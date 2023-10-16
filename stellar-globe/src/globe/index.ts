@@ -1,0 +1,231 @@
+import { Layer } from "~/layer/layer"
+import { PanLayer } from "~/layer/pan_layer"
+import { Distorter, DistortionParams } from "~/distorters"
+import { RollLayer } from "~/layer/roll_layer"
+import { TouchLayer } from '~/layer/touch_layer'
+import { ZoomLayer } from "~/layer/zoom_layer"
+import { EventManager, ReleaseCallbacks } from "~/utils/EventManager"
+import { Camera } from "./Camera"
+import { AnimationManager } from "./animation"
+import { Canvas } from "./canvas"
+import { GlobeEventMap } from "./events"
+import { PointerEventManager } from "./pointer_event"
+
+
+type GlobeOptions = {
+  preserveBuffer?: boolean
+  viewOptions?: ConstructorParameters<typeof Camera>[1]
+  distortion?: DistortionParams
+  noDefaultLayers?: boolean
+  jsdomTest?: boolean
+}
+
+
+export class Globe {
+  readonly camera: Camera
+  readonly animations: AnimationManager
+
+  /** @internal */
+  readonly canvas: Canvas
+
+  private readonly distorter?: Distorter
+
+  constructor(
+    el: HTMLElement,
+    options: GlobeOptions = {},
+  ) {
+    this.canvas = new Canvas(this, options)
+    this.onRelease(() => this.canvas.release())
+
+    el.appendChild(this.canvas.domElement)
+    this.onRelease(() => el.removeChild(this.canvas.domElement))
+
+    this.animations = new AnimationManager(this)
+    this.onRelease(() => this.animations.clear())
+
+    this.onRelease(PointerEventManager(this))
+
+    this.camera = new Camera(this, { aspectRatio: this.canvas.aspectRatio, ...(options.viewOptions ?? {}) })
+
+    // TODO: cleanup
+    if (options.distortion) {
+      this.distorter = new Distorter(this.gl, options.distortion)
+      this.onRelease(() => this.distorter!.release())
+    }
+
+    if (!options.noDefaultLayers) {
+      initControlLayers(this)
+    }
+
+    if (!options.jsdomTest) {
+      this.initResizeObserver()
+    }
+
+    this.onRelease(() => this._alreadyReleased = true)
+  }
+
+  private _alreadyReleased = false
+
+  get alreadyReleased() {
+    return this._alreadyReleased
+  }
+
+  // layers
+  /** @internal */
+  readonly layers: Layer[] = []
+
+  get gl() {
+    return this.canvas.gl
+  }
+
+  // events
+  private events = EventManager<GlobeEventMap>()
+  /** @internal */
+  emit = this.events.emit
+  on = this.events.on
+
+  // release callbacks
+  private releaseCallbacks = ReleaseCallbacks()
+  private onRelease = this.releaseCallbacks.add
+
+  release() {
+    for (const layer of this.layers.slice()) {
+      layer.release()
+    }
+    this.releaseCallbacks.flush()
+  }
+
+  /** @internal */
+  resize() {
+    this.canvas.resize(this.camera.retina)
+    this.camera.aspectRatio = this.canvas.aspectRatio
+    this.emit('resize', {})
+    this.requestRefresh()
+  }
+
+  private initResizeObserver() {
+    const observer = new ResizeObserver(_entries => {
+      requestAnimationFrame(() => this.resize())
+    })
+    observer.observe(this.canvas.domElement)
+    this.onRelease(() => {
+      observer.disconnect()
+    })
+    this.resize()
+  }
+
+  addNewLayer<LayerConstructor extends new (globe: Globe, ...args: any) => any>(
+    layerConstructor: LayerConstructor,
+    ...args: LayerConstructorRestParameters<typeof layerConstructor>
+  ): LayerType<typeof layerConstructor> {
+    const layer = new layerConstructor(this, ...[...args])
+    return this.addLayer(layer)
+  }
+
+  addLayer<L extends Layer>(layer: L) {
+    this.layers.push(layer)
+    this.layerSorter.sort()
+    layer.runOnAddToGlobeCallbacks()
+    this.requestRefresh()
+    this.emit('layer-change', {})
+    return layer
+  }
+
+  removeLayer(layer: Layer) {
+    const i = this.layers.indexOf(layer)
+    if (i >= 0) {
+      layer.runRemoveFromGlobeCallbacks()
+      this.layers.splice(i, 1)
+      this.requestRefresh()
+      this.emit('layer-change', {})
+    }
+  }
+
+  private rafId: number | undefined
+  requestRefresh() {
+    if (this._alreadyReleased) {
+      console.trace('called Globe.requestRefresh after release')
+      return
+    }
+    if (this.rafId === undefined) {
+      this.rafId = requestAnimationFrame(() => {
+        this.rafId = undefined
+        this.draw()
+      })
+    }
+  }
+
+  /** @internal */
+  draw() {
+    if (this._alreadyReleased) {
+      return
+    }
+    const gl = this.gl
+    const canvasEl = this.canvas.domElement
+    if (this.distorter) {
+      this.distorter.pipeAndDraw(() => {
+        const scale = this.distorter!.params.scale
+        const { width: width0, height: height0 } = canvasEl
+        canvasEl.width = Math.floor(canvasEl.width * scale)
+        canvasEl.height = Math.floor(canvasEl.height * scale)
+        gl.clearColor(0, 0, 0, 0)
+        gl.clear(gl.COLOR_BUFFER_BIT)
+        for (const layer of this.layers) {
+          layer.render(this.camera.view())
+        }
+        canvasEl.width = width0
+        canvasEl.height = height0
+      })
+    }
+    else {
+      gl.clearColor(0, 0, 0, 0)
+      gl.clear(gl.COLOR_BUFFER_BIT)
+      for (const layer of this.layers) {
+        layer.render(this.camera.view())
+      }
+    }
+  }
+
+  readonly layerSorter = new LayerSorter(this)
+}
+
+
+// These 2 types are for Globe.addNewLayer
+
+export type LayerConstructorRestParameters<
+  T extends abstract new (globe: Globe, ...args: any) => any
+> = T extends abstract new (globe: Globe, ...args: infer P) => any ? P : never
+
+type LayerType<
+  T extends abstract new (globe: Globe, ...args: any) => any
+> = T extends abstract new (globe: Globe, ...args: any) => infer P ? P : never
+
+
+class LayerSorter {
+  constructor(
+    private globe: Globe,
+  ) {
+  }
+
+  private sortFunc?: ((a: Layer, b: Layer) => number)
+
+  setSortFunc(f?: (a: Layer, b: Layer) => number) {
+    this.sortFunc = f
+    if (f) {
+      this.sort()
+      this.globe.requestRefresh()
+    }
+  }
+
+  sort() {
+    this.sortFunc && this.globe.layers.sort(this.sortFunc)
+  }
+}
+
+
+function initControlLayers(globe: Globe) {
+  globe.addNewLayer(PanLayer)
+  globe.addNewLayer(RollLayer)
+  globe.addNewLayer(ZoomLayer)
+  globe.addNewLayer(TouchLayer)
+}

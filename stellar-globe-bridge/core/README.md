@@ -1,0 +1,8 @@
+## Callbackについて
+
+`Globe$`やカタログのクリックイベントに対してcallback関数を設定できる。
+しかし`postMessage`に関数を渡すことはできないので、そこを橋渡しする必要がある。
+
+wrapperからcallbackには代わりにcallback番号を与える。
+coreはcallbackにundefined以外が与えられた場合、
+callbackが発生したときにCoreToWrapper.callbackをcallback番号とイベントの内容で呼び出す。

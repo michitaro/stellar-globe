@@ -1,0 +1,242 @@
+import { mat4, vec3 } from 'gl-matrix'
+import { Globe } from "."
+import { config } from '~/config'
+import { asec2rad, deg2rad, SkyCoord, wrapTo2Pi } from "~/lib/angle"
+import * as easing from '~/lib/easing'
+import { V3 } from "~/types"
+import { thetaphi2xyz, xyz2thetaphi } from '~/utils/math'
+import { View } from "~/view"
+import { MvpMatrix } from "~/view/MvpMatrix"
+import { cameraMatrix, CameraMode, CameraParams, composite, izenith3, izenith4, zenith3 } from "~/view/matrilx-utils"
+import { Animation } from "./animation"
+
+
+
+type JumpToOptions = {
+  duration: number
+  easingFunction: typeof easing.fastStart4
+  coord: SkyCoord
+  keepFovy: boolean
+}
+
+type Params = {
+  aspectRatio?: number
+  mode?: CameraMode
+  theta?: number
+  phi?: number
+  fovy?: number
+  roll?: number
+  lodBias?: number
+  za?: number
+  zd?: number
+  zp?: number
+  min_fovy?: number
+  max_fovy?: number
+  retina?: boolean
+}
+
+
+export class Camera implements CameraParams {
+  aspectRatio = -1
+  mode: CameraMode = 'STEREOGRAPHIC'
+
+  theta = 0
+  phi = 0
+  fovy = deg2rad(45)
+  roll = 0
+  lodBias = 0
+
+  za = 0
+  zd = Math.PI / 2
+  zp = 0
+
+  min_fovy = asec2rad(5)
+  max_fovy = 2
+
+  retina = config.retina
+
+  constructor(
+    private globe: Globe,
+    params: Params = {}
+  ) {
+    Object.assign(this, params)
+    this.setLodHooks()
+  }
+
+  coord2thetaphi(coord: SkyCoord) {
+    const v = vec3.transformMat3(vec3.create(), coord.xyz, zenith3(this.za, this.zd, this.zp))
+    return xyz2thetaphi(v[0], v[1], v[2])
+  }
+
+  xyz2thetaphi(v: V3) {
+    return this.coord2thetaphi(SkyCoord.fromXyz(v))
+  }
+
+  thetaphi2xyz(theta: number, phi: number): V3 {
+    return vec3.transformMat3([0, 0, 0] as any, thetaphi2xyz(theta, phi), izenith3(this.za, this.zd, this.zp)) as any
+  }
+
+  thetaphi2coord(theta: number, phi: number) {
+    return SkyCoord.fromXyz(this.thetaphi2xyz(theta, phi))
+  }
+
+  center() {
+    return this.thetaphi2coord(this.theta, this.phi)
+  }
+
+  jumpTo(params2: Partial<CameraParams>, options: Partial<JumpToOptions> = {}) {
+    const duration = options.duration ?? 400
+    const easingFunction = options.easingFunction || easing.fastStart4
+
+    this.globe.animations.stopCameraMotion()
+
+    const p1: CameraParams = {
+      aspectRatio: this.aspectRatio,
+      theta: this.theta,
+      phi: this.phi,
+      fovy: this.fovy,
+      roll: this.roll,
+      mode: this.mode,
+      za: this.za,
+      zd: this.zd,
+      zp: this.zp,
+    }
+
+    const p2 = { ...p1, ...params2 }
+
+    if (options.coord) {
+      const v = vec3.transformMat3(vec3.create(), options.coord.xyz, zenith3(p2.za, p2.zd, p2.zp));
+      [p2.theta, p2.phi] = xyz2thetaphi(v[0], v[1], v[2])
+    }
+
+    p1.mode !== p2.mode && this.changeMode(p2.mode, duration)
+
+    p1.phi = wrapTo2Pi(p1.phi)
+    if (Math.abs(p1.phi - p2.phi) > Math.PI) {
+      if (p1.phi > p2.phi) {
+        p2.phi += 2 * Math.PI
+      } else {
+        p1.phi += 2 * Math.PI
+      }
+    }
+
+    p1.za = wrapTo2Pi(p1.za)
+    p2.za = wrapTo2Pi(p2.za)
+    if (Math.abs(p1.za - p2.za) > Math.PI) {
+      if (p1.za > p2.za) {
+        p2.za += 2 * Math.PI
+      } else {
+        p1.za += 2 * Math.PI
+      }
+    }
+
+    const distance = vec3.distance(thetaphi2xyz(p1.theta, p1.phi), thetaphi2xyz(p2.theta, p2.phi))
+
+    return this.globe.animations.add(({ r: ratio }) => {
+      const r = easingFunction(ratio)
+      this.phi = r * p2.phi + (1 - r) * p1.phi
+      this.theta = r * p2.theta + (1 - r) * p1.theta
+      const f = 1 - (2 * (r - 0.5)) ** 2
+      this.fovy = options.keepFovy ?
+        (1 - r) * p1.fovy + r * p2.fovy : f * Math.max(distance - 2 * p1.fovy, 0) + (1 - r) * p1.fovy + r * p2.fovy
+      this.roll = (1 - r) * p1.roll + r * p2.roll
+      this.za = (1 - r) * p1.za + r * p2.za
+      this.zd = (1 - r) * p1.zd + r * p2.zd
+      this.zp = (1 - r) * p1.zp + r * p2.zp
+    }, { duration, cameraMotion: true })
+  }
+
+  private modeTransitionPv?: mat4
+
+  view() {
+    return new View(
+      new MvpMatrix(this.modeTransitionPv ?? this.pv()),
+      this.lodBias,
+      this.retina,
+      this.globe.gl.drawingBufferHeight)
+  }
+
+  private customPvMatrix?: (p: CameraParams) => mat4
+  private pv(mode = this.mode) {
+    return (this.customPvMatrix || cameraMatrix)({
+      aspectRatio: this.aspectRatio,
+      theta: this.theta,
+      phi: this.phi,
+      fovy: this.fovy,
+      roll: this.roll,
+      mode,
+      za: this.za,
+      zd: this.zd,
+      zp: this.zp,
+    })
+  }
+
+  private modeAnimation?: Animation
+  changeMode(mode: CameraMode, duration = 200) {
+    const oldMode = this.mode
+    this.modeAnimation && this.modeAnimation.stop()
+    this.mode = mode
+    this.modeAnimation = this.globe.animations.add(({ r }) => {
+      r = easing.fastStart4(r)
+      // @ts-ignore
+      this.modeTransitionPv = composite([1 - r, r], [this.pv(oldMode), this.pv()]) as mat4
+    }, { duration, immediate: true, cameraMotion: true })
+    this.modeAnimation.then(() => {
+      this.modeAnimation = undefined
+      this.modeTransitionPv = undefined
+    })
+  }
+
+  private cageAnimation?: Animation
+  /** @internal */
+  cage() {
+    const { min_fovy: MIN_FOVY, max_fovy: MAX_FOVY } = this
+    if (this.cageAnimation === undefined && (this.fovy < MIN_FOVY || MAX_FOVY < this.fovy)) {
+      this.cageAnimation = this.globe.animations.add(({ dt }) => {
+        if (MIN_FOVY <= this.fovy && this.fovy <= MAX_FOVY) {
+          this.cageAnimation!.stop()
+          return
+        }
+        const k = 5.e-3
+        const base = this.fovy > MAX_FOVY ? MAX_FOVY : MIN_FOVY
+        let d = Math.log(this.fovy / base)
+        d += (d < 0 ? -1 : 1) * 1.e-3
+        this.fovy *= Math.exp(-k * dt * d)
+      }, { cameraMotion: true })
+      this.cageAnimation.then(() => this.cageAnimation = undefined)
+    }
+  }
+
+  izenith() {
+    return izenith4(this.za, this.zd, this.zp)
+  }
+
+  private lodAnimation?: Animation
+  private setLodHooks() {
+    this.globe.on('camera-move-start', () => {
+      if (this.lodAnimation) {
+        this.lodAnimation.stop()
+      }
+      this.lodBias = 1
+    })
+    this.globe.on('camera-move-end', () => {
+      this.lodAnimation = this.globe.animations.add(
+        ({ r }) => this.lodBias = 1 - r,
+        { duration: 200 },
+      )
+      this.lodAnimation.then(() => {
+        this.lodAnimation = undefined
+      })
+    })
+  }
+
+  setRetina(retina: boolean) {
+    this.retina = retina
+    this.globe.resize()
+    this.globe.draw()
+  }
+
+  get canvasPixels() {
+    return this.retina ? window.devicePixelRatio : 1
+  }
+}
