@@ -52,7 +52,9 @@
         "watch:labextension": "jupyter labextension watch ."
     },
     "dependencies": {
-        "@jupyterlab/application": "^4.0.0"
+        "@jupyterlab/application": "^4.0.0",
+        "@stellar-globe/react-stellar-globe": "link:../react-stellar-globe",
+        "@stellar-globe/stellar-globe": "link:../stellar-globe"
     },
     "devDependencies": {
         "@jupyterlab/builder": "^4.0.0",
