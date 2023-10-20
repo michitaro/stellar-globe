@@ -18,3 +18,6 @@ export {
 }
 
 export type { GlobeHandle }
+
+import * as MessageControllableGlobe from './MessageControllableGlobe'
+export { MessageControllableGlobe }

@@ -1,7 +1,222 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "additionalProperties": false,
+    "anyOf": [
+        {
+            "additionalProperties": false,
+            "properties": {
+                "type": {
+                    "const": "clear",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "type"
+            ],
+            "type": "object"
+        },
+        {
+            "additionalProperties": false,
+            "properties": {
+                "args": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "layerDefs": {
+                            "items": {
+                                "$ref": "#/definitions/LayerDef"
+                            },
+                            "type": "array"
+                        }
+                    },
+                    "required": [
+                        "layerDefs"
+                    ],
+                    "type": "object"
+                },
+                "type": {
+                    "const": "setState",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "args",
+                "type"
+            ],
+            "type": "object"
+        }
+    ],
     "definitions": {
+        "LayerDef": {
+            "anyOf": [
+                {
+                    "additionalProperties": false,
+                    "properties": {
+                        "key": {
+                            "type": "string"
+                        },
+                        "props": {
+                            "$ref": "#/definitions/{showLines?:boolean|undefined;showNames?:boolean|undefined;lang?:ConstellationLang|undefined;fadeInDuration?:number|undefined;nameFont?:string|undefined;nameColor?:string|undefined;visible?:boolean|undefined;}"
+                        },
+                        "type": {
+                            "const": "ConstellationLayer",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "key",
+                        "props",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "additionalProperties": false,
+                    "properties": {
+                        "key": {
+                            "type": "string"
+                        },
+                        "props": {
+                            "$ref": "#/definitions/{fadeInDuration?:number|undefined;visible?:boolean|undefined;}"
+                        },
+                        "type": {
+                            "const": "EsoMilkyWayLayer",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "key",
+                        "props",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "additionalProperties": false,
+                    "properties": {
+                        "key": {
+                            "type": "string"
+                        },
+                        "props": {
+                            "$ref": "#/definitions/{baseUrl:string;filters?:Filter[]|undefined;outline?:boolean|undefined;colorParams?:SspTileParams|undefined;visible?:boolean|undefined;}"
+                        },
+                        "type": {
+                            "const": "SspTileLayer",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "key",
+                        "props",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "additionalProperties": false,
+                    "properties": {
+                        "key": {
+                            "type": "string"
+                        },
+                        "props": {
+                            "$ref": "#/definitions/{optionsManipulate?:CallbackDef|undefined;visible?:boolean|undefined;}"
+                        },
+                        "type": {
+                            "const": "GridLayer",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "key",
+                        "props",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "additionalProperties": false,
+                    "properties": {
+                        "key": {
+                            "type": "string"
+                        },
+                        "props": {
+                            "$ref": "#/definitions/{texts:BillboardText[];defaultFont?:string|undefined;defaultColor?:string|undefined;alphaFunc?:CallbackDef|undefined;visible?:boolean|undefined;}"
+                        },
+                        "type": {
+                            "const": "TextLayer",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "key",
+                        "props",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "additionalProperties": false,
+                    "properties": {
+                        "key": {
+                            "type": "string"
+                        },
+                        "props": {
+                            "$ref": "#/definitions/{visible?:boolean|undefined;}"
+                        },
+                        "type": {
+                            "const": "HipparcosCatalogLayer",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "key",
+                        "props",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "additionalProperties": false,
+                    "properties": {
+                        "key": {
+                            "type": "string"
+                        },
+                        "props": {
+                            "$ref": "#/definitions/{visible?:boolean|undefined;baseUrl:string;}"
+                        },
+                        "type": {
+                            "const": "HipsSimpleLayer",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "key",
+                        "props",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "additionalProperties": false,
+                    "properties": {
+                        "key": {
+                            "type": "string"
+                        },
+                        "props": {
+                            "$ref": "#/definitions/{markers:Marker[];defaultColor:V4;defaultType:\"circle\"|\"plus\"|\"x\"|\"hollowPlus\"|\"hollowX\"|\"dot\"|\"circledHallowPlus\"|\"circledHallowX\"|\"diamond\"|\"square\"|\"asterisk\"|\"hollowAsterisk\"|\"circledHallowAsterisk\"|\"triangle\"|\"pentagon\";dimmAlpha:number;onClick?:CallbackDef|undefined;visible?:boolean|undefined;}"
+                        },
+                        "type": {
+                            "const": "ClickableMarkerLayer",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "key",
+                        "props",
+                        "type"
+                    ],
+                    "type": "object"
+                }
+            ]
+        },
         "MarkerType": {
             "enum": [
                 "asterisk",
@@ -574,43 +789,6 @@
             },
             "type": "object"
         }
-    },
-    "properties": {
-        "ClickableMarkerLayer": {
-            "$ref": "#/definitions/{markers:Marker[];defaultColor:V4;defaultType:\"circle\"|\"plus\"|\"x\"|\"hollowPlus\"|\"hollowX\"|\"dot\"|\"circledHallowPlus\"|\"circledHallowX\"|\"diamond\"|\"square\"|\"asterisk\"|\"hollowAsterisk\"|\"circledHallowAsterisk\"|\"triangle\"|\"pentagon\";dimmAlpha:number;onClick?:CallbackDef|undefined;visible?:boolean|undefined;}"
-        },
-        "ConstellationLayer": {
-            "$ref": "#/definitions/{showLines?:boolean|undefined;showNames?:boolean|undefined;lang?:ConstellationLang|undefined;fadeInDuration?:number|undefined;nameFont?:string|undefined;nameColor?:string|undefined;visible?:boolean|undefined;}"
-        },
-        "EsoMilkyWayLayer": {
-            "$ref": "#/definitions/{fadeInDuration?:number|undefined;visible?:boolean|undefined;}"
-        },
-        "GridLayer": {
-            "$ref": "#/definitions/{optionsManipulate?:CallbackDef|undefined;visible?:boolean|undefined;}"
-        },
-        "HipparcosCatalogLayer": {
-            "$ref": "#/definitions/{visible?:boolean|undefined;}"
-        },
-        "HipsSimpleLayer": {
-            "$ref": "#/definitions/{visible?:boolean|undefined;baseUrl:string;}"
-        },
-        "SspTileLayer": {
-            "$ref": "#/definitions/{baseUrl:string;filters?:Filter[]|undefined;outline?:boolean|undefined;colorParams?:SspTileParams|undefined;visible?:boolean|undefined;}"
-        },
-        "TextLayer": {
-            "$ref": "#/definitions/{texts:BillboardText[];defaultFont?:string|undefined;defaultColor?:string|undefined;alphaFunc?:CallbackDef|undefined;visible?:boolean|undefined;}"
-        }
-    },
-    "required": [
-        "ClickableMarkerLayer",
-        "ConstellationLayer",
-        "EsoMilkyWayLayer",
-        "GridLayer",
-        "HipparcosCatalogLayer",
-        "HipsSimpleLayer",
-        "SspTileLayer",
-        "TextLayer"
-    ],
-    "type": "object"
+    }
 }
 

@@ -2,8 +2,8 @@ import { BillboardText, Globe, MarkerType, SkyCoord, SspTileLayer, V4, markerTyp
 import { produce } from 'immer'
 import React, { useMemo, useState } from 'react'
 import ReactDOM from 'react-dom/client'
-import { ClickableMarkerLayer$, ConstellationLayer$, EsoMilkyWayLayer$, Globe$, GridLayer$, HipparcosCatalogLayer$, HipsSimpleLayer$, SspTileLayer$, TextLayer$ } from '../src'
-import { LogScaleRange } from '../src/LogScaleRange'
+import { ClickableMarkerLayer$, ConstellationLayer$, EsoMilkyWayLayer$, Globe$, GridLayer$, HipparcosCatalogLayer$, HipsSimpleLayer$, SspTileLayer$, TextLayer$ } from '../../src'
+import { LogScaleRange } from '../../src/LogScaleRange'
 import './style.scss'
 
 

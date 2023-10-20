@@ -5,7 +5,6 @@ import { zenithSkyCoord } from '../src/utils/date'
 // import { ClicakblePolygonLayer } from './ClickablePolygonLayer'
 import { MarkerType, markerTypes } from '~/layer/marker_layer/marker'
 import './style.scss'
-import { sspTileParamsAssertType } from '~/layer/ssp_tile_layer/TextureProvider/params'
 
 
 window.addEventListener('load', main)

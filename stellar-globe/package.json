@@ -1,7 +1,7 @@
 {
   "name": "@stellar-globe/stellar-globe",
   "private": true,
-  "version": "0",
+  "version": "0.0.1",
   "type": "module",
   "files": [
     "dist",
@@ -9,8 +9,9 @@
   ],
   "exports": {
     ".": {
-      "default": "./dist/stellar-globe.js",
-      "types": "./types/index.d.ts"
+      "import": "./dist/stellar-globe.js",
+      "types": "./types/index.d.ts",
+      "default": "./dist/stellar-globe.js"
     }
   },
   "main": "./dist/stellar-globe.js",

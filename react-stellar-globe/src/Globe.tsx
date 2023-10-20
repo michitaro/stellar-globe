@@ -121,10 +121,12 @@ export const Globe$ = forwardRef<GlobeHandle, GlobeProps>(function Globe$(
 
   return (
     <GlobeContext.Provider value={context} >
-      <div style={{ display: 'none' }}>
-        {children}
+      <div style={{ height: '100%' }}>
+        <div ref={containerRef} style={{ height: '100%', width: '100%', position: 'absolute' }} />
+        <div>
+          {children}
+        </div>
       </div>
-      <div ref={containerRef} style={{ height: '100%' }} />
     </GlobeContext.Provider>
   )
 })

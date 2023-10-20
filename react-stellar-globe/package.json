@@ -10,8 +10,9 @@
   "types": "./types/index.d.ts",
   "exports": {
     ".": {
-      "default": "./dist/react-stellar-globe.es.js",
-      "types": "./types/index.d.ts"
+      "import": "./dist/react-stellar-globe.es.js",
+      "types": "./types/index.d.ts",
+      "default": "./dist/react-stellar-globe.es.js"
     }
   },
   "scripts": {
@@ -20,7 +21,8 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "type-check": "tsc --noEmit",
-    "test": "vitest"
+    "test": "vitest",
+    "message-jsonschema": "typescript-json-schema -o message.jsonschema.json --noExtraProps --required ./tsconfig.json Message"
   },
   "dependencies": {
     "react": "^18.2.0",
