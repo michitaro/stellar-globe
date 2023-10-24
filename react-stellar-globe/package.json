@@ -21,15 +21,12 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "type-check": "tsc --noEmit",
-    "test": "vitest",
-    "message-jsonschema": "typescript-json-schema -o message.jsonschema.json --noExtraProps --required ./tsconfig.json Message"
-  },
-  "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "test": "vitest"
   },
   "peerDependencies": {
-    "@stellar-globe/stellar-globe": "file:../stellar-globe"
+    "@stellar-globe/stellar-globe": "file:../stellar-globe",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.1.3",

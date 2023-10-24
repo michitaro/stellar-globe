@@ -1,6 +1,6 @@
-import { LayerDef, MessageControllableGlobeContextType } from "./MessageControlledGlobe"
+import { LayerDef, MessageControllableGlobeContextType } from "."
 
-function clear({ setLayerDefs }: MessageControllableGlobeContextType) {
+function clear({ setLayerDefs }: MessageControllableGlobeContextType, args: undefined) {
   setLayerDefs([])
 }
 
@@ -15,7 +15,11 @@ export const messageHandlers = {
 
 type MessageTypes = keyof typeof messageHandlers
 
-export type Message = {
+export type MessageToStellarGlobeForJsonSchema = {
+  [K in MessageTypes]: Parameters<(typeof messageHandlers)[K]>[1]
+}
+
+export type MessageToStellarGlobe = {
   [K in MessageTypes]: {
     type: K
     args: Parameters<(typeof messageHandlers)[K]>[1]

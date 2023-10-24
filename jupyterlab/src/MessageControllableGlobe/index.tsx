@@ -1,6 +1,15 @@
-import { Globe$, GlobeHandle } from "../../src"
-import { createContext, forwardRef, memo, useCallback, useContext, useImperativeHandle, useMemo, useRef, useState } from "react"
-import { Message, messageHandlers } from "./messageHandlers"
+import {
+  ClickableMarkerLayer$,
+  ConstellationLayer$,
+  EsoMilkyWayLayer$, Globe$, GlobeHandle, GridLayer$,
+  HipparcosCatalogLayer$,
+  HipsSimpleLayer$,
+  SspTileLayer$,
+  TextLayer$
+} from "@stellar-globe/react-stellar-globe"
+import { Globe } from "@stellar-globe/stellar-globe"
+import React, { createContext, forwardRef, memo, useCallback, useContext, useImperativeHandle, useMemo, useRef, useState } from 'react'
+import { MessageToStellarGlobe, messageHandlers } from "./messageHandlers"
 
 
 type MessageControllableGlobeProps = {
@@ -8,7 +17,7 @@ type MessageControllableGlobeProps = {
 }
 
 export type MessageControllableGlobeHandle = {
-  postMessage: (message: Message) => void
+  postMessage: (message: MessageToStellarGlobe) => void
 }
 
 export const MessageControllableGlobe = memo(forwardRef<MessageControllableGlobeHandle, MessageControllableGlobeProps>((
@@ -17,15 +26,18 @@ export const MessageControllableGlobe = memo(forwardRef<MessageControllableGlobe
 ) => {
   const globeRef = useRef<GlobeHandle>(null)
   const getGlobe = useCallback(() => {
-    if (!globeRef.current) throw new Error(`use of getGlobe in render phase`)
+    if (!globeRef.current) {
+      throw new Error(`use of getGlobe in render phase`)
+    }
     return globeRef.current()
   }, [])
   const context = useGenerateCoreContext(onCallback, getGlobe)
   const { layerDefs } = context
   useImperativeHandle(ref, () => ({
-    postMessage: (msg: Message) => {
+    postMessage: (msg: MessageToStellarGlobe) => {
       const { type } = msg
       const handler = messageHandlers[type]
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       handler?.(context, msg.args)
     }
@@ -77,9 +89,10 @@ const FromLayerDef = <K extends keyof LayerProps>({
   props: LayerProps[K],
 }) => {
   const { onCallback: onFireCallback } = useCoreContext()
-  const C = LayerComponents[type]
+  const C = layerComponents[type]
   const props = useConvertedProps(_props, onFireCallback)
   return (
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     <C {...props} />
   )
@@ -87,8 +100,9 @@ const FromLayerDef = <K extends keyof LayerProps>({
 
 
 function isCallback(v: unknown): v is CallbackDef {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  return !!v[CALLBACK_KEY]
+  return v && !!v[CALLBACK_KEY]
 }
 
 
@@ -152,29 +166,7 @@ export function callbackDef(id: number) {
   }
 }
 
-
-import {
-  ClickableMarkerLayer$,
-  ConstellationLayer$,
-  EsoMilkyWayLayer$,
-  GridLayer$,
-  HipparcosCatalogLayer$,
-  HipsSimpleLayer$,
-  SspTileLayer$,
-  TextLayer$,
-} from '../index'
-import { Globe } from "@stellar-globe/stellar-globe"
-
-const LayerComponents = {
-  ConstellationLayer: ConstellationLayer$,
-  EsoMilkyWayLayer: EsoMilkyWayLayer$,
-  SspTileLayer: SspTileLayer$,
-  GridLayer: GridLayer$,
-  TextLayer: TextLayer$,
-  HipparcosCatalogLayer: HipparcosCatalogLayer$,
-  HipsSimpleLayer: HipsSimpleLayer$,
-  ClickableMarkerLayer: ClickableMarkerLayer$,
-} as {
+const layerComponents: {
   ConstellationLayer: typeof ConstellationLayer$,
   EsoMilkyWayLayer: typeof EsoMilkyWayLayer$,
   SspTileLayer: typeof SspTileLayer$,
@@ -183,14 +175,24 @@ const LayerComponents = {
   HipparcosCatalogLayer: typeof HipparcosCatalogLayer$,
   HipsSimpleLayer: typeof HipsSimpleLayer$,
   ClickableMarkerLayer: typeof ClickableMarkerLayer$,
+} // these type annotations are needed to prevent TS2742
+  = {
+  ConstellationLayer: ConstellationLayer$,
+  EsoMilkyWayLayer: EsoMilkyWayLayer$,
+  SspTileLayer: SspTileLayer$,
+  GridLayer: GridLayer$,
+  TextLayer: TextLayer$,
+  HipparcosCatalogLayer: HipparcosCatalogLayer$,
+  HipsSimpleLayer: HipsSimpleLayer$,
+  ClickableMarkerLayer: ClickableMarkerLayer$,
 }
 
-type LayerNames = keyof typeof LayerComponents
+type LayerNames = keyof typeof layerComponents
 type Props<T extends (...args: never[]) => unknown> = Parameters<T>[0]
 
 
 type NativeLayerProps = {
-  [K in LayerNames]: Props<(typeof LayerComponents)[K]>
+  [K in LayerNames]: Props<(typeof layerComponents)[K]>
 }
 
 type LayerProps = {
@@ -212,3 +214,6 @@ type ConvertFunctionToCallback<T> = T extends undefined ? undefined : (
   T extends (...args: any[]) => unknown ?
   CallbackDef : T
 )
+
+
+export type LayerPropsForJsonSchema =  LayerProps

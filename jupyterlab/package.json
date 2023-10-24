@@ -53,6 +53,7 @@
     },
     "dependencies": {
         "@jupyterlab/application": "^4.0.0",
+        "@lumino/widgets": "^2.3.0",
         "@stellar-globe/react-stellar-globe": "link:../react-stellar-globe",
         "@stellar-globe/stellar-globe": "link:../stellar-globe"
     },
@@ -81,7 +82,7 @@
         "stylelint-csstree-validator": "^3.0.0",
         "stylelint-prettier": "^4.0.0",
         "typescript": "~5.0.2",
-        "yjs": "^13.5.0"
+                "yjs": "^13.5.0"
     },
     "sideEffects": [
         "style/*.css",
@@ -108,8 +109,7 @@
         "extends": [
             "eslint:recommended",
             "plugin:@typescript-eslint/eslint-recommended",
-            "plugin:@typescript-eslint/recommended",
-            "plugin:prettier/recommended"
+            "plugin:@typescript-eslint/recommended"
         ],
         "parser": "@typescript-eslint/parser",
         "parserOptions": {
@@ -142,20 +142,13 @@
             "@typescript-eslint/no-explicit-any": "off",
             "@typescript-eslint/no-namespace": "off",
             "@typescript-eslint/no-use-before-define": "off",
-            "@typescript-eslint/quotes": [
-                "error",
-                "single",
-                {
-                    "avoidEscape": true,
-                    "allowTemplateLiterals": false
-                }
-            ],
+            "@typescript-eslint/quotes": "off",
             "curly": [
                 "error",
                 "all"
             ],
             "eqeqeq": "error",
-            "prefer-arrow-callback": "error"
+            "prefer-arrow-callback": "off"
         }
     },
     "prettier": {

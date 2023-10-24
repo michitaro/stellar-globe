@@ -7,7 +7,11 @@ type SspTileLayerProps = ConstructorParameters<typeof SspTileLayer>[1] & {
 }
 const SspTileLayer$: React.FC<SspTileLayerProps> = memo(props => {
   const {
-    baseUrl, colorParams = SspTileLayer.defaultParams('sdssTrueColor'), filters, outline = false, visible = true,
+    baseUrl,
+    colorParams = SspTileLayer.defaultParams('sdssTrueColor'),
+    filters,
+    outline = false,
+    visible = true,
   } = props
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const factory = useCallback((globe: Globe) => new SspTileLayer(globe, props), [baseUrl])
