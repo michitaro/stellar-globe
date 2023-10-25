@@ -1,22 +1,18 @@
-from typing import NotRequired
 from .comm import create_comm
-from .models.LayerProps.EsoMilkyWayLayer import Model as EsoMilkyWayLayer
-from .models.OpenWindowMessage import Model as OpenWindowMessage
 from .utils.uid import uid
+from .utils.as_msg import as_msg
 
 
 class Window:
     def __init__(self, title: str | None = None) -> None:
-        msg = OpenWindowMessage(id=str(uid()), layout='split-right')
+        msg = {
+            'id': f'stellarglobe({uid()})',
+            'title': title,
+        }
         self._comm = create_comm(
             'stellarglobe/new',
-            dict(msg),
-        )
-        self._comm.send(
-            {
-                'type': 'clear',
-            }
+            as_msg(msg),
         )
 
     def _post_message(self, msg):
-        self._comm.send(msg)
+        self._comm.send(as_msg(msg))

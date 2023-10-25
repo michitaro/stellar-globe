@@ -37,7 +37,6 @@ export const MessageControllableGlobe = memo(forwardRef<MessageControllableGlobe
     postMessage: (msg: MessageToStellarGlobe) => {
       const { type } = msg
       const handler = messageHandlers[type]
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       handler?.(context, msg.args)
     }
@@ -92,7 +91,6 @@ const FromLayerDef = <K extends keyof LayerProps>({
   const C = layerComponents[type]
   const props = useConvertedProps(_props, onFireCallback)
   return (
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     <C {...props} />
   )
@@ -100,7 +98,6 @@ const FromLayerDef = <K extends keyof LayerProps>({
 
 
 function isCallback(v: unknown): v is CallbackDef {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   return v && !!v[CALLBACK_KEY]
 }
@@ -195,7 +192,7 @@ type NativeLayerProps = {
   [K in LayerNames]: Props<(typeof layerComponents)[K]>
 }
 
-type LayerProps = {
+export type LayerProps = {
   [K in keyof NativeLayerProps]: {
     [P in keyof NativeLayerProps[K]]: ConvertFunctionToCallback<NativeLayerProps[K][P]>
   }
@@ -214,6 +211,3 @@ type ConvertFunctionToCallback<T> = T extends undefined ? undefined : (
   T extends (...args: any[]) => unknown ?
   CallbackDef : T
 )
-
-
-export type LayerPropsForJsonSchema =  LayerProps

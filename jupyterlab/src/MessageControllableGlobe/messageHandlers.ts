@@ -15,10 +15,6 @@ export const messageHandlers = {
 
 type MessageTypes = keyof typeof messageHandlers
 
-export type MessageToStellarGlobeForJsonSchema = {
-  [K in MessageTypes]: Parameters<(typeof messageHandlers)[K]>[1]
-}
-
 export type MessageToStellarGlobe = {
   [K in MessageTypes]: {
     type: K

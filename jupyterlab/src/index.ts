@@ -1,21 +1,20 @@
-import typia from 'typia'
 import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application'
-import { ICommandPalette, ISessionContext } from '@jupyterlab/apputils'
+import { ISessionContext } from '@jupyterlab/apputils'
 import { INotebookTracker } from '@jupyterlab/notebook'
 import { StellarGlobeWindow } from './StellarGlobeWindow'
-import { OpenWindowMessage } from './types'
-import { MessageToStellarGlobe } from './MessageControllableGlobe/messageHandlers'
+import { assertMessageToStellarGlobe, assertOpenWindowMessage, catchTypeGuardError } from './TypeGuard'
+
 
 
 const plugin: JupyterFrontEndPlugin<void> = {
   id: 'jupyterlab-stellar-globe:plugin',
   description: '',
   autoStart: true,
-  requires: [ICommandPalette, INotebookTracker],
-  activate: (app: JupyterFrontEnd, palette: ICommandPalette, nbTracker: INotebookTracker) => {
+  requires: [INotebookTracker],
+  activate: (app: JupyterFrontEnd, nbTracker: INotebookTracker) => {
     setupNbTracker(app, nbTracker)
   }
 }
@@ -39,32 +38,32 @@ function setupNbTracker(app: JupyterFrontEnd, nbTracker: INotebookTracker) {
 }
 
 type KernelType = NonNullable<NonNullable<ISessionContext['session']>['kernel']>
-const isOpenWindowMessage = typia.createIs<OpenWindowMessage>()
-
 
 function setupCommTarget(app: JupyterFrontEnd, kernel: KernelType) {
   kernel.registerCommTarget('stellarglobe/new', function onConnected(comm, rawMsg) {
-    const msg: OpenWindowMessage = rawMsg.content.data as any
-    if (!isOpenWindowMessage(msg)) {
-      alert(`TypeError: expected OpenWindowMessage${JSON.stringify(msg, null, 2)}`)
-      return
-    }
-    const sgw = new StellarGlobeWindow({
-      id: msg.id,
-      title: msg.title,
-      onCallback: (msg) => {
-        console.log(msg)
-      },
+    const msg = rawMsg.content.data
+    catchTypeGuardError(() => {
+      assertOpenWindowMessage(msg)
+      const sgw = new StellarGlobeWindow({
+        id: msg.id,
+        title: msg.title,
+        onCallback: (msg) => {
+          console.log(msg)
+        },
+
+      })
+      const widget = sgw.widget
+      if (!widget.isAttached) {
+        app.shell.add(widget, 'main', { mode: 'split-right', activate: false })
+      }
+      // app.shell.activateById(widget.id)
+      comm.onMsg = rawMsg => {
+        const msg = rawMsg.content.data
+        catchTypeGuardError(() => {
+          assertMessageToStellarGlobe(msg)
+          sgw.postMessage(msg)
+        })
+      }
     })
-    const widget = sgw.widget
-    if (!widget.isAttached) {
-      app.shell.add(widget, 'main', { mode: 'split-right', activate: false })
-    }
-    // app.shell.activateById(widget.id)
-    comm.onMsg = rawMsg => {
-      console.log(rawMsg)
-      const msg = rawMsg.content.data as MessageToStellarGlobe
-      sgw.postMessage(msg)
-    }
   })
 }
