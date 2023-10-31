@@ -5,7 +5,6 @@ const externalProtocol = ssl ? 'https' : 'http'
 function defaultConfig() {
   return {
     retina: false,
-    decodeImageInBackgroundThread: false,
     tileRenderer: {
       enableMagFilter: true,
     },

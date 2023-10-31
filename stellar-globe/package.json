@@ -29,6 +29,7 @@
     "@types/hammerjs": "^2.0.42",
     "@types/sprintf-js": "^1.1.2",
     "rollup-plugin-visualizer": "^5.9.2",
+    "sass": "^1.69.1",
     "typedoc": "^0.25.2",
     "typescript": "^5.2.*",
     "vite": "^4.4.11",
@@ -39,12 +40,9 @@
     "@hscmap/healpix": "^1.4.12",
     "@stellar-globe/inertia": "git+https://hsc-gitlab.mtk.nao.ac.jp/michitaro/inertia.git#semver:^1.0.0",
     "@stellar-globe/wheel-event-normalizer": "git+https://hsc-gitlab.mtk.nao.ac.jp/michitaro/wheel-event-normalizer.git#semver:^1.0.0",
-    "fast-png": "^6.2.0",
     "gl-matrix": "^3.4.3",
     "gzip-js": "^0.3.2",
     "hammerjs": "^2.0.8",
-    "jpeg-js": "^0.4.4",
-    "sass": "^1.69.1",
     "sprintf-js": "^1.1.3"
   },
   "volta": {

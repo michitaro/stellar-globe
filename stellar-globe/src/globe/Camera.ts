@@ -102,7 +102,13 @@ export class Camera implements CameraParams {
       zp: this.zp,
     }
 
-    const p2 = { ...p1, ...params2 }
+    const p2 = { ...p1 }
+    for (const [k, v] of Object.entries(params2)) {
+      if (v !== undefined) {
+        // @ts-ignore
+        p2[k] = v
+      }
+    }
 
     if (options.coord) {
       const v = vec3.transformMat3(vec3.create(), options.coord.xyz, zenith3(p2.za, p2.zd, p2.zp));
