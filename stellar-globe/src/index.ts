@@ -8,7 +8,7 @@ export { HipparcosCatalogLayer } from "./layer/hipparcos_catalog_layer"
 export { Layer } from './layer/layer'
 export { MousePicker } from "./layer/layer/MousePicker"
 import { SspTileLayer } from './layer/ssp_tile_layer'
-export { SspTileLayer, SspTileLayer as TileLayer }
+export { SspTileLayer, SspTileLayer as TractTileLayer }
 export { TextLayer } from './layer/text_layer'
 export type { BillboardText } from './layer/text_layer'
 export { Angle, SkyCoord } from './lib/angle'
