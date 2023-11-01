@@ -13,6 +13,7 @@ import simple_rgb from './glsl/simple_rgb.glsl?raw'
 import simple_rgb_png_mixer from './glsl/simple_rgb_png_mixer.frag.glsl?raw'
 import sinh from './glsl/sinh.glsl?raw'
 import { SspTileParams, SspTileParamsOf } from "./params"
+import { nonNull } from "~/lib/gl-wrapper/utils"
 
 
 class SimpleRgbMixerPng extends ImageFilter {
@@ -291,9 +292,7 @@ export class SspTileTextureProvider extends AsyncTextureProvider {
       return tt
     }
 
-    // gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1)
     this.imageFilter.applyToImages(tt.tex, tileSize, tileSize, images)
-    // gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 0)
     tt.tex.bind(() => {
       if (ref.level === ref.tract.maxTileLevel) {
         gl.generateMipmap(gl.TEXTURE_2D)
@@ -321,14 +320,15 @@ function expandShader(template: string) {
 
 function CachedImageLoader(maxSize = 0) {
   const cache = new Cache<string, ImageLike>({ maxSize })
-  const zeroTexture = new ImageData(1, 1)
+  const zeroBitmapRequest = create1x1BitmapData()
 
   const fetch = async (url: string) => {
     const cache_hit = cache.get(url)
     if (cache_hit) {
       return cache_hit
     }
-    const fresh = await loadImage(url, { failover: zeroTexture })
+    const failover = await zeroBitmapRequest
+    const fresh = await loadImage(url, { failover })
     cache.set(url, fresh)
     return fresh
   }
@@ -337,4 +337,20 @@ function CachedImageLoader(maxSize = 0) {
     release: () => cache.clear(),
     setCacheSize: (maxSize: number) => cache.setLimit(maxSize),
   })
+}
+
+async function create1x1BitmapData(r = 0, g = 0, b = 0, a = 255) {
+  const imageData = new ImageData(1, 1)
+  imageData.data[0] = r // R
+  imageData.data[1] = g // G
+  imageData.data[2] = b // B
+  imageData.data[3] = a // A
+  const canvas = document.createElement('canvas')
+  canvas.width = 1
+  canvas.height = 1
+  const ctx = nonNull(canvas.getContext('2d'))
+  ctx.putImageData(imageData, 0, 0)
+  const blob = await new Promise<Blob>(resolve => canvas.toBlob(blob => resolve(blob as Blob)))
+  const imageBitmap = await createImageBitmap(blob)
+  return imageBitmap
 }

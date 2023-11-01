@@ -44,7 +44,7 @@ class BackgroundImageDecoder {
     const id = ++this.seq
     const d = deferred<ImageBitmap, unknown>()
     this.deferreds.set(id, d)
-    const msg: DecodeRequest = { id, url, flipY }
+    const msg: DecodeRequest = { id, url: (new URL(url, location.href)).href, flipY }
     this.worker.postMessage(msg)
     return d.promise
   }

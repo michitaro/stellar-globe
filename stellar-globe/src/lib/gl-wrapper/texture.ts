@@ -1,6 +1,6 @@
 import * as glUtils from './utils'
 
-export type ImageLike = ImageBitmap | ImageData
+export type ImageLike = ImageBitmap
 
 export class Texture {
     readonly name: WebGLTexture
@@ -21,8 +21,16 @@ export class Texture {
     }
 
     setImage(img: ImageLike) {
+        const gl = this.gl
         this.bind(() => {
-            this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, img)
+            this.gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img)
+        })
+    }
+
+    setImageArrayBuffer(ab: Uint8Array, width: number, height: number) {
+        const gl = this.gl
+        this.bind(() => {
+            this.gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, ab)
         })
     }
 }
