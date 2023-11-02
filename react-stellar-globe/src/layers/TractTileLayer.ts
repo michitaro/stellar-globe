@@ -1,21 +1,21 @@
-import { Globe, SspTileLayer } from "@stellar-globe/stellar-globe"
+import { Globe, TractTileLayer } from "@stellar-globe/stellar-globe"
 import React, { memo, useCallback, useEffect } from "react"
 import { setDisplayName, useLayerBind } from "../Globe"
 
-type SspTileLayerProps = ConstructorParameters<typeof SspTileLayer>[1] & {
+type TractTileLayerProps = ConstructorParameters<typeof TractTileLayer>[1] & {
   visible?: boolean
 }
-const SspTileLayer$: React.FC<SspTileLayerProps> = memo(props => {
+const TractTileLayer$: React.FC<TractTileLayerProps> = memo(props => {
   const {
     baseUrl,
-    colorParams = SspTileLayer.defaultParams('sdssTrueColor'),
+    colorParams = TractTileLayer.defaultParams('sdssTrueColor'),
     filters,
     outline = false,
     visible = true,
   } = props
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const factory = useCallback((globe: Globe) => new SspTileLayer(globe, props), [baseUrl])
-  const { node, ifLayerReady, setVisible, } = useLayerBind<SspTileLayer>(factory, visible)
+  const factory = useCallback((globe: Globe) => new TractTileLayer(globe, props), [baseUrl])
+  const { node, ifLayerReady, setVisible, } = useLayerBind<TractTileLayer>(factory, visible)
 
   useEffect(() => {
     ifLayerReady(layer => {
@@ -42,5 +42,5 @@ const SspTileLayer$: React.FC<SspTileLayerProps> = memo(props => {
 
   return node
 })
-setDisplayName({ SspTileLayer$ })
-export { SspTileLayer$ }
+setDisplayName({ TractTileLayer$ })
+export { TractTileLayer$ }

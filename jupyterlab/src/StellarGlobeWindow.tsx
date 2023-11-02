@@ -1,18 +1,18 @@
-import { ReactWidget } from '@jupyterlab/ui-components'
-import { CallbackMessage, MessageControllableGlobe, MessageControllableGlobeHandle } from './MessageControllableGlobe'
-import React, { useEffect, useRef } from 'react'
 import { MainAreaWidget } from '@jupyterlab/apputils'
+import { ReactWidget } from '@jupyterlab/ui-components'
 import { Widget } from '@lumino/widgets'
-import { MessageToStellarGlobe } from './MessageControllableGlobe/messageHandlers'
+import React, { useEffect, useRef } from 'react'
+import { CallbackMessage, MessageControllableGlobe, MessageControllableGlobeHandle, UnvalidatedMessage } from './MessageControllableGlobe'
 
 
-type PostMessageType = MessageControllableGlobeHandle["postMessage"]
+type PostUnvalidatedMessageType = (msg: UnvalidatedMessage) => void
 
 
 type StellarGlobeWindowOptions = {
   id: string
   title?: string
   onCallback: (msg: CallbackMessage) => void
+  onDisposed: () => void
 }
 
 
@@ -20,41 +20,54 @@ export class StellarGlobeWindow {
   constructor({
     id,
     title,
+    onDisposed,
     onCallback,
   }: StellarGlobeWindowOptions) {
     const buf = messageBuffer()
-    this._postMessage = buf.store
+    this._postUnvalidatedMessage = buf.store
     const content: Widget = stellarGlobeWidget({
       onCallback,
-      onInit: ({ postMessage }) => {
-        buf.flush(postMessage)
-        this._postMessage = postMessage
-      }
+      onInit: ({ postUnvalidatedMessage }) => {
+        buf.flush(postUnvalidatedMessage)
+        this._postUnvalidatedMessage = postUnvalidatedMessage
+      },
     })
     const widget = new MainAreaWidget({ content })
     widget.id = id
     widget.title.label = title ?? `StellarGlobe(${id})`
     widget.title.closable = true
+    widget.disposed.connect(() => {
+      onDisposed()
+    })
     this.widget = widget
   }
 
-  readonly widget: Widget
-  private _postMessage: PostMessageType
+  get id() {
+    return this.widget.id
+  }
 
-  get postMessage() {
-    return this._postMessage
+  readonly widget: Widget
+  private _postUnvalidatedMessage: PostUnvalidatedMessageType
+
+  get postUnvalidatedMessage() {
+    return this._postUnvalidatedMessage
+  }
+
+  close() {
+    this.widget.close()
+    this.widget.dispose()
   }
 }
 
 
 function messageBuffer() {
-  const buffer: MessageToStellarGlobe[] = []
-  const store = (msg: MessageToStellarGlobe) => {
+  const buffer: UnvalidatedMessage[] = []
+  const store: PostUnvalidatedMessageType = msg => {
     buffer.push(msg)
   }
-  const flush = (postMessage: PostMessageType) => {
+  const flush = (postUnvalidatedMessage: PostUnvalidatedMessageType) => {
     while (buffer.length > 0) {
-      postMessage(buffer.shift()!)
+      postUnvalidatedMessage(buffer.shift()!)
     }
   }
   return { flush, store }
@@ -62,7 +75,7 @@ function messageBuffer() {
 
 
 type StellarGlobeWidgetOnInit = {
-  postMessage: PostMessageType
+  postUnvalidatedMessage: PostUnvalidatedMessageType
 }
 
 
@@ -75,7 +88,7 @@ function stellarGlobeWidget(
   const Bridge = () => {
     const handle = useRef<MessageControllableGlobeHandle>(null)
     useEffect(() => {
-      options.onInit({ postMessage: handle.current!.postMessage })
+      options.onInit({ postUnvalidatedMessage: handle.current!.postUnvalidatedMessage })
     }, [])
     return <MessageControllableGlobe onCallback={options.onCallback} ref={handle} />
   }

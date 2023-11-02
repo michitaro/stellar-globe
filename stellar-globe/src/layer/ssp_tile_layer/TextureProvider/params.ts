@@ -1,8 +1,12 @@
 import { V3 } from "~/types"
 
 
+const defaultFilters = ['HSC-I', 'HSC-R', 'HSC-G']
+
 function sdssTrueColor() {
   return {
+    type: 'sdssTrueColor' as const,
+    filters: defaultFilters,
     sdssTrueColor: {
       beta: Math.exp(10),
       a: 1,
@@ -14,6 +18,8 @@ function sdssTrueColor() {
 
 function simpleRgb() {
   return {
+    type: 'simpleRgb' as const,
+    filters: defaultFilters,
     simpleRgb: {
       beta: Math.exp(10),
       a: 1,
@@ -25,6 +31,8 @@ function simpleRgb() {
 
 function simpleColorMatrix() {
   return {
+    type: 'simpleColorMatrix' as const,
+    filters: defaultFilters,
     simpleColorMatrix: {
       colors: [
         { enabled: true, value: [1, 0, 0] },
@@ -41,6 +49,8 @@ function simpleColorMatrix() {
 
 function sdssTrueColorMatrix() {
   return {
+    type: 'sdssTrueColorMatrix' as const,
+    filters: defaultFilters,
     sdssTrueColorMatrix: {
       colors: [
         { enabled: true, value: [1, 0, 0] },
@@ -62,45 +72,33 @@ const defaultParams = {
   sdssTrueColorMatrix,
 }
 
-
 export type SspTileMixerType = keyof typeof defaultParams
 
 type ParamsMap = {
-  [K in SspTileMixerType]: ReturnType<(typeof defaultParams)[K]> & { type: K, filters: string[] }
+  [K in SspTileMixerType]: ReturnType<(typeof defaultParams)[K]>
 }
 
 export type SspTileParams = ParamsMap[SspTileMixerType]
 
 export type SspTileParamsOf<
-  T extends SspTileMixerType,
-  U extends keyof ReturnType<(typeof defaultParams)[T]> = keyof ReturnType<(typeof defaultParams)[T]>
-> = ReturnType<(typeof defaultParams)[T]>[U]
+  T extends SspTileMixerType
+> = T extends "simpleRgb" ? ReturnType<(typeof defaultParams)[T]>["simpleRgb"] :
+  T extends "simpleColorMatrix" ? ReturnType<(typeof defaultParams)[T]>["simpleColorMatrix"] :
+  T extends "sdssTrueColor" ? ReturnType<(typeof defaultParams)[T]>["sdssTrueColor"] :
+  T extends "sdssTrueColorMatrix" ? ReturnType<(typeof defaultParams)[T]>["sdssTrueColorMatrix"] : never
 
 
 export function sspTileDefaultParams(type: SspTileMixerType = 'sdssTrueColor'): SspTileParams {
-  // @ts-ignore
   return {
-    type,
-    filters: ['HSC-I', 'HSC-R', 'HSC-G'],
     ...defaultParams[type](),
   }
 }
-
-// export function sspTileDefaultParams<T extends SspTileMixerType>(type: T) {
-//   return {
-//     type: type as T,
-//     filters: ['HSC-I', 'HSC-R', 'HSC-G'],
-//     ...defaultParams[type]() as ReturnType<(typeof defaultParams)[T]>,
-//   }
-// }
-
 
 export function sspTileParamsAssertType<T extends SspTileMixerType>(params: SspTileParams, type: T): asserts params is ParamsMap[T] {
   if (params.type !== type) {
     throw new Error(`SspTileLayerParams: type mismatch: expected=${type}, but actual: ${params.type}`)
   }
 }
-
 
 type MatrixColor = {
   enabled: boolean

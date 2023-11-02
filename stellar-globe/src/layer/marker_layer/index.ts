@@ -10,10 +10,14 @@ import { KdTree } from "~/utils/kd_tree"
 import { GlobeStoppablePointerEvent } from "~/globe/pointer_event"
 
 
-type MarkerLayerOptions = {
+type MarkerRendererOptions = {
   markers: Marker[]
   defaultColor: V4
   defaultType: MarkerType
+}
+
+type MarkerLayerOptions = MarkerRendererOptions & {
+  baseColor?: V4
 }
 
 
@@ -37,22 +41,32 @@ export class MarkerLayer extends Layer {
     this.update(options)
   }
 
-  update(options: Partial<MarkerLayerOptions>) {
-    this.options = { ...this.options, ...options }
-    if (options.markers) {
-      refreshRenderer(this.renderer, this.options)
-    }
-  }
-
   render(view: View): void {
     this.renderer.render(view)
   }
+
+  update(options: Partial<MarkerRendererOptions>) {
+    this.options = { ...this.options, ...options }
+    refreshRenderer(this.renderer, this.options)
+  }
+
+  set baseColor(baseColor: V4 | undefined) {
+    this.renderer.color = baseColor ?? [1, 1, 1, 1]
+  }
+}
+
+
+type OnClickEvent = {
+  /**
+   * @TJS-type integer
+   */
+  index: number
 }
 
 
 type ClickableMarkerLayerOptions = MarkerLayerOptions & {
   dimmAlpha: number
-  onClick?: (index: number) => void
+  onClick?: (e: OnClickEvent) => void
 }
 
 
@@ -78,18 +92,30 @@ export class ClickableMarkerLayer extends Layer {
     this.update(options)
   }
 
-  update(options: Partial<ClickableMarkerLayerOptions>) {
+  update(options: Partial<MarkerRendererOptions>) {
     this.options = { ...this.options, ...options }
-    if (options.markers) {
-      refreshRenderer(this.baseMarkerRenderer, this.options)
-      this.mousePicker.refresh()
-    }
+    refreshRenderer(this.baseMarkerRenderer, this.options)
+    this.mousePicker.refresh()
     this.globe.requestRefresh()
   }
 
   render(view: View): void {
     this.baseMarkerRenderer.render(view, this.options.dimmAlpha)
     this.focusedMarkerRenderer.render(view)
+  }
+
+  set onClick(handler: ((e: OnClickEvent) => void) | undefined) {
+    this.options.onClick = handler
+  }
+
+  set baseColor(baseColor: V4 | undefined) {
+    this.baseMarkerRenderer.color = baseColor ?? [1, 1, 1, 1]
+    this.focusedMarkerRenderer.color = baseColor ?? [1, 1, 1, 1]
+  }
+
+  set dimmAlpha(dimmAlpha: number) {
+    this.options.dimmAlpha = dimmAlpha
+    this.globe.requestRefresh()
   }
 }
 
@@ -131,7 +157,7 @@ class MarkerMousePicker extends MousePicker {
   protected onClick(_e: GlobeStoppablePointerEvent): void {
     const { options: { onClick } } = this.backdoor()
     if (onClick && this.focusedIndex >= 0) {
-      onClick(this.focusedIndex)
+      onClick({ index: this.focusedIndex })
     }
   }
 
@@ -158,7 +184,7 @@ class MarkerMousePicker extends MousePicker {
 
 function refreshRenderer(
   renderer: BillboardRenderer,
-  options: MarkerLayerOptions,
+  options: MarkerRendererOptions,
 ) {
   const { markers, defaultColor, defaultType } = options
   const imageId = Object.fromEntries(markerTypes.map((type, i) => [type, i]))

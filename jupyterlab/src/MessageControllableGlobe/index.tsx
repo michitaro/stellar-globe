@@ -4,12 +4,17 @@ import {
   EsoMilkyWayLayer$, Globe$, GlobeHandle, GridLayer$,
   HipparcosCatalogLayer$,
   HipsSimpleLayer$,
-  SspTileLayer$,
-  TextLayer$
+  TractTileLayer$,
+  TextLayer$,
+  alwaysOne
 } from "@stellar-globe/react-stellar-globe"
 import { Globe } from "@stellar-globe/stellar-globe"
 import React, { createContext, forwardRef, memo, useCallback, useContext, useImperativeHandle, useMemo, useRef, useState } from 'react'
-import { MessageToStellarGlobe, messageHandlers } from "./messageHandlers"
+import { TypeGuardError, assertMessageToStellarGlobeType } from "../TypeGuard"
+import { messageHandlers } from "./messageHandlers"
+
+
+export type UnvalidatedMessage = { type: string }
 
 
 type MessageControllableGlobeProps = {
@@ -17,7 +22,7 @@ type MessageControllableGlobeProps = {
 }
 
 export type MessageControllableGlobeHandle = {
-  postMessage: (message: MessageToStellarGlobe) => void
+  postUnvalidatedMessage: (message: UnvalidatedMessage) => void
 }
 
 export const MessageControllableGlobe = memo(forwardRef<MessageControllableGlobeHandle, MessageControllableGlobeProps>((
@@ -34,11 +39,17 @@ export const MessageControllableGlobe = memo(forwardRef<MessageControllableGlobe
   const context = useGenerateCoreContext(onCallback, getGlobe)
   const { layerDefs } = context
   useImperativeHandle(ref, () => ({
-    postMessage: (msg: MessageToStellarGlobe) => {
+    postUnvalidatedMessage: (msg: UnvalidatedMessage) => {
       const { type } = msg
-      const handler = messageHandlers[type]
       // @ts-ignore
-      handler?.(context, msg.args)
+      const handler = messageHandlers[type]
+      if (handler === undefined) {
+        throw new TypeGuardError(`Unknown Message Type: ${type}`)
+      }
+      // @ts-ignore
+      assertMessageToStellarGlobeType(type, msg)
+      // @ts-ignore
+      handler(context, msg.args)
     }
   }), [context])
   return (
@@ -97,16 +108,15 @@ const FromLayerDef = <K extends keyof LayerProps>({
 }
 
 
-function isCallback(v: unknown): v is CallbackDef {
+function isCallback(v: unknown): v is CallbackProp {
   // @ts-ignore
   return v && !!v[CALLBACK_KEY]
 }
 
 
 function useConvertedProps(props: Record<string, unknown>, runCallback: (message: CallbackMessage) => void) {
-  const callbackCache = useRef<
-    Map<string, { id: number, cb: (...args: unknown[]) => void }>
-  >(useMemo(() => new Map(), [])).current
+  type CallbackCache = Map<string, { id: string, cb: (...args: unknown[]) => void }>
+  const callbackCache = useRef<CallbackCache>(useMemo(() => new Map(), [])).current
   return Object.fromEntries(Object.entries(props).map(([k, v]) => {
     if (isCallback(v)) {
       const id = v[CALLBACK_KEY].id
@@ -149,24 +159,22 @@ export type LayerDef = {
 export type CallbackMessage = {
   type: 'callback'
   callback: {
-    id: number
-    arg: unknown
+    id: string
+    arg: any
   }
 }
 
 
-export function callbackDef(id: number) {
-  return {
-    [CALLBACK_KEY]: {
-      id
-    }
-  }
+function TextLayerForJupyterLab(props: Parameters<typeof TextLayer$>[0]) {
+  props.alphaFunc = alwaysOne
+  return <TextLayer$ {...props} />
 }
+
 
 const layerComponents: {
   ConstellationLayer: typeof ConstellationLayer$,
   EsoMilkyWayLayer: typeof EsoMilkyWayLayer$,
-  SspTileLayer: typeof SspTileLayer$,
+  TractTileLayer: typeof TractTileLayer$,
   GridLayer: typeof GridLayer$,
   TextLayer: typeof TextLayer$,
   HipparcosCatalogLayer: typeof HipparcosCatalogLayer$,
@@ -176,9 +184,9 @@ const layerComponents: {
   = {
   ConstellationLayer: ConstellationLayer$,
   EsoMilkyWayLayer: EsoMilkyWayLayer$,
-  SspTileLayer: SspTileLayer$,
+  TractTileLayer: TractTileLayer$,
   GridLayer: GridLayer$,
-  TextLayer: TextLayer$,
+  TextLayer: TextLayerForJupyterLab,
   HipparcosCatalogLayer: HipparcosCatalogLayer$,
   HipsSimpleLayer: HipsSimpleLayer$,
   ClickableMarkerLayer: ClickableMarkerLayer$,
@@ -198,16 +206,24 @@ export type LayerProps = {
   }
 }
 
-const CALLBACK_KEY = 'stellarglobe_callback'
-
-type CallbackDef = {
-  [CALLBACK_KEY]: {
-    id: number
+export type LayerCallbacks = {
+  [K in keyof NativeLayerProps]: {
+    [P in keyof Required<NativeLayerProps[K]>]: PickCallbackParameter0<NonNullable<NativeLayerProps[K][P]>>
   }
 }
 
-type ConvertFunctionToCallback<T> = T extends undefined ? undefined : (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  T extends (...args: any[]) => unknown ?
-  CallbackDef : T
-)
+
+type ConvertFunctionToCallback<T> = T extends (...args: any[]) => unknown ? CallbackProp : T
+type PickCallbackParameter0<T> = T extends (arg0: infer R, ...rest: any[]) => unknown ? R : never
+
+const CALLBACK_KEY = 'stellarglobe_callback'
+
+export type CallbackProp = {
+  stellarglobe_callback: { // [CALLBACK_KEY]: としたいが typescript-jsonschema がうまく処理してくれない
+    id: string
+  }
+}
+
+// CALLBACK_KEY == 'stellarglobe_callback' であることを確認
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+type CHECK_CALLBACK_KEY = (CallbackProp extends { [CALLBACK_KEY]: {} } ? CallbackProp : {})["stellarglobe_callback"]

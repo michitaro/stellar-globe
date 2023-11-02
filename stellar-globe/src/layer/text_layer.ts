@@ -23,6 +23,12 @@ type Options = {
 }
 
 
+const optionDefualts = {
+  color: 'white',
+  font: '12px sans-serif',
+}
+
+
 export class TextLayer extends Layer {
   private renderer: BillboardRenderer
   defaultFont: string
@@ -33,8 +39,8 @@ export class TextLayer extends Layer {
     globe: Globe,
     {
       texts,
-      defaultColor = 'white',
-      defaultFont = 'sans-serif',
+      defaultColor = optionDefualts.color,
+      defaultFont = optionDefualts.font,
       alphaFunc,
     }: Options,
   ) {
@@ -50,13 +56,19 @@ export class TextLayer extends Layer {
     })
   }
 
-  update({ defaultColor, defaultFont, texts }: {
+  update({
+    defaultColor,
+    defaultFont,
+    texts,
+  }: {
     texts?: BillboardText[],
-    defaultFont?: string,
-    defaultColor?: string,
+    defaultFont?: string | null,
+    defaultColor?: string | null,
   } = {}) {
-    this.defaultFont = defaultFont ?? this.defaultFont
-    this.defaultColor = defaultColor ?? this.defaultColor
+    console.log('update')
+    console.log({ defaultFont, defaultColor })
+    this.defaultFont = defaultFont ?? (defaultFont === null ? optionDefualts.font : this.defaultFont)
+    this.defaultColor = defaultColor ?? (defaultColor === null ? optionDefualts.color : this.defaultColor)
     texts && this.buildTextBillboards(texts)
     this.globe.requestRefresh()
   }

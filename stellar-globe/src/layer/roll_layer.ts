@@ -20,8 +20,9 @@ class RollMousePicker extends InertiaMousePicker {
   private offset = { x: NaN, y: NaN }
 
   protected onInertialPointerDown(e: GlobePointerEvent): void {
-    this.offset.x = e.clientX
-    this.offset.y = e.clientY
+    const { x, y } = e.offset()
+    this.offset.x = x
+    this.offset.y = y
   }
 
   protected onInertiaMove({ dt }: AnimationCallback): void {
@@ -30,9 +31,9 @@ class RollMousePicker extends InertiaMousePicker {
     y += this.offset.y
     const dx = dt * vx
     const dy = dt * vy
-    const canvas = this.globe.canvas
-    x -= canvas.domElement.clientWidth / 2
-    y -= canvas.domElement.clientHeight / 2
+    const canvas = this.globe.canvas.domElement
+    y -= canvas.clientHeight / 2
+    x -= canvas.clientWidth / 2
     if (x !== 0 && y !== 0) {
       this.globe.camera.roll += (y * dx - x * dy) / (x * x + y * y)
     }

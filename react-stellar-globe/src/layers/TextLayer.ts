@@ -20,7 +20,11 @@ const TextLayer$: React.FC<TextLayerProps> = memo(props => {
 
   useEffect(() => {
     ifLayerReady(layer => {
-      layer.update({ texts, defaultColor, defaultFont })
+      layer.update({
+        texts,
+        defaultColor: defaultColor ?? null,
+        defaultFont: defaultColor ?? null,
+      })
     })
   }, [ifLayerReady, texts, defaultColor, defaultFont])
 

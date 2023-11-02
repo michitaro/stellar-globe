@@ -67,7 +67,6 @@ export class SspTileLayer extends Layer {
   static assertType: typeof sspTileParamsAssertType = sspTileParamsAssertType
 }
 
-
 const defaultAreaFilters: NonNullable<Options["filters"]> = [
   {
     filterName: 'HSC-G',

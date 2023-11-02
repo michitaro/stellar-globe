@@ -6,14 +6,14 @@ import { GridLayer$ } from "./layers/GridLayer"
 import { HipparcosCatalogLayer$ } from "./layers/HipparcosCatalogLayer"
 import { HipsSimpleLayer$ } from './layers/HipsSimpleLayer'
 import { ClickableMarkerLayer$, MarkerLayer$ } from "./layers/MarkerLayer"
-import { SspTileLayer$ } from "./layers/SspTileLayer"
+import { TractTileLayer$ } from "./layers/TractTileLayer"
 import { TextLayer$, alwaysOne } from "./layers/TextLayer"
 
 export {
   ClickableMarkerLayer$, ConstellationLayer$,
   EsoMilkyWayLayer$, Globe$, GridLayer$,
   HipparcosCatalogLayer$,
-  HipsSimpleLayer$, LogScaleRange, MarkerLayer$, SspTileLayer$,
+  HipsSimpleLayer$, LogScaleRange, MarkerLayer$, TractTileLayer$,
   TextLayer$, alwaysOne, useLayerBind
 }
 

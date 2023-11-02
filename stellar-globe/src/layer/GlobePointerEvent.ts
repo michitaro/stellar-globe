@@ -8,7 +8,6 @@ import { View } from '~/view'
 export class GlobePointerEvent extends SinglePointerEvent {
   readonly coord: SkyCoord
 
-
   constructor(e: SinglePointerEvent, readonly globe: Globe, readonly view: View) {
     super(e.e)
     this.coord = globe.canvas.coordFromClientCoord(e)

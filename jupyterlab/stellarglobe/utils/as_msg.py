@@ -1,6 +1,5 @@
 from typing import TypedDict, Unpack, Optional
 
-
 def as_msg(
     o,
     *,

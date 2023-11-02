@@ -2,10 +2,10 @@ import { AttribList, Program, Texture, utils as glUtils } from "~/lib/gl-wrapper
 import { get2dContext } from "~/utils/canvas"
 import { View } from "~/view"
 import shaderFrag from './frag.glsl?raw'
-import { packRectsOptimally, powerOf2, Rect } from "./pack_rects"
 import shaderVert from './vert.glsl?raw'
 
 import { V2, V3, V4 } from '~/types'
+import { Box, PackRectSizeError, tryPackRects } from "./pack_rects"
 
 export type BillboardImage = {
   imageData: ImageData
@@ -30,7 +30,6 @@ export class BillboardRenderer {
   private program: Program
   private attribList: AttribList
   private texture: Texture
-  private packedTexture!: { imageData: ImageData, bbox: BBox[] }
 
   color: V4 = [1, 1, 1, 1]
 
@@ -64,17 +63,16 @@ export class BillboardRenderer {
   buildArray(images: BillboardImage[], imageRefs: BillboardImageRef[]) {
     const gl = this.gl
     const maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE)
-    this.packedTexture = packTextures(images, maxTextureSize)
+    const packedTexture = packTextures(images, maxTextureSize)
     this.texture.bind(() => {
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.packedTexture.imageData)
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, packedTexture.imageData)
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR)
       gl.generateMipmap(gl.TEXTURE_2D)
     })
     const attrs: number[] = []
-    const { width: W, height: H } = this.packedTexture.imageData
+    const { width: W, height: H } = packedTexture.imageData
     for (const s of imageRefs) {
-      const { rect: { left: l, right: r, top: t, bottom: b, width: w, height: h }, origin: o } =
-        this.packedTexture.bbox[s.imageID]
+      const { rect: { left: l, right: r, top: t, bottom: b, width: w, height: h }, origin: o } = packedTexture.bbox[s.imageID]
       attrs.push(
         ...s.position, ...s.color, (-1 + o[0]) * w, (-1 + o[1]) * h, l / W, b / H,
         ...s.position, ...s.color, (+1 + o[0]) * w, (-1 + o[1]) * h, r / W, b / H,
@@ -116,34 +114,61 @@ export class BillboardRenderer {
   }
 }
 
-function packTextures(images: BillboardImage[], maxTextureSize: number) {
-  const rects = images.map((image) => new Rect(image.imageData.width + 2, image.imageData.height + 2))
 
+function packTextures(images: BillboardImage[], maxSize: number) {
+  const boxes: Box[] = images.map(image => ({ width: image.imageData.width + 2, height: image.imageData.height + 2 }))
   try {
-    packRectsOptimally(rects, maxTextureSize)
-  } catch (e) {
-    console.warn(e)
-    return {
-      imageData: new ImageData(1, 1),
-      bbox: [],
-    }
+    const { boxPositions, containerHeight, containerWidth } = tryPackRects(boxes, maxSize)
+    const canvasWidth = powerOf2(containerWidth)
+    const canvasHeight = powerOf2(containerHeight)
+    return get2dContext(canvasWidth, canvasHeight, (ctx) => {
+      const bbox: BBox[] = []
+      for (let i = 0; i < images.length; ++i) {
+        const image = images[i]
+        const { x, y } = boxPositions[i]
+        const { width, height } = image.imageData
+        ctx.putImageData(image.imageData, x + 1, y + 1)
+        bbox.push({
+          rect: new Rect(
+            width, height,
+            x, y,
+          ), origin: image.origin
+        })
+      }
+      return {
+        imageData: ctx.getImageData(0, 0, canvasWidth, canvasHeight),
+        bbox,
+      }
+    })
   }
-
-  const width = powerOf2(Math.max(...rects.map((r) => r.right)))
-  const height = powerOf2(Math.max(...rects.map((r) => r.bottom)))
-
-  return get2dContext(width, height, (ctx) => {
-    const bbox: BBox[] = []
-    for (let i = 0; i < images.length; ++i) {
-      const image = images[i]
-      const rect = rects[i]
-      ctx.putImageData(image.imageData, rect.left + 1, rect.top + 1)
-      bbox.push({ rect, origin: image.origin })
+  catch (e) {
+    if (e instanceof PackRectSizeError) {
+      return {
+        imageData: new ImageData(1, 1),
+        bbox: []
+      }
     }
-    // window.open(ctx.canvas.toDataURL()) // for debug
-    return {
-      imageData: ctx.getImageData(0, 0, width, height),
-      bbox,
-    }
-  })
+    throw e
+  }
+}
+
+
+function powerOf2(n: number) {
+  let p = 1
+  while (p < n) {
+    p *= 2
+  }
+  return p
+}
+
+
+class Rect {
+  constructor(
+    readonly width: number,
+    readonly height: number,
+    readonly left: number,
+    readonly top: number,
+  ) { }
+  get right() { return this.left + this.width }
+  get bottom() { return this.top + this.height }
 }

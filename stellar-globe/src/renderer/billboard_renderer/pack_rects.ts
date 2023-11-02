@@ -1,70 +1,76 @@
-export type V2 = [number, number]
+export class PackRectSizeError extends Error {
+}
+export type Box = {
+  width: number
+  height: number
+}
+type Position = {
+  x: number
+  y: number
+}
+type PackResult = {
+  boxPositions: Position[]
+  containerWidth: number
+  containerHeight: number
+}
+export function packRects(boxes: Box[], maxWidth: number, maxHeight: number): PackResult {
+  const sortedBoxes = boxes.map((box, index) => ({ box, index })).sort((a, b) => b.box.height - a.box.height)
 
-export class Rect {
-  constructor(public width: number, public height: number, public position: V2 = [0, 0]) { }
+  let tempPositions: (Position & { index: number })[] = []
+  let containerWidth = 0
+  let containerHeight = 0
+  let currentX = 0
+  let currentY = 0
+  let rowHeight = 0
 
-  get left() { return this.position[0] }
-  get top() { return this.position[1] }
-  get right() { return this.left + this.width }
-  get bottom() { return this.top + this.height }
+  for (const { box, index } of sortedBoxes) {
+    if (box.width > maxWidth || box.height > maxHeight) {
+      throw new PackRectSizeError()
+    }
 
-  intersect(other: Rect) {
-    return (
-      !(this.right <= other.left || this.left >= other.right) &&
-      !(this.top >= other.bottom || this.bottom <= other.top)
-    )
+    if (currentX + box.width <= maxWidth) {
+      tempPositions.push({ x: currentX, y: currentY, index })
+      currentX += box.width
+      rowHeight = Math.max(rowHeight, box.height)
+    } else {
+      currentX = 0
+      currentY += rowHeight
+      rowHeight = box.height
+
+      tempPositions.push({ x: currentX, y: currentY, index })
+      currentX += box.width
+    }
+
+    containerWidth = Math.max(containerWidth, currentX)
+    containerHeight = currentY + rowHeight
+
+    if (containerHeight > maxHeight) {
+      throw new PackRectSizeError()
+    }
+  }
+
+  const boxPositions = tempPositions.sort((a, b) => a.index - b.index).map(pos => ({ x: pos.x, y: pos.y }))
+
+  return {
+    boxPositions,
+    containerWidth,
+    containerHeight,
   }
 }
 
-function packRects(rects: Rect[], height: number) {
-  rects = rects.slice().sort((a, b) => a.height - b.height)
-  const packed: Rect[] = []
-  const cands: V2[] = [[0, 0]]
-  while (rects.length > 0) {
-    const r = rects.pop()!
-    cands.sort((a, b) => a[0] - b[0])
-    for (let i = 0; i < cands.length; ++i) {
-      const c = cands[i]
-      r.position = c
-      if (r.bottom <= height && packed.every((p) => !p.intersect(r))) {
-        packed.push(r)
-        cands.splice(i, 1, [r.right, r.top], [r.left, r.bottom])
-        break
+export function tryPackRects(boxes: Box[], maxSize: number) {
+  let size = 256
+  while (size < maxSize) {
+    try {
+      return packRects(boxes, size, size)
+    } catch (e) {
+      if (e instanceof PackRectSizeError) {
+        size *= 2
+      }
+      else {
+        throw e
       }
     }
   }
-}
-
-export function packRectsOptimally(rects: Rect[], maxSize: number) {
-  const maxWidth = powerOf2(Math.max(...rects.map((r) => r.width)))
-  let height = powerOf2(Math.max(...rects.map((r) => r.height)))
-  let minArea = Infinity
-  let optimalHeight = -1
-  for (; true; height <<= 1) {
-    // const packed = packRects(rects, height)
-    const width = powerOf2(Math.max(...rects.map((r) => r.right)))
-    if (width > maxSize) {
-      continue
-    }
-    const area = width * height
-    if (area < minArea) {
-      minArea = area
-      optimalHeight = height
-    }
-    if (width === maxWidth) {
-      break
-    }
-  }
-  if (optimalHeight < 0) {
-    throw new Error(`Sprite Texture too large`)
-  }
-  packRects(rects, optimalHeight)
-}
-
-export function powerOf2(n: number) {
-  let p = 1
-  while (p < n) {
-    p *= 2
-  }
-  return p
+  throw new PackRectSizeError()
 }

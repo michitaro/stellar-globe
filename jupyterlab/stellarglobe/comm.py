@@ -1,1 +1,3 @@
-from comm import create_comm
+from comm import create_comm, DummyComm
+
+Comm = DummyComm

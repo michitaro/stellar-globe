@@ -1,8 +1,8 @@
-import { BillboardText, Globe, MarkerType, SkyCoord, SspTileLayer, V4, markerTypes } from '@stellar-globe/stellar-globe'
+import { BillboardText, Globe, MarkerType, SkyCoord, TractTileLayer, V4, markerTypes } from '@stellar-globe/stellar-globe'
 import { produce } from 'immer'
 import React, { useMemo, useState } from 'react'
 import ReactDOM from 'react-dom/client'
-import { ClickableMarkerLayer$, ConstellationLayer$, EsoMilkyWayLayer$, Globe$, GridLayer$, HipparcosCatalogLayer$, HipsSimpleLayer$, SspTileLayer$, TextLayer$ } from '../../src'
+import { ClickableMarkerLayer$, ConstellationLayer$, EsoMilkyWayLayer$, Globe$, GridLayer$, HipparcosCatalogLayer$, HipsSimpleLayer$, TractTileLayer$, TextLayer$ } from '../../src'
 import { LogScaleRange } from '../../src/LogScaleRange'
 import './style.scss'
 
@@ -28,7 +28,7 @@ function App() {
   })
   const [baseType, setBaseType] = useState<'hips' | 'tile'>('tile')
   const { constellation, constellationNames, catalog, area, milkyway, dud } = visibility
-  const [colorParams, setColorParams] = useState(() => SspTileLayer.defaultParams('sdssTrueColor'))
+  const [colorParams, setColorParams] = useState(() => TractTileLayer.defaultParams('sdssTrueColor'))
   const globeOptions = useMemo<GlobeOptions>(() => ({
     viewOptions: {
       retina: false,
@@ -62,19 +62,19 @@ function App() {
     }
   }), [])
 
-  SspTileLayer.assertType(colorParams, 'sdssTrueColor')
+  TractTileLayer.assertType(colorParams, 'sdssTrueColor')
 
   return (
     <div>
       <div style={{ width: '100vw', height: '100vh' }}>
         <Globe$ {...globeOptions}>
-          <SspTileLayer$
+          <TractTileLayer$
             baseUrl='//hscmap.mtk.nao.ac.jp/hscMap4/data/pdr3_wide'
             outline={area}
             colorParams={colorParams}
             visible={baseType === 'tile'}
           />
-          <SspTileLayer$
+          <TractTileLayer$
             baseUrl='//hscmap.mtk.nao.ac.jp/hscMap4/data/pdr3_dud'
             outline={area}
             colorParams={colorParams}

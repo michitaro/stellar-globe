@@ -19,8 +19,6 @@ copier copy https://github.com/jupyterlab/extension-template . --trust \
   -d repository=''
 ```
 
-# Development
-
 ```patch
 diff --git a/jupyterlab/package.json b/jupyterlab/package.json
 index 4fddf00..febdbed 100644
@@ -37,6 +35,17 @@ index 4fddf00..febdbed 100644
      },
      "devDependencies": {
          "@jupyterlab/builder": "^4.0.0",
+```
+
+```bash
+jlpm run refresh-type-validators
+```
+
+```bash
+python -m venv ./.venv-jsonschema
+./.venv-jsonschema/bin/pip install -U pip
+./.venv-jsonschema/bin/pip install 'datamodel-code-generator==0.22.1'
+python -m stellarglobe.devel.generatemodels
 ```
 
 ```bash

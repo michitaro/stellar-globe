@@ -1,38 +1,38 @@
 const path = require('path')
 const fs = require('fs')
+const Ajv = require("ajv")
+const standaloneCode = require("ajv/dist/standalone").default
+const root = require('../jsonschema/root.json')
 
 
 function main() {
-  const schema = require('../jsonschema/root.json')
-  dumpOne(schema, ['MessageToStellarGlobe'], './jsonschema/MessageToStellraGlobe.json')
-  dumpChildren(schema, ['MessageToJupyterLabMap'], './jsonschema/MessageToJupyterLab')
-  dumpChildren(schema, ['MessageToStellarGlobeMap'], './jsonschema/MessageToStellraGlobe')
-  dumpChildren(schema, ['LayerPropsMap'], './jsonschema/LayerProps')
-}
+  const schemata = []
 
+  for (const mapName of ['LayerProps', 'MessageToJS']) {
+    const parent = extractSchema(root, [mapName])
+    for (const k of Object.keys(parent.properties)) {
+      const $id = `${mapName}_${k}`
+      const s = { ...extractSchema(parent, [k]), $id }
+      schemata.push(s)
+    }
+  }
 
-function dumpOne(schema, routes, out) {
-  fs.mkdirSync(path.dirname(out), { recursive: true })
-  fs.writeFileSync(
-    out,
-    JSON.stringify(extractSchema(schema, routes), null, 2),
-  )
-}
-
-
-function dumpChildren(schema, routes, directory) {
-  const parent = extractSchema(schema, routes)
-  fs.mkdirSync(directory, { recursive: true })
-  Object.keys(parent.properties).forEach(child => {
-    fs.writeFileSync(
-      `${directory}/${child}.json`,
-      JSON.stringify(extractSchema(parent, [child]), null, 2),
-    )
-  })
+  const ajv = new Ajv({ schemas: schemata, code: { source: true, esm: true, es5: true, lines: true, optimize: true } })
+  let moduleCode = standaloneCode(ajv)
+  fs.writeFileSync(path.join(__dirname, "../src/typeValidators.js"), moduleCode)
 }
 
 
 function extractSchema(schema, routes) {
+  function _() {
+    const target = dig(schema, routes)
+    const newSchema = {
+      ...target,
+      definitions: cleanupDefinitions(target, schema.definitions),
+    }
+    return newSchema
+  }
+
   function dig(schema, routes, definitions = {}) {
     definitions = { ...schema.definitions ?? {}, ...definitions }
     schema = dereference(schema, definitions)
@@ -47,7 +47,7 @@ function extractSchema(schema, routes) {
   }
 
   function isRef(obj) {
-    return obj && !!obj.$ref
+    return (obj instanceof Object) && !!obj.$ref
   }
 
   function dereference(obj, definitions) {
@@ -63,7 +63,6 @@ function extractSchema(schema, routes) {
   function definitionKey($ref) {
     return $ref.slice('#/definitions/'.length)
   }
-
 
   function cleanupDefinitions(schema, definitions) {
     const usedDefinitaions = new Set()
@@ -92,12 +91,7 @@ function extractSchema(schema, routes) {
     )
   }
 
-  const target = dig(schema, routes)
-  const newSchema = {
-    ...target,
-    definitions: cleanupDefinitions(target, schema.definitions),
-  }
-  return newSchema
+  return _()
 }
 
 
