@@ -1,9 +1,6 @@
 import gzip from 'gzip-js'
 import { card, DataType, HduDecodeOption, HduSource, Header, WorkerRequestMessage, WorkerResponseMessage } from "./types"
 
-type gzip = {
-    unzip(compressed: Uint8Array): number[]
-}
 
 self.addEventListener('message', async e => {
     const request: WorkerRequestMessage = e.data
@@ -22,6 +19,7 @@ self.addEventListener('message', async e => {
             error,
         }
         mainThread.postMessage(response)
+        throw error
     }
 })
 
@@ -63,17 +61,19 @@ function buildTypedArray(header: Header, dv: DataView, o: HduDecodeOption) {
             picker = i => dv.getUint8(i)
             break
         case 16:
-            picker = i => dv.getUint16(i << 1)
+            picker = i => dv.getUint16(2 * i)
             break
         case 32:
-            picker = i => dv.getUint32(i << 2)
+            picker = i => dv.getUint32(4 * i)
             break
         case -32:
-            picker = i => dv.getFloat32(i << 2)
+            picker = i => dv.getFloat32(4 * i)
             break
         case -64:
-            picker = i => dv.getFloat64(i << 4)
+            picker = i => dv.getFloat64(8 * i)
             break
+        default:
+            throw new Error(`Invalid bitpix: ${bitpix}`)
     }
 
     let value = (i: number) => picker(i)
@@ -98,43 +98,6 @@ function buildTypedArray(header: Header, dv: DataView, o: HduDecodeOption) {
 
     return array.buffer
 }
-
-
-// function buildTypedArrayWA(header: Header, dv: DataView, o: HduDecodeOption) {
-//     const bzero = card(header, 'BZERO', 'number', 0)
-//     const bscale = card(header, 'BSCALE', 'number', 1)
-//     const { nPixels } = calcDataSize(header)
-//     const srcBitpix = card(header, 'BITPIX', 'number')
-//     const srcBytepix = Math.abs(srcBitpix) >> 3
-//     const srcBufer = wa._malloc(srcBytepix * nPixels)
-//     const heap = wa.HEAPU8 as Uint8Array
-//     heap.set(new Uint8Array(dv.buffer, dv.byteOffset, srcBytepix * nPixels), srcBufer)
-//     switch (srcBytepix) {
-//         case 2:
-//             wa._byteswap16(srcBufer, nPixels)
-//             break
-//         case 4:
-//             wa._byteswap32(srcBufer, nPixels)
-//             break
-//         case 8:
-//             wa._byteswap64(srcBufer, nPixels)
-//             break
-//     }
-//     const dstBytepix = Math.abs(o.outputDataType) >> 3
-//     const dstBuffer = wa._malloc(dstBytepix * nPixels)
-//     wa[`_convert_array_${bitpix2ctype(srcBitpix)}_${bitpix2ctype(o.outputDataType)}`](srcBufer, dstBuffer, nPixels, bscale, bzero)
-//     const array = new ({
-//         [DataType.uint8]: Uint8Array,
-//         [DataType.uint16]: Uint16Array,
-//         [DataType.uint32]: Uint32Array,
-//         [DataType.float32]: Float32Array,
-//         [DataType.float64]: Float64Array,
-//     }[o.outputDataType])(nPixels)
-//     array.set(new Uint8Array(heap.buffer, dstBuffer, dstBytepix * nPixels))
-//     wa._free(dstBuffer)
-//     wa._free(srcBufer)
-//     return array.buffer
-// }
 
 
 const CARD_LENGTH = 80
@@ -180,24 +143,6 @@ function calcDataSize(header: Header) {
 }
 
 
-// function bitpix2ctype(bitpix: number) {
-//     switch (bitpix) {
-//         case 8:
-//             return 'uint8_t'
-//         case 16:
-//             return 'uint16_t'
-//         case 32:
-//             return 'uint32_t'
-//         case -32:
-//             return 'float'
-//         case -64:
-//             return 'double'
-//         default:
-//             throw new Error(`invalid bitpix: ${bitpix} `)
-//     }
-// }
-
-
 function range(a: number, b: number) {
     const array: number[] = []
     for (let i = a; i < b; ++i)
@@ -215,7 +160,7 @@ function parseHeaderBlock(bytes: Uint8Array) {
     let end = false
     cardLoop:
     for (let i = 0; i < CARDS_PER_BLOCK; ++i) {
-        const cardString = text.substr(i * CARD_LENGTH, CARD_LENGTH)
+        const cardString = text.substring(i * CARD_LENGTH, (i + 1) * CARD_LENGTH)
         const card = Card.parse(cardString)
         switch (card.type) {
             case CardType.END:
@@ -255,15 +200,15 @@ class Card {
     }
 
     static parse(raw: string) {
-        switch (raw.substr(0, 8)) {
+        switch (raw.substring(0, 8)) {
             case 'END     ':
                 return new Card(CardType.END)
             case 'COMMENT ': {
-                const comment = raw.substr(8).trim()
+                const comment = raw.substring(8).trim()
                 return new Card(CardType.COMMENT, { comment })
             }
             case 'HISTORY ': {
-                const comment = raw.substr(8).trim()
+                const comment = raw.substring(8).trim()
                 return new Card(CardType.HISTORY, { comment })
             }
             default: {
@@ -272,7 +217,7 @@ class Card {
                     return new Card(CardType.UNKNOWN)
                 }
                 if (left.match(/^HIERARCH /))
-                    left = left.substr(9)
+                    left = left.substring(9)
                 const key = left.trim()
                 const { value, comment } = this.parseValueString(right)
                 return new Card(CardType.KEY_VALUE, { key, value, comment })
@@ -292,7 +237,7 @@ class Card {
             value = true
         else if (valueString == 'F')
             value = false
-        else if (valueString.substr(0, 1) == "'") {
+        else if (valueString.substring(0, 1) == "'") {
             value = valueString.substring(1, valueString.length - 1)
         }
         else {

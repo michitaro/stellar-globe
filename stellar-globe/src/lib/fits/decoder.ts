@@ -17,7 +17,7 @@ class Decoder {
 
     decode(fileContent: ArrayBuffer, hduDecodeOptions?: Partial<HduDecodeOption>[]) {
         return new Promise<Hdu[]>(async (resolve, reject) => {
-            const worker = await this.setupWorker()
+            const worker = this.setupWorker()
             const requestId = ++this.requestId
             const request: WorkerRequestMessage = {
                 requestId,
@@ -32,25 +32,33 @@ class Decoder {
         })
     }
 
-    private async setupWorker() {
-        if (this.worker)
-            return this.worker
-        this.worker = setWorkerErrorHandler(new DecodeWorker())
-        this.worker.addEventListener('message', e => {
-            const response: WorkerResponseMessage = e.data
-            const { resolve, reject } = this.callbacks.get(response.requestId)!
-            response.error ? reject(response.error) : resolve(response.hduSources!.map(Hdu.fromSource))
-            this.callbacks.delete(response.requestId)
-        })
+    private setupWorker() {
+        if (this.worker === undefined) {
+            this.worker = setWorkerErrorHandler(new DecodeWorker())
+            this.worker.addEventListener('message', e => {
+                const response: WorkerResponseMessage = e.data
+                const { resolve, reject } = this.callbacks.get(response.requestId)!
+                this.callbacks.delete(response.requestId)
+                if (response.error) {
+                    reject(response.error)
+                }
+                else {
+                    resolve(response.hduSources!.map(Hdu.fromSource))
+                }
+            })
+        }
         return this.worker
     }
 
-    static singleton?: Decoder
+    private static _singleton?: Decoder
+    static singleton() {
+        this._singleton ??= new Decoder()
+        return this._singleton
+    }
 }
 
 
 export async function decode(fileContent: ArrayBuffer, hduDecodeOptions?: Partial<HduDecodeOption>[]) {
-    const decoder = Decoder.singleton = Decoder.singleton || new Decoder()
-    const hdul = await decoder.decode(fileContent, hduDecodeOptions)
+    const hdul = await Decoder.singleton().decode(fileContent, hduDecodeOptions)
     return hdul
 }
