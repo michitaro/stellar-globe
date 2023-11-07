@@ -1,86 +1,86 @@
 type Options<K, V> = {
-    maxSize: number
-    onDrop?: (value: V, key: K) => void,
+  maxSize: number
+  onDrop?: (value: V, key: K) => void,
 }
 
 
 export class Cache<K, V>  {
-    private readonly store = new Map<K, V>()
-    private onDrop?: Options<K, V>["onDrop"]
-    private maxSize: Options<K, V>["maxSize"]
+  private readonly store = new Map<K, V>()
+  private onDrop?: Options<K, V>["onDrop"]
+  private maxSize: Options<K, V>["maxSize"]
 
-    constructor(options: Options<K, V>) {
-        this.maxSize = options.maxSize
-        this.onDrop = options.onDrop
-    }
+  constructor(options: Options<K, V>) {
+    this.maxSize = options.maxSize
+    this.onDrop = options.onDrop
+  }
 
-    set(k: K, v: V) {
-        if (this.store.has(k)) {
-            const v0 = this.store.get(k)
-            this.onDrop?.(v0!, k)
-        }
-        this.store.set(k, v)
-        this.deleteOldItems()
-        return this
+  set(k: K, v: V) {
+    if (this.store.has(k)) {
+      const v0 = this.store.get(k)
+      this.onDrop?.(v0!, k)
     }
+    this.store.set(k, v)
+    this.deleteOldItems()
+    return this
+  }
 
-    peek(k: K) {
-        return this.store.get(k)
-    }
+  peek(k: K) {
+    return this.store.get(k)
+  }
 
-    get(k: K) {
-        if (this.store.has(k)) {
-            const v = this.store.get(k)!
-            this.store.delete(k)
-            this.store.set(k, v)
-            return v
-        }
-        return
+  get(k: K) {
+    if (this.store.has(k)) {
+      const v = this.store.get(k)!
+      this.store.delete(k)
+      this.store.set(k, v)
+      return v
     }
+    return
+  }
 
-    *keys() {
-        for (const k of this.store.keys()) {
-            yield k
-        }
+  *keys() {
+    for (const k of this.store.keys()) {
+      yield k
     }
+  }
 
-    has(k: K) {
-        return this.store.has(k)
-    }
+  has(k: K) {
+    return this.store.has(k)
+  }
 
-    clear() {
-        if (this.onDrop) {
-            for (const [k, v] of this.store) {
-                this.onDrop(v, k)
-            }
-        }
-        this.store.clear()
+  clear() {
+    if (this.onDrop) {
+      for (const [k, v] of this.store) {
+        this.onDrop(v, k)
+      }
     }
+    this.store.clear()
+  }
 
-    delete(k: K) {
-        if (this.store.has(k)) {
-            const v = this.store.get(k)
-            this.onDrop?.(v!, k)
-            this.store.delete(k)
-        }
+  delete(k: K) {
+    if (this.store.has(k)) {
+      const v = this.store.get(k)
+      this.onDrop?.(v!, k)
+      this.store.delete(k)
     }
+  }
 
-    setLimit(limit: number) {
-        this.maxSize = limit
-        this.deleteOldItems()
-    }
+  setLimit(limit: number) {
+    this.maxSize = limit
+    this.deleteOldItems()
+  }
 
-    get size() {
-        return this.store.size
-    }
+  get size() {
+    return this.store.size
+  }
 
-    private deleteOldItems() {
-        while (this.store.size > this.maxSize) {
-            for (const [k, v] of this.store) {
-                this.onDrop?.(v, k)
-                this.store.delete(k)
-                break
-            }
-        }
+  private deleteOldItems() {
+    while (this.store.size > this.maxSize) {
+      for (const [k, v] of this.store) {
+        this.onDrop?.(v, k)
+        this.store.delete(k)
+        break
+      }
     }
+  }
 }
