@@ -25,14 +25,14 @@
     "test": "vitest"
   },
   "devDependencies": {
-    "@types/gzip-js": "^0.3.3",
-    "@types/hammerjs": "^2.0.42",
-    "@types/sprintf-js": "^1.1.2",
-    "rollup-plugin-visualizer": "^5.9.2",
+    "@types/gzip-js": "^0.3.5",
+    "@types/hammerjs": "^2.0.45",
+    "@types/sprintf-js": "^1.1.4",
+    "rollup-plugin-visualizer": "^5.9.3",
     "sass": "^1.69.1",
-    "typedoc": "^0.25.2",
-    "typescript": "^5.2.*",
-    "vite": "^4.4.11",
+    "typedoc": "^0.25.4",
+    "typescript": "^5.3.2",
+    "vite": "^5.0.2",
     "vite-plugin-dts": "^3.6.0",
     "vitest": "^0.34.6"
   },

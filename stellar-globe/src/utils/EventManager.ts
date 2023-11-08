@@ -1,7 +1,9 @@
 export function EventManager<EventMap>() {
-  const events: Map<keyof EventMap, Set<(e: EventMap[keyof EventMap]) => void>> = new Map()
+  type Keys = keyof EventMap
 
-  const on = (type: keyof EventMap, cb: (e: EventMap[typeof type]) => void) => {
+  const events: Map<Keys, Set<(event: any) => void>> = new Map()
+
+  const on = <K extends Keys>(type: K, cb: (e: EventMap[K]) => void) => {
     if (!events.has(type)) {
       events.set(type, new Set())
     }
@@ -11,7 +13,7 @@ export function EventManager<EventMap>() {
     }
   }
 
-  const emit = <K extends keyof EventMap>(type: K, event: EventMap[K]) => {
+  const emit = <K extends Keys>(type: K, event: EventMap[K]) => {
     for (const cb of events.get(type) ?? []) {
       cb(event)
     }

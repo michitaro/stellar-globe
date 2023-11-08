@@ -1,17 +1,21 @@
 import {
   ClickableMarkerLayer$,
   ConstellationLayer$,
-  EsoMilkyWayLayer$, Globe$, GlobeHandle, GridLayer$,
+  EsoMilkyWayLayer$, Globe$,
+  GlobeEventLayer$,
+  GlobeHandle, GridLayer$,
   HipparcosCatalogLayer$,
   HipsSimpleLayer$,
-  TractTileLayer$,
+  PathLayer$,
   TextLayer$,
+  TractTileLayer$,
   alwaysOne
 } from "@stellar-globe/react-stellar-globe"
 import { Globe } from "@stellar-globe/stellar-globe"
-import React, { createContext, forwardRef, memo, useCallback, useContext, useImperativeHandle, useMemo, useRef, useState } from 'react'
+import React, { createContext, forwardRef, memo, useCallback, useContext, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import { TypeGuardError, assertMessageToStellarGlobeType } from "../TypeGuard"
 import { messageHandlers } from "./messageHandlers"
+import { debounce } from "./debounce"
 
 
 export type UnvalidatedMessage = { type: string }
@@ -37,7 +41,8 @@ export const MessageControllableGlobe = memo(forwardRef<MessageControllableGlobe
     return globeRef.current()
   }, [])
   const context = useGenerateCoreContext(onCallback, getGlobe)
-  const { layerDefs } = context
+  const { state } = context
+  const { layerDefs } = state
   useImperativeHandle(ref, () => ({
     postUnvalidatedMessage: (msg: UnvalidatedMessage) => {
       const { type } = msg
@@ -52,6 +57,7 @@ export const MessageControllableGlobe = memo(forwardRef<MessageControllableGlobe
       handler(context, msg.args)
     }
   }), [context])
+
   return (
     <Context.Provider value={context}>
       <Globe$ ref={globeRef}>
@@ -64,23 +70,34 @@ export const MessageControllableGlobe = memo(forwardRef<MessageControllableGlobe
 }))
 
 
+function initialState() {
+  return {
+    layerDefs: [] as LayerDef[],
+  }
+}
+
+
+export type State = ReturnType<typeof initialState>
+
+
 function useGenerateCoreContext(
   onCallback: (message: CallbackMessage) => void,
   getGlobe: () => Globe | undefined,
 ) {
-  const [layerDefs, setLayerDefs] = useState<LayerDef[]>([])
+  const [state, setState] = useState(initialState)
   const context = useMemo(() => ({
-    layerDefs,
-    setLayerDefs,
+    state,
+    setState,
     onCallback,
     getGlobe,
-  }), [getGlobe, layerDefs, onCallback])
+  }), [getGlobe, onCallback, setState, state])
   return context
 }
 
 
 export type MessageControllableGlobeContextType = ReturnType<typeof useGenerateCoreContext>
 const Context = createContext<MessageControllableGlobeContextType | undefined>(undefined)
+
 
 function useCoreContext() {
   const context = useContext(Context)
@@ -114,9 +131,19 @@ function isCallback(v: unknown): v is CallbackProp {
 }
 
 
-function useConvertedProps(props: Record<string, unknown>, runCallback: (message: CallbackMessage) => void) {
-  type CallbackCache = Map<string, { id: string, cb: (...args: unknown[]) => void }>
+type DebouncedCallback = ReturnType<typeof debounce>
+
+
+function useConvertedProps<T extends Record<string, unknown>>(props: T, runCallback: (message: CallbackMessage) => void): Record<keyof T, unknown> {
+  type CallbackCache = Map<string, { id: string, cb: DebouncedCallback }>
   const callbackCache = useRef<CallbackCache>(useMemo(() => new Map(), [])).current
+  useEffect(() => {
+    return () => {
+      callbackCache.forEach(({ cb }) => {
+        cb.stop()
+      })
+    }
+  }, [callbackCache])
   return Object.fromEntries(Object.entries(props).map(([k, v]) => {
     if (isCallback(v)) {
       const id = v[CALLBACK_KEY].id
@@ -125,23 +152,25 @@ function useConvertedProps(props: Record<string, unknown>, runCallback: (message
         v = cache.cb
       }
       else {
-        const cb = (arg: unknown) => {
+        const cb = debounce(v[CALLBACK_KEY].debounce ?? 0, (arg: unknown) => {
           const msg: CallbackMessage = {
             type: 'callback',
             callback: { id, arg }
           }
           runCallback(msg)
-        }
+        })
+        callbackCache.get(k)?.cb.stop()
         callbackCache.set(k, { id, cb })
         v = cb
       }
       return [k, v]
     }
     else {
+      callbackCache.get(k)?.cb.stop()
       callbackCache.delete(k)
     }
     return [k, v]
-  }))
+  })) as Record<keyof T, unknown>
 }
 
 
@@ -180,6 +209,8 @@ const layerComponents: {
   HipparcosCatalogLayer: typeof HipparcosCatalogLayer$,
   HipsSimpleLayer: typeof HipsSimpleLayer$,
   ClickableMarkerLayer: typeof ClickableMarkerLayer$,
+  GlobeEventLayer: typeof GlobeEventLayer$,
+  PathLayer: typeof PathLayer$,
 } // these type annotations are needed to prevent TS2742
   = {
   ConstellationLayer: ConstellationLayer$,
@@ -190,6 +221,8 @@ const layerComponents: {
   HipparcosCatalogLayer: HipparcosCatalogLayer$,
   HipsSimpleLayer: HipsSimpleLayer$,
   ClickableMarkerLayer: ClickableMarkerLayer$,
+  GlobeEventLayer: GlobeEventLayer$,
+  PathLayer: PathLayer$,
 }
 
 type LayerNames = keyof typeof layerComponents
@@ -221,6 +254,7 @@ const CALLBACK_KEY = 'stellarglobe_callback'
 export type CallbackProp = {
   stellarglobe_callback: { // [CALLBACK_KEY]: としたいが typescript-jsonschema がうまく処理してくれない
     id: string
+    debounce?: number
   }
 }
 

@@ -3,7 +3,7 @@ import { AttribList, Program, utils as glUtils } from '~/lib/gl-wrapper'
 import { V3, V4 } from '~/types'
 import { View } from "~/view"
 
-export enum JOINT { MITER, NONE }
+export type JOINT = 'MITER' | 'NONE'
 
 export type Point = {
   position: V3
@@ -17,25 +17,29 @@ export type Path = {
   joint: JOINT
 }
 
-export enum BlendMode {
-  NORMAL = 'NORMAL',
-  ADD = 'ADD',
-}
+export type BlendMode = 'NORMAL' | 'ADD'
 
 import shaderFrag from './frag.glsl?raw'
 import shaderVert from './vert.glsl?raw'
+
+
+type Options = {
+  darkenNarrowLine?: boolean
+  minWidth?: number
+  blendMode?: BlendMode
+}
 
 
 export class Renderer {
   private program: Program
   private attribList: AttribList
 
-  darkenNarrowLine = true
-  depthTest = false
-  stencilTest = false
-  minWidth = 5
-  alpha = 1
-  blendMode = BlendMode.ADD
+  // depthTest = false
+  // stencilTest = false
+  darkenNarrowLine: boolean
+  minWidth: number
+  blendMode: BlendMode
+
   modelMatrix = mat4.create()
 
   private _paths: Path[] = []
@@ -45,7 +49,11 @@ export class Renderer {
     this.needsUpdatePaths = true
   }
 
-  constructor(private readonly gl: WebGLRenderingContext) {
+  constructor(private readonly gl: WebGLRenderingContext, options: Options = {}) {
+    this.darkenNarrowLine = options.darkenNarrowLine ?? true
+    this.minWidth = options.minWidth ?? 5
+    this.blendMode = options.blendMode ?? 'ADD'
+
     this.program = Program.new(gl,
       shaderVert,
       shaderFrag,
@@ -72,7 +80,7 @@ export class Renderer {
 
   private needsUpdatePaths = false
 
-  render(view: View, alpha = this.alpha) {
+  render(view: View, alpha = 1) {
     if (this.needsUpdatePaths) {
       this.updateVBO()
       this.needsUpdatePaths = false
@@ -102,26 +110,26 @@ export class Renderer {
       p.uniform1i({ u_darkenNarrowLine: this.darkenNarrowLine ? 1 : 0 })
       const features: number[] = [gl.BLEND]
       let clearBit = 0
-      if (this.stencilTest) {
-        features.push(gl.STENCIL_TEST)
-        clearBit |= gl.STENCIL_BUFFER_BIT
-        gl.clearStencil(0)
-        gl.stencilFunc(gl.EQUAL, 0, ~0)
-        gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR)
-      }
-      if (this.depthTest) {
-        features.push(gl.DEPTH_TEST)
-        clearBit |= gl.DEPTH_BUFFER_BIT
-      }
+      // if (this.stencilTest) {
+      //   features.push(gl.STENCIL_TEST)
+      //   clearBit |= gl.STENCIL_BUFFER_BIT
+      //   gl.clearStencil(0)
+      //   gl.stencilFunc(gl.EQUAL, 0, ~0)
+      //   gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR)
+      // }
+      // if (this.depthTest) {
+      //   features.push(gl.DEPTH_TEST)
+      //   clearBit |= gl.DEPTH_BUFFER_BIT
+      // }
       if (clearBit) {
         gl.clear(clearBit)
       }
       glUtils.enable(gl, features, () => {
         switch (this.blendMode) {
-          case BlendMode.ADD:
+          case 'ADD':
             gl.blendFunc(gl.SRC_ALPHA, gl.ONE)
             break
-          case BlendMode.NORMAL:
+          case 'NORMAL':
             gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
             break
         }
@@ -135,10 +143,10 @@ export class Renderer {
     const paths = this._paths
     for (const path of paths) {
       switch (path.joint) {
-        case JOINT.MITER:
+        case 'MITER':
           path2attrsMiter(attrs, path)
           break
-        case JOINT.NONE:
+        case 'NONE':
           path2attrsNone(attrs, path)
           break
       }

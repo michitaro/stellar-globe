@@ -71,7 +71,8 @@ export function PointerEventManager(
 
 
   const checkHover = (e: GlobePointerEvent) => {
-    for (const l of globe.layers) {
+    for (let i = globe.layers.length - 1; i >= 0; --i) {
+      const l = globe.layers[i]
       for (const m of l.mousePickers) {
         m.runOnMove(e)
         if (!pointerPressed) {

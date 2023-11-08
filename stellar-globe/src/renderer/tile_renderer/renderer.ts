@@ -133,14 +133,14 @@ class TractRenderer {
     }
   }
 
-  visibleTiles(view: View, lodBias: number, request: boolean) {
+  visibleTiles(view: View, lodBias: number, doRequest: boolean) {
     const tract = this.tract
     const tiles: TileAndTexture[] = []
     const done = new Set<TileId>()
     const { minP, maxP, minQ, maxQ, baseLevel, lodAlpha } = tract.tileIndices(view, lodBias)
     for (let p = minP; p <= maxP; ++p) {
       for (let q = minQ; q <= maxQ; ++q) {
-        this.readyTilesFor(baseLevel, p, q, request, (tile, tt) => {
+        this.readyTilesFor(baseLevel, p, q, doRequest, (tile, tt) => {
           if (!done.has(tile.id)) {
             tiles.push(({ tile, tt }))
           }
@@ -151,7 +151,7 @@ class TractRenderer {
     return { tiles, baseLevel, lodAlpha }
   }
 
-  private readyTilesFor(baseLevel: number, p: number, q: number, request: boolean, cb: (tile: Tile, tt: TileTexture) => void) {
+  private readyTilesFor(baseLevel: number, p: number, q: number, doRequest: boolean, cb: (tile: Tile, tt: TileTexture) => void) {
     const { renderer, tract } = this
     const { textureProvider } = renderer
     for (let level = baseLevel; level <= tract.maxTileLevel; ++level) {
@@ -160,7 +160,7 @@ class TractRenderer {
       const tile = Tile.get(id)
       if (tt) {
         cb(tile, tt)
-        request && tt.needUpdate() && textureProvider.requestTile(id, {
+        doRequest && tt.needUpdate() && textureProvider.requestTile(id, {
           fadeIn: false,
           immediate: level < tract.maxTileLevel
         })
@@ -168,7 +168,7 @@ class TractRenderer {
           break
         }
       } else {
-        request && textureProvider.requestTile(id, { immediate: false, fadeIn: true })
+        doRequest && textureProvider.requestTile(id, { immediate: false, fadeIn: true })
       }
       p >>= 1
       q >>= 1

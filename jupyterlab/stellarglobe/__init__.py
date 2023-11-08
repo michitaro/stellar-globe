@@ -14,3 +14,7 @@ def _jupyter_labextension_paths():
         "src": "labextension",
         "dest": "jupyterlab-stellar-globe"
     }]
+
+
+from .window import Window
+from . import layers

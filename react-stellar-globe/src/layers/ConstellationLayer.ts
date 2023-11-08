@@ -1,6 +1,6 @@
 import { ConstellationLayer, Globe } from "@stellar-globe/stellar-globe"
 import React, { memo, useCallback, useEffect } from "react"
-import { setDisplayName, useLayerBind } from "../Globe"
+import { setDisplayName, useLayerBind } from "../GlobeContext"
 
 
 type ConstellationLayerProps = NonNullable<ConstructorParameters<typeof ConstellationLayer>[1]> & { visible?: boolean }
@@ -12,7 +12,7 @@ const ConstellationLayer$: React.FC<ConstellationLayerProps> = memo(props => {
   } = options
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const factory = useCallback((globe: Globe) => new ConstellationLayer(globe, options), [lang, nameColor, nameFont])
-  const { node, ifLayerReady, setVisible } = useLayerBind<ConstellationLayer>(factory, visible)
+  const { node, ifLayerReady } = useLayerBind<ConstellationLayer>(factory, visible)
 
   useEffect(() => {
     ifLayerReady(layer => {
@@ -21,10 +21,6 @@ const ConstellationLayer$: React.FC<ConstellationLayerProps> = memo(props => {
       layer.globe.requestRefresh()
     })
   }, [ifLayerReady, showLines, showNames])
-
-  useEffect(() => {
-    setVisible(visible)
-  }, [setVisible, visible])
 
   return node
 })

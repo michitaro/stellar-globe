@@ -1,0 +1,43 @@
+.colorParamsControl {
+  table {
+    width: 100%;
+
+    input[type="range"] {
+      width: 100%;
+    }
+  }
+}
+
+.scalarParamsControl {
+  td {
+    text-align: center;
+  }
+}
+
+.matrixControl {
+
+  th,
+  td {
+    text-align: center;
+  }
+
+  .colorText {
+    div {
+      display: flex;
+      flex-flow: column;
+      align-items: center;
+      input {
+        width: 2em;
+      }
+    }
+  }
+}
+
+.filterSelector {
+
+  th,
+  td {
+    width: 2em;
+    text-align: center;
+  }
+}

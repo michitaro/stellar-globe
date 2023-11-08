@@ -3,7 +3,7 @@ import { Layer } from "~/layer/layer"
 import { overlayAlpha } from "~/layer/overlayAlpha"
 import { SkyCoord } from "~/lib/angle"
 import { BillboardImage, BillboardImageRef, BillboardRenderer } from "~/renderer/billboard_renderer"
-import { JOINT, Path, Renderer as PathRenderer } from "~/renderer/path_renderer"
+import { Path, Renderer as PathRenderer } from "~/renderer/path_renderer"
 import { V3, V4 } from "~/types"
 import { text2imageData } from "~/utils/text2imagedata"
 import { View } from "~/view"
@@ -49,7 +49,7 @@ export class ConstellationLayer extends Layer {
       showLines: true,
       showNames: false,
       lang: 'English',
-      fadeInDuration: 0,
+      fadeInDuration: 400,
       nameFont: '12pt fantasy',
       nameColor: 'rgba(239, 225, 196, 1)',
     }
@@ -70,7 +70,7 @@ export class ConstellationLayer extends Layer {
     _options: Partial<Options> = {},
   ) {
     super(globe)
-    const options = { ...ConstellationLayer.defaultOptions(), _options }
+    const options = { ...ConstellationLayer.defaultOptions(), ..._options }
     this.showLines = options.showLines
     this.showNames = options.showNames
     this.lang = options.lang
@@ -126,7 +126,7 @@ export class ConstellationLayer extends Layer {
               { position: star2xyz(stars[i + 1]), color, size: 0.015 },
             ],
             close: false,
-            joint: JOINT.NONE,
+            joint: 'NONE',
           }
           paths.push(path)
         }

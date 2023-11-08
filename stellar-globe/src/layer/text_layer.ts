@@ -65,8 +65,6 @@ export class TextLayer extends Layer {
     defaultFont?: string | null,
     defaultColor?: string | null,
   } = {}) {
-    console.log('update')
-    console.log({ defaultFont, defaultColor })
     this.defaultFont = defaultFont ?? (defaultFont === null ? optionDefualts.font : this.defaultFont)
     this.defaultColor = defaultColor ?? (defaultColor === null ? optionDefualts.color : this.defaultColor)
     texts && this.buildTextBillboards(texts)

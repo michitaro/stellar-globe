@@ -143,10 +143,6 @@ export abstract class AsyncTextureProvider extends TextureProvider {
 
   protected abstract makeTileTexture(ref: TileRef, fadeIn: boolean): Promise<TileTexture>
 
-  numLoadingImages() {
-    return this.loading.size
-  }
-
   clearCache(keep?: (id: TileId) => boolean) {
     if (keep) {
       for (const id of this.cache.keys()) {
@@ -178,7 +174,7 @@ export abstract class SimpleImageTextureProvider extends AsyncTextureProvider {
   async makeTileTexture(ref: TileRef, fadeIn: boolean): Promise<TileTexture> {
     const url = this.ref2url(ref)
     const image = await loadImage(url)
-    const tt = new TileTexture(this, fadeIn)
+    const tt = new TileTexture(this, { fadeIn })
     const gl = this.globe.gl
     tt.bind(() => {
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image)
@@ -199,10 +195,10 @@ export class TileTexture {
   readonly tex: Texture
   fadeAlpha = 1
 
-  constructor(readonly tp: TextureProvider, fadeIn = false) {
+  constructor(readonly tp: TextureProvider, { fadeIn = false, revision }: { fadeIn?: boolean, revision?: number }) {
     const gl = tp.globe.gl
     this.tex = new Texture(gl)
-    this.revision = tp.revision
+    this.revision = revision ?? tp.revision
     fadeIn && this.fadeIn()
   }
 

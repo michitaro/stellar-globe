@@ -23,6 +23,13 @@ export type JsonSchema = {
         title?: string
       }
     }
+    showErrorMessage: {
+      type: 'showErrorMessage'
+      args: {
+        title: string
+        body: string
+      }
+    }
     CallbackProp: CallbackProp
   } & MessageToStellarGlobeMap
   MessageToPython: {

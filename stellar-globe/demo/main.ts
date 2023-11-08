@@ -24,7 +24,7 @@ function main() {
   // @ts-expect-error
   const zenith = zenithSkyCoord({ when: new Date, where: NaojLocation })
   // const globe = new Globe(el, { viewOptions: { retina: false, ...zenith } })
-  const globe = new Globe(el, { viewOptions: { retina: false } })
+  const globe = new Globe(el, { viewOptions: { retina: true } })
 
   initTileLayer(globe)
   globe.addNewLayer(GridLayer)
@@ -54,7 +54,7 @@ function main() {
 
 function initTileLayer(globe: Globe) {
   const betaInput = document.querySelector('#beta-input') as HTMLInputElement
-  const params = SspTileLayer.defaultParams('simpleRgb')
+  const params = SspTileLayer.defaultParams({ type: 'simpleRgb' })
   const a = 1.e+1
   const f = (x: number) => Math.exp(a * x)
   const g = (y: number) => Math.log(y) / a

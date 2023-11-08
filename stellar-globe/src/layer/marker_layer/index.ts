@@ -56,7 +56,7 @@ export class MarkerLayer extends Layer {
 }
 
 
-type OnClickEvent = {
+type ClickEvent = {
   /**
    * @TJS-type integer
    */
@@ -64,9 +64,15 @@ type OnClickEvent = {
 }
 
 
+type HoverChangeEvent = {
+  index: number | null
+}
+
+
 type ClickableMarkerLayerOptions = MarkerLayerOptions & {
   dimmAlpha: number
-  onClick?: (e: OnClickEvent) => void
+  onClick?: (e: ClickEvent) => void
+  onHoverChange?: (e: HoverChangeEvent) => void
 }
 
 
@@ -104,8 +110,12 @@ export class ClickableMarkerLayer extends Layer {
     this.focusedMarkerRenderer.render(view)
   }
 
-  set onClick(handler: ((e: OnClickEvent) => void) | undefined) {
+  set onClick(handler: ((e: ClickEvent) => void) | undefined) {
     this.options.onClick = handler
+  }
+
+  set onHoverChange(handler: ((e: HoverChangeEvent) => void) | undefined) {
+    this.options.onHoverChange = handler
   }
 
   set baseColor(baseColor: V4 | undefined) {
@@ -173,6 +183,8 @@ class MarkerMousePicker extends MousePicker {
     this.focusedIndex = hits.length > 0 ? hits[0] : -1
     if (lastFocusedMarker !== this.focusedIndex) {
       this.refreshActiveMarkerRenderer()
+      const { options: { onHoverChange } } = this.backdoor()
+      onHoverChange?.({ index: this.focusedIndex >= 0 ? this.focusedIndex : null })
     }
     return {
       hit: !!this.focusedIndex,

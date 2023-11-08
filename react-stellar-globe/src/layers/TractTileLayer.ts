@@ -1,27 +1,34 @@
 import { Globe, TractTileLayer } from "@stellar-globe/stellar-globe"
 import React, { memo, useCallback, useEffect } from "react"
-import { setDisplayName, useLayerBind } from "../Globe"
+import { setDisplayName, useLayerBind } from "../GlobeContext"
+
 
 type TractTileLayerProps = ConstructorParameters<typeof TractTileLayer>[1] & {
   visible?: boolean
+  filterNameDictionary?: filterNameDictionary
 }
+
+type ColorParams = NonNullable<TractTileLayerProps['colorParams']>
+
 const TractTileLayer$: React.FC<TractTileLayerProps> = memo(props => {
   const {
     baseUrl,
-    colorParams = TractTileLayer.defaultParams('sdssTrueColor'),
-    filters,
+    colorParams = TractTileLayer.defaultParams({ type: 'sdssTrueColor' }),
     outline = false,
     visible = true,
+    filterNameDictionary,
   } = props
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const factory = useCallback((globe: Globe) => new TractTileLayer(globe, props), [baseUrl])
-  const { node, ifLayerReady, setVisible, } = useLayerBind<TractTileLayer>(factory, visible)
-
-  useEffect(() => {
-    ifLayerReady(layer => {
-      layer.setAreaFilters(filters)
-    })
-  }, [filters, ifLayerReady])
+  const factory = useCallback(
+    (globe: Globe) => {
+      return new TractTileLayer(globe, {
+        ...props,
+        colorParams: applyFilterNameTranslation(colorParams, filterNameDictionary)
+      })
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [baseUrl],
+  )
+  const { node, ifLayerReady } = useLayerBind<TractTileLayer>(factory, visible)
 
   useEffect(() => {
     ifLayerReady(layer => {
@@ -32,15 +39,28 @@ const TractTileLayer$: React.FC<TractTileLayerProps> = memo(props => {
 
   useEffect(() => {
     ifLayerReady(layer => {
-      layer.setParams(colorParams)
+      layer.setParams(applyFilterNameTranslation(colorParams, filterNameDictionary))
     })
-  }, [colorParams, ifLayerReady])
-
-  useEffect(() => {
-    setVisible(visible)
-  }, [setVisible, visible])
+  }, [colorParams, filterNameDictionary, ifLayerReady])
 
   return node
 })
 setDisplayName({ TractTileLayer$ })
 export { TractTileLayer$ }
+
+
+type filterNameDictionary = { [altName: string]: string }
+
+
+function applyFilterNameTranslation(colorParams: ColorParams, dict: filterNameDictionary | undefined) {
+  if (dict) {
+    const filters = colorParams.filters.map(f => {
+      if (dict[f] === undefined) {
+        throw new Error(`Filter name lookup failed: ${f} for ${JSON.stringify(dict)}`)
+      }
+      return dict[f]
+    })
+    return { ...colorParams, filters }
+  }
+  return colorParams
+}

@@ -1,0 +1,35 @@
+@import 'src/theme.scss';
+
+.menuBar {
+  display: flex;
+  align-items: stretch;
+
+  @include background;
+  padding: 0 8px;
+
+  button.menuBarItem {
+    @include reset;
+    background-color: transparent;
+    font-size: large;
+    padding: 8px 12px;
+
+    display: flex;
+    height: 100%;
+    align-items: center;
+
+    &.active {
+      @include active;
+    }
+  }
+}
+
+.menuItemWithAnnotation {
+  display: flex;
+  align-items: baseline;
+  width: 100%;
+
+  &-body {
+    flex-grow: 1;
+    padding-right: 1em;
+  }
+}

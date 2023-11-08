@@ -1,14 +1,15 @@
 import { AttribList, Program, utils as glUtils } from '~/lib/gl-wrapper'
-import { View } from "~/view"
-
-
-export class Point {
-  constructor(public position: V3, public color: V4, public size: number) { }
-}
-
 import { V3, V4 } from "~/types"
+import { View } from "~/view"
 import shaderFrag from './frag.glsl?raw'
 import shaderVert from './vert.glsl?raw'
+
+
+type Point = {
+  position: V3
+  color: V4
+  size: number
+}
 
 
 export class PointRenderer {
@@ -17,13 +18,6 @@ export class PointRenderer {
 
   darkenSmallPoint = true
   minSize = 3
-
-  private _points: Point[] = []
-  get points() { return this.points }
-  set points(points: Point[]) {
-    this._points = points
-    this.needsUpdatePoints = true
-  }
 
   constructor(private readonly gl: WebGLRenderingContext) {
     this.program = Program.new(gl,
@@ -44,14 +38,7 @@ export class PointRenderer {
     this.program.release()
   }
 
-  private needsUpdatePoints = false
-
   render(view: View, alpha = 1) {
-    if (this.needsUpdatePoints) {
-      this.updateVBO()
-      this.needsUpdatePoints = false
-    }
-
     if (this.attribList.vertexCount === 0) {
       return
     }
@@ -80,22 +67,21 @@ export class PointRenderer {
     })
   }
 
-  private updateVBO() {
+  // @ts-ignore
+  private updateVBO(points: Point[]) {
     /*
       { name: 'a_position', nComponents: 3 },
       { name: 'a_size', nComponents: 1 },
       { name: 'a_color', nComponents: 4 },
     */
     const attrs: number[] = []
-    const points = this._points
     for (const p of points) {
       attrs.push(...p.position, p.size, ...p.color)
     }
     this.attribList.setData({ array: new Float32Array(attrs) })
   }
 
-  _setArray(array: Float32Array) {
-    this._points = []
-    this.attribList.setData({ array: new Float32Array(array) })
+  setArray(array: Float32Array) {
+    this.attribList.setData({ array })
   }
 }

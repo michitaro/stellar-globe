@@ -1,7 +1,7 @@
 import { ClickableMarkerLayer, Globe, LayerConstructorRestParameters, MarkerLayer } from "@stellar-globe/stellar-globe"
 import React, { memo, useCallback, useEffect } from "react"
 import { useLayerBind } from ".."
-import { setDisplayName } from "../Globe"
+import { setDisplayName } from "../GlobeContext"
 
 
 type MarkerLayerProps = ConstructorParameters<typeof MarkerLayer>[1] & {
@@ -44,7 +44,7 @@ const ClickableMarkerLayer$: React.FC<ClickableMarkerLayerProps> = memo(props =>
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const factory = useCallback((globe: Globe) => new ClickableMarkerLayer(globe, options), [])
   const { node, ifLayerReady } = useLayerBind<ClickableMarkerLayer>(factory, visible)
-  const { defaultColor, defaultType, markers, dimmAlpha, onClick, baseColor } = options
+  const { defaultColor, defaultType, markers, dimmAlpha, onClick, onHoverChange, baseColor } = options
 
   useEffect(() => {
     ifLayerReady(layer => {
@@ -55,10 +55,11 @@ const ClickableMarkerLayer$: React.FC<ClickableMarkerLayerProps> = memo(props =>
   useEffect(() => {
     ifLayerReady(layer => {
       layer.dimmAlpha = dimmAlpha
-      layer.onClick = onClick
       layer.baseColor = baseColor
+      layer.onClick = onClick
+      layer.onHoverChange = onHoverChange
     })
-  }, [baseColor, dimmAlpha, ifLayerReady, onClick])
+  }, [baseColor, dimmAlpha, ifLayerReady, onClick, onHoverChange])
 
   return node
 })

@@ -1,9 +1,10 @@
 import { Globe, Layer } from '@stellar-globe/stellar-globe'
 import '@testing-library/jest-dom/vitest'
 import { render, renderHook } from '@testing-library/react'
-import React, { useCallback, useRef } from 'react'
+import React, { useRef } from 'react'
 import { describe, expect, test } from 'vitest'
-import { Globe$, GlobeHandle, makePureLayerComponent, useLayerBind } from '../src/Globe'
+import { makePureLayerComponent } from '../src/GlobeContext'
+import { Globe$, GlobeHandle } from '../src/Globe'
 
 
 
@@ -23,9 +24,16 @@ class LogLayer extends Layer {
 }
 
 
-const LogLayer$ = makePureLayerComponent<LogLayer, { log: string[], postfix?: string }>(
+type LogLayerProps = {
+  log: string[]
+  postfix?: string
+  visible?: boolean
+}
+
+
+const LogLayer$ = makePureLayerComponent<LogLayerProps>(
   (globe, { log, postfix }) => new LogLayer(globe, log, postfix),
-  'DummyLayer$',
+  'visible',
 )
 
 
@@ -131,8 +139,8 @@ class NumberedLayer extends Layer {
 
 
 const NumberedLayer$ = makePureLayerComponent<
-  NumberedLayer, { n: number }
->((globe, { n }) => new NumberedLayer(globe, n), 'NumberedLayer$')
+  { n: number, visible?: boolean }
+>((globe, { n }) => new NumberedLayer(globe, n), 'visible')
 
 
 test('ref', () => {

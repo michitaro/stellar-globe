@@ -1,6 +1,6 @@
 import { mat4 } from "gl-matrix"
 import { Globe } from "~/globe"
-import { BlendMode, JOINT, Path, Renderer } from "~/renderer/path_renderer"
+import { BlendMode, Path, Renderer } from "~/renderer/path_renderer"
 import { V4 } from "~/types"
 import { range } from "~/utils/math"
 import { View } from "~/view"
@@ -11,7 +11,7 @@ import { overlayAlpha } from "./overlayAlpha"
 function defaultGridOptions() {
   return {
     modelMatrix: undefined as undefined | (() => mat4),
-    blendMode: BlendMode.ADD,
+    blendMode: 'ADD' as BlendMode,
     defaultGridColor: [0.25, 0.5, 1, 0.75] as V4,
     width: 0.008,
     thetaLine: {
@@ -31,6 +31,7 @@ function defaultGridOptions() {
         18: [0.5, 0, 1, 0.5],
       } as { [index: number]: V4 },
     },
+    fadeInDuration: 400,
   }
 }
 
@@ -41,6 +42,7 @@ type GridLayerOptions = ReturnType<typeof defaultGridOptions>
 export class GridLayer extends Layer {
   protected pathRenderer!: Renderer
   readonly options: GridLayerOptions
+  private fadeAlpha = 0
 
   constructor(
     globe: Globe,
@@ -55,14 +57,17 @@ export class GridLayer extends Layer {
     this.onRelease(() => {
       this.pathRenderer.release()
     })
+    this.addAnimation(({ r }) => {
+      this.fadeAlpha = r
+    }, { duration: this.options.fadeInDuration })
   }
 
   render(view: View) {
-    this.pathRenderer.alpha = overlayAlpha(view)
+    const alpha = this.fadeAlpha * overlayAlpha(view)
     if (this.options.modelMatrix) {
       this.pathRenderer.modelMatrix = this.options.modelMatrix()
     }
-    this.pathRenderer.render(view)
+    this.pathRenderer.render(view, alpha)
   }
 
   private generatePaths() {
@@ -88,7 +93,7 @@ export class GridLayer extends Layer {
             }
           }),
           close: true,
-          joint: JOINT.MITER,
+          joint: 'MITER',
         })
       }
     }
@@ -111,7 +116,7 @@ export class GridLayer extends Layer {
             }
           }),
           close: false,
-          joint: JOINT.MITER,
+          joint: 'MITER',
         })
       }
     }

@@ -1,0 +1,45 @@
+@import 'src/theme.scss';
+
+.wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.panel {
+  @include background;
+  padding: 16px;
+  border-radius: 0 0 0 16px;
+}
+
+.bottomMenu {
+  display: flex;
+  align-items: flex-start;
+  justify-content: end;
+}
+
+.fade {
+  &-enter {
+    opacity: 0;
+    // transform: translate(0, -100%);
+    transform: translate(0, -16px);
+  }
+
+  &-enter-active {
+    opacity: 1;
+    transform: translate(0, 0);
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  &-exit {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+
+  &-exit-active {
+    opacity: 0;
+    // transform: translate(0, -100%);
+    transform: translate(0, -16px);
+    transition: opacity 0.2s, transform 0.2s;
+  }
+}

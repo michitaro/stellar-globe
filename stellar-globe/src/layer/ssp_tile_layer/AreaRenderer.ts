@@ -49,7 +49,7 @@ export class AreaRenderer {
       const a = this.region[filter.filterName] || []
       const color: V4 = [...filter.color, 0.75]
       for (const piece of a) {
-        const p: path.Path = { points: piece.map(v => ({ position: v, color, size: width })), close: true, joint: path.JOINT.MITER }
+        const p: path.Path = { points: piece.map(v => ({ position: v, color, size: width })), close: true, joint: 'MITER' }
         paths.push(p)
       }
     }
@@ -58,7 +58,7 @@ export class AreaRenderer {
       const a = this.region['$any'] || []
       const color: V4 = Object.keys(this.region).length == 1 ? [0, 1, 0, 0.5] : [1, 1, 1, 0.25]
       for (const piece of a) {
-        const p: path.Path = { points: piece.map(v => ({ position: v, color, size: width })), close: true, joint: path.JOINT.MITER }
+        const p: path.Path = { points: piece.map(v => ({ position: v, color, size: width })), close: true, joint: 'MITER' }
         paths.push(p)
       }
     }

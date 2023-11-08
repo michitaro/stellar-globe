@@ -6,3 +6,5 @@ from .TractTileLayer import TractTileLayer
 from .HipsSimpleLayer import HipsSimpleLayer
 from .TextLayer import TextLayer
 from .ClickableMarkerLayer import ClickableMarkerLayer
+from .GlobeEventLayer import GlobeEventLayer
+from .PathLayer import PathLayer

@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, TypedDict
+from typing import Any, TypedDict, Dict
 
 from ..utils.uid import uid
 
@@ -22,4 +22,4 @@ class BaseLayer:
 class LayerDef(TypedDict):
     type: str
     key: str
-    props: dict[str, Any]
+    props: Dict[str, Any]

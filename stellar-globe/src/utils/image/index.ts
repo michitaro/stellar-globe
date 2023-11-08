@@ -32,12 +32,18 @@ export async function loadImage(
 
 class BackgroundImageDecoder {
   private deferreds = new Map<number, Deferred<ImageBitmap, unknown>>()
-  private worker: Worker
   private seq = 0
 
-  constructor() {
-    this.worker = setWorkerErrorHandler(new DecodeWorker())
-    this.worker.addEventListener('message', this.workerOnMessage)
+  private _worker?: Worker
+
+  private get worker() {
+    if (!this._worker) {
+      // constructorで↓をしないのはjsdomTestができなくなるから
+      const worker = setWorkerErrorHandler(new DecodeWorker())
+      worker.addEventListener('message', this.workerOnMessage)
+      this._worker = worker
+    }
+    return this._worker
   }
 
   load(url: string, { flipY = true }: { flipY?: boolean } = {}) {
@@ -49,7 +55,7 @@ class BackgroundImageDecoder {
     return d.promise
   }
 
-  private workerOnMessage = (e: MessageEvent) => {
+  private workerOnMessage = async (e: MessageEvent) => {
     const msg: DecodeResponse = e.data
     const { id } = msg
     const { resolve, reject } = this.deferreds.get(id)!

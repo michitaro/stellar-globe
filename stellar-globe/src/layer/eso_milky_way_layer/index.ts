@@ -41,7 +41,7 @@ export class EsoMilkyWayLayer extends Layer {
       this.onRelease(() => this.renderer?.release())
       this.addAnimation(({ r }) => {
         this.fadeAlpha = r
-      }, { duration: this.options.fadeInDuration ?? 0 })
+      }, { duration: this.options.fadeInDuration ?? 400 })
     }
   }
 

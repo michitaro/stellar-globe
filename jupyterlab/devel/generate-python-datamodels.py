@@ -64,13 +64,15 @@ def generate_datamodel(schema, outfile: Path):
     codes = re.sub(r'(from\s+__future__\s+import\s+annotations)', r'\1\nfrom typing import Optional, Literal', codes)
     codes = re.sub(r'(\s*\w+:\s*)NotRequired\[', r'\1Optional[', codes)
     codes = re.sub(r'    type: Optional\[str\]\n$', fr'    type: Literal["{outfile.stem}"]', codes)
-
+    codes = re.sub(r'from typing_extensions ', r'from typing ', codes)
+    codes = re.sub(r'(from typing import .*)NotRequired(.*)', r'\1Any\2', codes)
+    
     assert p.returncode == 0
     outfile.write_text(codes)
 
 
 def extractSchema(schema, routes: list[str]):
-    # machine translation of devel/genearete-validation-codes.js
+    # machine translation of devel/generate-js-type-validators.js
 
     def dig(schema, routes, definitions=None):
         if definitions is None:

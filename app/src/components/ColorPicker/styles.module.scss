@@ -1,0 +1,43 @@
+.toggleButton {
+  width: 30px;
+  height: 20px;
+
+  &:hover {
+    box-shadow: 0 0 12px rgba(white, 1);
+  }
+
+  &:active {
+    box-shadow: 0 0 12px rgba(white, 0.25);
+  }
+}
+
+.wrapper {
+  background-color: rgba(#777, 0.9);
+  box-shadow: 0 0 8px black;
+  padding: 8px;
+  border-radius: 16px;
+}
+
+.fade {
+  &-enter {
+    opacity: 0;
+    transform: scale(90%);
+  }
+
+  &-enter-active {
+    opacity: 1;
+    transform: scale(100%);
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  &-exit {
+    opacity: 1;
+    transform: scale(100%);
+  }
+
+  &-exit-active {
+    opacity: 0;
+    transform: scale(90%);
+    transition: opacity 0.2s, transform 0.2s;
+  }
+}

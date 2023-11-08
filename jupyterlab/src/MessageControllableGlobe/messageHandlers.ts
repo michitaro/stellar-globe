@@ -1,11 +1,13 @@
-import { SkyCoord, angle } from "@stellar-globe/stellar-globe"
-import { LayerDef, MessageControllableGlobeContextType } from "."
+import { SkyCoord } from "@stellar-globe/stellar-globe"
+import { produce } from 'immer'
+import { LayerDef, MessageControllableGlobeContextType, State } from "."
 import { assertLayerProps } from "../TypeGuard"
 
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-function clear({ setLayerDefs }: MessageControllableGlobeContextType, args: {}) {
-  setLayerDefs([])
+function clear({ setState }: MessageControllableGlobeContextType, args: {}) {
+  setState(produce(_ => {
+    _.layerDefs = []
+  }))
 }
 
 type UnvalidatedLayerDef = {
@@ -14,16 +16,19 @@ type UnvalidatedLayerDef = {
   key: string
 }
 
-function setState({ setLayerDefs }: MessageControllableGlobeContextType, args: { layerDefs: UnvalidatedLayerDef[] }) {
+type UnvalidatedState = Omit<State, "layerDefs"> & { layerDefs: UnvalidatedLayerDef[] }
+
+function setState({ setState }: MessageControllableGlobeContextType, args: UnvalidatedState) {
   args.layerDefs.forEach(d => {
     // @ts-ignore
     assertLayerProps(d.type, d.props)
   })
   // @ts-ignore
   const layerDefs: LayerDef[] = args.layerDefs
-  setLayerDefs(layerDefs)
+  setState(produce(_ => {
+    _.layerDefs = layerDefs
+  }))
 }
-
 
 function jumpTo({ getGlobe }: MessageControllableGlobeContextType, args: {
   ra: number,
@@ -35,14 +40,13 @@ function jumpTo({ getGlobe }: MessageControllableGlobeContextType, args: {
   const { ra, dec, fov, roll, duration } = args
   const globe = getGlobe()!
   globe.camera.jumpTo({
-    fovy: fov && angle.deg2rad(fov),
-    roll: roll && angle.deg2rad(roll),
+    fovy: fov,
+    roll: roll,
   }, {
-    coord: SkyCoord.fromDeg(ra, dec),
+    coord: SkyCoord.fromRad(ra, dec),
     duration,
   })
 }
-
 
 export const messageHandlers = {
   clear,

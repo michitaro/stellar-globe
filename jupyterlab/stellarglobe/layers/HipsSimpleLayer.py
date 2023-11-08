@@ -7,11 +7,11 @@ from .BaseLayer import BaseLayer
 @dataclass
 class HipsSimpleLayer(BaseLayer):
     type = 'HipsSimpleLayer'
-    baseUrl: str
+    base_url: str
     visible: bool = True
 
     def props(self):
-        return Props(baseUrl=self.baseUrl, visible=self.visible)
+        return Props(baseUrl=self.base_url, visible=self.visible)
 
     # @classmethod
     # def search(

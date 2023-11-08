@@ -18,6 +18,7 @@ type GlobeOptions = {
   distortion?: DistortionParams
   noDefaultLayers?: boolean
   jsdomTest?: boolean
+  // cursor?: CSSStyleDeclaration['cursor']
 }
 
 
@@ -123,6 +124,10 @@ export class Globe {
   }
 
   addLayer<L extends Layer>(layer: L) {
+    if (this.hasLayer(layer)) {
+      console.warn(layer)
+      throw new Error('The layer is added twice')
+    }
     this.layers.push(layer)
     this.layerSorter.sort()
     layer.runOnAddToGlobeCallbacks()
@@ -139,6 +144,10 @@ export class Globe {
       this.requestRefresh()
       this.emit('layer-change', {})
     }
+  }
+
+  hasLayer(layer: Layer) {
+    return this.layers.includes(layer)
   }
 
   private rafId: number | undefined

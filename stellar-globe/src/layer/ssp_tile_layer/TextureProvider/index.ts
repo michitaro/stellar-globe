@@ -14,6 +14,7 @@ import simple_rgb_png_mixer from './glsl/simple_rgb_png_mixer.frag.glsl?raw'
 import sinh from './glsl/sinh.glsl?raw'
 import { SspTileParams, SspTileParamsOf } from "./params"
 import { nonNull } from "~/lib/gl-wrapper/utils"
+import { waitIdleTime } from "~/utils/time"
 
 
 class SimpleRgbMixerPng extends ImageFilter {
@@ -72,8 +73,7 @@ class SimpleColorMatrixPng extends ImageFilter {
     // float r = color[0][0] * t0 + color[1][0] * t1 + ...;
     // float g = color[0][1] * t0 + color[1][1] * t1 + ...;
 
-    const filters = params.colors.filter(c => c.enabled)
-    const n = filters.length
+    const n = params.colors.length
     const ts = range(n).map(i => `t${i} = texture2D(u_texture${i}, v_coord).r`).join(', ')
     const r = range(n).map(i => `u_color[${i}][0] * t${i}`).join(' + ')
     const g = range(n).map(i => `u_color[${i}][1] * t${i}`).join(' + ')
@@ -91,7 +91,7 @@ class SimpleColorMatrixPng extends ImageFilter {
 
       //@import ./sinh;
       //@import ./decode_png;
-      //@import ./sdss_true_color;
+      //@import ./simple_rgb;
       
       void main(void){
         float ${ts};
@@ -106,7 +106,7 @@ class SimpleColorMatrixPng extends ImageFilter {
 
   setUniformParams() {
     this.program.uniform3fv(Object.fromEntries(
-      this.params.colors.filter(c => c.enabled).map((c, i) => [`u_color[${i}]`, Array.from(c.value)])
+      this.params.colors.map((c, i) => [`u_color[${i}]`, c])
     ))
     this.program.uniform1f({
       u_a: this.params.a,
@@ -137,8 +137,7 @@ class SdssTrueColorMatrixPng extends ImageFilter {
     // float r = color[0][0] * t0 + color[1][0] * t1 + ...;
     // float g = color[0][1] * t0 + color[1][1] * t1 + ...;
 
-    const filters = params.colors.filter(c => c.enabled)
-    const n = filters.length
+    const n = params.colors.length
     const ts = range(n).map(i => `t${i} = texture2D(u_texture${i}, v_coord).r`).join(', ')
     const r = range(n).map(i => `u_color[${i}][0] * t${i}`).join(' + ')
     const g = range(n).map(i => `u_color[${i}][1] * t${i}`).join(' + ')
@@ -171,7 +170,7 @@ class SdssTrueColorMatrixPng extends ImageFilter {
 
   setUniformParams() {
     this.program.uniform3fv(Object.fromEntries(
-      this.params.colors.filter(c => c.enabled).map((c, i) => [`u_color[${i}]`, Array.from(c.value)])
+      this.params.colors.map((c, i) => [`u_color[${i}]`, c])
     ))
     this.program.uniform1f({
       u_a: this.params.a,
@@ -217,7 +216,10 @@ export class SspTileTextureProvider extends AsyncTextureProvider {
   }
 
   setParams(params: SspTileParams) {
-    if (params.type !== this.params?.type) { // constructor内では this.params === undefined
+    if (
+      params.type !== this.params?.type ||
+      params.filters.length !== this.params?.filters.length
+    ) { // constructor内では this.params === undefined
       this.imageFilter && this.imageFilter.release()
       switch (params.type) {
         case 'sdssTrueColor':
@@ -283,8 +285,9 @@ export class SspTileTextureProvider extends AsyncTextureProvider {
 
   async makeTileTexture(ref: TileRef, fadeIn: boolean) {
     const urls = this.imageUrls(ref)
+    const revision = this.revision
     const images = await Promise.all(urls.map(url => this.imageCache(url)))
-    const tt = new TileTexture(this, fadeIn)
+    const tt = new TileTexture(this, { fadeIn, revision })
     const gl = this.globe.gl
     const { tileSize } = ref.tract
 

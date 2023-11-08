@@ -32,14 +32,14 @@ export class ClicakblePolygonLayer extends Layer {
     this.basePathRenderer.darkenNarrowLine = false
     this.activePathRenderer = new path.Renderer(globe.gl)
     this.activePathRenderer.darkenNarrowLine = false
-    this.activePathRenderer.blendMode = path.BlendMode.NORMAL
+    this.activePathRenderer.blendMode = 'NORMAL'
     this.onRelease(() => {
       this.activePathRenderer.release()
       this.basePathRenderer.release()
     })
     this.basePathRenderer.setPaths(polygons.map(polygon => ({
       close: true,
-      joint: path.JOINT.MITER,
+      joint: 'MITER',
       points: polygon.map(position => ({ color: this.baseColor, position, size: 0 })),
     })))
     this.mousePickers = polygons.map((polygon, index) => new PolygonMousePicker(this, index, polygon))
@@ -88,7 +88,7 @@ export class ClicakblePolygonLayer extends Layer {
   private refreshActivePath() {
     const hoverPath: path.Path[] = [...this.hoverIndices.values()].map(i => ({
       close: true,
-      joint: path.JOINT.MITER,
+      joint: 'MITER',
       points: this.polygons[i].map(position => ({
         color: this.hoverColor,
         size: 0,
@@ -97,7 +97,7 @@ export class ClicakblePolygonLayer extends Layer {
     }))
     const activePath: path.Path[] = [...this.activesIndices.values()].map(i => ({
       close: true,
-      joint: path.JOINT.MITER,
+      joint: 'MITER',
       points: this.polygons[i].map(position => ({
         color: this.activeColor,
         size: 0,

@@ -22,21 +22,15 @@
         ```
     * `type`により`args`の型は変わる。
 
+* Naming convention
+    * JavaScript的な名前
+    * 角度はRadian
+    * 時間はms
+
 ## JSON Schema
 
 ### 生成手順
 
-1. `typescript-json-schema`により、必要な型定義をすべて含んだJSON Schemaを作る
-    * `./src/types.ts`の`JsonSchema`で定義
-1. ↑のJSON Schemaファイルを解析し必要なSchemaを抽出しファイルに保存
-    * `./devel/extractSchema.js`に実装
-
-## Validation
-
-ajvのstandaloneコードを使う。
-
-
-## Pythonの型チェック
-
-Python内での厳密な型チェックはできない。
-
+```bash
+jlpm run refresh-type-validators-and-datamodels
+```

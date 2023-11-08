@@ -9,22 +9,7 @@ export function composite(scales: number[], matrices: Float32Array[]): Float32Ar
   return m
 }
 
-export type CameraMode = 'GNOMONIC' | 'STEREOGRAPHIC' | 'FLOATING_EYE'
-
-
-export type CameraParams = {
-  aspectRatio: number
-  fovy: number
-  mode: CameraMode
-  theta: number,
-  phi: number,
-  roll: number,
-  za: number, // zenith alpha
-  zd: number, // zenith delta
-  zp: number, // rotation angle around zenith pole
-}
-
-function mulZenith4(m: mat4, a: number, d: number, p: number) {
+export function mulZenith4(m: mat4, a: number, d: number, p: number) {
   // mat4.rotateZ(m, m, -p)
   // mat4.rotateY(m, m, -(Math.PI / 2 - d))
   // mat4.rotateZ(m, m, -a)
@@ -94,46 +79,4 @@ function zenith2adp(m: mat3) {
 
 export function normalizeZenith(a: number, d: number, z: number) {
   return zenith2adp(zenith3(a, d, z))
-}
-
-export function cameraMatrix(p: CameraParams) {
-  const out = mat4.create()
-  look(out, p)
-  mulZenith4(out, p.za, p.zd, p.zp)
-  return out
-}
-
-function look(out: mat4, p: CameraParams) {
-  const fovy = p.fovy
-  const ar = p.aspectRatio
-  const cA = Math.cos(p.phi)
-  const sA = Math.sin(p.phi)
-  const cD = Math.cos(p.theta)
-  const sD = Math.sin(p.theta)
-  const sR = Math.sin(p.roll)
-  const cR = Math.cos(p.roll)
-  switch (p.mode) {
-    case 'GNOMONIC':
-      return mat4.set(out,
-        (cA * sD * sR + cR * sA) / (ar * fovy), (-cA * cR * sD + sA * sR) / fovy, 41 * cA * cD / 39, cA * cD,
-        (-cA * cR + sA * sD * sR) / (ar * fovy), -(cA * sR + cR * sA * sD) / fovy, 41 * cD * sA / 39, cD * sA,
-        -cD * sR / (ar * fovy), cD * cR / fovy, 41 * sD / 39, sD,
-        0, 0, -4 / 39, 0)
-    case 'STEREOGRAPHIC':
-      return mat4.set(out,
-        2 * (cA * sD * sR + cR * sA) / (ar * fovy), 2 * (-cA * cR * sD + sA * sR) / fovy, 13 * cA * cD / 11, cA * cD,
-        // tslint:disable-next-line:max-line-length
-        2 * (-cA * cR + sA * sD * sR) / (ar * fovy), -(2 * cA * sR + 2 * cR * sA * sD) / fovy, 13 * cD * sA / 11, cD * sA,
-        -2 * cD * sR / (ar * fovy), 2 * cD * cR / fovy, 13 * sD / 11, sD,
-        0, 0, 7 / 11, 1)
-    case 'FLOATING_EYE':
-      return mat4.set(out,
-        // tslint:disable-next-line:max-line-length
-        (fovy + 1) * (cA * sD * sR + cR * sA) / (ar * fovy), (fovy + 1) * (-cA * cR * sD + sA * sR) / fovy, 41 * cA * cD / 39, cA * cD,
-        // tslint:disable-next-line:max-line-length
-        (fovy + 1) * (-cA * cR + sA * sD * sR) / (ar * fovy), -(fovy + 1) * (cA * sR + cR * sA * sD) / fovy, 41 * cD * sA / 39, cD * sA,
-        -cD * sR * (fovy + 1) / (ar * fovy), cD * cR * (fovy + 1) / fovy, 41 * sD / 39, sD,
-        0, 0, 41 * fovy / 39 - 20 / 39, fovy,
-      )
-  }
 }

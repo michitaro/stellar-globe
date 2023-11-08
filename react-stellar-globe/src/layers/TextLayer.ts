@@ -1,6 +1,6 @@
 import { Globe, TextLayer, overlayAlpha } from "@stellar-globe/stellar-globe"
 import { memo, useCallback, useEffect } from "react"
-import { setDisplayName, useLayerBind } from "../Globe"
+import { setDisplayName, useLayerBind } from "../GlobeContext"
 
 
 type TextLayerProps = ConstructorParameters<typeof TextLayer>[1] & { visible?: boolean }

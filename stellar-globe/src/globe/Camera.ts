@@ -1,16 +1,28 @@
 import { mat4, vec3 } from 'gl-matrix'
-import { Globe } from "."
 import { config } from '~/config'
-import { asec2rad, deg2rad, SkyCoord, wrapTo2Pi } from "~/lib/angle"
+import { SkyCoord, asec2rad, deg2rad, wrapTo2Pi } from "~/lib/angle"
 import * as easing from '~/lib/easing'
 import { V3 } from "~/types"
 import { thetaphi2xyz, xyz2thetaphi } from '~/utils/math'
+import { composite, izenith3, izenith4, mulZenith4, zenith3 } from "~/utils/matrilx-utils"
 import { View } from "~/view"
 import { MvpMatrix } from "~/view/MvpMatrix"
-import { cameraMatrix, CameraMode, CameraParams, composite, izenith3, izenith4, zenith3 } from "~/view/matrilx-utils"
+import { Globe } from "."
 import { Animation } from "./animation"
 
+export type CameraMode = 'GNOMONIC' | 'STEREOGRAPHIC' | 'FLOATING_EYE'
 
+export type CameraParams = {
+  aspectRatio: number
+  fovy: number
+  mode: CameraMode
+  theta: number,
+  phi: number,
+  roll: number,
+  za: number, // zenith alpha
+  zd: number, // zenith delta
+  zp: number, // rotation angle around zenith pole
+}
 
 type JumpToOptions = {
   duration: number
@@ -19,20 +31,10 @@ type JumpToOptions = {
   keepFovy: boolean
 }
 
-type Params = {
-  aspectRatio?: number
-  mode?: CameraMode
-  theta?: number
-  phi?: number
-  fovy?: number
-  roll?: number
-  lodBias?: number
-  za?: number
-  zd?: number
-  zp?: number
-  min_fovy?: number
-  max_fovy?: number
+
+type CameraOptions = Partial<CameraParams> & {
   retina?: boolean
+  lodBias?: number
 }
 
 
@@ -57,9 +59,9 @@ export class Camera implements CameraParams {
 
   constructor(
     private globe: Globe,
-    params: Params = {}
+    options: CameraOptions = {},
   ) {
-    Object.assign(this, params)
+    Object.assign(this, options)
     this.setLodHooks()
   }
 
@@ -179,6 +181,7 @@ export class Camera implements CameraParams {
 
   private modeAnimation?: Animation
   changeMode(mode: CameraMode, duration = 200) {
+    this.globe.emit('camera-mode-change', { mode })
     const oldMode = this.mode
     this.modeAnimation && this.modeAnimation.stop()
     this.mode = mode
@@ -244,5 +247,50 @@ export class Camera implements CameraParams {
 
   get canvasPixels() {
     return this.retina ? window.devicePixelRatio : 1
+  }
+}
+
+function cameraMatrix(p: CameraParams) {
+  const out = mat4.create()
+  generateCameraMatrix(out, p)
+  mulZenith4(out, p.za, p.zd, p.zp)
+  return out
+}
+
+function generateCameraMatrix(out: mat4, p: CameraParams) {
+  const fovy = p.fovy
+  const ar = p.aspectRatio
+  const cA = Math.cos(p.phi)
+  const sA = Math.sin(p.phi)
+  const cD = Math.cos(p.theta)
+  const sD = Math.sin(p.theta)
+  const sR = Math.sin(p.roll)
+  const cR = Math.cos(p.roll)
+  switch (p.mode) {
+    case 'GNOMONIC':
+      mat4.set(out,
+        (cA * sD * sR + cR * sA) / (ar * fovy), (-cA * cR * sD + sA * sR) / fovy, 41 * cA * cD / 39, cA * cD,
+        (-cA * cR + sA * sD * sR) / (ar * fovy), -(cA * sR + cR * sA * sD) / fovy, 41 * cD * sA / 39, cD * sA,
+        -cD * sR / (ar * fovy), cD * cR / fovy, 41 * sD / 39, sD,
+        0, 0, -4 / 39, 0)
+      break
+    case 'STEREOGRAPHIC':
+      mat4.set(out,
+        2 * (cA * sD * sR + cR * sA) / (ar * fovy), 2 * (-cA * cR * sD + sA * sR) / fovy, 13 * cA * cD / 11, cA * cD,
+        // tslint:disable-next-line:max-line-length
+        2 * (-cA * cR + sA * sD * sR) / (ar * fovy), -(2 * cA * sR + 2 * cR * sA * sD) / fovy, 13 * cD * sA / 11, cD * sA,
+        -2 * cD * sR / (ar * fovy), 2 * cD * cR / fovy, 13 * sD / 11, sD,
+        0, 0, 7 / 11, 1)
+      break
+    case 'FLOATING_EYE':
+      mat4.set(out,
+        // tslint:disable-next-line:max-line-length
+        (fovy + 1) * (cA * sD * sR + cR * sA) / (ar * fovy), (fovy + 1) * (-cA * cR * sD + sA * sR) / fovy, 41 * cA * cD / 39, cA * cD,
+        // tslint:disable-next-line:max-line-length
+        (fovy + 1) * (-cA * cR + sA * sD * sR) / (ar * fovy), -(fovy + 1) * (cA * sR + cR * sA * sD) / fovy, 41 * cD * sA / 39, cD * sA,
+        -cD * sR * (fovy + 1) / (ar * fovy), cD * cR * (fovy + 1) / fovy, 41 * sD / 39, sD,
+        0, 0, 41 * fovy / 39 - 20 / 39, fovy,
+      )
+      break
   }
 }

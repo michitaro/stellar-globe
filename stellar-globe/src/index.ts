@@ -1,12 +1,16 @@
 export { Globe } from "./globe"
 export type { Animation } from "./globe/animation"
+export { PanLayer } from './layer/pan_layer'
+export { ZoomLayer } from './layer/zoom_layer'
+export { RollLayer } from './layer/roll_layer'
+export { TouchLayer } from './layer/touch_layer'
 export { ConstellationLayer } from "./layer/constellation_layer"
 export { EsoMilkyWayLayer } from "./layer/eso_milky_way_layer"
-export { GlobePointerEvent } from "./layer/GlobePointerEvent"
+export { GlobePointerEvent, GlobePointerDragEvent } from "./layer/GlobePointerEvent"
 export { GridLayer } from "./layer/grid_layer"
 export { HipparcosCatalogLayer } from "./layer/hipparcos_catalog_layer"
 export { Layer } from './layer/layer'
-export { MousePicker } from "./layer/layer/MousePicker"
+export { MousePicker, GlobeStoppablePointerEvent } from "./layer/layer/MousePicker"
 import { SspTileLayer } from './layer/ssp_tile_layer'
 export { SspTileLayer, SspTileLayer as TractTileLayer }
 export { TextLayer } from './layer/text_layer'
@@ -21,8 +25,8 @@ export * as tile from './renderer/tile_renderer'
 export type { V2, V3, V4 } from './types'
 export * as dateUtils from './utils/date'
 export { View } from './view'
-export * as matrixUtils from './view/matrilx-utils'
-export type { CameraMode, CameraParams } from './view/matrilx-utils'
+export * as matrixUtils from './utils/matrilx-utils'
+export type { CameraMode } from './globe/Camera'
 export { BeautifulObjectLayer } from './layer/beautiful_object'
 export { baseAlpha, overlayAlpha } from './layer/overlayAlpha'
 export { angle }
@@ -40,5 +44,9 @@ export { DistortionParams } from './distorters'
 export { PlanetariumDistorterParams } from './distorters/PlanetariumDistorterParams'
 export type { LayerConstructorRestParameters } from './globe'
 export { ClickableMarkerLayer, MarkerLayer } from './layer/marker_layer'
+export { PathLayer } from './layer/path_layer'
 export { markerTypes } from './layer/marker_layer/marker'
 export type { MarkerType } from './layer/marker_layer/marker'
+export type { GlobeEventMap } from './globe/events'
+import * as gzip from 'gzip-js'
+export { gzip }

@@ -7,14 +7,16 @@ import { overlayAlpha } from "../overlayAlpha"
 import { AreaRenderer } from "./AreaRenderer"
 import { SspTileTextureProvider } from "./TextureProvider"
 import { SspTileParams, sspTileDefaultParams, sspTileParamsAssertType } from "./TextureProvider/params"
+import { V3 } from '~/types'
 
 
 type Options = {
   baseUrl: string
-  filters?: ConstructorParameters<typeof AreaRenderer>[2]
   outline?: boolean
   colorParams?: SspTileParams
 }
+
+type FilterList = ConstructorParameters<typeof AreaRenderer>[2]
 
 
 export class SspTileLayer extends Layer {
@@ -27,8 +29,8 @@ export class SspTileLayer extends Layer {
     super(globe)
 
     const baseUrl = options.baseUrl
-    const filters = options.filters ?? defaultAreaFilters
-    const colorParams = options.colorParams ?? sspTileDefaultParams('sdssTrueColor')
+    const colorParams = options.colorParams ?? sspTileDefaultParams({ type: 'sdssTrueColor' })
+    const filters = outlineFilter(colorParams)
     this.outline = options.outline ?? false
 
     const textureProvider = new SspTileTextureProvider(globe, baseUrl, colorParams)
@@ -45,21 +47,22 @@ export class SspTileLayer extends Layer {
     this.outline && this.areaRenderer.render(view, this.alpha * alpha)
   }
 
-  setParams(...args: Parameters<SspTileTextureProvider["setParams"]>) {
+  setParams(params: Parameters<SspTileTextureProvider["setParams"]>[0]) {
     const changeParamLod = 2 + Math.log2(this.globe.camera.canvasPixels)
     const { textureProvider } = this.tileRenderer
     const view = this.globe.camera.view()
     const visibleTiles = new Set<TileId>()
     this.tileRenderer.visibleTiles(view, changeParamLod, tileId => visibleTiles.add(tileId))
-    textureProvider.setParams(...args)
+    textureProvider.setParams(params)
     textureProvider.clearCache(tileId => {
       return visibleTiles.has(tileId)
     })
+    this.setAreaFilters(outlineFilter(params))
     this.globe.requestRefresh()
   }
 
-  setAreaFilters(filters: Options["filters"]) {
-    this.areaRenderer.setFilter(filters ?? defaultAreaFilters)
+  private setAreaFilters(filters: FilterList) {
+    this.areaRenderer.setFilter(filters)
     this.globe.requestRefresh()
   }
 
@@ -67,17 +70,20 @@ export class SspTileLayer extends Layer {
   static assertType: typeof sspTileParamsAssertType = sspTileParamsAssertType
 }
 
-const defaultAreaFilters: NonNullable<Options["filters"]> = [
-  {
-    filterName: 'HSC-G',
-    color: [0.2, 0.25, 1],
-  },
-  {
-    filterName: 'HSC-R',
-    color: [0.25, 1, 0.25],
-  },
-  {
-    filterName: 'HSC-I',
-    color: [1, 0.25, 0.25],
-  },
-]
+
+function outlineFilter(params: SspTileParams): FilterList {
+  const rgb: V3[] = [
+    [1., 0.25, 0.25],
+    [0.25, 1, 0.25],
+    [0.25, 0.25, 1],
+  ]
+
+  switch (params.type) {
+    case 'sdssTrueColor': case 'simpleRgb':
+      return params.filters.map((f, i) => ({ filterName: f, color: rgb[i] }))
+    case 'sdssTrueColorMatrix':
+      return params.filters.map((f, i) => ({ filterName: f, color: params.sdssTrueColorMatrix.colors[i] }))
+    case 'simpleColorMatrix':
+      return params.filters.map((f, i) => ({ filterName: f, color: params.simpleColorMatrix.colors[i] }))
+  }
+}

@@ -1,4 +1,5 @@
 import { Globe } from "."
+import { cameraToCameraMoveEvent } from "./events"
 
 export type Animation = ReturnType<AnimationInternal["wrap"]>
 
@@ -32,12 +33,12 @@ export class AnimationManager {
       }
     })
     if (a.cameraMotion && this.animations.filter((aa) => aa.cameraMotion).length === 0) {
-      this.globe.emit('camera-move-start', {})
+      this.globe.emit('camera-move-start', cameraToCameraMoveEvent(this.globe.camera))
     }
     this.animations.push(a)
     a.promise.finally(() => {
       if (a.cameraMotion && this.animations.filter((aa) => aa.cameraMotion).length === 0) {
-        this.globe.emit('camera-move-end', {})
+        this.globe.emit('camera-move-end', cameraToCameraMoveEvent(this.globe.camera))
       }
     })
     this.tick()
@@ -61,7 +62,7 @@ export class AnimationManager {
         this.globe.draw()
         this.tick()
         if (motionAnimation > 0) {
-          this.globe.emit('camera-move', {})
+          this.globe.emit('camera-move', cameraToCameraMoveEvent(this.globe.camera))
         }
       })
     }

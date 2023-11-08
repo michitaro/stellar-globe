@@ -57,8 +57,8 @@ function App() {
       color: [...hsvToRgb(Math.random(), 0.75, 1), 0.75] as V4,
       type: markerTypes[i % markerTypes.length] as MarkerType,
     })),
-    onClick: index => {
-      setHistory(_ => [..._, index])
+    onClick: e => {
+      setHistory(_ => [..._, e.index])
     }
   }), [])
 

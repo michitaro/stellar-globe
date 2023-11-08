@@ -12,13 +12,10 @@ export type Vertex = {
   color: V4
 }
 
-export enum BlendMode {
-  NORMAL = 'NORMAL',
-  ADD = 'ADD',
-}
+export type BlendMode = 'NORMAL' | 'ADD'
 
 export class Renderer {
-  blendMode = BlendMode.ADD
+  blendMode: BlendMode = 'ADD'
   modelMatrix = mat4.create()
 
   private program: Program
@@ -81,10 +78,10 @@ export class Renderer {
       })
       glUtils.enable(gl, [gl.BLEND], () => {
         switch (this.blendMode) {
-          case BlendMode.ADD:
+          case 'ADD':
             gl.blendFunc(gl.SRC_ALPHA, gl.ONE)
             break
-          case BlendMode.NORMAL:
+          case 'NORMAL':
             gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
             break
         }

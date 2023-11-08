@@ -1,9 +1,12 @@
 import { GlobePointerEvent } from "~/layer/GlobePointerEvent"
+import { CameraMode } from ".."
+import { Camera } from "./Camera"
 
 export interface GlobeEventMap {
   'camera-move-start': CameraMoveEvent
   'camera-move-end': CameraMoveEvent
   'camera-move': CameraMoveEvent
+  'camera-mode-change': CameraModeChangeEvent
   'pointer-down': GlobePointerEvent
   'pointer-move': GlobePointerEvent
   'pointer-up': GlobePointerEvent
@@ -14,7 +17,19 @@ export interface GlobeEventMap {
   'resize': GlobeResizeEvent
 }
 
-type CameraMoveEvent = {}
+type CameraMoveEvent = ReturnType<typeof cameraToCameraMoveEvent>
+
+type CameraModeChangeEvent = {
+  mode: CameraMode
+}
+
 type LayerChangeEvent = {}
 type ImageLoadEvent = {}
 type GlobeResizeEvent = {}
+
+
+export function cameraToCameraMoveEvent(camera: Camera) {
+  const { a, d } = camera.center()
+  const { theta, phi, za, zd, zp, fovy, roll } = camera
+  return { theta, phi, za, zd, zp, fovy, roll, skyCoord: { ra: a.rad, dec: d.rad } }
+}

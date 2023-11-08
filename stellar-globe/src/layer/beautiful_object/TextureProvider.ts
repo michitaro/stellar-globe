@@ -54,7 +54,7 @@ export class FitsTextureProvider extends tile.AsyncTextureProvider {
         await Fits.fetch(url, [{ outputDataType: Fits.DataType.float32, sourceIndex: 0 }]).catch(() => undefined)
       return hdul && hdul[0]
     }))
-    const tt = new tile.TileTexture(this, fadeIn)
+    const tt = new tile.TileTexture(this, { fadeIn })
 
     const gl = this.globe.gl
     const { tileSize } = ref.tract

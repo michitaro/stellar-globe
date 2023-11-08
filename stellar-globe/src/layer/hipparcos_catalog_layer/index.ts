@@ -16,26 +16,28 @@ type Options = {
 
 
 export class HipparcosCatalogLayer extends Layer {
-  private pointRenderer?: PointRenderer
-  private array?: Float32Array
-  private fadeInAlpha = 1
+  private pointRenderer: PointRenderer
+  private fadeInAlpha = 0
 
   constructor(
     globe: Globe,
     {
-      fadeInDuration = 0,
+      fadeInDuration = 400,
     }: Options = {}
   ) {
     super(globe)
-    this.addAnimation(({ r }) => {
-      this.fadeInAlpha = r
-    }, { duration: fadeInDuration })
-    this.onRelease(loadCatalog(buffer => {
-      this.array = new Float32Array(buffer)
-      this.refresh()
-    }))
     this.pointRenderer = new PointRenderer(this.globe.gl)
-    this.refresh()
+    this.onRelease(loadCatalog(
+      () => {
+        this.addAnimation(({ r }) => {
+          this.fadeInAlpha = r
+        }, { duration: fadeInDuration })
+      },
+      buffer => {
+        const array = new Float32Array(buffer)
+        this.pointRenderer.setArray(array)
+        this.globe.requestRefresh()
+      }))
     this.onRelease(() => {
       this.pointRenderer!.release()
     })
@@ -43,36 +45,34 @@ export class HipparcosCatalogLayer extends Layer {
 
   render(view: View) {
     const alpha = this.fadeInAlpha * overlayAlpha(view)
-    this.pointRenderer!.render(view, alpha)
-  }
-
-  private refresh() {
-    if (this.globe && this.pointRenderer && this.array) {
-      this.pointRenderer._setArray(this.array)
-      this.globe.requestRefresh()
-    }
+    this.pointRenderer?.render(view, alpha)
   }
 }
 
 
-function loadCatalog(cb: (buffer: ArrayBuffer) => void) {
+function loadCatalog(onFirstLoad: () => void, onLoad: (buffer: ArrayBuffer) => void) {
   const loader = setWorkerErrorHandler(new CatalogWorker())
 
-  const cleanup = Object.assign(() => {
-    cleanup.fired = true
+  let messageCount = 0
+
+  let cleanup: (() => void) | undefined = () => {
+    cleanup = undefined
     offLoaderMessage()
     loader.terminate()
-  }, { fired: false })
+  }
 
   // @ts-ignore
   const offLoaderMessage = on(loader, 'message',
     (e: MessageEvent) => {
       const res: ResponseMessage = e.data
-      if (!cleanup.fired) {
-        cb(res.buffer)
+      if (cleanup) {
+        if (messageCount++ === 0) {
+          onFirstLoad()
+        }
+        onLoad(res.buffer)
       }
       if (res.end) {
-        cleanup()
+        cleanup?.()
       }
     }
   )
@@ -83,5 +83,7 @@ function loadCatalog(cb: (buffer: ArrayBuffer) => void) {
 
   loader.postMessage(request)
 
-  return cleanup
+  return () => {
+    cleanup?.()
+  }
 }

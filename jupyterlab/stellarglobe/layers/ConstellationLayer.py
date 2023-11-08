@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import Literal, Optional
 
 from .._models.LayerProps.ConstellationLayer import Model as Props
+from ..utils.unit import s2ms
 from .BaseLayer import BaseLayer
 
 
@@ -9,21 +10,21 @@ from .BaseLayer import BaseLayer
 class ConstellationLayer(BaseLayer):
     type = 'ConstellationLayer'
 
-    fadeInDuration: Optional[float] = None
+    fade_in_duration: Optional[float] = None
     lang: Optional[Literal['Hiragana', 'Kanji', 'English']] = 'English'
-    nameColor: Optional[str] = None
-    nameFont: Optional[str] = None
-    showLines: bool = True
-    showNames: bool = False
+    name_color: Optional[str] = None
+    name_font: Optional[str] = None
+    show_lines: bool = True
+    show_names: bool = False
     visible: bool = True
 
     def props(self):
         return Props(
             visible=self.visible,
-            fadeInDuration=self.fadeInDuration,
+            fadeInDuration=self.fade_in_duration and self.fade_in_duration * s2ms,
             lang=self.lang,
-            nameColor=self.nameColor,
-            nameFont=self.nameFont,
-            showLines=self.showLines,
-            showNames=self.showNames,
+            nameColor=self.name_color,
+            nameFont=self.name_font,
+            showLines=self.show_lines,
+            showNames=self.show_names,
         )

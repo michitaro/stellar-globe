@@ -1,5 +1,5 @@
 import { HipparcosCatalogLayer } from "@stellar-globe/stellar-globe"
-import { makePureLayerComponent, setDisplayName } from "../Globe"
+import { makePureLayerComponent, setDisplayName } from "../GlobeContext"
 
 const HipparcosCatalogLayer$ = makePureLayerComponent<{
   visible?: boolean
