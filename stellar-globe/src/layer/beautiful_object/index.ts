@@ -1,12 +1,12 @@
 import { mat4 } from "gl-matrix"
-import { config } from "~/config"
 import { tile } from "~/index"
 import { View } from "~/view"
 import { Globe } from '../../globe'
 import { Layer } from "../layer"
 import { baseAlpha } from '../overlayAlpha'
-import * as mixerParams from './mixerParams'
 import { FitsTextureProvider } from "./TextureProvider"
+import * as mixerParams from './mixerParams'
+import { wegblProfile } from "~/devel/webgl-profiler/utils"
 
 
 export class BeautifulObjectLayer extends Layer {
@@ -15,7 +15,7 @@ export class BeautifulObjectLayer extends Layer {
   constructor(globe: Globe, which: keyof typeof mixerParams) {
     super(globe)
 
-    const tp = new FitsTextureProvider(globe, `${config.dataRepository}/pretty_picture/${which}`)
+    const tp = new FitsTextureProvider(globe, `${globe.dataRepository}/pretty_picture/${which}`)
     const params = mixerParams[which]
     tp.mixer.beta = params.beta
     tp.mixer.a = params.a
@@ -32,7 +32,10 @@ export class BeautifulObjectLayer extends Layer {
 
   render(view: View): void {
     const alpha = baseAlpha(view)
-    this.renderer.render(view, alpha)
+    const gl = this.globe.gl
+    wegblProfile(gl, 'BeautifulObjects', () => {
+      this.renderer.render(view, alpha)
+    })
   }
 }
 

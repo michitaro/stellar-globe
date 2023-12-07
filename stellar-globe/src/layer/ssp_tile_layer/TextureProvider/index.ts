@@ -1,7 +1,8 @@
-import { config } from "~/config"
+import { wegblProfile } from "~/devel/webgl-profiler/utils"
 import { Globe } from "~/globe"
 import { Cache } from "~/lib/cache"
 import { ImageLike } from '~/lib/gl-wrapper'
+import { nonNull } from "~/lib/gl-wrapper/utils"
 import { AsyncTextureProvider, TileRef, TileTexture, Tract } from "~/renderer/tile_renderer"
 import { loadImage } from "~/utils"
 import { ImageFilter } from "~/utils/image_filter"
@@ -13,7 +14,6 @@ import simple_rgb from './glsl/simple_rgb.glsl?raw'
 import simple_rgb_png_mixer from './glsl/simple_rgb_png_mixer.frag.glsl?raw'
 import sinh from './glsl/sinh.glsl?raw'
 import { SspTileParams, SspTileParamsOf } from "./params"
-import { nonNull } from "~/lib/gl-wrapper/utils"
 import { waitIdleTime } from "~/utils/time"
 
 
@@ -188,6 +188,7 @@ export class SspTileTextureProvider extends AsyncTextureProvider {
   private imageFilter!: ImageFilter
   private params!: SspTileParams
   private imageCache: ReturnType<typeof CachedImageLoader>
+  private magFilter = true
 
   constructor(
     globe: Globe,
@@ -283,7 +284,7 @@ export class SspTileTextureProvider extends AsyncTextureProvider {
       .map((f) => `${this.baseUrl}/${f}/${this.tractName.get(ref.tract)}/${ref.level}/${ref.p}/${ref.q}.png`)
   }
 
-  async makeTileTexture(ref: TileRef, fadeIn: boolean) {
+  async makeTileTexture(ref: TileRef, { sync, fadeIn }: { fadeIn: boolean, sync: boolean }) {
     const urls = this.imageUrls(ref)
     const revision = this.revision
     const images = await Promise.all(urls.map(url => this.imageCache(url)))
@@ -291,17 +292,24 @@ export class SspTileTextureProvider extends AsyncTextureProvider {
     const gl = this.globe.gl
     const { tileSize } = ref.tract
 
+    if (!sync) {
+      await waitIdleTime()
+    }
+
     if (this.alreadyReleased) {
       return tt
     }
 
-    this.imageFilter.applyToImages(tt.tex, tileSize, tileSize, images)
+    wegblProfile(gl, 'imageFilter', () => {
+      this.imageFilter.applyToImages(tt.tex, tileSize, tileSize, images)
+    })
+
     tt.tex.bind(() => {
       if (ref.level === ref.tract.maxTileLevel) {
         gl.generateMipmap(gl.TEXTURE_2D)
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR)
       }
-      if (!config.tileRenderer.enableMagFilter && ref.level === 0) {
+      if (!this.magFilter && ref.level === 0) {
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST)
       }
     })

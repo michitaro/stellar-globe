@@ -6,6 +6,7 @@ import { range } from "~/utils/math"
 import { View } from "~/view"
 import { Layer } from "./layer"
 import { overlayAlpha } from "./overlayAlpha"
+import { wegblProfile } from "~/devel/webgl-profiler/utils"
 
 
 function defaultGridOptions() {
@@ -64,10 +65,13 @@ export class GridLayer extends Layer {
 
   render(view: View) {
     const alpha = this.fadeAlpha * overlayAlpha(view)
+    const gl = this.globe.gl
     if (this.options.modelMatrix) {
       this.pathRenderer.modelMatrix = this.options.modelMatrix()
     }
-    this.pathRenderer.render(view, alpha)
+    wegblProfile(gl, 'Grid', () => {
+      this.pathRenderer.render(view, alpha)
+    })
   }
 
   private generatePaths() {

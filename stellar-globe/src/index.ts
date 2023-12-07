@@ -6,11 +6,11 @@ export { RollLayer } from './layer/roll_layer'
 export { TouchLayer } from './layer/touch_layer'
 export { ConstellationLayer } from "./layer/constellation_layer"
 export { EsoMilkyWayLayer } from "./layer/eso_milky_way_layer"
-export { GlobePointerEvent, GlobePointerDragEvent } from "./layer/GlobePointerEvent"
+export { GlobePointerEvent as GlobePointerEvent, GlobePointerDragEvent } from "./layer/GlobePointerEvent"
 export { GridLayer } from "./layer/grid_layer"
 export { HipparcosCatalogLayer } from "./layer/hipparcos_catalog_layer"
 export { Layer } from './layer/layer'
-export { MousePicker, GlobeStoppablePointerEvent } from "./layer/layer/MousePicker"
+export { MousePicker, GlobePointerEvent } from "./layer/layer/MousePicker"
 import { SspTileLayer } from './layer/ssp_tile_layer'
 export { SspTileLayer, SspTileLayer as TractTileLayer }
 export { TextLayer } from './layer/text_layer'
@@ -50,3 +50,6 @@ export type { MarkerType } from './layer/marker_layer/marker'
 export type { GlobeEventMap } from './globe/events'
 import * as gzip from 'gzip-js'
 export { gzip }
+import * as glMatrix from 'gl-matrix'
+export { glMatrix }
+export { enableWebglProfiler, webglProfileSupported, wegblProfile } from './devel/webgl-profiler/utils'

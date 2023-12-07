@@ -123,7 +123,7 @@ export abstract class AsyncTextureProvider extends TextureProvider {
     if (!sync) {
       await waitIdleTime() // カクつきを軽減
     }
-    this.makeTileTexture(ref, fadeIn).then(tt => {
+    this.makeTileTexture(ref, { fadeIn, sync }).then(tt => {
       if (this.alreadyReleased) {
         tt.release()
         return
@@ -141,7 +141,7 @@ export abstract class AsyncTextureProvider extends TextureProvider {
     })
   }
 
-  protected abstract makeTileTexture(ref: TileRef, fadeIn: boolean): Promise<TileTexture>
+  protected abstract makeTileTexture(ref: TileRef, options: { fadeIn: boolean, sync: boolean }): Promise<TileTexture>
 
   clearCache(keep?: (id: TileId) => boolean) {
     if (keep) {
@@ -171,7 +171,7 @@ export abstract class SimpleImageTextureProvider extends AsyncTextureProvider {
     super(globe)
   }
 
-  async makeTileTexture(ref: TileRef, fadeIn: boolean): Promise<TileTexture> {
+  async makeTileTexture(ref: TileRef, { fadeIn }: { fadeIn: boolean }): Promise<TileTexture> {
     const url = this.ref2url(ref)
     const image = await loadImage(url)
     const tt = new TileTexture(this, { fadeIn })

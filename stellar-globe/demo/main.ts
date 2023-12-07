@@ -26,6 +26,16 @@ function main() {
   // const globe = new Globe(el, { viewOptions: { retina: false, ...zenith } })
   const globe = new Globe(el, { viewOptions: { retina: true } })
 
+  // if (webglProfileSupported()) {
+  //   const profiler = enableWebglProfiler(globe.gl)
+  //   setTimeout(() => {
+  //     const stop = profiler.start()
+  //     setTimeout(() => {
+  //       stop()
+  //     }, 3000)
+  //   }, 2000)
+  // }
+
   initTileLayer(globe)
   globe.addNewLayer(GridLayer)
   globe.addNewLayer(HipparcosCatalogLayer)

@@ -1,5 +1,4 @@
 import { mat4, vec3 } from 'gl-matrix'
-import { config } from '~/config'
 import { SkyCoord, asec2rad, deg2rad, wrapTo2Pi } from "~/lib/angle"
 import * as easing from '~/lib/easing'
 import { V3 } from "~/types"
@@ -55,7 +54,7 @@ export class Camera implements CameraParams {
   min_fovy = asec2rad(5)
   max_fovy = 2
 
-  retina = config.retina
+  retina = true
 
   constructor(
     private globe: Globe,

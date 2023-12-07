@@ -18,7 +18,7 @@ export function PointerEventManager(
   const offDown = SinglePointerEvent.onDown(domElement, downSe => {
     // マウス押下中・・・
     const activeMousePickers: MousePicker[] = []
-    const downGe = new GlobeStoppablePointerEvent(downSe, globe, view())
+    const downGe = new GlobePointerEvent(downSe, globe, view())
     pointerPressed = true
 
     layerLoop:
@@ -49,9 +49,10 @@ export function PointerEventManager(
       offDrag()
       pointerPressed = false
       const v = view()
-      const upGe = new GlobeStoppablePointerEvent(upSe, globe, v)
+      const dragGe = new GlobePointerDragEvent(upSe, globe, v, downGe)
+      const upGe = new GlobePointerEvent(upSe, globe, v)
       for (const mp of activeMousePickers) {
-        mp.runOnPointerUp(upGe)
+        mp.runOnPointerUp(dragGe)
       }
       if (isClick(downSe, upSe)) {
         for (const mp of activeMousePickers) {
@@ -96,18 +97,4 @@ export function PointerEventManager(
   }))
 
   return releaseCallbacks.flush
-}
-
-
-export class GlobeStoppablePointerEvent extends GlobePointerEvent {
-  private stopCount = 0
-
-  stopPropagation() {
-    ++this.stopCount
-  }
-
-  /** @internal */
-  get stopped() {
-    return this.stopCount > 0
-  }
 }

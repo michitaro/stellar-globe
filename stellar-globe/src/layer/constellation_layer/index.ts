@@ -8,6 +8,7 @@ import { V3, V4 } from "~/types"
 import { text2imageData } from "~/utils/text2imagedata"
 import { View } from "~/view"
 import { constellationNamesHiragana, constellationNamesKanji } from "./japanese"
+import { wegblProfile } from "~/devel/webgl-profiler/utils"
 
 
 type ConstellationDictionary = { [name: string]: Constellation }
@@ -87,19 +88,24 @@ export class ConstellationLayer extends Layer {
 
   render(view: View) {
     const alpha = this.fadeInAlpha * overlayAlpha(view)
+    const gl = this.globe.gl
     if (this.showLines) {
       if (!this.pathRenderer) {
         this.pathRenderer = new PathRenderer(this.globe.gl)
         this.buildLines()
       }
-      this.pathRenderer.render(view, alpha)
+      wegblProfile(gl, 'Constellation.lines', () => {
+        this.pathRenderer!.render(view, alpha)
+      })
     }
     if (this.showNames) {
       if (!this.billboardRenderer) {
         this.billboardRenderer = new BillboardRenderer(this.globe.gl)
         this.buildNameBillboards()
       }
-      this.billboardRenderer.render(view, alpha)
+      wegblProfile(gl, 'Constellation.names', () => {
+        this.billboardRenderer!.render(view, alpha)
+      })
     }
   }
 

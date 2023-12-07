@@ -1,7 +1,6 @@
 import { Inertia2D } from "@stellar-globe/inertia"
 import { Globe } from "~/globe"
 import { Animation, AnimationCallback } from "~/globe/animation"
-import { GlobeStoppablePointerEvent } from "~/globe/pointer_event"
 import { GlobePointerDragEvent, GlobePointerEvent } from "~/layer/GlobePointerEvent"
 
 
@@ -13,10 +12,10 @@ type HitResult = {
 
 export abstract class MousePicker {
   abstract hit(e: GlobePointerEvent): HitResult
-  protected onPointerDown(e: GlobeStoppablePointerEvent) { e }
+  protected onPointerDown(e: GlobePointerEvent) { e }
   protected onDrag(e: GlobePointerDragEvent) { e }
-  protected onPointerUp(e: GlobePointerEvent) { e }
-  protected onClick(e: GlobeStoppablePointerEvent) { e }
+  protected onPointerUp(e: GlobePointerDragEvent) { e }
+  protected onClick(e: GlobePointerEvent) { e }
   protected onMove(e: GlobePointerEvent) { e }
   protected onHover(e: GlobePointerEvent) { e }
   protected onEnter(e: GlobePointerEvent) { e }
@@ -105,4 +104,4 @@ export abstract class InertiaMousePicker extends MousePicker {
 }
 
 
-export { GlobeStoppablePointerEvent }
+export { GlobePointerEvent }

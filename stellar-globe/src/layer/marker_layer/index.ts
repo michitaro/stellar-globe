@@ -7,7 +7,7 @@ import { MarkerType, makeMarkerImageData, markerTypes } from "./marker"
 import { MousePicker } from "../layer/MousePicker"
 import { GlobePointerEvent } from "../GlobePointerEvent"
 import { KdTree } from "~/utils/kd_tree"
-import { GlobeStoppablePointerEvent } from "~/globe/pointer_event"
+import { wegblProfile } from "~/devel/webgl-profiler/utils"
 
 
 type MarkerRendererOptions = {
@@ -106,8 +106,11 @@ export class ClickableMarkerLayer extends Layer {
   }
 
   render(view: View): void {
-    this.baseMarkerRenderer.render(view, this.options.dimmAlpha)
-    this.focusedMarkerRenderer.render(view)
+    const gl = this.globe.gl
+    wegblProfile(gl, 'ClickableMarker', () => {
+      this.baseMarkerRenderer.render(view, this.options.dimmAlpha)
+      this.focusedMarkerRenderer.render(view)
+    })
   }
 
   set onClick(handler: ((e: ClickEvent) => void) | undefined) {
@@ -164,7 +167,7 @@ class MarkerMousePicker extends MousePicker {
     layer.globe.requestRefresh()
   }
 
-  protected onClick(_e: GlobeStoppablePointerEvent): void {
+  protected onClick(_e: GlobePointerEvent): void {
     const { options: { onClick } } = this.backdoor()
     if (onClick && this.focusedIndex >= 0) {
       onClick({ index: this.focusedIndex })

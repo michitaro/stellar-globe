@@ -9,6 +9,7 @@ type PathLayerOptions = {
   paths: Path[]
   blendMode?: BlendMode
   dimOnZoom?: boolean
+  darkenNarrowLine?: boolean
 }
 
 
@@ -22,8 +23,7 @@ export class PathLayer extends Layer {
   ) {
     super(globe)
     const options: Required<PathLayerOptions> = { ...PathLayer.defaultOptions(), ..._options }
-    this.pathRenderer = new Renderer(this.globe.gl)
-    this.pathRenderer.blendMode = options.blendMode
+    this.pathRenderer = new Renderer(this.globe.gl, options)
     this._dimOnZoom = options.dimOnZoom
     this.onRelease(() => {
       this.pathRenderer.release()
@@ -51,10 +51,16 @@ export class PathLayer extends Layer {
     this.globe.requestRefresh()
   }
 
+  set darkenNarrowLine(darkenNarrowLine: boolean) {
+    this.pathRenderer.darkenNarrowLine = darkenNarrowLine
+    this.globe.requestRefresh()
+  }
+
   static defaultOptions() {
     return {
       blendMode: 'NORMAL' as BlendMode,
       dimOnZoom: false,
+      darkenNarrowLine: true,
     }
   }
 }

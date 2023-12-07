@@ -1,4 +1,3 @@
-import { config } from "~/config"
 import { Globe } from "~/globe"
 import { Layer } from '~/layer/layer'
 import { overlayAlpha } from '~/layer/overlayAlpha'
@@ -8,6 +7,7 @@ import { setWorkerErrorHandler } from "~/utils/setWorkerErrorHandler"
 import { View } from "~/view"
 import { RequestMessage, ResponseMessage } from './catalog-loader'
 import CatalogWorker from './catalog-loader?worker&inline'
+import { wegblProfile } from "~/devel/webgl-profiler/utils"
 
 
 type Options = {
@@ -28,6 +28,7 @@ export class HipparcosCatalogLayer extends Layer {
     super(globe)
     this.pointRenderer = new PointRenderer(this.globe.gl)
     this.onRelease(loadCatalog(
+      globe.dataRepository,
       () => {
         this.addAnimation(({ r }) => {
           this.fadeInAlpha = r
@@ -44,13 +45,15 @@ export class HipparcosCatalogLayer extends Layer {
   }
 
   render(view: View) {
-    const alpha = this.fadeInAlpha * overlayAlpha(view)
-    this.pointRenderer?.render(view, alpha)
+    wegblProfile(this.globe.gl, 'HipparcosCatalog', () => {
+      const alpha = this.fadeInAlpha * overlayAlpha(view)
+      this.pointRenderer?.render(view, alpha)
+    })
   }
 }
 
 
-function loadCatalog(onFirstLoad: () => void, onLoad: (buffer: ArrayBuffer) => void) {
+function loadCatalog(dataRepository: string, onFirstLoad: () => void, onLoad: (buffer: ArrayBuffer) => void) {
   const loader = setWorkerErrorHandler(new CatalogWorker())
 
   let messageCount = 0
@@ -78,7 +81,7 @@ function loadCatalog(onFirstLoad: () => void, onLoad: (buffer: ArrayBuffer) => v
   )
 
   const request: RequestMessage = {
-    dataRepository: config.dataRepository,
+    dataRepository,
   }
 
   loader.postMessage(request)

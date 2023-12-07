@@ -1,7 +1,6 @@
+import { mat2, mat3, mat4 } from 'gl-matrix'
 import { AttribList } from './attrib_list'
 import * as glUtils from './utils'
-import { TupleMap } from "~/lib/tuple-map"
-import { mat2, mat3, mat4 } from 'gl-matrix'
 
 
 export class Program {
@@ -12,7 +11,11 @@ export class Program {
   private uniformLocationMemo = new Map<string, WebGLUniformLocation>()
   private refCount = 1
 
-  private constructor(readonly gl: WebGLRenderingContext, private vertSource: string, private fragSource: string) {
+  private constructor(
+    readonly gl: WebGLRenderingContext,
+    vertSource: string,
+    fragSource: string,
+  ) {
     this.vertShader = this.createShader(vertSource, this.gl.VERTEX_SHADER)
     this.fragShader = this.createShader(fragSource, this.gl.FRAGMENT_SHADER)
     this.name = glUtils.nonNull(this.gl.createProgram())
@@ -24,36 +27,38 @@ export class Program {
     }
   }
 
-  private retain() {
-    ++this.refCount
-    return this
-  }
-
-  private static cache = new TupleMap<[WebGLRenderingContext, string, string], Program>()
-
   static new(gl: WebGLRenderingContext, vertSource: string, fragSource: string) {
-    const cachedProgram = Program.cache.get([gl, vertSource, fragSource])
+    const cachedProgram = recallProgram(gl, { vertSource, fragSource })
     if (cachedProgram) {
-      return cachedProgram.retain()
+      ++cachedProgram.refCount
+      return cachedProgram
     }
     else {
       const program = new Program(gl, vertSource, fragSource)
-      this.cache.set([gl, vertSource, fragSource], program)
+      const forget = memoProgram(gl, { vertSource, fragSource }, program)
+      program.forget = forget
       return program
     }
   }
 
+  private forget?: () => void
+
   release() {
-    if (--this.refCount == 0) {
+    --this.refCount
+    if (this.refCount == 0) {
       this.gl.deleteShader(this.fragShader)
       this.gl.deleteShader(this.vertShader)
       this.gl.deleteProgram(this.name)
-      Program.cache.delete([this.gl, this.vertSource, this.fragSource])
+      this.forget!()
     }
   }
 
   use() {
-    this.gl.useProgram(this.name)
+    const p = activeProgram.get(this.gl)
+    if (p !== this) {
+      activeProgram.set(this.gl, this)
+      this.gl.useProgram(this.name)
+    }
   }
 
   attribLocation(varName: string) {
@@ -144,5 +149,45 @@ export class Program {
     }
     return glUtils.nonNull(shader)
   }
-
 }
+
+
+const activeProgram = new WeakMap<WebGLRenderingContext, Program>()
+
+
+const { recallProgram, memoProgram } = (() => {
+  const memo = new WeakMap<WebGLRenderingContext, Map<string, Program>>()
+
+  function getMap(gl: WebGLRenderingContext) {
+    if (!memo.has(gl)) {
+      memo.set(gl, new Map())
+    }
+    return memo.get(gl)!
+  }
+
+  type MemoSource = {
+    vertSource: string
+    fragSource: string
+  }
+
+  const makeKey = (sources: MemoSource) => {
+    return JSON.stringify([sources.vertSource, sources.fragSource])
+  }
+
+  const recallProgram = (gl: WebGLRenderingContext, sources: MemoSource) => {
+    const map = getMap(gl)
+    const key = makeKey(sources)
+    return map.get(key)
+  }
+
+  const memoProgram = (gl: WebGLRenderingContext, sources: MemoSource, program: Program) => {
+    const map = getMap(gl)
+    const key = makeKey(sources)
+    map.set(key, program)
+    return () => {
+      map.delete(key)
+    }
+  }
+
+  return { recallProgram, memoProgram }
+})()

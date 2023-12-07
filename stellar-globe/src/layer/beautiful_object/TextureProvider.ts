@@ -5,6 +5,7 @@ import { assert } from "~/utils/debug"
 import { ImageFilter } from "~/utils/image_filter"
 import { Globe } from '../../globe'
 import mixerFragShader from './mixer.frag.glsl?raw'
+import { waitIdleTime } from "~/utils/time"
 
 
 export class FitsTextureProvider extends tile.AsyncTextureProvider {
@@ -46,7 +47,7 @@ export class FitsTextureProvider extends tile.AsyncTextureProvider {
     }
   }
 
-  async makeTileTexture(ref: tile.TileRef, fadeIn: boolean) {
+  async makeTileTexture(ref: tile.TileRef, { fadeIn, sync }: { fadeIn: boolean, sync: boolean }) {
     const filters = this.meta!.filters
     const urls = filters.map((f) => `${this.url}/${f}/${ref.level}/${ref.p}/${ref.q}.fits`)
     const hdus = await Promise.all(urls.map(async (url) => {
@@ -55,6 +56,14 @@ export class FitsTextureProvider extends tile.AsyncTextureProvider {
       return hdul && hdul[0]
     }))
     const tt = new tile.TileTexture(this, { fadeIn })
+    
+    if (!sync) {
+      await waitIdleTime()
+    }
+
+    if (this.alreadyReleased) {
+      return tt
+    }
 
     const gl = this.globe.gl
     const { tileSize } = ref.tract
@@ -65,8 +74,7 @@ export class FitsTextureProvider extends tile.AsyncTextureProvider {
           gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST)
           gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST)
           if (i < this.nFilters && hdus[i]) {
-            gl.texImage2D(
-              gl.TEXTURE_2D, 0, gl.LUMINANCE, tileSize, tileSize, 0, gl.LUMINANCE, gl.FLOAT, hdus[i]!.float32array())
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, tileSize, tileSize, 0, gl.LUMINANCE, gl.FLOAT, hdus[i]!.float32array())
           } else {
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, 1, 1, 0, gl.LUMINANCE, gl.FLOAT, new Float32Array([0]))
           }

@@ -1,5 +1,5 @@
 import { mat4 } from 'gl-matrix'
-import { config } from '~/config'
+import { wegblProfile } from '~/devel/webgl-profiler/utils'
 import { Globe } from '~/globe'
 import { Layer } from '~/layer/layer'
 import { overlayAlpha } from '~/layer/overlayAlpha'
@@ -14,6 +14,7 @@ import { View } from '~/view'
 
 type Options = {
   fadeInDuration?: number
+  imageSize?: 512 | 1024
 }
 
 
@@ -22,32 +23,37 @@ export class EsoMilkyWayLayer extends Layer {
 
   constructor(
     globe: Globe,
-    private readonly options: Options = {},
+    options: Options = {},
   ) {
     super(globe)
-    this.loadImages()
+    this.loadImages(options)
   }
 
   private fadeAlpha = 0
 
-  private async loadImages() {
+  private async loadImages({
+    fadeInDuration = 400,
+    imageSize = 1024,
+  }: Options) {
     let alive = true
     this.onRelease(() => alive = false)
     const gl = this.globe.gl
-    const maxCubeMapSize = gl.getParameter(gl.MAX_CUBE_MAP_TEXTURE_SIZE)
-    const images = await EsoMilkyWay.loadImages(maxCubeMapSize)
+    const maxCubeMapSize = Math.min(gl.getParameter(gl.MAX_CUBE_MAP_TEXTURE_SIZE), imageSize)
+    const images = await EsoMilkyWay.loadImages(this.globe.dataRepository, maxCubeMapSize)
     if (alive) {
       this.renderer = new EsoMilkyWay(this.globe.gl, images)
       this.onRelease(() => this.renderer?.release())
       this.addAnimation(({ r }) => {
         this.fadeAlpha = r
-      }, { duration: this.options.fadeInDuration ?? 400 })
+      }, { duration: fadeInDuration })
     }
   }
 
   render(view: View) {
-    const alpha = overlayAlpha(view) * this.fadeAlpha
-    this.renderer?.render(view, alpha)
+    wegblProfile(this.globe.gl, 'EsoMiokyWay', () => {
+      const alpha = overlayAlpha(view) * this.fadeAlpha
+      this.renderer?.render(view, alpha)
+    })
   }
 
   static attributions = [{
@@ -78,15 +84,17 @@ class EsoMilkyWay extends CubeMapRenderer {
     return this.m
   }
 
-  static async loadImages(maxCubeMapSize: number) {
-    const urls1024 = ['px', 'py', 'pz', 'nx', 'ny', 'nz']
-      .map((dir) => `${config.dataRepository}/eso_milky_way_layer/images-1024/${dir}.png`)
-    const urls512 = ['px', 'py', 'pz', 'nx', 'ny', 'nz']
-      .map((dir) => `${config.dataRepository}/eso_milky_way_layer/images-512/${dir}.png`)
-
-    const urls = maxCubeMapSize >= 1024 ? urls1024 : urls512
-    const images = await Promise.all(urls.map(url => loadImage(url, { flipY: false })))
-    return images
+  static async loadImages(dataRepository: string, maxCubeMapSize: number) {
+    const sizes = [1024, 512]
+    for (const size of sizes) {
+      if (size <= maxCubeMapSize) {
+        const urls = ['px', 'py', 'pz', 'nx', 'ny', 'nz']
+          .map((dir) => `${dataRepository}/eso_milky_way_layer/images-${size}/${dir}.png`)
+        const images = await Promise.all(urls.map(url => loadImage(url, { flipY: false })))
+        return images
+      }
+    }
+    throw new Error(`No available image: size: ${maxCubeMapSize}`)
   }
 
   // private enableMatrixCalibrator() {

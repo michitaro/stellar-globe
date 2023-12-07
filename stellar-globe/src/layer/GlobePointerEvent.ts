@@ -33,6 +33,17 @@ export class GlobePointerEvent extends SinglePointerEvent {
       rect.height * (1 - (y + 1) / 2.),
     ]
   }
+
+  private stopCount = 0
+
+  stopPropagation() {
+    ++this.stopCount
+  }
+
+  /** @internal */
+  get stopped() {
+    return this.stopCount > 0
+  }
 }
 
 export class GlobePointerDragEvent extends GlobePointerEvent {

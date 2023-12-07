@@ -8,6 +8,7 @@ import { AreaRenderer } from "./AreaRenderer"
 import { SspTileTextureProvider } from "./TextureProvider"
 import { SspTileParams, sspTileDefaultParams, sspTileParamsAssertType } from "./TextureProvider/params"
 import { V3 } from '~/types'
+import { wegblProfile } from '~/devel/webgl-profiler/utils'
 
 
 type Options = {
@@ -42,9 +43,16 @@ export class SspTileLayer extends Layer {
   }
 
   render(view: View): void {
+    const gl = this.globe.gl
     const alpha = overlayAlpha(view)
-    this.tileRenderer.render(view, 1 - alpha)
-    this.outline && this.areaRenderer.render(view, this.alpha * alpha)
+    wegblProfile(gl, 'sspTile', () => {
+      this.tileRenderer.render(view, 1 - alpha)
+    })
+    if (this.outline) {
+      wegblProfile(gl, 'sspTileOutline', () => {
+        this.areaRenderer.render(view, this.alpha * alpha)
+      })
+    }
   }
 
   setParams(params: Parameters<SspTileTextureProvider["setParams"]>[0]) {

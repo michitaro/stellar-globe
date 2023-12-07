@@ -1,6 +1,7 @@
+import { wegblProfile } from "~/devel/webgl-profiler/utils"
+import { Distorter, DistortionParams } from "~/distorters"
 import { Layer } from "~/layer/layer"
 import { PanLayer } from "~/layer/pan_layer"
-import { Distorter, DistortionParams } from "~/distorters"
 import { RollLayer } from "~/layer/roll_layer"
 import { TouchLayer } from '~/layer/touch_layer'
 import { ZoomLayer } from "~/layer/zoom_layer"
@@ -18,6 +19,7 @@ type GlobeOptions = {
   distortion?: DistortionParams
   noDefaultLayers?: boolean
   jsdomTest?: boolean
+  dataRepository?: string
   // cursor?: CSSStyleDeclaration['cursor']
 }
 
@@ -29,12 +31,16 @@ export class Globe {
   /** @internal */
   readonly canvas: Canvas
 
+  readonly dataRepository: string
+
   private readonly distorter?: Distorter
 
   constructor(
     el: HTMLElement,
     options: GlobeOptions = {},
   ) {
+    this.dataRepository = options.dataRepository ?? `${location.protocol}//hscmap.mtk.nao.ac.jp/stellar-globe/static`
+
     this.canvas = new Canvas(this, options)
     this.onRelease(() => this.canvas.release())
 
@@ -187,11 +193,13 @@ export class Globe {
       })
     }
     else {
-      gl.clearColor(0, 0, 0, 0)
-      gl.clear(gl.COLOR_BUFFER_BIT)
-      for (const layer of this.layers) {
-        layer.render(this.camera.view())
-      }
+      wegblProfile(this.gl, 'draw', () => {
+        gl.clearColor(0, 0, 0, 0)
+        gl.clear(gl.COLOR_BUFFER_BIT)
+        for (const layer of this.layers) {
+          layer.render(this.camera.view())
+        }
+      })
     }
   }
 

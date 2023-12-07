@@ -47,16 +47,15 @@ export class AnimationManager {
 
   private tick() {
     if (this.animations.length > 0 && this.rafId === undefined) {
-      this.rafId = requestAnimationFrame(() => {
+      this.rafId = requestAnimationFrame((now) => {
         this.rafId = undefined
-        const now = performance.now()
         let motionAnimation = 0
         for (const a of this.animations.slice()) {
           if (a.cameraMotion) {
             ++motionAnimation
           }
           a.update(now)
-          // この行でexpireする可能性がある
+          // この行でexpireするanimationもある
           // expireした場合は(microtaskではなく)この行で this.animations からanimationが減る
         }
         this.globe.draw()
