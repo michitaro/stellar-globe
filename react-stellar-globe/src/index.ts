@@ -1,30 +1,25 @@
-import { useLayerBind } from "./GlobeContext"
 import { Globe$, GlobeHandle } from './Globe'
+import { mountOndemand, useLayerBind } from "./GlobeContext"
 import { LogScaleRange } from "./LogScaleRange"
+import { BeautifulObjectLayer$ } from './layers/BeautifulObjectsLayer'
 import { ConstellationLayer$ } from "./layers/ConstellationLayer"
+import { PanLayer$, RollLayer$, TouchLayer$, ZoomLayer$ } from './layers/ControlLayers'
 import { EsoMilkyWayLayer$ } from "./layers/EsoMilkyWayLayer"
+import { GlobeEventLayer$ } from './layers/GlobeEventLayer'
 import { GridLayer$ } from "./layers/GridLayer"
 import { HipparcosCatalogLayer$ } from "./layers/HipparcosCatalogLayer"
 import { HipsSimpleLayer$ } from './layers/HipsSimpleLayer'
 import { ClickableMarkerLayer$, MarkerLayer$ } from "./layers/MarkerLayer"
-import { TractTileLayer$ } from "./layers/TractTileLayer"
-import { TextLayer$, alwaysOne } from "./layers/TextLayer"
 import { PathLayer$ } from "./layers/PathLayer"
-import { GlobeEventLayer$ } from './layers/GlobeEventLayer'
-import { BeautifulObjectLayer$ } from './layers/BeautifulObjectsLayer'
-import { PanLayer$, ZoomLayer$, RollLayer$, TouchLayer$ } from './layers/ControlLayers'
+import { TextLayer$, alwaysOne } from "./layers/TextLayer"
+import { TractTileLayer$ } from "./layers/TractTileLayer"
 
 export {
-  PanLayer$, ZoomLayer$, RollLayer$, TouchLayer$,
-  ClickableMarkerLayer$,
+  BeautifulObjectLayer$, ClickableMarkerLayer$,
   ConstellationLayer$,
-  EsoMilkyWayLayer$, Globe$, GridLayer$,
+  EsoMilkyWayLayer$, Globe$, GlobeEventLayer$, GridLayer$,
   HipparcosCatalogLayer$,
-  HipsSimpleLayer$, LogScaleRange, MarkerLayer$, TractTileLayer$, PathLayer$,
-  TextLayer$, alwaysOne,
-  BeautifulObjectLayer$,
-  useLayerBind,
-  GlobeEventLayer$,
+  HipsSimpleLayer$, LogScaleRange, MarkerLayer$, PanLayer$, PathLayer$, RollLayer$, TextLayer$, TouchLayer$, TractTileLayer$, ZoomLayer$, alwaysOne, mountOndemand, useLayerBind
 }
 
 export type { GlobeHandle }

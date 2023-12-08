@@ -10,7 +10,7 @@ import { cameraSlice } from '../camera/cameraSlice'
 
 export function ViewMenu() {
   const { rootElementRef } = useAppContext()
-  const { isFullscreen, toggleFullscreen } = useFullscreen(rootElementRef)
+  const { isFullscreen } = useFullscreen(rootElementRef)
   const camera = useAppSelector(state => state.camera)
   const dispatch = useAppDispatch()
 
@@ -23,6 +23,8 @@ export function ViewMenu() {
         <MenuItem type='checkbox' checked={camera.projection === 'GNOMONIC'} onClick={_ => dispatch(cameraSlice.actions.projectionUpdated('GNOMONIC'))} >Gnomonic</MenuItem>
         <MenuItem type='checkbox' checked={camera.projection === 'STEREOGRAPHIC'} onClick={_ => dispatch(cameraSlice.actions.projectionUpdated('STEREOGRAPHIC'))} >Stereographic</MenuItem>
         <MenuItem type='checkbox' checked={camera.projection === 'FLOATING_EYE'} onClick={_ => dispatch(cameraSlice.actions.projectionUpdated('FLOATING_EYE'))} >Stellar Globe</MenuItem>
+        <MenuDivider />
+        <MenuItemWithKeybind keybind='toggleProjection'>Toggle</MenuItemWithKeybind>
       </SubMenu>
       <MenuDivider />
       <MenuItemWithKeybind type='checkbox' checked={camera.retina} keybind='toggleRetina' >Retina</MenuItemWithKeybind>

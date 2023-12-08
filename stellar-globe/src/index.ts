@@ -6,11 +6,11 @@ export { RollLayer } from './layer/roll_layer'
 export { TouchLayer } from './layer/touch_layer'
 export { ConstellationLayer } from "./layer/constellation_layer"
 export { EsoMilkyWayLayer } from "./layer/eso_milky_way_layer"
-export { GlobePointerEvent as GlobePointerEvent, GlobePointerDragEvent } from "./layer/GlobePointerEvent"
+export { GlobePointerDragEvent, GlobePointerEvent } from "./layer/GlobePointerEvent"
 export { GridLayer } from "./layer/grid_layer"
 export { HipparcosCatalogLayer } from "./layer/hipparcos_catalog_layer"
 export { Layer } from './layer/layer'
-export { MousePicker, GlobePointerEvent } from "./layer/layer/MousePicker"
+export { MousePicker } from "./layer/layer/MousePicker"
 import { SspTileLayer } from './layer/ssp_tile_layer'
 export { SspTileLayer, SspTileLayer as TractTileLayer }
 export { TextLayer } from './layer/text_layer'

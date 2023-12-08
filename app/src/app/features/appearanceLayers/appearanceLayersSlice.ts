@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import type { ConstellationLayer$ } from "@stellar-globe/react-stellar-globe"
+import type { ConstellationLayer$, EsoMilkyWayLayer$ } from "@stellar-globe/react-stellar-globe"
 
 
 type ExtractProps<T extends (...args: never[]) => unknown> = Parameters<T>[0]
@@ -9,9 +9,7 @@ type State = {
   grid: {
     visible: boolean
   }
-  esoMilkyWay: {
-    visible: boolean
-  }
+  esoMilkyWay: ExtractProps<typeof EsoMilkyWayLayer$>
   constellation: ExtractProps<typeof ConstellationLayer$>
   nearbyGalaxiesAndNebulas: {
     visible: true
@@ -29,6 +27,7 @@ function initialState(): State {
     },
     esoMilkyWay: {
       visible: true,
+      imageSize: 512,
     },
     constellation: {
       visible: true,

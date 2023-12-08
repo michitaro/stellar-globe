@@ -293,7 +293,7 @@ export class SspTileTextureProvider extends AsyncTextureProvider {
     const { tileSize } = ref.tract
 
     if (!sync) {
-      await waitIdleTime()
+      // await waitIdleTime()
     }
 
     if (this.alreadyReleased) {

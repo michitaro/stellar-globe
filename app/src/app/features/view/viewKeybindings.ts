@@ -1,14 +1,15 @@
-import { angle } from "@stellar-globe/stellar-globe"
+import { CameraMode, angle } from "@stellar-globe/stellar-globe"
 import { useMemo } from "react"
 import { Keybind } from "../../../components/keybindings"
 import { useFullscreen } from "../../../hooks/useFullscreen"
 import { useAppContext } from "../../context"
-import { useAppDispatch } from "../../store/hooks"
+import { useAppDispatch, useAppSelector } from "../../store/hooks"
 import { cameraSlice } from "../camera/cameraSlice"
 
 
 export function useViewKeybindings() {
   const { globeHandle, rootElementRef } = useAppContext()
+  const projection = useAppSelector(state => state.camera.projection)
   const fullscreen = useFullscreen(rootElementRef)
   const dispatch = useAppDispatch()
 
@@ -40,10 +41,24 @@ export function useViewKeybindings() {
       shortcut: 'Ctrl+R',
     }
 
+    const toggleProjection: Keybind = {
+      action() {
+        const map: { [K in CameraMode]: CameraMode } = {
+          GNOMONIC: 'STEREOGRAPHIC',
+          STEREOGRAPHIC: 'FLOATING_EYE',
+          FLOATING_EYE: 'GNOMONIC',
+        }
+        const next: CameraMode = map[projection]
+        dispatch(cameraSlice.actions.projectionUpdated(next))
+      },
+      shortcut: 'Z',
+    }
+
     return {
       moveToCoords,
       toggleFullscreen,
       toggleRetina,
+      toggleProjection,
     }
-  }, [dispatch, fullscreen, globeHandle])
+  }, [dispatch, fullscreen, globeHandle, projection])
 }

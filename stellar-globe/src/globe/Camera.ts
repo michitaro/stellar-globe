@@ -241,7 +241,7 @@ export class Camera implements CameraParams {
   setRetina(retina: boolean) {
     this.retina = retina
     this.globe.resize()
-    this.globe.draw()
+    this.globe.requestRefresh()
   }
 
   get canvasPixels() {

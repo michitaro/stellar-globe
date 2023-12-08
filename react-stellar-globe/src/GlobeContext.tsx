@@ -1,5 +1,5 @@
 import { CameraMode, Globe, Layer } from '@stellar-globe/stellar-globe'
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef } from "react"
+import { Fragment, createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
 import { useInstanceVariable } from './hooks/useInstanceVariable'
 
 
@@ -120,7 +120,7 @@ export function useGenerateContext({
     const globe = new Globe(containerRef.current!, {
       jsdomTest,
       preserveBuffer,
-      viewOptions: { ...initialProps.current.cameraParams, retina: initialProps.current.retina },
+      viewOptions: { ...initialProps.current.cameraParams, retina: initialProps.current.retina, mode: projection },
       noDefaultLayers: initialProps.current.noDefaultLayers,
     })
     onInit?.(globe)
@@ -246,6 +246,26 @@ export function makePureLayerComponent<
     )
     const { node } = useLayerBind(memoizedFactory, visible as boolean)
     return node
+  }
+}
+
+
+export function mountOndemand<
+  Props extends object = object,
+  VisibleKey extends PickKeysOf<Props, boolean | undefined> = PickKeysOf<Props, boolean | undefined>,
+>(
+  Component: React.ComponentType<Props>,
+  visibleKey: VisibleKey,
+) {
+  return function WrappedComponent(props: Props) {
+    const { [visibleKey]: visible = true } = props
+    const [initialized, setInitialized] = useState(visible)
+    useEffect(() => {
+      if (visible) {
+        setInitialized(true)
+      }
+    }, [visible])
+    return initialized && <Component {...props} />
   }
 }
 

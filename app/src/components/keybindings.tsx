@@ -20,7 +20,10 @@ function useMakeContext({
       if (catchAllEvents || e.target instanceof Node && containerRef.current?.contains(e.target)) {
         const shortcut = generateShortcutFromEvent(e)
         const kb = shortcutMap.get(shortcut)
-        kb?.()
+        if (kb) {
+          e.preventDefault()
+          kb()
+        }
       }
     }
     document.addEventListener('keydown', cb)

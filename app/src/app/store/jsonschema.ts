@@ -1,9 +1,11 @@
 import { Slice } from "@reduxjs/toolkit"
-import { HashState } from "./hashSync"
+import { StorageState } from "./stateSync/StorageSync"
+import { HashState } from "./stateSync/hashSync"
 
 export type JsonSchema = {
   // actions: ExtractAction<typeof appearanceLayersSlice>
   HashState: HashState
+  StorageState: StorageState
 }
 
 

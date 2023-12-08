@@ -1,6 +1,6 @@
 import { Globe, TractTileLayer } from "@stellar-globe/stellar-globe"
 import React, { memo, useCallback, useEffect } from "react"
-import { setDisplayName, useLayerBind } from "../GlobeContext"
+import { mountOndemand, setDisplayName, useLayerBind } from "../GlobeContext"
 
 
 type TractTileLayerProps = ConstructorParameters<typeof TractTileLayer>[1] & {
@@ -10,7 +10,7 @@ type TractTileLayerProps = ConstructorParameters<typeof TractTileLayer>[1] & {
 
 type ColorParams = NonNullable<TractTileLayerProps['colorParams']>
 
-const TractTileLayer$: React.FC<TractTileLayerProps> = memo(props => {
+const TractTileLayer$: React.FC<TractTileLayerProps> = mountOndemand(memo(props => {
   const {
     baseUrl,
     colorParams = TractTileLayer.defaultParams({ type: 'sdssTrueColor' }),
@@ -44,7 +44,7 @@ const TractTileLayer$: React.FC<TractTileLayerProps> = memo(props => {
   }, [colorParams, filterNameDictionary, ifLayerReady])
 
   return node
-})
+}), 'visible')
 setDisplayName({ TractTileLayer$ })
 export { TractTileLayer$ }
 

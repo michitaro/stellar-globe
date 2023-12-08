@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { CameraMode, GlobeEventMap } from "@stellar-globe/stellar-globe"
-import { readHashState } from "../../store/hashSync"
+import { readHashState } from "../../store/stateSync/hashSync"
+import { readStorageState } from "../../store/stateSync/StorageSync"
 
 
 export type CameraParams = GlobeEventMap['camera-move']
@@ -15,8 +16,8 @@ type State = {
 
 function initialState(): State {
   return {
-    retina: true,
-    projection: 'STEREOGRAPHIC',
+    retina: readStorageState().retina ?? false,
+    projection: readHashState().projection ?? 'STEREOGRAPHIC',
     params: readHashState().cameraParams,
   }
 }

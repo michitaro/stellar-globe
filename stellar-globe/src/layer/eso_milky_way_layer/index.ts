@@ -4,7 +4,7 @@ import { Globe } from '~/globe'
 import { Layer } from '~/layer/layer'
 import { overlayAlpha } from '~/layer/overlayAlpha'
 import { ImageLike } from '~/lib/gl-wrapper'
-import { CubeMapRenderer } from '~/renderer/cube_map_renderer'
+import { CubeMapRenderer } from '~/renderer/cube_map_renderer2'
 import { loadImage } from '~/utils/image'
 import { View } from '~/view'
 

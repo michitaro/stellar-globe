@@ -162,7 +162,7 @@ export class Globe {
       console.trace('called Globe.requestRefresh after release')
       return
     }
-    if (this.rafId === undefined) {
+    if (this.rafId === undefined && !this.animations.refreshScheduled) {
       this.rafId = requestAnimationFrame(() => {
         this.rafId = undefined
         this.draw()

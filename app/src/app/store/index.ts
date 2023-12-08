@@ -3,7 +3,8 @@ import { cameraSlice } from "../features/camera/cameraSlice"
 import { appearanceLayersSlice } from "../features/appearanceLayers/appearanceLayersSlice"
 import { panelSlice } from '../Panels/panelSlice'
 import { tractTileLayersSlice } from '../features/tractTileLayers/tractTileLayersSlice'
-import { toolsSlice } from "../features/tools/toolsSclie"
+import { regionsSlice } from "../features/regions/regionsSclie"
+import { develSlice } from "../features/devel/develSlice"
 // import { jsonPatchLogger } from './JsonPatchLogger'
 
 
@@ -14,7 +15,8 @@ export function makeStore() {
       camera: cameraSlice.reducer,
       panel: panelSlice.reducer,
       tractTileLayers: tractTileLayersSlice.reducer,
-      tools: toolsSlice.reducer,
+      regions: regionsSlice.reducer,
+      devel: develSlice.reducer,
     },
     // middleware: (getDefaultMiddleware) =>
     //   getDefaultMiddleware().concat(jsonPatchLogger((patches) => console.log(patches))),

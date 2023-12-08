@@ -1,5 +1,6 @@
 import { MenuBar } from '../../components/Menu/MenuBar'
-import { ToolsMenu } from '../features/tools/ToolsMenu'
+import { DevelMenu } from '../features/devel/DevelMenu'
+import { ToolsMenu } from '../features/regions/ToolsMenu'
 import { DatasetMenu } from '../features/tractTileLayers/DatasetMenu'
 import { ViewMenu } from '../features/view/ViewMenu'
 import styles from './styles.module.scss'
@@ -11,6 +12,7 @@ export default function MainMenu() {
       <ViewMenu />
       <DatasetMenu />
       <ToolsMenu />
+      <DevelMenu />
     </MenuBar >
   )
 }

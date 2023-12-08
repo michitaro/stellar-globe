@@ -1,7 +1,8 @@
 import { MenuItemProps } from "@szhsin/react-menu"
-import { memo } from "react"
+import { memo, useMemo } from "react"
 import { useAppKeybinds, useKeybindAction, useKeybindShortcut } from "."
 import { MenuItemWithAnnotation } from "../../components/Menu/MenuItemWithAnnotation"
+import { convertShortcutToSymbols } from "../../utils/keybindings"
 
 
 type Props = MenuItemProps & {
@@ -16,9 +17,10 @@ export const MenuItemWithKeybind = memo((
 ) => {
   const action = useKeybindAction(keybind)
   const shortcut = useKeybindShortcut(keybind)
+  const shortcutSymbols = useMemo(() => convertShortcutToSymbols(shortcut), [shortcut])
   return (
     <MenuItemWithAnnotation
-      annotation={shortcut}
+      annotation={shortcutSymbols}
       onClick={action}
       {...rests}
     >

@@ -58,7 +58,7 @@ export class FitsTextureProvider extends tile.AsyncTextureProvider {
     const tt = new tile.TileTexture(this, { fadeIn })
     
     if (!sync) {
-      await waitIdleTime()
+      // await waitIdleTime()
     }
 
     if (this.alreadyReleased) {

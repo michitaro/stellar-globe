@@ -102,6 +102,3 @@ export abstract class InertiaMousePicker extends MousePicker {
   protected onInertiaMoveEnd() {
   }
 }
-
-
-export { GlobePointerEvent }

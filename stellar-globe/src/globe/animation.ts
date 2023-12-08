@@ -67,6 +67,10 @@ export class AnimationManager {
     }
   }
 
+  get refreshScheduled() {
+    return !!this.rafId
+  }
+
   stopCameraMotion() {
     for (const a of this.animations.slice()) {
       if (a.cameraMotion) {

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { TractTileLayer } from "@stellar-globe/stellar-globe"
-import { readHashState } from "../../store/hashSync"
+import { readHashState } from "../../store/stateSync/hashSync"
 
 
 type ColorParams = ReturnType<typeof TractTileLayer.defaultParams>
@@ -48,8 +48,9 @@ function layerVisible(layerName: string) {
     's23b_20231116T053220Z',
     's23b_20231120T084248Z',
     's23b_20231125T044351Z',
-    's23b_step3_minIter15_alltracts_correct2_20221206T050622Z', // for backword compatibility
-    's23b_wide_step3_minIter15_alltracts_correct2_20221206T050622Z',
+    // 's22a_test_step3_minIter15_alltracts_correct2_20221206T050622Z',
+    'test_s22a_step3_20220721T111750Z',
+    'test_s22a_step3_20221010T234451Z',
   ]).includes(layerName)
 }
 
@@ -81,7 +82,9 @@ function initialState(): State {
         's23b_wide_20231116T053220Z',
         's23b_wide_20231120T084248Z',
         's23b_wide_20231125T044351Z',
-        's23b_wide_step3_minIter15_alltracts_correct2_20221206T050622Z',
+        's22a_test_step3_minIter15_alltracts_correct2_20221206T050622Z',
+        'test_s22a_step3_20220721T111750Z',
+        'test_s22a_step3_20221010T234451Z',
       ].map(rerun => ({
         name: rerun,
         baseUrl: import.meta.env.DEV ? `./data/s23b_wide/${rerun}` : `../data/${rerun}`,

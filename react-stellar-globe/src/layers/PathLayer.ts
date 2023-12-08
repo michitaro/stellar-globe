@@ -13,7 +13,7 @@ const PathLayer$: React.FC<PathLayerProps> = memo(props => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const factory = useCallback((globe: Globe) => new PathLayer(globe, options), [])
   const { node, ifLayerReady } = useLayerBind<PathLayer>(factory, visible)
-  const { paths, blendMode, dimOnZoom } = options
+  const { paths, blendMode, dimOnZoom, darkenNarrowLine } = options
 
   useEffect(() => {
     ifLayerReady(layer => {
@@ -26,8 +26,9 @@ const PathLayer$: React.FC<PathLayerProps> = memo(props => {
       const defaults = PathLayer.defaultOptions()
       layer.blendeMode = blendMode ?? defaults.blendMode
       layer.dimOnZoom = dimOnZoom ?? defaults.dimOnZoom
+      layer.darkenNarrowLine = darkenNarrowLine ?? defaults.darkenNarrowLine
     })
-  }, [blendMode, dimOnZoom, ifLayerReady])
+  }, [blendMode, darkenNarrowLine, dimOnZoom, ifLayerReady])
 
   return node
 })

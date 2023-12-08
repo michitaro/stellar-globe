@@ -1,7 +1,6 @@
 import '@szhsin/react-menu/dist/index.css'
 import '@szhsin/react-menu/dist/theme-dark.css'
 import 'material-symbols'
-import { useEffect } from "react"
 import { Provider } from "react-redux"
 import { useInstanceVariable } from '../hooks/useInstanceVaribale'
 import MainMenu from "./MainMenu"
@@ -10,28 +9,27 @@ import { Panels } from "./Panels"
 import { useAppContext, wrapWithAppContext } from "./context"
 import { KeybindsProvider } from './keybindings'
 import { makeStore } from "./store"
-import { enableHashSync } from './store/hashSync'
+import { useHashSync } from './store/stateSync/hashSync'
 import styles from './style.module.scss'
+import { useLocalStorageSync } from './store/stateSync/StorageSync'
 
 
 type Props = {
   hashSync?: boolean
+  storageSync?: boolean
   catchAllKeyboardEvents?: boolean
 }
 
 
 const App = wrapWithAppContext(({
   hashSync = false,
+  storageSync = false,
   catchAllKeyboardEvents = false,
 }: Props) => {
   const store = useInstanceVariable(makeStore)
   const { rootElementRef } = useAppContext()
-
-  useEffect(() => {
-    if (hashSync) {
-      return enableHashSync(store)
-    }
-  }, [hashSync, store])
+  useHashSync({ store, enabled: hashSync })
+  useLocalStorageSync({ store, enabled: storageSync })
 
   return (
     <Provider store={store}>

@@ -4,8 +4,9 @@ import { MainContextMenu } from "./MainContextMenu"
 import { useAppContext } from "./context"
 import { CameraParams, cameraSlice } from "./features/camera/cameraSlice"
 import { useAppDispatch, useAppSelector } from "./store/hooks"
-import { ToolsLayer } from "./features/tools/ToolsLayer"
+import { ToolsLayer } from "./features/regions/ToolsLayer"
 import { Globe } from "@stellar-globe/stellar-globe"
+import { RegionsLayer } from "./features/regions/RegionsLayer"
 
 
 export function MainViewer() {
@@ -51,6 +52,7 @@ export function MainViewer() {
         <GridLayer$ {...layers.grid} />
 
         <ToolsLayer />
+        <RegionsLayer />
       </Globe$>
     </MainContextMenu>
   )
