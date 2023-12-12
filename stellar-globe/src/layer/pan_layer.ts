@@ -7,13 +7,13 @@ import { clip } from "~/utils/math"
 import { mouse } from '~/utils/mouse'
 import { GlobePointerEvent } from "./GlobePointerEvent"
 import { Layer } from "./layer"
-import { InertiaMousePicker } from './layer/MousePicker'
+import { InertialPointingObject } from './layer/PointingObject'
 
 
 const EPSILON = (1 / 3600) / 180 * Math.PI
 
 
-class PanMousePicker extends InertiaMousePicker {
+class PanPointingObject extends InertialPointingObject {
   private fovy0: number
   private J = mat2.create() // matrix for dx,dy -> d_theta, d_phi
 
@@ -70,6 +70,10 @@ class PanMousePicker extends InertiaMousePicker {
     camera.theta -= scale * dCoord[1]
     camera.theta = clip(camera.theta, -Math.PI / 2 + EPSILON, Math.PI / 2 - EPSILON)
   }
+
+  get dragDetectionDelay() {
+    return 0
+  }
 }
 
 
@@ -78,7 +82,7 @@ export class PanLayer extends Layer {
     globe: Globe,
   ) {
     super(globe)
-    this.mousePickers.push(new PanMousePicker(globe, new Inertia2D({
+    this.pointingObjects.push(new PanPointingObject(globe, new Inertia2D({
       omega0: 7.5e-2,
       gamma: 5.e-2,
       gamma0: 1.e-3

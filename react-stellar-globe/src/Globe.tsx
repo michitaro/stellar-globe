@@ -27,11 +27,9 @@ export const Globe$ = forwardRef<GlobeHandle, GlobeProps>(function Globe$(
 
   return (
     <GlobeContext.Provider value={context}>
-      <div style={{ height: '100%' }}>
+      <div style={{ height: '100%', width: '100%', position: 'relative', overflow: 'hidden' }}>
         <div ref={containerRef} style={{ height: '100%', width: '100%', position: 'absolute' }} />
-        <div>
-          {children}
-        </div>
+        {children}
       </div>
     </GlobeContext.Provider>
   )

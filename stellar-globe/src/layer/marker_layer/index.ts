@@ -4,7 +4,7 @@ import { V3, V4 } from "~/types"
 import { View } from "~/view"
 import { BillboardImage, BillboardImageRef, BillboardRenderer } from "~/renderer/billboard_renderer"
 import { MarkerType, makeMarkerImageData, markerTypes } from "./marker"
-import { MousePicker } from "../layer/MousePicker"
+import { PointingObject } from "../layer/PointingObject"
 import { GlobePointerEvent } from "../GlobePointerEvent"
 import { KdTree } from "~/utils/kd_tree"
 import { wegblProfile } from "~/devel/webgl-profiler/utils"
@@ -79,7 +79,7 @@ type ClickableMarkerLayerOptions = MarkerLayerOptions & {
 export class ClickableMarkerLayer extends Layer {
   private baseMarkerRenderer: BillboardRenderer
   private focusedMarkerRenderer: BillboardRenderer
-  private mousePicker: MarkerMousePicker
+  private pointingObject: MarkerPointingObject
 
   constructor(
     globe: Globe,
@@ -90,7 +90,7 @@ export class ClickableMarkerLayer extends Layer {
     this.onRelease(() => this.baseMarkerRenderer.release())
     this.focusedMarkerRenderer = new BillboardRenderer(this.globe.gl)
     this.onRelease(() => this.focusedMarkerRenderer.release())
-    this.mousePickers.push(this.mousePicker = new MarkerMousePicker(() => ({
+    this.pointingObjects.push(this.pointingObject = new MarkerPointingObject(() => ({
       layer: this,
       renderer: this.focusedMarkerRenderer,
       options: this.options,
@@ -101,7 +101,7 @@ export class ClickableMarkerLayer extends Layer {
   update(options: Partial<MarkerRendererOptions>) {
     this.options = { ...this.options, ...options }
     refreshRenderer(this.baseMarkerRenderer, this.options)
-    this.mousePicker.refresh()
+    this.pointingObject.refresh()
     this.globe.requestRefresh()
   }
 
@@ -133,7 +133,7 @@ export class ClickableMarkerLayer extends Layer {
 }
 
 
-class MarkerMousePicker extends MousePicker {
+class MarkerPointingObject extends PointingObject {
   private index: KdTree<3, number>
 
   constructor(
@@ -176,7 +176,7 @@ class MarkerMousePicker extends MousePicker {
 
   hit(e: GlobePointerEvent): { hit: boolean; passThrough: boolean } {
     const { layer } = this.backdoor()
-    const markerSize = 32 * layer.globe.camera.canvasPixels
+    const markerSize = 32 * layer.globe.camera.pixelRatio
     const fovy = layer.globe.camera.fovy
     const h = layer.globe.canvas.domElement.height
     // 画面上の markerSize は天球上のどれだけの距離か

@@ -56,7 +56,7 @@ export class SspTileLayer extends Layer {
   }
 
   setParams(params: Parameters<SspTileTextureProvider["setParams"]>[0]) {
-    const changeParamLod = 2 + Math.log2(this.globe.camera.canvasPixels)
+    const changeParamLod = 2 + Math.log2(this.globe.camera.pixelRatio)
     const { textureProvider } = this.tileRenderer
     const view = this.globe.camera.view()
     const visibleTiles = new Set<TileId>()

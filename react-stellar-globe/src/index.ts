@@ -1,5 +1,5 @@
 import { Globe$, GlobeHandle } from './Globe'
-import { mountOndemand, useLayerBind } from "./GlobeContext"
+import { mountOndemand, useGetGlobe, useLayerBind } from "./GlobeContext"
 import { LogScaleRange } from "./LogScaleRange"
 import { BeautifulObjectLayer$ } from './layers/BeautifulObjectsLayer'
 import { ConstellationLayer$ } from "./layers/ConstellationLayer"
@@ -13,13 +13,16 @@ import { ClickableMarkerLayer$, MarkerLayer$ } from "./layers/MarkerLayer"
 import { PathLayer$ } from "./layers/PathLayer"
 import { TextLayer$, alwaysOne } from "./layers/TextLayer"
 import { TractTileLayer$ } from "./layers/TractTileLayer"
+import { DomLayer$ } from './layers/DomLayer'
 
 export {
   BeautifulObjectLayer$, ClickableMarkerLayer$,
   ConstellationLayer$,
+  useGetGlobe,
   EsoMilkyWayLayer$, Globe$, GlobeEventLayer$, GridLayer$,
   HipparcosCatalogLayer$,
-  HipsSimpleLayer$, LogScaleRange, MarkerLayer$, PanLayer$, PathLayer$, RollLayer$, TextLayer$, TouchLayer$, TractTileLayer$, ZoomLayer$, alwaysOne, mountOndemand, useLayerBind
+  DomLayer$,
+  HipsSimpleLayer$, LogScaleRange, MarkerLayer$, PanLayer$, PathLayer$, RollLayer$, TextLayer$, TouchLayer$, TractTileLayer$, ZoomLayer$, alwaysOne, mountOndemand, useLayerBind,
 }
 
 export type { GlobeHandle }

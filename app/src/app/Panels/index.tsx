@@ -10,6 +10,7 @@ import { TonePanel } from "../features/tractTileLayers/TonePanel"
 import { useAppDispatch, useAppSelector } from "../store/hooks"
 import { panelSlice } from "./panelSlice"
 import styles from './styles.module.scss'
+import { RegionsPanels } from "../features/regions/RegionsPanel"
 
 
 export function Panels() {
@@ -20,6 +21,9 @@ export function Panels() {
       <CornerPanelMenu />
       <Panel show={selectedPanel === 'tone'} bottomMenu={<BottomMenu />}>
         <TonePanel />
+      </Panel>
+      <Panel show={selectedPanel === 'regions'} bottomMenu={<BottomMenu />}>
+        <RegionsPanels />
       </Panel>
     </div>
   )
@@ -43,6 +47,10 @@ const PanelMenu = memo(forwardRef(({ className }: { className?: string }, ref) =
       <MenuItem type={selectedPanel && 'checkbox'} checked={selectedPanel === 'tone'} onClick={() => setSelectedPanel('tone')} >
         <Icon type="tune" marginRight />
         Tone
+      </MenuItem>
+      <MenuItem type={selectedPanel && 'checkbox'} checked={selectedPanel === 'regions'} onClick={() => setSelectedPanel('regions')} >
+        <Icon type="straighten" marginRight />
+        Regions
       </MenuItem>
     </HoverMenu>
   )

@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
-type PanelType = 'tone' | undefined
+
+type PanelType = 'tone' | 'regions' | undefined
+
 
 type State = {
   selectedPanel: PanelType

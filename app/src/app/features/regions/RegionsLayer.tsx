@@ -4,6 +4,8 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks"
 import { LineDef, LinearRegionLayer } from "./LinearRegionLayer"
 import { regionsSlice } from "./regionsSclie"
 import { normalizeSkyCoord, skyCoordFromCoordDef } from "./utils"
+import { MenuItem } from "@szhsin/react-menu"
+import { Icon } from "../../../components/Icon"
 
 
 export function RegionsLayer() {
@@ -61,6 +63,12 @@ const LinearRegionFromDefLayer = memo(({
       color={color}
       visible={visible}
       onChange={onChange}
-    />)
+    >
+      <MenuItem
+        onClick={() => {
+          dispatch(regionsSlice.actions.regionDeleted({ index }))
+        }}
+      ><Icon type="delete" marginRight />Delete</MenuItem>
+    </LinearRegionLayer>)
 })
 setDisplayName({ LinearRegionFromDefLayer })

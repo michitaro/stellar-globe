@@ -10,7 +10,7 @@ export { GlobePointerDragEvent, GlobePointerEvent } from "./layer/GlobePointerEv
 export { GridLayer } from "./layer/grid_layer"
 export { HipparcosCatalogLayer } from "./layer/hipparcos_catalog_layer"
 export { Layer } from './layer/layer'
-export { MousePicker } from "./layer/layer/MousePicker"
+export { PointingObject, makePointingObject } from "./layer/layer/PointingObject"
 import { SspTileLayer } from './layer/ssp_tile_layer'
 export { SspTileLayer, SspTileLayer as TractTileLayer }
 export { TextLayer } from './layer/text_layer'
@@ -24,7 +24,7 @@ export * as path from './renderer/path_renderer'
 export * as tile from './renderer/tile_renderer'
 export type { V2, V3, V4 } from './types'
 export * as dateUtils from './utils/date'
-export { View } from './view'
+export type { View } from './view'
 export * as matrixUtils from './utils/matrilx-utils'
 export type { CameraMode } from './globe/Camera'
 export { BeautifulObjectLayer } from './layer/beautiful_object'
@@ -53,3 +53,4 @@ export { gzip }
 import * as glMatrix from 'gl-matrix'
 export { glMatrix }
 export { enableWebglProfiler, webglProfileSupported, wegblProfile } from './devel/webgl-profiler/utils'
+export type { CursorStyle } from './globe'

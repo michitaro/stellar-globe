@@ -1,10 +1,10 @@
 import { PanLayer$ } from '@stellar-globe/react-stellar-globe'
-import { SkyCoord, V4 } from '@stellar-globe/stellar-globe'
+import { GlobePointerDragEvent, SkyCoord, V4 } from '@stellar-globe/stellar-globe'
 import { Fragment, memo, useCallback, useMemo, useState } from 'react'
 import { setDisplayName } from '../../../utils/setDisplayName'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { LinearRegionLayer } from './LinearRegionLayer'
-import { PointerDragAndUpLayer$ } from './PointerDragAndUpLayer'
+import { PointerDragAndUpLayer$ } from './PointerDragLayer'
 import { regionsSlice } from './regionsSclie'
 import { normalizeSkyCoord } from './utils'
 
@@ -15,7 +15,7 @@ export const ToolsLayer = memo(() => {
   const dispatch = useAppDispatch()
   const [coords, setCoords] = useState<[SkyCoord, SkyCoord] | null>(null)
 
-  const onSubmit = useCallback((start: SkyCoord, end: SkyCoord) => {
+  const addRegion = useCallback((start: SkyCoord, end: SkyCoord) => {
     dispatch(regionsSlice.actions.newLinearRegionAdded({
       type: 'Linear',
       start: normalizeSkyCoord(start),
@@ -27,16 +27,18 @@ export const ToolsLayer = memo(() => {
     if (!toolPinned) {
       dispatch(regionsSlice.actions.toolChanged({ tool: 'pan' }))
     }
-    setCoords(null)
   }, [dispatch, toolPinned])
 
-  const onDrag = useCallback((start: SkyCoord, end: SkyCoord) => {
-    setCoords([start, end])
+  const onDrag = useCallback((e: GlobePointerDragEvent) => {
+    setCoords([e.downEvent.coord, e.coord])
   }, [])
 
-  const onUp = useCallback((start: SkyCoord, end: SkyCoord) => {
-    onSubmit(start, end)
-  }, [onSubmit])
+  const onUp = useCallback((e: GlobePointerDragEvent) => {
+    if (e.moved) {
+      addRegion(e.downEvent.coord, e.coord)
+    }
+    setCoords(null)
+  }, [addRegion])
 
   const color = useMemo<V4>(() => [1, 0, 1, 1], [])
   const lineDef = useMemo(() => coords && { start: coords[0], end: coords[1] }, [coords])

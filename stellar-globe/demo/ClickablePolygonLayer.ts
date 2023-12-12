@@ -1,5 +1,5 @@
 import { mat3, vec3 } from "gl-matrix"
-import { Globe, GlobePointerEvent, Layer, MousePicker, path, V3, V4, View } from "~/index"
+import { Globe, GlobePointerEvent, Layer, PointingObject, path, V3, V4, View, GlobePointerDragEvent } from "~/index"
 
 
 type Polygon = V3[]
@@ -42,7 +42,7 @@ export class ClicakblePolygonLayer extends Layer {
       joint: 'MITER',
       points: polygon.map(position => ({ color: this.baseColor, position, size: 0 })),
     })))
-    this.mousePickers = polygons.map((polygon, index) => new PolygonMousePicker(this, index, polygon))
+    this.pointingObjects = polygons.map((polygon, index) => new PolygonPointingObject(this, index, polygon))
   }
 
   render(view: View): void {
@@ -110,7 +110,7 @@ export class ClicakblePolygonLayer extends Layer {
 }
 
 
-class PolygonMousePicker extends MousePicker {
+class PolygonPointingObject extends PointingObject {
   constructor(
     readonly layer: ClicakblePolygonLayer,
     readonly index: number,
@@ -135,7 +135,7 @@ class PolygonMousePicker extends MousePicker {
     this.layer.onPointerDown(this.index)
   }
 
-  onPointerUp(_e: GlobePointerEvent): void {
+  onPointerUp(_e: GlobePointerDragEvent): void {
     this.layer.onPointerUp(this.index)
   }
 

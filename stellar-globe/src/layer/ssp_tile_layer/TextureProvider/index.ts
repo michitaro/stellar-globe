@@ -14,7 +14,6 @@ import simple_rgb from './glsl/simple_rgb.glsl?raw'
 import simple_rgb_png_mixer from './glsl/simple_rgb_png_mixer.frag.glsl?raw'
 import sinh from './glsl/sinh.glsl?raw'
 import { SspTileParams, SspTileParamsOf } from "./params"
-import { waitIdleTime } from "~/utils/time"
 
 
 class SimpleRgbMixerPng extends ImageFilter {

@@ -51,7 +51,7 @@ export class Canvas {
 
   resize(retina: boolean) {
     const canvas = this.domElement
-    const r = retina ? devicePixelRatio : 1
+    const r = retina ? window.devicePixelRatio : 1
     const w = r * canvas.clientWidth
     const h = r * canvas.clientHeight
     canvas.width = w

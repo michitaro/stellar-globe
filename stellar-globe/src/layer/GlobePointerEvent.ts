@@ -46,20 +46,44 @@ export class GlobePointerEvent extends SinglePointerEvent {
   }
 }
 
-export class GlobePointerDragEvent extends GlobePointerEvent {
+
+export class GlobePointerDragEvent {
   constructor(
-    e: SinglePointerEvent,
-    readonly globe: Globe,
-    readonly view: View,
+    private readonly current: GlobePointerEvent,
     readonly downEvent: GlobePointerEvent,
   ) {
-    super(e, globe, view)
+
+  }
+
+  get coord() {
+    return this.current.coord
+  }
+
+  get offset() {
+    return this.current.offset
+  }
+
+  coord2offset(coord: SkyCoord): [number, number] {
+    return this.coord2offset(coord)
+  }
+
+  stopPropagation() {
+    return this.current.stopPropagation()
+  }
+
+  /** @internal */
+  get stopped() {
+    return this.current.stopped
   }
 
   delta() {
     return {
-      x: this.clientX - this.downEvent.clientX,
-      y: this.clientY - this.downEvent.clientY,
+      x: this.current.clientX - this.downEvent.clientX,
+      y: this.current.clientY - this.downEvent.clientY,
     }
+  }
+
+  get moved() {
+    return !(this.current.clientX === this.downEvent.clientX && this.current.clientY === this.downEvent.clientY)
   }
 }

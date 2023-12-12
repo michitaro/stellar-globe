@@ -12,6 +12,7 @@ export function ContextMenu({ children, target }: { children: ReactNode; target:
         setAnchorPoint({ x: e.clientX, y: e.clientY })
         setOpen(true)
       }}
+      style={{ height: '100%' }}
     >
       {target}
       <ControlledMenu

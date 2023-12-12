@@ -54,6 +54,8 @@ export class Camera implements CameraParams {
   min_fovy = asec2rad(5)
   max_fovy = 2
 
+  // Apple製品でcanvas内の解像度を２倍にする。
+  // この設定を変えてもサイズや太さが変わるのではなく、ぼやけたりくっきりするだけ。
   retina = true
 
   constructor(
@@ -155,12 +157,13 @@ export class Camera implements CameraParams {
 
   private modeTransitionPv?: mat4
 
-  view() {
-    return new View(
-      new MvpMatrix(this.modeTransitionPv ?? this.pv()),
-      this.lodBias,
-      this.retina,
-      this.globe.gl.drawingBufferHeight)
+  view(): View {
+    return {
+      mvp: new MvpMatrix(this.modeTransitionPv ?? this.pv()),
+      lodBias: this.lodBias,
+      pixelRatio: this.pixelRatio,
+      drawingBufferHeight: this.globe.gl.drawingBufferHeight,
+    }
   }
 
   private customPvMatrix?: (p: CameraParams) => mat4
@@ -244,7 +247,8 @@ export class Camera implements CameraParams {
     this.globe.requestRefresh()
   }
 
-  get canvasPixels() {
+  /** @internal */
+  get pixelRatio() {
     return this.retina ? window.devicePixelRatio : 1
   }
 }

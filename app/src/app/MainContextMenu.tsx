@@ -1,4 +1,4 @@
-import { MenuDivider, MenuItem } from '@szhsin/react-menu'
+import { MenuItem } from '@szhsin/react-menu'
 import { ReactNode } from "react"
 import { ContextMenu } from '../components/ContextMenu'
 

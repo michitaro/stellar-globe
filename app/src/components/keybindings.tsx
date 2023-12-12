@@ -65,20 +65,20 @@ export function makeKeybindsEnvironment<T extends Record<string, Keybind>>(
     )
   }
 
-  const useKeybind = (which: keyof T) => {
+  const useKeybind = (which?: keyof T) => {
     const context = useContext(Context)
     if (context === undefined) {
       throw new Error(`use of useKeybinds outside its provider`)
     }
-    return (context.keybinds as T)[which]
+    return which && (context.keybinds as T)[which]
   }
 
-  const useKeybindShortcut = (which: keyof T) => {
-    return useKeybind(which).shortcut
+  const useKeybindShortcut = (which?: keyof T) => {
+    return useKeybind(which)?.shortcut
   }
 
-  const useKeybindAction = (which: keyof T) => {
-    return useKeybind(which).action
+  const useKeybindAction = (which?: keyof T) => {
+    return useKeybind(which)?.action
   }
 
   return { KeybindsProvider, useKeybindShortcut, useKeybindAction }

@@ -6,7 +6,7 @@ import { convertShortcutToSymbols } from "../../utils/keybindings"
 
 
 type Props = MenuItemProps & {
-  keybind: keyof ReturnType<typeof useAppKeybinds>
+  keybind?: keyof ReturnType<typeof useAppKeybinds>
 }
 
 
@@ -17,7 +17,7 @@ export const MenuItemWithKeybind = memo((
 ) => {
   const action = useKeybindAction(keybind)
   const shortcut = useKeybindShortcut(keybind)
-  const shortcutSymbols = useMemo(() => convertShortcutToSymbols(shortcut), [shortcut])
+  const shortcutSymbols = useMemo(() => convertShortcutToSymbols(shortcut ?? ''), [shortcut])
   return (
     <MenuItemWithAnnotation
       annotation={shortcutSymbols}

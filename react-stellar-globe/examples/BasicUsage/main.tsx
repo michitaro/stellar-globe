@@ -1,8 +1,8 @@
-import { BillboardText, Globe, MarkerType, SkyCoord, TractTileLayer, V4, markerTypes } from '@stellar-globe/stellar-globe'
+import { BillboardText, Globe, MarkerType, SkyCoord, TractTileLayer, V3, V4, markerTypes } from '@stellar-globe/stellar-globe'
 import { produce } from 'immer'
 import React, { useMemo, useState } from 'react'
 import ReactDOM from 'react-dom/client'
-import { ClickableMarkerLayer$, ConstellationLayer$, EsoMilkyWayLayer$, Globe$, GridLayer$, HipparcosCatalogLayer$, HipsSimpleLayer$, TractTileLayer$, TextLayer$ } from '../../src'
+import { ClickableMarkerLayer$, ConstellationLayer$, EsoMilkyWayLayer$, Globe$, GridLayer$, HipparcosCatalogLayer$, HipsSimpleLayer$, TractTileLayer$, TextLayer$, DomLayer$ } from '../../src'
 import { LogScaleRange } from '../../src/LogScaleRange'
 import './style.scss'
 
@@ -28,7 +28,7 @@ function App() {
   })
   const [baseType, setBaseType] = useState<'hips' | 'tile'>('tile')
   const { constellation, constellationNames, catalog, area, milkyway, dud } = visibility
-  const [colorParams, setColorParams] = useState(() => TractTileLayer.defaultParams('sdssTrueColor'))
+  const [colorParams, setColorParams] = useState(() => TractTileLayer.defaultParams({ type: 'sdssTrueColor' }))
   const globeOptions = useMemo<GlobeOptions>(() => ({
     viewOptions: {
       retina: false,
@@ -64,6 +64,8 @@ function App() {
 
   TractTileLayer.assertType(colorParams, 'sdssTrueColor')
 
+  const domPosition = useMemo<V3>(() => [1, 0, 0], [])
+
   return (
     <div>
       <div style={{ width: '100vw', height: '100vh' }}>
@@ -90,6 +92,9 @@ function App() {
           <EsoMilkyWayLayer$ fadeInDuration={400} visible={milkyway} />
           <TextLayer$ defaultColor='white' defaultFont='24pt sans-serif' texts={texts} />
           <ClickableMarkerLayer$ {...clickableMarkerLayerProps} />
+          <DomLayer$ position={domPosition}>
+            <button onClick={() => alert('ok')}>DomLayer</button>
+          </DomLayer$>
         </Globe$>
       </div>
       <div className='controlpanel'>

@@ -5,7 +5,6 @@ import { assert } from "~/utils/debug"
 import { ImageFilter } from "~/utils/image_filter"
 import { Globe } from '../../globe'
 import mixerFragShader from './mixer.frag.glsl?raw'
-import { waitIdleTime } from "~/utils/time"
 
 
 export class FitsTextureProvider extends tile.AsyncTextureProvider {

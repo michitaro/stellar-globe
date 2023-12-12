@@ -105,7 +105,7 @@ export class Renderer {
         u_alpha: alpha,
         u_fovy: mvp.fovy,
         u_aspectRatio: mvp.aspectRatio,
-        u_minWidth: this.minWidth / gl.drawingBufferHeight,
+        u_minWidth: view.pixelRatio * this.minWidth / gl.drawingBufferHeight,
       })
       p.uniform1i({ u_darkenNarrowLine: this.darkenNarrowLine ? 1 : 0 })
       const features: number[] = [gl.BLEND]

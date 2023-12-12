@@ -1,5 +1,5 @@
 import { CameraMode, Globe, Layer } from '@stellar-globe/stellar-globe'
-import { Fragment, createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
 import { useInstanceVariable } from './hooks/useInstanceVariable'
 
 
@@ -66,6 +66,7 @@ export function useGenerateContext({
     retina,
     noDefaultLayers,
     cameraParams,
+    projection,
   })
   const { layers, layerFactories } = state
 
@@ -120,7 +121,11 @@ export function useGenerateContext({
     const globe = new Globe(containerRef.current!, {
       jsdomTest,
       preserveBuffer,
-      viewOptions: { ...initialProps.current.cameraParams, retina: initialProps.current.retina, mode: projection },
+      viewOptions: {
+        ...initialProps.current.cameraParams,
+        retina: initialProps.current.retina,
+        mode: initialProps.current.projection,
+      },
       noDefaultLayers: initialProps.current.noDefaultLayers,
     })
     onInit?.(globe)
@@ -159,9 +164,20 @@ export const GlobeContext = createContext<ReturnType<typeof useGenerateContext> 
 function useGlobeContext() {
   const context = useContext(GlobeContext)
   if (context === undefined) {
-    throw new Error(`use of useGlobe outside <$Globe />`)
+    throw new Error(`use of useGlobeContext outside <$Globe />`)
   }
   return context
+}
+
+
+export function useGetGlobe() {
+  const context = useGlobeContext()
+  return useCallback(() => {
+    if (context.state.globe === undefined) {
+      throw new Error(`globe has not been set up yet`)
+    }
+    return context.state.globe
+  }, [context])
 }
 
 

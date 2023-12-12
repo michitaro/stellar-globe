@@ -236,7 +236,7 @@ function ScalarParamsControl({ params, onChange }: ScalarParamsProps) {
         <tr>
           <th> &beta; </th>
           <td>
-            <LogScaleRange value={params.beta} min={0} max={2.e+8} onInput={beta => {
+            <LogScaleRange value={params.beta} min={0} max={1.e+7} onInput={beta => {
               onChange(produce(params, _ => { _.beta = beta }))
             }} />
           </td>

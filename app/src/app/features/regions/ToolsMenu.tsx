@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks"
 import { regionsSlice } from "./regionsSclie"
 import { Icon } from "../../../components/Icon"
 import { MaterialSymbol } from "material-symbols"
+import { MenuItemWithKeybind } from "../../keybindings/MenuItemWithKeybind"
 
 
 type ToolType = ReturnType<typeof regionsSlice['getInitialState']>['tool']
@@ -38,25 +39,34 @@ export function ToolsMenu() {
   const toolPinned = useAppSelector(state => state.regions.toolPinned)
   const dispatch = useAppDispatch()
 
+  const typeToKeybidn = {
+    'line': 'toggleLineTool',
+    'circle': 'toggleCircleTool',
+    'rect': 'toggleRectTool',
+    'pan': undefined
+  } as const
+
   return (
     <MenuBarItem
       label={<Icon type={toolDefs[selectedTool].icon} />}
     >
       {(['pan', 'line', 'circle', 'rect'] as const).map(tool => (
-        <MenuItem
+        <MenuItemWithKeybind
           key={tool}
           type='checkbox'
           checked={tool === selectedTool}
-          onClick={() => {
-            dispatch(regionsSlice.actions.toolChanged({ tool }))
-          }}
+          keybind={typeToKeybidn[tool]}
         >
           <Icon type={toolDefs[tool].icon} marginRight />
           {toolDefs[tool].displayName}
-        </MenuItem>
+        </MenuItemWithKeybind>
       ))}
       <MenuDivider />
       <MenuItem type="checkbox" checked={toolPinned} onClick={() => dispatch(regionsSlice.actions.toolPinnedToggled())}>Pin tool</MenuItem>
+      <MenuItem
+        type='checkbox'
+        onClick={() => dispatch(regionsSlice.actions.regionsCleared())}
+      >Clear</MenuItem>
     </MenuBarItem>
   )
 }

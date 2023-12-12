@@ -15,6 +15,7 @@ function hashState(state: RootState) {
     cameraParams: state.camera.params,
     projection: state.camera.projection,
     datasets: state.tractTileLayers.layers.filter(l => l.visible).map(l => l.name),
+    regions: state.regions.regions,
   }
 }
 
@@ -34,6 +35,7 @@ export function useHashSync({
         appOnChange(store, state => state.tractTileLayers.colorParams, sync),
         appOnChange(store, state => state.camera.params, sync),
         appOnChange(store, state => state.camera.projection, sync),
+        appOnChange(store, state => state.regions, sync),
       ]
       return () => {
         while (cleanup.length > 0) {

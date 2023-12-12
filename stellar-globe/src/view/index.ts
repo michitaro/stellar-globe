@@ -1,11 +1,8 @@
 import { MvpMatrix } from "./MvpMatrix"
 
-export class View {
-  constructor(
-    readonly mvp: MvpMatrix,
-    readonly lodBias: number,
-    readonly retina: boolean,
-    readonly drawingBufferHeight: number,
-  ) {
-  }
+export type View = {
+  readonly mvp: MvpMatrix
+  readonly lodBias: number
+  readonly pixelRatio: number
+  readonly drawingBufferHeight: number
 }

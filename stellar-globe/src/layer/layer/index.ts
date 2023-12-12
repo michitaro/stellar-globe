@@ -2,7 +2,7 @@ import { Globe } from "~/globe"
 import { AnimationManager } from "~/globe/animation"
 import { ReleaseCallbacks } from "~/utils/EventManager"
 import { View } from "~/view"
-import { MousePicker } from "./MousePicker"
+import { PointingObject } from "./PointingObject"
 
 
 export class Layer {
@@ -46,5 +46,5 @@ export class Layer {
     this.onRemoveFromGlobeCallbacks.flush()
   }
 
-  mousePickers: MousePicker[] = []
+  pointingObjects: PointingObject[] = []
 }

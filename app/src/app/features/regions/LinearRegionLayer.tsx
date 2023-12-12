@@ -1,10 +1,13 @@
+import { DomLayer$, PathLayer$, useLayerBind } from "@stellar-globe/react-stellar-globe"
+import { Globe, GlobePointerDragEvent, GlobePointerEvent, Layer, makePointingObject, SkyCoord, V3, V4, glMatrix, V2 } from "@stellar-globe/stellar-globe"
+import { Menu } from "@szhsin/react-menu"
 import { produce } from 'immer'
-import { PathLayer$, useLayerBind } from "@stellar-globe/react-stellar-globe"
-import { Globe, GlobePointerDragEvent, GlobePointerEvent, Layer, MousePicker, SkyCoord, V4, glMatrix } from "@stellar-globe/stellar-globe"
-import { Fragment, memo, useCallback, useMemo, useRef } from "react"
+import { Fragment, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { formatAngleInSexagesimal } from '../../../utils/formatAngle'
 import { slerp } from "../../../utils/math"
-import { setDisplayName } from "../../../utils/setDisplayName"
-const { mat3, vec3 } = glMatrix
+import styles from './styles.module.scss'
+import { Icon } from "../../../components/Icon"
+const { mat3, vec3, mat4 } = glMatrix
 
 
 export type LineDef = {
@@ -17,15 +20,23 @@ type Props = {
   color: V4
   visible: boolean
   onChange?: (lineDef: LineDef) => void
+  children?: ReactNode
 }
 
-export const LinearRegionLayer = memo(({
-  lineDef,
+export const LinearRegionLayer = ({
+  lineDef: lineDefProp,
   color,
   visible,
   onChange,
+  children,
 }: Props) => {
   type Paths = Parameters<typeof PathLayer$>[0]['paths']
+
+  const [lineDef, setLineDef] = useState(lineDefProp)
+
+  useEffect(() => {
+    setLineDef(lineDefProp)
+  }, [lineDefProp])
 
   const paths = useMemo(() => {
     const { start, end } = lineDef
@@ -46,6 +57,13 @@ export const LinearRegionLayer = memo(({
     return paths
   }, [lineDef, color])
 
+  const onSubmit = useCallback(() => {
+    onChange?.(lineDef)
+  }, [lineDef, onChange])
+
+  const position = useMemo(() => lineDef.end.xyz, [lineDef.end])
+  const offset = useMemo<V2>(() => [10, 10], [])
+
   return (
     <Fragment>
       <PathLayer$
@@ -53,69 +71,150 @@ export const LinearRegionLayer = memo(({
         visible={visible}
         blendMode="NORMAL"
         dimOnZoom={false}
-        darkenNarrowLine={false} />
-      <MouseLayer$ lineDef={lineDef} onChagne={onChange} />
+        darkenNarrowLine={false}
+      />
+      <DomLayer$ position={position} offset={offset} >
+        <Menu
+          menuButton={
+            <div className={styles.lineInfo} >
+              <span>
+                {formatAngleInSexagesimal(lineDef.start.angle(lineDef.end).rad)}
+              </span>
+              <Icon type="expand_more" />
+            </div>
+          }
+          theming="dark"
+        >
+          {children}
+        </Menu>
+      </DomLayer$>
+      {onChange && (
+        <MouseLayer$ lineDef={lineDef} onChange={setLineDef} onSubmit={onSubmit} />
+      )}
     </Fragment>
   )
-})
-setDisplayName({ LinearRegionLayer })
-
+}
+// setDisplayName({ LinearRegionLayer })
 
 
 class MouseLayer extends Layer {
   constructor(
     globe: Globe,
-    lineDef: LineDef,
-    onChange?: (lineDef: LineDef) => void,
+    public props: MouseLayerProps,
   ) {
     super(globe)
+    this.pointingObjects.push(
+      lineEndPicker(this),
+      lineBodyPicker(this),
+    )
+  }
+}
 
-    class LineBodyPicker extends MousePicker {
-      hit(e: GlobePointerEvent): { hit: boolean; passThrough: boolean } {
-        const lineWidth = 5
-        const { start, end } = lineDef
-        const p = e.coord.xyz
-        const a = start.xyz
-        const b = end.xyz
-        const c = vec3.cross(vec3.create(), a, b)
-        vec3.normalize(c, c)
-        // console.log([...a, ...b, ...c])
-        // @ts-ignore
-        const A = mat3.fromValues(...a, ...b, ...c)
-        if (mat3.determinant(A) === 0.) {
-          return { hit: false, passThrough: false }
-        }
-        const B = mat3.invert(mat3.create(), A)
-        const q = vec3.transformMat3(vec3.create(), p, B)
-        const d = 0.01 // globe.camera.fovy * lineWidth / globe.gl.drawingBufferHeight
-        const hit = q[0] >= 0 && q[1] >= 0 && Math.abs(q[2]) <= d
-        console.log(hit)
-        return { hit, passThrough: false }
+
+function lineBodyPicker(layer: MouseLayer) {
+  const { globe } = layer
+  const picker = makePointingObject({
+    hoverIcon: 'grab',
+    dragIcon: 'grabbing',
+    hit(e: GlobePointerEvent) {
+      const { start, end } = layer.props.lineDef
+      const p = e.coord.xyz
+      const a = start.xyz
+      const b = end.xyz
+      const c = vec3.normalize(vec3.create(), vec3.cross(vec3.create(), a, b))
+      vec3.normalize(c, c)
+      // @ts-ignore
+      const A = mat3.fromValues(...a, ...b, ...c)
+      if (mat3.determinant(A) === 0.) {
+        return { hit: false, passThrough: false }
       }
-
-      protected onDrag(e: GlobePointerDragEvent): void {
-        const newDef = produce(lineDef, _ => {
-          _.end = e.coord
+      const B = mat3.invert(mat3.create(), A)
+      const q = vec3.transformMat3(vec3.create(), p, B)
+      const d = 1.e-2 * globe.camera.fovy
+      const hit = q[0] >= 0 && q[1] >= 0 && Math.abs(q[2]) <= d
+      return { hit, passThrough: false }
+    },
+    onPointerDown() {
+      const baseLineDef = layer.props.lineDef
+      const onDrag = (e: GlobePointerDragEvent) => {
+        const newDef = produce(baseLineDef, _ => {
+          const R = mat4.create()
+          mat4.rotateZ(R, R, e.coord.a.rad)
+          mat4.rotateY(R, R, -e.coord.d.rad + e.downEvent.coord.d.rad)
+          mat4.rotateZ(R, R, -e.downEvent.coord.a.rad)
+          const start = SkyCoord.fromXyz(vec3.transformMat4(vec3.create(), _.start.xyz, R) as V3)
+          const end = SkyCoord.fromXyz(vec3.transformMat4(vec3.create(), _.end.xyz, R) as V3)
+          _.start = start
+          _.end = end
         })
-        console.log(newDef)
-        onChange?.(newDef)
+        layer.props.onChange?.(newDef)
+      }
+      return {
+        onDrag,
+        onPointerUp: () => layer.props.onSubmit(),
       }
     }
+  })
+  return picker
+}
 
-    this.mousePickers.push(new LineBodyPicker())
-  }
+
+function lineEndPicker(layer: MouseLayer) {
+  const globe = layer.globe
+  return makePointingObject({
+    hoverIcon: 'move',
+    dragIcon: 'crosshair',
+    hit(e) {
+      const { lineDef } = layer.props
+      const hit = (
+        lineDef.start.angle(e.coord).rad <= 2.e-2 * globe.camera.fovy ||
+        lineDef.end.angle(e.coord).rad <= 2.e-2 * globe.camera.fovy
+      )
+      return {
+        hit,
+      }
+    },
+    onPointerDown(e) {
+      const { lineDef: baseLineDef } = layer.props
+      const which = e.coord.cosine(baseLineDef.start) >= e.coord.cosine(baseLineDef.end) ? 'start' : 'end'
+      const onDrag = (e: GlobePointerDragEvent) => {
+        const newDef = produce(baseLineDef, _ => {
+          _[which] = e.coord
+        })
+        return layer.props.onChange(newDef)
+      }
+      return {
+        onDrag,
+        onPointerUp: () => {
+          layer.props.onSubmit()
+        },
+      }
+    },
+  })
+}
+
+
+type MouseLayerProps = {
+  lineDef: LineDef,
+  onChange: (lineDef: LineDef) => void
+  onSubmit: () => void
 }
 
 
 function MouseLayer$({
   lineDef,
-  onChagne,
-}: {
-  lineDef: LineDef,
-  onChagne?: (lineDef: LineDef) => void
-}) {
-  const initialLineDef = useRef(lineDef)
-  const factory = useCallback((globe: Globe) => new MouseLayer(globe, initialLineDef.current, onChagne), [onChagne])
-  const { node } = useLayerBind(factory, true)
+  onChange,
+  onSubmit,
+}: MouseLayerProps) {
+  const initialProps = useRef<MouseLayerProps>({ lineDef, onChange, onSubmit })
+  const factory = useCallback((globe: Globe) => new MouseLayer(globe, { ...initialProps.current }), [])
+  const { node, ifLayerReady } = useLayerBind<MouseLayer>(factory, true)
+  const newProps = useMemo<MouseLayerProps>(() => ({ lineDef, onChange, onSubmit }), [lineDef, onChange, onSubmit])
+
+  useEffect(() => {
+    ifLayerReady(layer => {
+      layer.props = newProps
+    })
+  }, [ifLayerReady, newProps])
   return node
 }

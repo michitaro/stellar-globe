@@ -4,10 +4,10 @@ import { AnimationCallback } from "~/globe/animation"
 import { mouse } from '~/utils/mouse'
 import { GlobePointerEvent } from "./GlobePointerEvent"
 import { Layer } from "./layer"
-import { InertiaMousePicker } from "./layer/MousePicker"
+import { InertialPointingObject } from "./layer/PointingObject"
 
 
-class RollMousePicker extends InertiaMousePicker {
+class RollPointingObject extends InertialPointingObject {
   hit(e: GlobePointerEvent) {
     return {
       passThrough: false,
@@ -38,6 +38,10 @@ class RollMousePicker extends InertiaMousePicker {
       this.globe.camera.roll += (y * dx - x * dy) / (x * x + y * y)
     }
   }
+
+  get dragDetectionDelay() {
+    return 0
+  }
 }
 
 
@@ -46,6 +50,6 @@ export class RollLayer extends Layer {
     globe: Globe,
   ) {
     super(globe)
-    this.mousePickers.push(new RollMousePicker(globe, new Inertia2D()))
+    this.pointingObjects.push(new RollPointingObject(globe, new Inertia2D()))
   }
 }

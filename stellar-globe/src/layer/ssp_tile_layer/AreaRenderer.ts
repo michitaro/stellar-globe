@@ -18,7 +18,7 @@ export class AreaRenderer {
 
   constructor(readonly globe: Globe, public baseUrl: string, filters: Filter[]) {
     this.r = new path.Renderer(globe.gl)
-    this.r.minWidth = 3 * globe.camera.canvasPixels
+    this.r.minWidth = 3
     this.load().then(() => {
       globe.animations.add(({ r }) => {
         this.fadeInAlpha = r

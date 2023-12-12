@@ -1,5 +1,5 @@
 import { GlobePointerEvent } from "~/layer/GlobePointerEvent"
-import { CameraMode } from ".."
+import { CameraMode, Layer } from ".."
 import { Camera } from "./Camera"
 
 export interface GlobeEventMap {
@@ -23,7 +23,10 @@ type CameraModeChangeEvent = {
   mode: CameraMode
 }
 
-type LayerChangeEvent = {}
+type LayerChangeEvent = {
+  added?: Layer[]
+  removed?: Layer[]
+}
 type ImageLoadEvent = {}
 type GlobeResizeEvent = {}
 

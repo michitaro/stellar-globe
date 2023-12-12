@@ -9,9 +9,9 @@ import { Panels } from "./Panels"
 import { useAppContext, wrapWithAppContext } from "./context"
 import { KeybindsProvider } from './keybindings'
 import { makeStore } from "./store"
+import { useLocalStorageSync } from './store/stateSync/StorageSync'
 import { useHashSync } from './store/stateSync/hashSync'
 import styles from './style.module.scss'
-import { useLocalStorageSync } from './store/stateSync/StorageSync'
 
 
 type Props = {

@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { V3, V4 } from "@stellar-globe/stellar-globe"
+import { V4 } from "@stellar-globe/stellar-globe"
+import { readHashState } from "../../store/stateSync/hashSync"
 
 
 type ToolType = 'pan' | 'line' | 'rect' | 'circle'
@@ -18,7 +19,7 @@ function initialState(): State {
   return {
     tool: 'pan',
     toolPinned: false,
-    regions: [],
+    regions: readHashState().regions ?? [],
   }
 }
 
@@ -41,6 +42,12 @@ export const regionsSlice = createSlice({
         throw new Error(`Index error`)
       }
       state.regions[index] = regionDef
+    },
+    regionsCleared(state, { payload }: PayloadAction<void>) {
+      state.regions = []
+    },
+    regionDeleted(state, { payload: { index } }: PayloadAction<{ index: number }>) {
+      state.regions.splice(index, 1)
     },
   },
 })

@@ -9,15 +9,22 @@ export function usePanelKeyBindings() {
   const selectedPanel = useAppSelector(state => state.panel.selectedPanel)
 
   return useMemo(() => {
-    const togglePanel: Keybind = {
-      action() {
-        dispatch(panelSlice.actions.selectPanel(selectedPanel === 'tone' ? undefined : 'tone'))
-      },
-      shortcut: 'C',
+    const makeKeybind = (panelType: typeof selectedPanel, shortcut: string) => {
+      const keybind: Keybind = {
+        action() {
+          dispatch(panelSlice.actions.selectPanel(selectedPanel === panelType ? undefined : panelType))
+        },
+        shortcut,
+      }
+      return keybind
     }
 
+    const toggleTonePanel = makeKeybind('tone', 'C')
+    const toggleRegionPanel = makeKeybind('regions', 'R')
+
     return {
-      togglePanel,
+      toggleTonePanel,
+      toggleRegionPanel,
     }
   }, [dispatch, selectedPanel])
 }

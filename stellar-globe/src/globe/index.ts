@@ -20,7 +20,6 @@ type GlobeOptions = {
   noDefaultLayers?: boolean
   jsdomTest?: boolean
   dataRepository?: string
-  // cursor?: CSSStyleDeclaration['cursor']
 }
 
 
@@ -138,7 +137,7 @@ export class Globe {
     this.layerSorter.sort()
     layer.runOnAddToGlobeCallbacks()
     this.requestRefresh()
-    this.emit('layer-change', {})
+    this.emit('layer-change', { added: [layer] })
     return layer
   }
 
@@ -148,7 +147,7 @@ export class Globe {
       layer.runRemoveFromGlobeCallbacks()
       this.layers.splice(i, 1)
       this.requestRefresh()
-      this.emit('layer-change', {})
+      this.emit('layer-change', { removed: [layer] })
     }
   }
 
@@ -196,15 +195,29 @@ export class Globe {
       wegblProfile(this.gl, 'draw', () => {
         gl.clearColor(0, 0, 0, 0)
         gl.clear(gl.COLOR_BUFFER_BIT)
+        const view = this.camera.view()
         for (const layer of this.layers) {
-          layer.render(this.camera.view())
+          layer.render(view)
         }
       })
     }
   }
 
   readonly layerSorter = new LayerSorter(this)
+
+  private cursorMemo: CursorStyle = 'default'
+
+  /** @internal */
+  setCursor(cursor: CursorStyle) {
+    if (this.cursorMemo !== cursor) {
+      this.cursorMemo = cursor
+      this.canvas.domElement.style.cursor = cursor
+    }
+  }
 }
+
+
+export type CursorStyle = "alias" | "all-scroll" | "auto" | "cell" | "col-resize" | "context-menu" | "copy" | "crosshair" | "default" | "e-resize" | "ew-resize" | "grab" | "grabbing" | "help" | "move" | "n-resize" | "ne-resize" | "nesw-resize" | "no-drop" | "none" | "not-allowed" | "ns-resize" | "nw-resize" | "nwse-resize" | "pointer" | "progress" | "row-resize" | "s-resize" | "se-resize" | "sw-resize" | "text" | "vertical-text" | "w-resize" | "wait" | "zoom-in" | "zoom-out"
 
 
 // These 2 types are for Globe.addNewLayer

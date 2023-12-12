@@ -4,12 +4,17 @@
   position: absolute;
   top: 0;
   right: 0;
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .panel {
   @include background;
   padding: 16px;
   border-radius: 0 0 0 16px;
+  flex-grow: 1;
+  overflow-y: auto;
 }
 
 .bottomMenu {

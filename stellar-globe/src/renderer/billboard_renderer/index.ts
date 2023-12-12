@@ -94,7 +94,7 @@ export class BillboardRenderer {
     const gl = this.gl
     const p = this.program
     p.use()
-    const ratio = this.scale * (view.retina ? devicePixelRatio : 1)
+    const ratio = this.scale * view.pixelRatio
     p.uniformMatrix4fv({ u_pvMatrix: view.mvp.pv })
     p.uniform4fv({ u_color: this.color })
     p.uniform1i({ u_texture: 0 })
