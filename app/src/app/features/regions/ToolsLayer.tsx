@@ -1,33 +1,37 @@
 import { PanLayer$ } from '@stellar-globe/react-stellar-globe'
 import { GlobePointerDragEvent, SkyCoord, V4 } from '@stellar-globe/stellar-globe'
-import { Fragment, memo, useCallback, useMemo, useState } from 'react'
+import { Fragment, ReactNode, memo, useCallback, useMemo, useState } from 'react'
 import { setDisplayName } from '../../../utils/setDisplayName'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import { CircularRegionLayer } from './CircularRegionLayer'
 import { LinearRegionLayer } from './LinearRegionLayer'
 import { PointerDragAndUpLayer$ } from './PointerDragLayer'
-import { regionsSlice } from './regionsSclie'
+import { regionsSlice } from './regionsSlice'
 import { normalizeSkyCoord } from './utils'
 
 
 export const ToolsLayer = memo(() => {
   const tool = useAppSelector(state => state.regions.tool)
-  const toolPinned = useAppSelector(state => state.regions.toolPinned)
-  const dispatch = useAppDispatch()
-  const [coords, setCoords] = useState<[SkyCoord, SkyCoord] | null>(null)
 
-  const addRegion = useCallback((start: SkyCoord, end: SkyCoord) => {
-    dispatch(regionsSlice.actions.newLinearRegionAdded({
-      type: 'Linear',
-      start: normalizeSkyCoord(start),
-      end: normalizeSkyCoord(end),
-      color: [0, 1, 0, 1],
-      name: 'MyRegion',
-      visible: true,
-    }))
-    if (!toolPinned) {
-      dispatch(regionsSlice.actions.toolChanged({ tool: 'pan' }))
-    }
-  }, [dispatch, toolPinned])
+  return (
+    <Fragment>
+      <PanLayer$ enabled={tool === 'pan'} />
+      {tool === 'line' && <NewLinearRegionLayer />}
+      {tool === 'circle' && <NewCircularRegionLayer />}
+    </Fragment>
+  )
+})
+setDisplayName({ ToolsLayer })
+
+
+type NewRegionLayerProps = {
+  render: (coords: [SkyCoord, SkyCoord]) => ReactNode
+  onSubmit: (coords: [SkyCoord, SkyCoord]) => void
+}
+
+
+function NewRegionLayer({ render, onSubmit }: NewRegionLayerProps) {
+  const [coords, setCoords] = useState<[SkyCoord, SkyCoord] | null>(null)
 
   const onDrag = useCallback((e: GlobePointerDragEvent) => {
     setCoords([e.downEvent.coord, e.coord])
@@ -35,26 +39,89 @@ export const ToolsLayer = memo(() => {
 
   const onUp = useCallback((e: GlobePointerDragEvent) => {
     if (e.moved) {
-      addRegion(e.downEvent.coord, e.coord)
+      onSubmit([e.downEvent.coord, e.coord])
     }
     setCoords(null)
-  }, [addRegion])
-
-  const color = useMemo<V4>(() => [1, 0, 1, 1], [])
-  const lineDef = useMemo(() => coords && { start: coords[0], end: coords[1] }, [coords])
+  }, [onSubmit])
 
   return (
     <Fragment>
-      <PanLayer$ enabled={tool === 'pan'} />
-      {lineDef && (
+      {coords && render(coords)}
+      <PointerDragAndUpLayer$ onDrag={onDrag} onUp={onUp} />
+    </Fragment>
+  )
+}
+
+
+const NewLinearRegionLayer = memo(() => {
+  const toolPinned = useAppSelector(state => state.regions.toolPinned)
+  const dispatch = useAppDispatch()
+
+  const addRegion = useCallback((coords: [SkyCoord, SkyCoord]) => {
+    const [start, end] = coords
+    dispatch(regionsSlice.actions.newLinearRegionAdded({
+      type: 'Linear',
+      start: normalizeSkyCoord(start),
+      end: normalizeSkyCoord(end),
+      color: [0, 1, 0, 1],
+      visible: true,
+    }))
+    if (!toolPinned) {
+      dispatch(regionsSlice.actions.toolChanged({ tool: 'pan' }))
+    }
+  }, [dispatch, toolPinned])
+
+  const color = useMemo<V4>(() => [1, 0, 1, 1], [])
+  const lineDef = (coords: [SkyCoord, SkyCoord]) => ({ start: coords[0], end: coords[1] })
+
+  return (
+    <NewRegionLayer
+      onSubmit={addRegion}
+      render={coords => (
         <LinearRegionLayer
-          lineDef={lineDef}
+          lineDef={lineDef(coords)}
           color={color}
           visible
         />
       )}
-      <PointerDragAndUpLayer$ enabled={tool === 'line'} onDrag={onDrag} onUp={onUp} />
-    </Fragment>
+    />
   )
 })
-setDisplayName({ ToolsLayer })
+setDisplayName({ NewLinearRegionLayer })
+
+
+const NewCircularRegionLayer = memo(() => {
+  const toolPinned = useAppSelector(state => state.regions.toolPinned)
+  const dispatch = useAppDispatch()
+
+  const addRegion = useCallback((coords: [SkyCoord, SkyCoord]) => {
+    const [a, b] = coords
+    dispatch(regionsSlice.actions.newCircularRegionAdded({
+      type: 'Circular',
+      center: normalizeSkyCoord(a),
+      radius: a.angle(b).rad,
+      color: [0, 1, 0, 1],
+      visible: true,
+    }))
+    if (!toolPinned) {
+      dispatch(regionsSlice.actions.toolChanged({ tool: 'pan' }))
+    }
+  }, [dispatch, toolPinned])
+
+  const color = useMemo<V4>(() => [1, 0, 1, 1], [])
+  const circleDef = (coords: [SkyCoord, SkyCoord]) => ({ center: coords[0], radius: coords[0].angle(coords[1]).rad })
+
+  return (
+    <NewRegionLayer
+      onSubmit={addRegion}
+      render={coords => (
+        <CircularRegionLayer
+          circleDef={circleDef(coords)}
+          color={color}
+          visible
+        />
+      )}
+    />
+  )
+})
+setDisplayName({ NewLinearRegionLayer })

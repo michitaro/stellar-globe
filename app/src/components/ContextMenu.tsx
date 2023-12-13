@@ -1,10 +1,11 @@
 import { ControlledMenu } from '@szhsin/react-menu'
-import { ReactNode, useState } from "react"
+import { ReactNode, useMemo, useState } from "react"
 
 
 export function ContextMenu({ children, target }: { children: ReactNode; target: ReactNode }) {
   const [isOpen, setOpen] = useState(false)
   const [anchorPoint, setAnchorPoint] = useState({ x: 0, y: 0 })
+  const transition = useMemo(() => ({ close: true }), [])
   return (
     <div
       onContextMenu={(e) => {
@@ -22,6 +23,7 @@ export function ContextMenu({ children, target }: { children: ReactNode; target:
         onClose={() => setOpen(false)}
         submenuOpenDelay={0}
         submenuCloseDelay={0}
+        transition={transition}
       >
         {children}
       </ControlledMenu>

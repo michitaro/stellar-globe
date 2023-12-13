@@ -3,7 +3,7 @@ import { cameraSlice } from "../features/camera/cameraSlice"
 import { appearanceLayersSlice } from "../features/appearanceLayers/appearanceLayersSlice"
 import { panelSlice } from '../Panels/panelSlice'
 import { tractTileLayersSlice } from '../features/tractTileLayers/tractTileLayersSlice'
-import { regionsSlice } from "../features/regions/regionsSclie"
+import { regionsSlice } from "../features/regions/regionsSlice"
 import { develSlice } from "../features/devel/develSlice"
 // import { jsonPatchLogger } from './JsonPatchLogger'
 

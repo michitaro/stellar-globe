@@ -39,11 +39,11 @@ class PointerDragLayer extends Layer {
 
 
 type Props = {
-  enabled: boolean
+  enabled?: boolean
 } & Callbacks
 
 
-export function PointerDragAndUpLayer$({ enabled, onDrag, onUp }: Props) {
+export function PointerDragAndUpLayer$({ enabled = true, onDrag, onUp }: Props) {
   const factory = useCallback((globe: Globe) => new PointerDragLayer(globe, { onDrag, onUp }), [onDrag, onUp])
   const { node } = useLayerBind(factory, enabled)
   return node

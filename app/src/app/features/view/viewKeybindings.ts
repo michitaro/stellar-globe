@@ -18,7 +18,7 @@ export function useViewKeybindings() {
       action() {
         const globe = globeHandle.current!()
         const { a, d } = globe.camera.center()
-        const coords = prompt('Coords?', `${a.deg} ${d.deg, 6}`)
+        const coords = prompt('Coords?', `${a.deg} ${d.deg}`)
         if (coords) {
           const skyCoord = angle.SkyCoord.parse(coords)
           globe.camera.jumpTo({}, { coord: skyCoord })

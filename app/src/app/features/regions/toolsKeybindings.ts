@@ -1,7 +1,7 @@
 import { useMemo } from "react"
 import { Keybind } from "../../../components/keybindings"
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
-import { regionsSlice } from "./regionsSclie"
+import { regionsSlice } from "./regionsSlice"
 
 export function useToolsKeybindings() {
   const dispatch = useAppDispatch()

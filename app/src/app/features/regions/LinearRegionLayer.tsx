@@ -75,6 +75,7 @@ export const LinearRegionLayer = ({
       />
       <DomLayer$ position={position} offset={offset} >
         <Menu
+          transition={{ close: true }}
           menuButton={
             <div className={styles.lineInfo} >
               <span>

@@ -1,7 +1,7 @@
 import { MenuDivider, MenuItem } from "@szhsin/react-menu"
 import { MenuBarItem } from "../../../components/Menu/MenuBarItem"
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
-import { regionsSlice } from "./regionsSclie"
+import { regionsSlice } from "./regionsSlice"
 import { Icon } from "../../../components/Icon"
 import { MaterialSymbol } from "material-symbols"
 import { MenuItemWithKeybind } from "../../keybindings/MenuItemWithKeybind"

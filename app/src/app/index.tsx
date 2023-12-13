@@ -1,5 +1,6 @@
 import '@szhsin/react-menu/dist/index.css'
 import '@szhsin/react-menu/dist/theme-dark.css'
+import '@szhsin/react-menu/dist/transitions/slide.css'
 import 'material-symbols'
 import { Provider } from "react-redux"
 import { useInstanceVariable } from '../hooks/useInstanceVaribale'

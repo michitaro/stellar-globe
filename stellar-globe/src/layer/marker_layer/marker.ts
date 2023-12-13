@@ -11,10 +11,10 @@ function reset({ size }: MarkerOptions, { canvas, ctx }: { canvas: HTMLCanvasEle
   canvas.height = size
   ctx.strokeStyle = '#ffffff'
   ctx.globalAlpha = 1
-  ctx.setTransform(size / 2, 0, 0, size / 2, size / 2, size / 2)
+  ctx.setTransform(size / 2, 0, 0, size / 2, (size - 2) / 2, (size - 2) / 2)
+  // ctx.setTransform(size / 2, 0, 0, size / 2, size / 2, size / 2)
   ctx.clearRect(-1, -1, 2, 2)
 }
-
 
 function circle({ width }: MarkerOptions, ctx: CanvasRenderingContext2D) {
   ctx.lineWidth = width

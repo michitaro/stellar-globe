@@ -83,9 +83,9 @@ export class PanLayer extends Layer {
   ) {
     super(globe)
     this.pointingObjects.push(new PanPointingObject(globe, new Inertia2D({
-      omega0: 7.5e-2,
-      gamma: 5.e-2,
-      gamma0: 1.e-3
+      omega0: 5.e-2,
+      gamma: 4.e-2,
+      gamma0: 1.e-3,
     })))
   }
 

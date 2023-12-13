@@ -1,11 +1,12 @@
+import { MenuItem } from "@szhsin/react-menu"
 import { Fragment, memo, useCallback, useMemo } from "react"
+import { Icon } from "../../../components/Icon"
 import { setDisplayName } from "../../../utils/setDisplayName"
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
+import { CircleDef, CircularRegionLayer } from "./CircularRegionLayer"
 import { LineDef, LinearRegionLayer } from "./LinearRegionLayer"
-import { regionsSlice } from "./regionsSclie"
+import { regionsSlice } from "./regionsSlice"
 import { normalizeSkyCoord, skyCoordFromCoordDef } from "./utils"
-import { MenuItem } from "@szhsin/react-menu"
-import { Icon } from "../../../components/Icon"
 
 
 export function RegionsLayer() {
@@ -13,10 +14,12 @@ export function RegionsLayer() {
 
   return (
     <Fragment>
-      {regions.map((def, index) => {
+      {regions.map((def) => {
         switch (def.type) {
           case 'Linear':
-            return <LinearRegionFromDefLayer key={index} index={index} {...def} />
+            return <LinearRegionFromDefLayer key={def.id} {...def} />
+          case 'Circular':
+            return <CircularRegionFromDefLayer key={def.id} {...def} />
         }
       })}
     </Fragment>
@@ -29,28 +32,27 @@ type SpecificRegionType<U extends RegionDef['type'], T = RegionDef> = T extends 
 
 
 const LinearRegionFromDefLayer = memo(({
-  name,
+  id,
   start: startDef,
   end: endDef,
   color,
   visible,
-  index,
-}: SpecificRegionType<'Linear'> & { index: number }) => {
+}: SpecificRegionType<'Linear'>) => {
   const dispatch = useAppDispatch()
 
   const onChange = useCallback(({ start, end }: LineDef) => {
     dispatch(regionsSlice.actions.regionUpdated({
-      index,
+      id,
       regionDef: {
         type: 'Linear',
-        name,
+        id,
         color,
         start: normalizeSkyCoord(start),
         end: normalizeSkyCoord(end),
         visible,
       },
     }))
-  }, [color, dispatch, index, name, visible])
+  }, [color, dispatch, id, visible])
 
   const lineDef = useMemo(() => ({
     start: skyCoordFromCoordDef(startDef),
@@ -66,9 +68,56 @@ const LinearRegionFromDefLayer = memo(({
     >
       <MenuItem
         onClick={() => {
-          dispatch(regionsSlice.actions.regionDeleted({ index }))
+          dispatch(regionsSlice.actions.regionDeleted({ id }))
         }}
       ><Icon type="delete" marginRight />Delete</MenuItem>
     </LinearRegionLayer>)
 })
 setDisplayName({ LinearRegionFromDefLayer })
+
+
+
+const CircularRegionFromDefLayer = memo(({
+  id,
+  center: centerDef,
+  radius: radiusDef,
+  color,
+  visible,
+}: SpecificRegionType<'Circular'>) => {
+  const dispatch = useAppDispatch()
+
+  const onChange = useCallback(({ center, radius }: CircleDef) => {
+    dispatch(regionsSlice.actions.regionUpdated({
+      id,
+      regionDef: {
+        type: 'Circular',
+        id,
+        color,
+        center: normalizeSkyCoord(center),
+        radius,
+        visible,
+      },
+    }))
+  }, [color, dispatch, id, visible])
+
+  const circleDef = useMemo(() => ({
+    center: skyCoordFromCoordDef(centerDef),
+    radius: radiusDef,
+  }), [centerDef, radiusDef])
+
+  return (
+    <CircularRegionLayer
+      circleDef={circleDef}
+      color={color}
+      visible={visible}
+      onChange={onChange}
+    >
+      <MenuItem
+        onClick={() => {
+          dispatch(regionsSlice.actions.regionDeleted({ id }))
+        }}
+      ><Icon type="delete" marginRight />Delete</MenuItem>
+    </CircularRegionLayer>
+  )
+})
+setDisplayName({ CircularRegionFromDefLayer })

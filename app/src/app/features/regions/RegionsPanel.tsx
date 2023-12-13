@@ -1,13 +1,15 @@
-import { memo } from "react"
+import styles from './styles.module.scss'
+import { memo, useCallback } from "react"
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
 import { Icon } from "../../../components/Icon"
-import { regionsSlice } from "./regionsSclie"
+import { Region, regionsSlice } from "./regionsSlice"
 import { MaterialSymbol } from "material-symbols"
 import { setDisplayName } from "../../../utils/setDisplayName"
+import { ColorPickerRgba } from "../../../components/ColorPicker"
+import { V4 } from "@stellar-globe/stellar-globe"
 
 export const RegionsPanels = memo(() => {
   const regions = useAppSelector(state => state.regions.regions)
-  const dispatch = useAppDispatch()
 
   return (
     <div>
@@ -16,32 +18,47 @@ export const RegionsPanels = memo(() => {
         <thead>
           <tr>
             <th>Type</th>
-            {/* <th>Name</th> */}
+            <th>Name</th>
             <th></th>
             <th />
           </tr>
         </thead>
         <tbody>
-          {regions.map((region, index) => (
-            <tr key={index}>
-              <td> <Icon type={typeIcon[region.type]} /></td>
-              {/* <td>{region.name}</td> */}
-              <td>
-                {/* {JSON.stringify(region)} */}
-              </td>
-              <td>
-                <button
-                  onClick={() => dispatch(regionsSlice.actions.regionDeleted({ index }))}
-                ><Icon type="delete" /></button>
-              </td>
-            </tr>
-          ))}
+          {regions.map(region => <RegionTr key={region.id} region={region} />)}
         </tbody>
       </table>
     </div>
   )
 })
 setDisplayName({ RegionsPanels })
+
+
+const RegionTr = memo(({ region }: { region: Region }) => {
+  const dispatch = useAppDispatch()
+  const { type, id, color } = region
+
+  const onChangeColor = useCallback((color: V4) => {
+    dispatch(regionsSlice.actions.regionUpdated({ id, regionDef: { ...region, color } }))
+  }, [dispatch, id, region])
+
+  return (
+    <tr>
+      <td> <Icon type={typeIcon[type]} /></td>
+      <td>{id}</td>
+      <td>
+        {/* {JSON.stringify(region)} */}
+      </td>
+      <td>
+        <div className={styles.regionTrButtons}>
+          <ColorPickerRgba color={color} onChange={onChangeColor} />
+          <button
+            onClick={() => dispatch(regionsSlice.actions.regionDeleted({ id }))}
+          ><Icon type="delete" /></button>
+        </div>
+      </td>
+    </tr>
+  )
+})
 
 
 type RegionType = ReturnType<typeof regionsSlice.getInitialState>['regions'][number]['type']

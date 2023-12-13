@@ -37,6 +37,7 @@ export class MarkerLayer extends Layer {
   ) {
     super(globe)
     this.renderer = new BillboardRenderer(this.globe.gl)
+    this.renderer.color = options.baseColor ?? this.renderer.color
     this.onRelease(() => this.renderer.release())
     this.update(options)
   }
