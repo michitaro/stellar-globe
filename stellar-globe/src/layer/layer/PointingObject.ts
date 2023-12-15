@@ -54,11 +54,11 @@ export abstract class PointingObject {
   /** @internal */
   runOnDrag(...args: Parameters<PointingObject["onDrag"]>) { return this.onDrag(...args) }
 
-  get hoverIcon(): CursorStyle {
+  hoverIcon(_e: GlobePointerEvent): CursorStyle {
     return 'default'
   }
 
-  get dragIcon(): CursorStyle {
+  dragIcon(_e: GlobePointerEvent): CursorStyle {
     return 'default'
   }
 
@@ -126,20 +126,20 @@ export type PointingObjectDef = {
     onPointerUp?: (e: GlobePointerDragEvent) => void
   } | void,
   onContextMenu?: (e: GlobePointerEvent) => void
-  hoverIcon?: CursorStyle
-  dragIcon?: CursorStyle
+  hoverIcon?: CursorStyle | ((e: GlobePointerEvent) => CursorStyle)
+  dragIcon?: CursorStyle | ((e: GlobePointerEvent) => CursorStyle)
   dragDetectiveDelay?: number
 }
 
 
 export function makePointingObject(def: PointingObjectDef): PointingObject {
   return new class extends PointingObject {
-    get hoverIcon() {
-      return def.hoverIcon ?? 'default'
+    hoverIcon(e: GlobePointerEvent): CursorStyle {
+      return typeof def.hoverIcon === 'function' ? def.hoverIcon(e) : def.hoverIcon ?? 'default'
     }
 
-    get dragIcon() {
-      return def.dragIcon ?? 'default'
+    dragIcon(e: GlobePointerEvent): CursorStyle {
+      return typeof def.dragIcon === 'function' ? def.dragIcon(e) : def.dragIcon ?? 'default'
     }
 
     hit(e: GlobePointerEvent): { hit: boolean; passThrough: boolean } {

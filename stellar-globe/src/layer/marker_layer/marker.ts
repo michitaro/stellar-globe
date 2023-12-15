@@ -56,12 +56,12 @@ function dot({ width }: MarkerOptions, ctx: CanvasRenderingContext2D) {
   ctx.stroke()
 }
 
-function circledHallowPlus(options: MarkerOptions, ctx: CanvasRenderingContext2D) {
+function circledHollowPlus(options: MarkerOptions, ctx: CanvasRenderingContext2D) {
   circle(options, ctx)
   hollowPlus(options, ctx)
 }
 
-function circledHallowX(options: MarkerOptions, ctx: CanvasRenderingContext2D) {
+function circledHollowX(options: MarkerOptions, ctx: CanvasRenderingContext2D) {
   circle(options, ctx)
   hollowX(options, ctx)
 }
@@ -76,7 +76,7 @@ function hollowAsterisk(options: MarkerOptions, ctx: CanvasRenderingContext2D) {
   hollowX(options, ctx)
 }
 
-function circledHallowAsterisk(options: MarkerOptions, ctx: CanvasRenderingContext2D) {
+function circledHollowAsterisk(options: MarkerOptions, ctx: CanvasRenderingContext2D) {
   hollowPlus(options, ctx)
   hollowX(options, ctx)
   circle(options, ctx)
@@ -120,13 +120,13 @@ const markerMakers = {
   hollowPlus,
   hollowX,
   dot,
-  circledHallowPlus,
-  circledHallowX,
+  circledHollowPlus,
+  circledHollowX,
   diamond,
   square,
   asterisk,
   hollowAsterisk,
-  circledHallowAsterisk,
+  circledHollowAsterisk,
   triangle,
   pentagon,
 }

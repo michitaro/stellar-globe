@@ -8,6 +8,7 @@ import { LinearRegionLayer } from './LinearRegionLayer'
 import { PointerDragAndUpLayer$ } from './PointerDragLayer'
 import { regionsSlice } from './regionsSlice'
 import { normalizeSkyCoord } from './utils'
+import { RectDef, RectangularRegionLayer } from './RectangularRegionLayer'
 
 
 export const ToolsLayer = memo(() => {
@@ -18,6 +19,7 @@ export const ToolsLayer = memo(() => {
       <PanLayer$ enabled={tool === 'pan'} />
       {tool === 'line' && <NewLinearRegionLayer />}
       {tool === 'circle' && <NewCircularRegionLayer />}
+      {tool === 'rect' && <NewRectangularRegionLayer />}
     </Fragment>
   )
 })
@@ -117,6 +119,50 @@ const NewCircularRegionLayer = memo(() => {
       render={coords => (
         <CircularRegionLayer
           circleDef={circleDef(coords)}
+          color={color}
+          visible
+        />
+      )}
+    />
+  )
+})
+setDisplayName({ NewLinearRegionLayer })
+
+
+const NewRectangularRegionLayer = memo(() => {
+  const toolPinned = useAppSelector(state => state.regions.toolPinned)
+  const dispatch = useAppDispatch()
+
+  const addRegion = useCallback((coords: [SkyCoord, SkyCoord]) => {
+    const [a, b] = coords
+    dispatch(regionsSlice.actions.newRectangularRegionAdded({
+      type: 'Rectangular',
+      minRa: a.a.rad,
+      maxRa: b.a.rad,
+      minDec: a.d.rad,
+      maxDec: b.d.rad,
+      color: [0, 1, 0, 1],
+      visible: true,
+    }))
+    if (!toolPinned) {
+      dispatch(regionsSlice.actions.toolChanged({ tool: 'pan' }))
+    }
+  }, [dispatch, toolPinned])
+
+  const color = useMemo<V4>(() => [1, 0, 1, 1], [])
+  const rectDef = (coords: [SkyCoord, SkyCoord]): RectDef => ({
+    minRa: coords[0].a.rad,
+    maxRa: coords[1].a.rad,
+    minDec: coords[0].d.rad,
+    maxDec: coords[1].d.rad,
+  })
+
+  return (
+    <NewRegionLayer
+      onSubmit={addRegion}
+      render={coords => (
+        <RectangularRegionLayer
+          rectDef={rectDef(coords)}
           color={color}
           visible
         />

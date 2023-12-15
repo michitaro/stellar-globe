@@ -1,16 +1,18 @@
 import { Action, ThunkAction, configureStore } from "@reduxjs/toolkit"
-import { cameraSlice } from "../features/camera/cameraSlice"
-import { appearanceLayersSlice } from "../features/appearanceLayers/appearanceLayersSlice"
 import { panelSlice } from '../Panels/panelSlice'
-import { tractTileLayersSlice } from '../features/tractTileLayers/tractTileLayersSlice'
-import { regionsSlice } from "../features/regions/regionsSlice"
+import { appearanceLayersSlice } from "../features/appearanceLayers/appearanceLayersSlice"
+import { cameraSlice } from "../features/camera/cameraSlice"
 import { develSlice } from "../features/devel/develSlice"
+import { regionsSlice } from "../features/regions/regionsSlice"
+import { tractTileLayersSlice } from '../features/tractTileLayers/tractTileLayersSlice'
+import { commonSlice } from "../features/common/commonSlice"
 // import { jsonPatchLogger } from './JsonPatchLogger'
 
 
 export function makeStore() {
   return configureStore({
     reducer: {
+      common: commonSlice.reducer,
       layers: appearanceLayersSlice.reducer,
       camera: cameraSlice.reducer,
       panel: panelSlice.reducer,

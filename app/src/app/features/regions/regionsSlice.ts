@@ -6,13 +6,14 @@ import { readHashState } from "../../store/stateSync/hashSync"
 type ToolType = 'pan' | 'line' | 'rect' | 'circle'
 
 
-export type Region = LinearRegion | CircularRegion
+export type Region = LinearRegion | CircularRegion | RectangularRegion
 
 
 type State = {
   tool: ToolType
   toolPinned: boolean
   regions: Region[]
+  showLabel: boolean
 }
 
 function initialState(): State {
@@ -20,6 +21,7 @@ function initialState(): State {
     tool: 'pan',
     toolPinned: false,
     regions: readHashState().regions ?? [],
+    showLabel: true,
   }
 }
 
@@ -61,6 +63,25 @@ export const regionsSlice = createSlice({
             type: 'Circular' as const,
             id: nanoid(),
             center, radius, color, visible,
+          }
+        }
+      },
+    },
+    newRectangularRegionAdded: {
+      reducer: (state, { payload: regionDef }: PayloadAction<RectangularRegion>) => {
+        if (!state.regions.find(r => r.id === regionDef.id)) {
+          state.regions.push(regionDef)
+        }
+      },
+      prepare: ({ minRa, maxRa, minDec, maxDec, visible, color }: Omit<RectangularRegion, 'id'>) => {
+        return {
+          payload: {
+            type: 'Rectangular' as const,
+            id: nanoid(),
+            minRa, maxRa,
+            minDec, maxDec,
+            visible,
+            color,
           }
         }
       },
@@ -107,5 +128,14 @@ export type CircularRegion = RegionBase & {
   type: 'Circular'
   center: SkyCoordType
   radius: number // radian
+  color: V4
+}
+
+export type RectangularRegion = RegionBase & {
+  type: 'Rectangular'
+  minRa: number // radian
+  maxRa: number
+  minDec: number
+  maxDec: number
   color: V4
 }

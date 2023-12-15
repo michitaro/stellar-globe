@@ -5,6 +5,7 @@ import { setDisplayName } from "../../../utils/setDisplayName"
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
 import { CircleDef, CircularRegionLayer } from "./CircularRegionLayer"
 import { LineDef, LinearRegionLayer } from "./LinearRegionLayer"
+import { RectDef, RectangularRegionLayer } from "./RectangularRegionLayer"
 import { regionsSlice } from "./regionsSlice"
 import { normalizeSkyCoord, skyCoordFromCoordDef } from "./utils"
 
@@ -20,6 +21,8 @@ export function RegionsLayer() {
             return <LinearRegionFromDefLayer key={def.id} {...def} />
           case 'Circular':
             return <CircularRegionFromDefLayer key={def.id} {...def} />
+          case 'Rectangular':
+            return <RectangularRegionFromDefLayer key={def.id} {...def} />
         }
       })}
     </Fragment>
@@ -64,6 +67,7 @@ const LinearRegionFromDefLayer = memo(({
       lineDef={lineDef}
       color={color}
       visible={visible}
+      angleUnit={useAppSelector(state => state.common.angleUnit)}
       onChange={onChange}
     >
       <MenuItem
@@ -109,6 +113,7 @@ const CircularRegionFromDefLayer = memo(({
     <CircularRegionLayer
       circleDef={circleDef}
       color={color}
+      angleUnit={useAppSelector(state => state.common.angleUnit)}
       visible={visible}
       onChange={onChange}
     >
@@ -118,6 +123,59 @@ const CircularRegionFromDefLayer = memo(({
         }}
       ><Icon type="delete" marginRight />Delete</MenuItem>
     </CircularRegionLayer>
+  )
+})
+setDisplayName({ CircularRegionFromDefLayer })
+
+
+const RectangularRegionFromDefLayer = memo(({
+  id,
+  minRa: minRaDef,
+  maxRa: maxRaDef,
+  minDec: minDecDef,
+  maxDec: maxDecDef,
+  color,
+  visible,
+}: SpecificRegionType<'Rectangular'>) => {
+  const dispatch = useAppDispatch()
+
+  const onChange = useCallback(({ minRa, maxRa, minDec, maxDec }: RectDef) => {
+    dispatch(regionsSlice.actions.regionUpdated({
+      id,
+      regionDef: {
+        type: 'Rectangular',
+        id,
+        color,
+        minRa,
+        maxRa,
+        minDec,
+        maxDec,
+        visible,
+      },
+    }))
+  }, [color, dispatch, id, visible])
+
+  const rectDef = useMemo(() => ({
+    minRa: minRaDef,
+    maxRa: maxRaDef,
+    minDec: minDecDef,
+    maxDec: maxDecDef,
+  }), [maxDecDef, maxRaDef, minDecDef, minRaDef])
+
+  return (
+    <RectangularRegionLayer
+      rectDef={rectDef}
+      color={color}
+      angleUnit={useAppSelector(state => state.common.angleUnit)}
+      visible={visible}
+      onChange={onChange}
+    >
+      <MenuItem
+        onClick={() => {
+          dispatch(regionsSlice.actions.regionDeleted({ id }))
+        }}
+      ><Icon type="delete" marginRight />Delete</MenuItem>
+    </RectangularRegionLayer>
   )
 })
 setDisplayName({ CircularRegionFromDefLayer })

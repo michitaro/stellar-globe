@@ -5,6 +5,8 @@ import { regionsSlice } from "./regionsSlice"
 import { Icon } from "../../../components/Icon"
 import { MaterialSymbol } from "material-symbols"
 import { MenuItemWithKeybind } from "../../keybindings/MenuItemWithKeybind"
+import { createSelector } from "@reduxjs/toolkit"
+import { useMemo } from "react"
 
 
 type ToolType = ReturnType<typeof regionsSlice['getInitialState']>['tool']
@@ -38,6 +40,8 @@ export function ToolsMenu() {
   const selectedTool = useAppSelector(state => state.regions.tool)
   const toolPinned = useAppSelector(state => state.regions.toolPinned)
   const dispatch = useAppDispatch()
+  const regions = useAppSelector(state => state.regions.regions)
+  const clearRegionsDisabled = useMemo(() => regions.length === 0, [regions.length])
 
   const typeToKeybidn = {
     'line': 'toggleLineTool',
@@ -62,10 +66,15 @@ export function ToolsMenu() {
         </MenuItemWithKeybind>
       ))}
       <MenuDivider />
-      <MenuItem type="checkbox" checked={toolPinned} onClick={() => dispatch(regionsSlice.actions.toolPinnedToggled())}>Pin tool</MenuItem>
+      <MenuItem type="checkbox" checked={toolPinned} onClick={() => dispatch(regionsSlice.actions.toolPinnedToggled())}>Pin Tool</MenuItem>
       <MenuItem
+        disabled={clearRegionsDisabled}
         type='checkbox'
-        onClick={() => dispatch(regionsSlice.actions.regionsCleared())}
+        onClick={() => {
+          if (confirm(`Are you sure to delete all regions?`)) {
+            dispatch(regionsSlice.actions.regionsCleared())
+          }
+        }}
       >Clear</MenuItem>
     </MenuBarItem>
   )

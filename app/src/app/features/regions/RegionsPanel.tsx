@@ -18,7 +18,7 @@ export const RegionsPanels = memo(() => {
         <thead>
           <tr>
             <th>Type</th>
-            <th>Name</th>
+            {/* <th>Name</th> */}
             <th></th>
             <th />
           </tr>
@@ -44,7 +44,7 @@ const RegionTr = memo(({ region }: { region: Region }) => {
   return (
     <tr>
       <td> <Icon type={typeIcon[type]} /></td>
-      <td>{id}</td>
+      {/* <td>{id}</td> */}
       <td>
         {/* {JSON.stringify(region)} */}
       </td>
@@ -67,4 +67,5 @@ type RegionType = ReturnType<typeof regionsSlice.getInitialState>['regions'][num
 const typeIcon: { [K in RegionType]: MaterialSymbol } = {
   Linear: 'straighten',
   Circular: 'circle',
+  Rectangular: 'rectangle',
 } as const

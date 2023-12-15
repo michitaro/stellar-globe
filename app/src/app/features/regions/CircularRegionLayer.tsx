@@ -1,10 +1,11 @@
-import { DomLayer$, MarkerLayer$, PathLayer$, useLayerBind } from "@stellar-globe/react-stellar-globe"
+import { DomLayer$, PathLayer$, useLayerBind } from "@stellar-globe/react-stellar-globe"
 import { Globe, GlobePointerDragEvent, Layer, SkyCoord, V2, V3, V4, glMatrix, makePointingObject } from "@stellar-globe/stellar-globe"
 import { Menu } from "@szhsin/react-menu"
 import { produce } from 'immer'
-import { Fragment, ReactNode, memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { Fragment, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Icon } from "../../../components/Icon"
-import { formatAngleInSexagesimal } from '../../../utils/formatAngle'
+import { AngleUnit, formatAngle } from '../../../utils/formatAngle'
+import { PointMarker } from "./PointMarker"
 import styles from './styles.module.scss'
 const { vec3 } = glMatrix
 
@@ -18,6 +19,7 @@ type Props = {
   circleDef: CircleDef
   color: V4
   visible: boolean
+  angleUnit: AngleUnit
   onChange?: (circleDef: CircleDef) => void
   children?: ReactNode
 }
@@ -26,6 +28,7 @@ export const CircularRegionLayer = ({
   circleDef: circleDefProp,
   color,
   visible,
+  angleUnit,
   onChange,
   children,
 }: Props) => {
@@ -66,6 +69,14 @@ export const CircularRegionLayer = ({
   const centerXyz = useMemo(() => circleDef.center.xyz, [circleDef.center.xyz])
   const offset = useMemo<V2>(() => [10, 10], [])
 
+  const infoText = useMemo(() => (
+    <Fragment>
+      <Icon type='architecture' />
+      {formatAngle(circleDef.radius, angleUnit)}
+      <Icon type="expand_more" />
+    </Fragment>
+  ), [angleUnit, circleDef])
+
   return (
     <Fragment>
       <PathLayer$
@@ -75,18 +86,16 @@ export const CircularRegionLayer = ({
         dimOnZoom={false}
         darkenNarrowLine={false}
       />
-      <CircleCenter
+      <PointMarker
         position={centerXyz}
         color={color}
+        markerType="hollowPlus"
       />
       <DomLayer$ position={menuXyz} offset={offset} >
         <Menu
           menuButton={
             <div className={styles.lineInfo} >
-              <span>
-                {formatAngleInSexagesimal(circleDef.radius)}
-              </span>
-              <Icon type="expand_more" />
+              {infoText}
             </div>
           }
           theming="dark"
@@ -202,31 +211,6 @@ function MouseLayer$({
   }, [ifLayerReady, newProps])
   return node
 }
-
-
-type CircleCenterProps = {
-  position: V3
-  color: V4
-}
-
-const CircleCenter = memo(({ position, color }: CircleCenterProps) => {
-  type Marker = Parameters<typeof MarkerLayer$>[0]['markers'][number]
-
-  const markers = useMemo<Marker[]>(() => [{
-    position,
-  }], [position])
-
-  const defaultColor = useMemo<V4>(() => [1, 1, 1, 1], [])
-
-  return (
-    <MarkerLayer$
-      baseColor={color}
-      markers={markers}
-      defaultColor={defaultColor}
-      defaultType="hollowPlus"
-    />
-  )
-})
 
 
 function Circumference(circleDef: CircleDef) {

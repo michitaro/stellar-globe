@@ -21,16 +21,6 @@ export function MainViewer() {
   const params = useAppSelector(state => state.tractTileLayers.colorParams)
   const tractTilelayers = useAppSelector(state => state.tractTileLayers.layers)
 
-  // if (import.meta.env.DEV) {
-  //   // eslint-disable-next-line react-hooks/rules-of-hooks
-  //   useEffect(() => {
-  //     const globe = globeHandle.current!()
-  //     globe.on('layer-change', (e) => {
-  //       console.log('Layer changed', e)
-  //     })
-  //   })
-  // }
-
   return (
     // <MainContextMenu>
     <Globe$

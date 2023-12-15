@@ -11,6 +11,7 @@ export type StorageState = Partial<ReturnType<typeof localStorageState>>
 function localStorageState(state: RootState) {
   return {
     retina: state.camera.retina,
+    angleUnit: state.common.angleUnit,
   }
 }
 

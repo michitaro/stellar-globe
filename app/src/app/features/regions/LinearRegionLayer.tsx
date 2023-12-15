@@ -1,12 +1,12 @@
 import { DomLayer$, PathLayer$, useLayerBind } from "@stellar-globe/react-stellar-globe"
-import { Globe, GlobePointerDragEvent, GlobePointerEvent, Layer, makePointingObject, SkyCoord, V3, V4, glMatrix, V2 } from "@stellar-globe/stellar-globe"
+import { Globe, GlobePointerDragEvent, GlobePointerEvent, Layer, SkyCoord, V2, V3, V4, glMatrix, makePointingObject } from "@stellar-globe/stellar-globe"
 import { Menu } from "@szhsin/react-menu"
 import { produce } from 'immer'
 import { Fragment, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { formatAngleInSexagesimal } from '../../../utils/formatAngle'
+import { Icon } from "../../../components/Icon"
+import { AngleUnit, formatAngle } from '../../../utils/formatAngle'
 import { slerp } from "../../../utils/math"
 import styles from './styles.module.scss'
-import { Icon } from "../../../components/Icon"
 const { mat3, vec3, mat4 } = glMatrix
 
 
@@ -19,6 +19,7 @@ type Props = {
   lineDef: LineDef
   color: V4
   visible: boolean
+  angleUnit: AngleUnit
   onChange?: (lineDef: LineDef) => void
   children?: ReactNode
 }
@@ -27,6 +28,7 @@ export const LinearRegionLayer = ({
   lineDef: lineDefProp,
   color,
   visible,
+  angleUnit,
   onChange,
   children,
 }: Props) => {
@@ -46,7 +48,7 @@ export const LinearRegionLayer = ({
     const paths: Paths = [
       {
         close: false,
-        joint: 'NONE',
+        joint: 'MITER',
         points: Array.from({ length: div + 1 }, (_, i) => ({
           color,
           position: slerp(a.xyz, b.xyz, i / div),
@@ -63,6 +65,13 @@ export const LinearRegionLayer = ({
 
   const position = useMemo(() => lineDef.end.xyz, [lineDef.end])
   const offset = useMemo<V2>(() => [10, 10], [])
+  const infoText = useMemo(() => (
+    <Fragment>
+      <Icon type="width" />
+      {formatAngle(lineDef.start.angle(lineDef.end).rad, angleUnit)}
+      <Icon type="expand_more" />
+    </Fragment>
+  ), [angleUnit, lineDef])
 
   return (
     <Fragment>
@@ -78,10 +87,7 @@ export const LinearRegionLayer = ({
           transition={{ close: true }}
           menuButton={
             <div className={styles.lineInfo} >
-              <span>
-                {formatAngleInSexagesimal(lineDef.start.angle(lineDef.end).rad)}
-              </span>
-              <Icon type="expand_more" />
+              {infoText}
             </div>
           }
           theming="dark"

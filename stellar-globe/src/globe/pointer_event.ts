@@ -27,7 +27,7 @@ export function PointerEventManager(
       for (const object of layer.pointingObjects) {
         const { hit, passThrough } = object.hit(downGe)
         if (hit) {
-          globe.setCursor(object.dragIcon)
+          globe.setCursor(object.dragIcon(downGe))
           activeObjects.push(object)
           object.runOnPointerDown(downGe)
           if (!passThrough || downGe.stopped) {
@@ -89,7 +89,7 @@ export function PointerEventManager(
           const { hit } = m.runHover(e)
           if (hit) {
             if (hitCount++ === 0) {
-              globe.setCursor(m.hoverIcon)
+              globe.setCursor(m.hoverIcon(e))
             }
           }
         }
