@@ -65,7 +65,6 @@ const NewLinearRegionLayer = memo(() => {
       type: 'Linear',
       start: normalizeSkyCoord(start),
       end: normalizeSkyCoord(end),
-      color: [0, 1, 0, 1],
       visible: true,
     }))
     if (!toolPinned) {
@@ -104,7 +103,6 @@ const NewCircularRegionLayer = memo(() => {
       type: 'Circular',
       center: normalizeSkyCoord(a),
       radius: a.angle(b).rad,
-      color: [0, 1, 0, 1],
       visible: true,
     }))
     if (!toolPinned) {
@@ -145,7 +143,6 @@ const NewRectangularRegionLayer = memo(() => {
       maxRa: b.a.rad,
       minDec: a.d.rad,
       maxDec: b.d.rad,
-      color: [0, 1, 0, 1],
       visible: true,
     }))
     if (!toolPinned) {

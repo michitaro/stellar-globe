@@ -39,6 +39,7 @@ const toolDefs: { [K in ToolType]: {
 export function ToolsMenu() {
   const selectedTool = useAppSelector(state => state.regions.tool)
   const toolPinned = useAppSelector(state => state.regions.toolPinned)
+  const autoColor = useAppSelector(state => state.regions.autoColor)
   const dispatch = useAppDispatch()
   const regions = useAppSelector(state => state.regions.regions)
   const clearRegionsDisabled = useMemo(() => regions.length === 0, [regions.length])
@@ -67,6 +68,8 @@ export function ToolsMenu() {
       ))}
       <MenuDivider />
       <MenuItem type="checkbox" checked={toolPinned} onClick={() => dispatch(regionsSlice.actions.toolPinnedToggled())}>Pin Tool</MenuItem>
+      <MenuItem type="checkbox" checked={autoColor} onClick={() => dispatch(regionsSlice.actions.autoColorToggled())}>Auto Color</MenuItem>
+      <MenuDivider />
       <MenuItem
         disabled={clearRegionsDisabled}
         type='checkbox'
@@ -75,7 +78,7 @@ export function ToolsMenu() {
             dispatch(regionsSlice.actions.regionsCleared())
           }
         }}
-      >Clear</MenuItem>
+      >Clear All Regions</MenuItem>
     </MenuBarItem>
   )
 }

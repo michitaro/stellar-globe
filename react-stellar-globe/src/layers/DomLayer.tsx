@@ -103,7 +103,7 @@ export function DomLayer$({
       const e2 = new WheelEvent(e.type, e)
       globe.gl.canvas.dispatchEvent(e2)
     }
-    el.addEventListener('wheel', onWheel)
+    el.addEventListener('wheel', onWheel, { passive: true })
     return () => {
       el.removeEventListener('wheel', onWheel)
     }
