@@ -302,7 +302,15 @@ export class SspTileTextureProvider extends AsyncTextureProvider {
     }
 
     wegblProfile(gl, 'imageFilter', () => {
-      this.imageFilter.applyToImages(tt.tex, tileSize, tileSize, images)
+      // this.imageFilter.applyToImages(tt.tex, tileSize, tileSize, images)
+      this.imageFilter.apply(tt.tex, tileSize, tileSize, images.length, (tex, index) => {
+        tex.bind(() => {
+          const image = images[index]
+          // const { width, height } = image
+          // gl.texStorage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, width, height)
+          gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, gl.LUMINANCE, gl.UNSIGNED_BYTE, image)
+        })
+      })
     })
 
     tt.tex.bind(() => {
