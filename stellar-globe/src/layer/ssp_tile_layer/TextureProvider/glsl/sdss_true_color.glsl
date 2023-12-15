@@ -1,5 +1,5 @@
 float scale(in float x, in float beta) {
-    return myAsinh(beta * x) / myAsinh(beta);
+    return asinh(beta * x) / asinh(beta);
 }
 
 vec3 sdss_true_color(in vec3 raw, in float beta, in float a, in float bias, in float b0) {

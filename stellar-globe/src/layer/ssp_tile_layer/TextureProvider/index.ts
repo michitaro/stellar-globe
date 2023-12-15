@@ -12,7 +12,6 @@ import sdss_true_color from './glsl/sdss_true_color.glsl?raw'
 import sdss_true_color_mixer_png from './glsl/sdss_true_color_png_mixer.frag.glsl?raw'
 import simple_rgb from './glsl/simple_rgb.glsl?raw'
 import simple_rgb_png_mixer from './glsl/simple_rgb_png_mixer.frag.glsl?raw'
-import sinh from './glsl/sinh.glsl?raw'
 import { SspTileParams, SspTileParamsOf } from "./params"
 
 
@@ -67,18 +66,20 @@ class SimpleColorMatrixPng extends ImageFilter {
     // g = \sum_i colors[i][1]
     // b = \sum_i colors[i][2]
     // raw = decode_png(vec3(r, g, b))
-    // float t0 = texture2D(u_texture0, v_coord).r,
-    //       t1 = texture2D(u_texture1, v_coord).r, ...;
+    // float t0 = texture(u_texture0, v_coord).r,
+    //       t1 = texture(u_texture1, v_coord).r, ...;
     // float r = color[0][0] * t0 + color[1][0] * t1 + ...;
     // float g = color[0][1] * t0 + color[1][1] * t1 + ...;
 
     const n = params.colors.length
-    const ts = range(n).map(i => `t${i} = texture2D(u_texture${i}, v_coord).r`).join(', ')
+    const ts = range(n).map(i => `t${i} = texture(u_texture${i}, v_coord).r`).join(', ')
     const r = range(n).map(i => `u_color[${i}][0] * t${i}`).join(' + ')
     const g = range(n).map(i => `u_color[${i}][1] * t${i}`).join(' + ')
     const b = range(n).map(i => `u_color[${i}][2] * t${i}`).join(' + ')
 
-    const fragShader = expandShader(`
+    const fragShader = expandShader(`\
+      #version 300 es
+
       precision highp float;
       uniform sampler2D ${range(n).map(t => `u_texture${t}`)};
       uniform vec3  u_color[${n}];
@@ -86,9 +87,9 @@ class SimpleColorMatrixPng extends ImageFilter {
       uniform float u_a;
       uniform float u_bias;
       uniform float u_b0;
-      varying vec2 v_coord;
+      in      vec2  v_coord;
+      out     vec4  outputColor;
 
-      //@import ./sinh;
       //@import ./decode_png;
       //@import ./simple_rgb;
       
@@ -96,7 +97,7 @@ class SimpleColorMatrixPng extends ImageFilter {
         float ${ts};
         vec3 raw = decode_png(vec3(${r}, ${g}, ${b}));
         vec3 color = simple_rgb(raw, u_beta, u_a, u_bias, u_b0);
-        gl_FragColor = vec4(color, 1.);
+        outputColor = vec4(color, 1.);
       }
     `)
 
@@ -131,18 +132,19 @@ class SdssTrueColorMatrixPng extends ImageFilter {
     // g = \sum_i colors[i][1]
     // b = \sum_i colors[i][2]
     // raw = decode_png(vec3(r, g, b))
-    // float t0 = texture2D(u_texture0, v_coord).r,
-    //       t1 = texture2D(u_texture1, v_coord).r, ...;
+    // float t0 = texture(u_texture0, v_coord).r,
+    //       t1 = texture(u_texture1, v_coord).r, ...;
     // float r = color[0][0] * t0 + color[1][0] * t1 + ...;
     // float g = color[0][1] * t0 + color[1][1] * t1 + ...;
 
     const n = params.colors.length
-    const ts = range(n).map(i => `t${i} = texture2D(u_texture${i}, v_coord).r`).join(', ')
+    const ts = range(n).map(i => `t${i} = texture(u_texture${i}, v_coord).r`).join(', ')
     const r = range(n).map(i => `u_color[${i}][0] * t${i}`).join(' + ')
     const g = range(n).map(i => `u_color[${i}][1] * t${i}`).join(' + ')
     const b = range(n).map(i => `u_color[${i}][2] * t${i}`).join(' + ')
 
-    const fragShader = expandShader(`
+    const fragShader = expandShader(`\
+      #version 300 es
       precision highp float;
       uniform sampler2D ${range(n).map(t => `u_texture${t}`)};
       uniform vec3  u_color[${n}];
@@ -150,9 +152,9 @@ class SdssTrueColorMatrixPng extends ImageFilter {
       uniform float u_a;
       uniform float u_bias;
       uniform float u_b0;
-      varying vec2 v_coord;
+      in      vec2  v_coord;
+      out     vec4  outputColor;
 
-      //@import ./sinh;
       //@import ./decode_png;
       //@import ./sdss_true_color;
       
@@ -160,7 +162,7 @@ class SdssTrueColorMatrixPng extends ImageFilter {
         float ${ts};
         vec3 raw = decode_png(vec3(${r}, ${g}, ${b}));
         vec3 color = sdss_true_color(raw, u_beta, u_a, u_bias, u_b0);
-        gl_FragColor = vec4(color, 1.);
+        outputColor = vec4(color, 1.);
       }
     `)
 
@@ -322,7 +324,6 @@ function expandShader(template: string) {
     decode_png,
     sdss_true_color,
     simple_rgb,
-    sinh,
   } as { [modname: string]: string }
   return template.replace(/^\s*\/\/@import\s+\.\/(.*?);/mg, (_m, mod) => modules[mod])
 }
