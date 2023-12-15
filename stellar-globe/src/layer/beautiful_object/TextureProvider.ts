@@ -106,7 +106,7 @@ class Mixer extends ImageFilter {
   ground = 0
 
   constructor(
-    gl: WebGLRenderingContext,
+    gl: WebGL2RenderingContext,
   ) {
     super(gl, mixerFragShader)
   }

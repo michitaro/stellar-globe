@@ -1,7 +1,7 @@
 import { sprintf } from 'sprintf-js'
 
 
-export function enable(gl: WebGLRenderingContext, fs: number[], callback: () => void) {
+export function enable(gl: WebGL2RenderingContext, fs: number[], callback: () => void) {
   for (let f of fs) {
     gl.enable(f)
   }

@@ -4,7 +4,7 @@ import { nonNull } from '~/lib/gl-wrapper/utils'
 
 
 export class CaptureTarget {
-  readonly gl: WebGLRenderingContext
+  readonly gl: WebGL2RenderingContext
   readonly frameBuffer: WebGLFramebuffer
   readonly rawOutput: Texture
   private canvasWidth!: number
@@ -12,7 +12,7 @@ export class CaptureTarget {
   private canvasHeight!: number
   private targetHeight!: number
 
-  constructor(gl: WebGLRenderingContext) {
+  constructor(gl: WebGL2RenderingContext) {
     this.gl = gl
     this.frameBuffer = nonNull(gl.createFramebuffer())
     this.rawOutput = new Texture(gl)

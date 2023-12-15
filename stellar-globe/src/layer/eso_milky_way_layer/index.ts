@@ -66,7 +66,7 @@ export class EsoMilkyWayLayer extends Layer {
 
 class EsoMilkyWay extends CubeMapRenderer {
   constructor(
-    gl: WebGLRenderingContext,
+    gl: WebGL2RenderingContext,
     images: ImageLike[],
   ) {
     super(gl)

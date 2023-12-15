@@ -49,7 +49,7 @@ export class Renderer {
     this.needsUpdatePaths = true
   }
 
-  constructor(private readonly gl: WebGLRenderingContext, options: Options = {}) {
+  constructor(private readonly gl: WebGL2RenderingContext, options: Options = {}) {
     this.darkenNarrowLine = options.darkenNarrowLine ?? true
     this.minWidth = options.minWidth ?? 5
     this.blendMode = options.blendMode ?? 'ADD'

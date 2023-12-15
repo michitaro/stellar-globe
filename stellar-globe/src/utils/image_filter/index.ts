@@ -9,7 +9,7 @@ export abstract class ImageFilter {
   private textures: Texture[] = []
 
   constructor(
-    readonly gl: WebGLRenderingContext,
+    readonly gl: WebGL2RenderingContext,
     fragmentShader: string,
   ) {
     this.attribList = new AttribList(gl, {

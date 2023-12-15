@@ -34,7 +34,7 @@ export class BillboardRenderer {
   color: V4 = [1, 1, 1, 1]
 
   constructor(
-    private readonly gl: WebGLRenderingContext,
+    private readonly gl: WebGL2RenderingContext,
     images: BillboardImage[] = [],
     imageRefs: BillboardImageRef[] = [],
   ) {

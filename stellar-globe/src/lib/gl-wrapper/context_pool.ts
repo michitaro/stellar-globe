@@ -20,7 +20,7 @@ export function pull(options: WebGLContextAttributes, { jsdomTest }: { jsdomTest
     list.push(createCanvas())
   }
   const canvas = list.pop()!
-  const gl: WebGLRenderingContext = jsdomTest ? (new Dummy() as any) : nonNull(canvas.getContext('webgl', options))
+  const gl: WebGL2RenderingContext = jsdomTest ? (new Dummy() as any) : nonNull(canvas.getContext('webgl2', options))
   const release = () => {
     list.push(canvas)
   }

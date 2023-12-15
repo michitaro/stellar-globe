@@ -12,7 +12,7 @@ export class CubeMapRenderer {
   private indexBuffer!: IndexBuffer
   private texture?: WebGLTexture
 
-  constructor(readonly gl: WebGLRenderingContext) {
+  constructor(readonly gl: WebGL2RenderingContext) {
     this.program = Program.new(gl,
       shaderVert,
       shaderFrag,

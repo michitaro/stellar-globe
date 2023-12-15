@@ -10,7 +10,7 @@ export class IndexBuffer {
   private usage!: number
   private _length!: number
 
-  constructor(readonly gl: WebGLRenderingContext, dataOption?: DataOption) {
+  constructor(readonly gl: WebGL2RenderingContext, dataOption?: DataOption) {
     this.name = glUtils.nonNull(this.gl.createBuffer())
     if (dataOption)
       this.setData(dataOption)

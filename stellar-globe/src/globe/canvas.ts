@@ -16,7 +16,7 @@ type CanvasOptions = {
 
 export class Canvas {
   readonly domElement: HTMLCanvasElement
-  readonly gl: WebGLRenderingContext
+  readonly gl: WebGL2RenderingContext
   private readonly releaseCanvas: () => void
   private readonly preserveBuffer: boolean
 

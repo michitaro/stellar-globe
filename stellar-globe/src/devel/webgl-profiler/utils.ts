@@ -1,10 +1,10 @@
 import { WebGLProfiler } from "./figma-webgl-profiler"
 
 
-const instances = new WeakMap<WebGLRenderingContext, WebGLProfiler>()
+const instances = new WeakMap<WebGL2RenderingContext, WebGLProfiler>()
 
 
-export function enableWebglProfiler(gl: WebGLRenderingContext) {
+export function enableWebglProfiler(gl: WebGL2RenderingContext) {
   if (!webglProfileSupported()) {
     throw new Error(`WebGL Profiling is not supported.`)
   }
@@ -36,7 +36,7 @@ export function enableWebglProfiler(gl: WebGLRenderingContext) {
 }
 
 
-export function wegblProfile(gl: WebGLRenderingContext, name: string, cb: () => void) {
+export function wegblProfile(gl: WebGL2RenderingContext, name: string, cb: () => void) {
   const profiler = instances.get(gl)
   if (profiler && profiler.isProfilerRunning()) {
     profiler.pushContext(name)

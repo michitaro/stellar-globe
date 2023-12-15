@@ -5,7 +5,7 @@ export type ImageLike = ImageBitmap
 export class Texture {
   readonly name: WebGLTexture
 
-  constructor(readonly gl: WebGLRenderingContext, parameterSetter?: (gl: WebGLRenderingContext) => void) {
+  constructor(readonly gl: WebGL2RenderingContext, parameterSetter?: (gl: WebGL2RenderingContext) => void) {
     this.name = glUtils.nonNull(gl.createTexture())
     this.bind(() => (parameterSetter || defaultParameterSetter)(this.gl))
   }
@@ -36,7 +36,7 @@ export class Texture {
 }
 
 
-function defaultParameterSetter(gl: WebGLRenderingContext) {
+function defaultParameterSetter(gl: WebGL2RenderingContext) {
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)

@@ -26,7 +26,7 @@ type Options = {
 
 
 export class Renderer<TP extends TextureProvider = TextureProvider> {
-  readonly gl: WebGLRenderingContext
+  readonly gl: WebGL2RenderingContext
   readonly program: Program
   readonly attribList: AttribList
 

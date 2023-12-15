@@ -23,7 +23,7 @@ export class Renderer {
   private releaseCallbacks = ReleaseCallbacks()
   private onRelease = this.releaseCallbacks.add
 
-  constructor(private readonly gl: WebGLRenderingContext) {
+  constructor(private readonly gl: WebGL2RenderingContext) {
     this.program = Program.new(gl,
       shaderVert,
       shaderFrag,

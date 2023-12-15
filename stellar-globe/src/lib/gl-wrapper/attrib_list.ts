@@ -23,7 +23,7 @@ export class AttribList {
   private bufferSize = -1
   vertexCount = 0
 
-  constructor(readonly gl: WebGLRenderingContext, data?: DataOption) {
+  constructor(readonly gl: WebGL2RenderingContext, data?: DataOption) {
     this.bufferName = glUtils.nonNull(gl.createBuffer())
     if (data) {
       this.setData(data)
@@ -82,7 +82,7 @@ export class AttribList {
 }
 
 
-function sizeof(gl: WebGLRenderingContext, dataType: number) {
+function sizeof(gl: WebGL2RenderingContext, dataType: number) {
   switch (dataType) {
     case gl.FLOAT:
       return 4

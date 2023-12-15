@@ -18,7 +18,7 @@ import { SspTileParams, SspTileParamsOf } from "./params"
 
 class SimpleRgbMixerPng extends ImageFilter {
   constructor(
-    gl: WebGLRenderingContext,
+    gl: WebGL2RenderingContext,
     public params: SspTileParamsOf<'simpleRgb'>,
   ) {
     super(gl, expandShader(simple_rgb_png_mixer))
@@ -36,7 +36,7 @@ class SimpleRgbMixerPng extends ImageFilter {
 
 class SdssTrueColorMixerPng extends ImageFilter {
   constructor(
-    gl: WebGLRenderingContext,
+    gl: WebGL2RenderingContext,
     public params: SspTileParamsOf<'sdssTrueColor'>,
   ) {
     super(gl, expandShader(sdss_true_color_mixer_png))
@@ -55,7 +55,7 @@ class SdssTrueColorMixerPng extends ImageFilter {
 
 class SimpleColorMatrixPng extends ImageFilter {
   constructor(
-    gl: WebGLRenderingContext,
+    gl: WebGL2RenderingContext,
     public params: SspTileParamsOf<'simpleColorMatrix'>,
   ) {
     super(gl, SimpleColorMatrixPng.fragmentShader(params))
@@ -119,7 +119,7 @@ class SimpleColorMatrixPng extends ImageFilter {
 
 class SdssTrueColorMatrixPng extends ImageFilter {
   constructor(
-    gl: WebGLRenderingContext,
+    gl: WebGL2RenderingContext,
     public params: SspTileParamsOf<'sdssTrueColorMatrix'>,
   ) {
     super(gl, SdssTrueColorMatrixPng.fragmentShader(params))

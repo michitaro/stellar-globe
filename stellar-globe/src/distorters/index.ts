@@ -15,7 +15,7 @@ export class Distorter {
   private captureTarget: CaptureTarget
 
   constructor(
-    readonly gl: WebGLRenderingContext,
+    readonly gl: WebGL2RenderingContext,
     readonly params: DistortionParams,
   ) {
     this.captureTarget = new CaptureTarget(gl)

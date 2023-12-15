@@ -19,7 +19,7 @@ export class PointRenderer {
   darkenSmallPoint = true
   minSize = 3
 
-  constructor(private readonly gl: WebGLRenderingContext) {
+  constructor(private readonly gl: WebGL2RenderingContext) {
     this.program = Program.new(gl,
       shaderVert,
       shaderFrag,

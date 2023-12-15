@@ -68,7 +68,7 @@
  * we remember what event is associated with the start/end of each query.
  */
 export class WebGLProfiler {
-  private readonly context: WebGLRenderingContext
+  private readonly context: WebGL2RenderingContext
   private readonly ext: EXTDisjointTimerQuery | null = null
   private activeQuery: WebGLTimerQueryEXT | null = null
   private isRunning = false
@@ -86,7 +86,7 @@ export class WebGLProfiler {
   // that the pushContext/popContext calls match up properly.
   private namedContextStack: string[] = []
 
-  constructor(context: WebGLRenderingContext) {
+  constructor(context: WebGL2RenderingContext) {
     this.context = context
     this.ext = context.getExtension("EXT_disjoint_timer_query") as EXTDisjointTimerQuery | null
   }

@@ -144,6 +144,6 @@ export function preload(order: number) {
 }
 
 
-export function uploadZeroShiftmap(gl: WebGLRenderingContext) {
+export function uploadZeroShiftmap(gl: WebGL2RenderingContext) {
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, 1, 1, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, new Uint8Array([128]))
 }

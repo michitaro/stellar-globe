@@ -12,7 +12,7 @@ export class Program {
   private refCount = 1
 
   private constructor(
-    readonly gl: WebGLRenderingContext,
+    readonly gl: WebGL2RenderingContext,
     vertSource: string,
     fragSource: string,
   ) {
@@ -27,7 +27,7 @@ export class Program {
     }
   }
 
-  static new(gl: WebGLRenderingContext, vertSource: string, fragSource: string) {
+  static new(gl: WebGL2RenderingContext, vertSource: string, fragSource: string) {
     const cachedProgram = recallProgram(gl, { vertSource, fragSource })
     if (cachedProgram) {
       ++cachedProgram.refCount
@@ -152,13 +152,13 @@ export class Program {
 }
 
 
-const activeProgram = new WeakMap<WebGLRenderingContext, Program>()
+const activeProgram = new WeakMap<WebGL2RenderingContext, Program>()
 
 
 const { recallProgram, memoProgram } = (() => {
-  const memo = new WeakMap<WebGLRenderingContext, Map<string, Program>>()
+  const memo = new WeakMap<WebGL2RenderingContext, Map<string, Program>>()
 
-  function getMap(gl: WebGLRenderingContext) {
+  function getMap(gl: WebGL2RenderingContext) {
     if (!memo.has(gl)) {
       memo.set(gl, new Map())
     }
@@ -174,13 +174,13 @@ const { recallProgram, memoProgram } = (() => {
     return JSON.stringify([sources.vertSource, sources.fragSource])
   }
 
-  const recallProgram = (gl: WebGLRenderingContext, sources: MemoSource) => {
+  const recallProgram = (gl: WebGL2RenderingContext, sources: MemoSource) => {
     const map = getMap(gl)
     const key = makeKey(sources)
     return map.get(key)
   }
 
-  const memoProgram = (gl: WebGLRenderingContext, sources: MemoSource, program: Program) => {
+  const memoProgram = (gl: WebGL2RenderingContext, sources: MemoSource, program: Program) => {
     const map = getMap(gl)
     const key = makeKey(sources)
     map.set(key, program)
