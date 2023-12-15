@@ -1,5 +1,5 @@
 import { Globe, Layer, V2, V3, View, glMatrix } from "@stellar-globe/stellar-globe"
-import { Fragment, ReactNode, useCallback, useEffect, useMemo, useRef } from "react"
+import { Fragment, ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from "react"
 import { useGetGlobe, useLayerBind } from ".."
 const { vec4 } = glMatrix
 
@@ -93,7 +93,7 @@ export function DomLayer$({
 
   const containerRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     Object.assign(containerRef.current!.style, {
       display: 'none',
     })

@@ -7,7 +7,7 @@ import { CircularRegionLayer } from './CircularRegionLayer'
 import { LinearRegionLayer } from './LinearRegionLayer'
 import { PointerDragAndUpLayer$ } from './PointerDragLayer'
 import { regionsSlice } from './regionsSlice'
-import { normalizeSkyCoord } from './utils'
+import { normalizeSkyCoord } from './regionUtils'
 import { RectDef, RectangularRegionLayer } from './RectangularRegionLayer'
 
 
@@ -75,6 +75,7 @@ const NewLinearRegionLayer = memo(() => {
 
   const color = useMemo<V4>(() => [1, 0, 1, 1], [])
   const lineDef = (coords: [SkyCoord, SkyCoord]) => ({ start: coords[0], end: coords[1] })
+  const angleUnit = useAppSelector(state => state.common.angleUnit)
 
   return (
     <NewRegionLayer
@@ -83,6 +84,7 @@ const NewLinearRegionLayer = memo(() => {
         <LinearRegionLayer
           lineDef={lineDef(coords)}
           color={color}
+          angleUnit={angleUnit}
           visible
         />
       )}
@@ -112,6 +114,7 @@ const NewCircularRegionLayer = memo(() => {
 
   const color = useMemo<V4>(() => [1, 0, 1, 1], [])
   const circleDef = (coords: [SkyCoord, SkyCoord]) => ({ center: coords[0], radius: coords[0].angle(coords[1]).rad })
+  const angleUnit = useAppSelector(state => state.common.angleUnit)
 
   return (
     <NewRegionLayer
@@ -120,6 +123,7 @@ const NewCircularRegionLayer = memo(() => {
         <CircularRegionLayer
           circleDef={circleDef(coords)}
           color={color}
+          angleUnit={angleUnit}
           visible
         />
       )}
@@ -156,6 +160,7 @@ const NewRectangularRegionLayer = memo(() => {
     minDec: coords[0].d.rad,
     maxDec: coords[1].d.rad,
   })
+  const angleUnit = useAppSelector(state => state.common.angleUnit)
 
   return (
     <NewRegionLayer
@@ -164,6 +169,7 @@ const NewRectangularRegionLayer = memo(() => {
         <RectangularRegionLayer
           rectDef={rectDef(coords)}
           color={color}
+          angleUnit={angleUnit}
           visible
         />
       )}

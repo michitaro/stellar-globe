@@ -9,9 +9,9 @@ export type JsonSchema = {
 }
 
 
-type ExtractAction<T extends Slice> = {
-  [K in keyof T["actions"]]: {
-    type: T["actions"][K]["type"]
-    payload: Parameters<T["actions"][K]>[0]
-  }
-}
+// type ExtractAction<T extends Slice> = {
+//   [K in keyof T["actions"]]: {
+//     type: T["actions"][K]["type"]
+//     payload: Parameters<T["actions"][K]>[0]
+//   }
+// }

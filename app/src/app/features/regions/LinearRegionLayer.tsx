@@ -67,7 +67,7 @@ export const LinearRegionLayer = ({
   const offset = useMemo<V2>(() => [10, 10], [])
   const infoText = useMemo(() => (
     <Fragment>
-      <Icon type="width" />
+      <Icon type="architecture" />
       {formatAngle(lineDef.start.angle(lineDef.end).rad, angleUnit)}
       <Icon type="expand_more" />
     </Fragment>

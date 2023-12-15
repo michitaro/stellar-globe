@@ -1,4 +1,4 @@
-import { createSlice, nanoid, PayloadAction } from "@reduxjs/toolkit"
+import { createSlice, nanoid } from "@reduxjs/toolkit"
 import { V4 } from "@stellar-globe/stellar-globe"
 import { readHashState } from "../../store/stateSync/hashSync"
 
@@ -28,80 +28,68 @@ function initialState(): State {
 export const regionsSlice = createSlice({
   name: 'regions',
   initialState,
-  reducers: {
-    toolChanged(state, { payload: { tool } }: PayloadAction<{ tool: ToolType }>) {
+  reducers: create => ({
+    toolChanged: create.reducer<{ tool: ToolType }>((state, { payload: { tool } }) => {
       state.tool = tool
-    },
-    toolPinnedToggled(state) {
+    }),
+    toolPinnedToggled: create.reducer(state => {
       state.toolPinned = !state.toolPinned
-    },
-    newLinearRegionAdded: {
-      reducer: (state, { payload: regionDef }: PayloadAction<LinearRegion>) => {
+    }),
+    newLinearRegionAdded: create.preparedReducer(
+      ({ id, ...rests }: Omit<LinearRegion, 'id'> & { id?: string }) => ({
+        payload: {
+          id: id ?? nanoid(),
+          ...rests,
+        }
+      }),
+      (state, { payload: regionDef }) => {
         if (!state.regions.find(r => r.id === regionDef.id)) {
           state.regions.push(regionDef)
         }
       },
-      prepare: ({ start, end, color, visible }: Omit<LinearRegion, 'id'>) => {
-        return {
-          payload: {
-            type: 'Linear' as const,
-            id: nanoid(),
-            start, end, color, visible,
-          }
-        }
-      },
-    },
-    newCircularRegionAdded: {
-      reducer: (state, { payload: regionDef }: PayloadAction<CircularRegion>) => {
+    ),
+    newCircularRegionAdded: create.preparedReducer(
+      ({ id, ...rests }: Omit<CircularRegion, 'id'> & { id?: string }) => ({
+        payload: {
+          id: id ?? nanoid(),
+          ...rests,
+        },
+      }),
+      (state, { payload: regionDef }) => {
         if (!state.regions.find(r => r.id === regionDef.id)) {
           state.regions.push(regionDef)
         }
       },
-      prepare: ({ center, radius, color, visible }: Omit<CircularRegion, 'id'>) => {
-        return {
-          payload: {
-            type: 'Circular' as const,
-            id: nanoid(),
-            center, radius, color, visible,
-          }
+    ),
+    newRectangularRegionAdded: create.preparedReducer(
+      ({ id, ...rests }: Omit<RectangularRegion, 'id'> & { id?: string }) => ({
+        payload: {
+          id: id ?? nanoid(),
+          ...rests,
         }
-      },
-    },
-    newRectangularRegionAdded: {
-      reducer: (state, { payload: regionDef }: PayloadAction<RectangularRegion>) => {
+      }),
+      (state, { payload: regionDef }) => {
         if (!state.regions.find(r => r.id === regionDef.id)) {
           state.regions.push(regionDef)
         }
       },
-      prepare: ({ minRa, maxRa, minDec, maxDec, visible, color }: Omit<RectangularRegion, 'id'>) => {
-        return {
-          payload: {
-            type: 'Rectangular' as const,
-            id: nanoid(),
-            minRa, maxRa,
-            minDec, maxDec,
-            visible,
-            color,
-          }
-        }
-      },
-    },
-    regionUpdated(state, { payload: { id, regionDef } }: PayloadAction<{ id: string, regionDef: Region }>) {
+    ),
+    regionUpdated: create.reducer<{ id: string, regionDef: Region }>((state, { payload: { id, regionDef } }) => {
       const index = state.regions.findIndex(r => r.id === id)
       if (index >= 0) {
         state.regions[index] = regionDef
       }
-    },
-    regionsCleared(state, { payload }: PayloadAction<void>) {
+    }),
+    regionsCleared: create.reducer(state => {
       state.regions = []
-    },
-    regionDeleted(state, { payload: { id } }: PayloadAction<{ id: string }>) {
+    }),
+    regionDeleted: create.reducer<{ id: string }>((state, { payload: { id } }) => {
       const index = state.regions.findIndex(r => r.id === id)
       if (index >= 0) {
         state.regions.splice(index, 1)
       }
-    },
-  },
+    }),
+  }),
 })
 
 

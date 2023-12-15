@@ -7,7 +7,7 @@ import { CircleDef, CircularRegionLayer } from "./CircularRegionLayer"
 import { LineDef, LinearRegionLayer } from "./LinearRegionLayer"
 import { RectDef, RectangularRegionLayer } from "./RectangularRegionLayer"
 import { regionsSlice } from "./regionsSlice"
-import { normalizeSkyCoord, skyCoordFromCoordDef } from "./utils"
+import { normalizeSkyCoord, skyCoordFromCoordDef } from "./regionUtils"
 
 
 export function RegionsLayer() {

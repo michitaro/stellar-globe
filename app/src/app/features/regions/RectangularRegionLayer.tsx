@@ -1,14 +1,13 @@
 import { DomLayer$, PathLayer$, useLayerBind } from "@stellar-globe/react-stellar-globe"
 import { CursorStyle, Globe, GlobePointerDragEvent, GlobePointerEvent, Layer, SkyCoord, V2, V3, V4, glMatrix, makePointingObject } from "@stellar-globe/stellar-globe"
 import { Menu } from "@szhsin/react-menu"
-import produce from 'immer'
+import { produce } from 'immer'
 import { Fragment, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Icon } from "../../../components/Icon"
 import { AngleUnit, formatAngle } from "../../../utils/formatAngle"
 import { memoizeOne } from "../../../utils/memoizeOne"
 import { PointMarker } from './PointMarker'
 import styles from './styles.module.scss'
-const { vec3 } = glMatrix
 
 
 export type RectDef = {
