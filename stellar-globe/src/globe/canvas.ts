@@ -31,9 +31,10 @@ export class Canvas {
     this.preserveBuffer = preserveBuffer
 
     const { canvas, gl, release: releaseCanvas } = canvasPool.pull({
-      alpha: false,
+      // https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/WebGL_best_practices#avoid_alphafalse_which_can_be_expensive
+      alpha: true,
       antialias: false,
-      stencil: true,
+      stencil: false,
       premultipliedAlpha: false,
       preserveDrawingBuffer: preserveBuffer,
     }, { jsdomTest })

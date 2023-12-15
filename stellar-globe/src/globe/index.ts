@@ -176,31 +176,37 @@ export class Globe {
     }
     const gl = this.gl
     const canvasEl = this.canvas.domElement
-    if (this.distorter) {
-      this.distorter.pipeAndDraw(() => {
-        const scale = this.distorter!.params.scale
-        const { width: width0, height: height0 } = canvasEl
-        canvasEl.width = Math.floor(canvasEl.width * scale)
-        canvasEl.height = Math.floor(canvasEl.height * scale)
-        gl.clearColor(0, 0, 0, 0)
-        gl.clear(gl.COLOR_BUFFER_BIT)
-        for (const layer of this.layers) {
-          layer.render(this.camera.view())
-        }
-        canvasEl.width = width0
-        canvasEl.height = height0
-      })
-    }
-    else {
-      wegblProfile(this.gl, 'draw', () => {
-        gl.clearColor(0, 0, 0, 0)
-        gl.clear(gl.COLOR_BUFFER_BIT)
+    wegblProfile(this.gl, 'draw', () => {
+      gl.colorMask(true, true, true, true)
+      gl.clearColor(0, 0, 0, 1)
+      gl.clear(gl.COLOR_BUFFER_BIT)
+      if (this.distorter) {
+        this.distorter.pipeAndDraw(() => {
+          const scale = this.distorter!.params.scale
+          const { width: width0, height: height0 } = canvasEl
+          canvasEl.width = Math.floor(canvasEl.width * scale)
+          canvasEl.height = Math.floor(canvasEl.height * scale)
+          gl.clear(gl.COLOR_BUFFER_BIT)
+          for (const layer of this.layers) {
+            layer.render(this.camera.view())
+          }
+          canvasEl.width = width0
+          canvasEl.height = height0
+        })
+      }
+      else {
         const view = this.camera.view()
         for (const layer of this.layers) {
           layer.render(view)
         }
-      })
-    }
+        // backbufferのalphaをクリア
+        gl.clearColor(0, 0, 0, 1)
+        gl.colorMask(false, false, false, true)
+        gl.clear(gl.COLOR_BUFFER_BIT)
+        // asyncでwebglが呼ばれたときのためにリセット
+        gl.colorMask(true, true, true, true)
+      }
+    })
   }
 
   readonly layerSorter = new LayerSorter(this)

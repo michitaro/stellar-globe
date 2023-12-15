@@ -55,7 +55,7 @@ export class FitsTextureProvider extends tile.AsyncTextureProvider {
       return hdul && hdul[0]
     }))
     const tt = new tile.TileTexture(this, { fadeIn })
-    
+
     if (!sync) {
       // await waitIdleTime()
     }
@@ -73,7 +73,7 @@ export class FitsTextureProvider extends tile.AsyncTextureProvider {
           gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST)
           gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST)
           if (i < this.nFilters && hdus[i]) {
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, tileSize, tileSize, 0, gl.LUMINANCE, gl.FLOAT, hdus[i]!.float32array())
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.ALPHA, tileSize, tileSize, 0, gl.ALPHA, gl.FLOAT, hdus[i]!.float32array())
           } else {
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, 1, 1, 0, gl.LUMINANCE, gl.FLOAT, new Float32Array([0]))
           }

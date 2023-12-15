@@ -10,5 +10,5 @@ void main() {
     gl_FragColor = texture2D(u_texture0, v_tCoord);
     gl_FragColor.rgb *= u_layer_alpha;
     gl_FragColor.a *= u_alpha;
-    // gl_FragColor.g += 0.5 * u_alpha;
+        // gl_FragColor.g += 0.5 * u_alpha;
 }

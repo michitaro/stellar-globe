@@ -24,10 +24,10 @@ vec4 myAsinh(in vec4 x) {
 
 void main(void){
     vec4 source = vec4(
-        texture2D(u_texture0, v_coord).r,
-        texture2D(u_texture1, v_coord).r,
-        texture2D(u_texture2, v_coord).r,
-        texture2D(u_texture3, v_coord).r
+        texture2D(u_texture0, v_coord).a,
+        texture2D(u_texture1, v_coord).a,
+        texture2D(u_texture2, v_coord).a,
+        texture2D(u_texture3, v_coord).a
     );
     source = u_a * (source + u_b);
     source = myAsinh(u_beta * source) / myAsinh(u_beta) + u_bias;
