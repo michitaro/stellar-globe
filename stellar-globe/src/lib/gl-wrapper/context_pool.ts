@@ -2,27 +2,17 @@ import { Dummy } from "~/utils/dummy_class"
 import { nonNull } from "./utils"
 
 
-const pool: Map<string, HTMLCanvasElement[]> = new Map()
-
-
-function canvasList(options: WebGLContextAttributes) {
-  const key = contextOptions2key(options)
-  if (!pool.has(key)) {
-    pool.set(key, [])
-  }
-  return pool.get(key)!
-}
-
-
-export function pull(options: WebGLContextAttributes, { jsdomTest }: { jsdomTest: boolean }) {
-  const list = canvasList(options)
-  if (list.length === 0) {
-    list.push(createCanvas())
-  }
-  const canvas = list.pop()!
-  const gl: WebGL2RenderingContext = jsdomTest ? (new Dummy() as any) : nonNull(canvas.getContext('webgl2', options))
+export function pull(
+  options: WebGLContextAttributes,
+  {
+    jsdomTest,
+    webgl,
+  }: { jsdomTest: boolean, webgl: 'webgl' | 'webgl2' },
+) {
+  const canvas = createCanvas()
+  const gl: WebGL2RenderingContext = jsdomTest ? (new Dummy() as any) : nonNull(canvas.getContext(webgl, options))
   const release = () => {
-    list.push(canvas)
+    gl.getExtension("WEBGL_lose_context")?.loseContext()
   }
   return { canvas, gl, release }
 }
@@ -30,11 +20,5 @@ export function pull(options: WebGLContextAttributes, { jsdomTest }: { jsdomTest
 
 function createCanvas() {
   const canvas = document.createElement('canvas')
-  canvas.style.backgroundColor = '#007'
   return canvas
-}
-
-
-function contextOptions2key(opt: any) {
-  return JSON.stringify(Object.keys(opt).sort().map(k => [k, opt[k]]))
 }

@@ -11,6 +11,7 @@ export type ClientCoord = {
 type CanvasOptions = {
   preserveBuffer?: boolean
   jsdomTest?: boolean
+  webgl?: 'webgl' | 'webgl2'
 }
 
 
@@ -27,6 +28,7 @@ export class Canvas {
     const {
       preserveBuffer = false,
       jsdomTest = false,
+      webgl = 'webgl2'
     } = options
     this.preserveBuffer = preserveBuffer
 
@@ -37,7 +39,7 @@ export class Canvas {
       stencil: false,
       premultipliedAlpha: false,
       preserveDrawingBuffer: preserveBuffer,
-    }, { jsdomTest })
+    }, { jsdomTest, webgl })
     this.domElement = canvas
     this.gl = gl
     this.releaseCanvas = releaseCanvas

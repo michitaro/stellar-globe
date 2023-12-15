@@ -20,6 +20,7 @@ type GlobeOptions = {
   noDefaultLayers?: boolean
   jsdomTest?: boolean
   dataRepository?: string
+  webgl?: 'webgl' | 'webgl2'
 }
 
 
