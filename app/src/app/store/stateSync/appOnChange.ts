@@ -1,6 +1,6 @@
-import { AppStore, RootState } from ".."
+import { AppStore, AppState } from ".."
 
-export function appOnChange<T>(store: AppStore, select: (state: RootState) => T, onChange: (newValue: T, prevValue: T) => void) {
+export function appOnChange<T>(store: AppStore, select: (state: AppState) => T, onChange: (newValue: T, prevValue: T) => void) {
   let prevValue = select(store.getState())
 
   const onStoreChange = () => {

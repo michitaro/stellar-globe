@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { PayloadAction, createSlice } from "@reduxjs/toolkit"
+import { regionsSlice } from "../features/regions/regionsSlice"
 
 
 type PanelType = 'tone' | 'regions' | undefined
@@ -23,5 +24,14 @@ export const panelSlice = createSlice({
     selectPanel(state, { payload: panel }: PayloadAction<PanelType>) {
       state.selectedPanel = panel
     },
+  },
+  extraReducers(builder) {
+    builder.addMatcher(action => [
+      regionsSlice.actions.newCircularRegionAdded.type,
+      regionsSlice.actions.newLinearRegionAdded.type,
+      regionsSlice.actions.newRectangularRegionAdded.type,
+    ].includes(action.type), state => {
+      state.selectedPanel = 'regions'
+    })
   },
 })

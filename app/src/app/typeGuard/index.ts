@@ -10,7 +10,6 @@ export function catchTypeGuardError(cb: () => void) {
     cb()
   }
   catch (e) {
-    console.log(e)
     if (e instanceof TypeGuardError) {
       alert(e.message)
     }

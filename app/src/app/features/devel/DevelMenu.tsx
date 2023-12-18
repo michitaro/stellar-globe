@@ -11,7 +11,7 @@ export const DevelMenu = memo(() => {
 
   return (
     enabled && (
-      <MenuBarItem label={<Icon type="settings" />}>
+      <MenuBarItem label={<Icon type="code" />}>
         <MenuItemWithKeybind
           keybind="toggleProfiler"
           disabled={!profilerSupported}

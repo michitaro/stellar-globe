@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { AppStore, RootState } from ".."
+import { AppStore, AppState } from ".."
 import { debounce } from "../../../utils/debounce"
 import { createIs } from "../../typeGuard"
 import { appOnChange } from "./appOnChange"
@@ -8,7 +8,7 @@ import { appOnChange } from "./appOnChange"
 export type StorageState = Partial<ReturnType<typeof localStorageState>>
 
 
-function localStorageState(state: RootState) {
+function localStorageState(state: AppState) {
   return {
     retina: state.camera.retina,
     angleUnit: state.common.angleUnit,

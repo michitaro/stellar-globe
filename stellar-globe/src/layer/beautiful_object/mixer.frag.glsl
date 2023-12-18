@@ -19,10 +19,10 @@ out vec4           outputColor;
 
 void main(void){
     vec4 source = vec4(
-        texture(u_texture0, v_coord).a,
-        texture(u_texture1, v_coord).a,
-        texture(u_texture2, v_coord).a,
-        texture(u_texture3, v_coord).a
+        texture(u_texture0, v_coord).r,
+        texture(u_texture1, v_coord).r,
+        texture(u_texture2, v_coord).r,
+        texture(u_texture3, v_coord).r
     );
     source = u_a * (source + u_b);
     source = asinh(u_beta * source) / asinh(u_beta) + u_bias;

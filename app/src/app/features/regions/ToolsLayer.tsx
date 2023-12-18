@@ -9,6 +9,7 @@ import { PointerDragAndUpLayer$ } from './PointerDragLayer'
 import { regionsSlice } from './regionsSlice'
 import { normalizeSkyCoord } from './regionUtils'
 import { RectDef, RectangularRegionLayer } from './RectangularRegionLayer'
+import { trackAction } from '../../store/stateHistory'
 
 
 export const ToolsLayer = memo(() => {
@@ -61,12 +62,12 @@ const NewLinearRegionLayer = memo(() => {
 
   const addRegion = useCallback((coords: [SkyCoord, SkyCoord]) => {
     const [start, end] = coords
-    dispatch(regionsSlice.actions.newLinearRegionAdded({
+    dispatch(trackAction(regionsSlice.actions.newLinearRegionAdded({
       type: 'Linear',
       start: normalizeSkyCoord(start),
       end: normalizeSkyCoord(end),
       visible: true,
-    }))
+    }), 'Add new Linear Region'))
     if (!toolPinned) {
       dispatch(regionsSlice.actions.toolChanged({ tool: 'pan' }))
     }
@@ -99,12 +100,12 @@ const NewCircularRegionLayer = memo(() => {
 
   const addRegion = useCallback((coords: [SkyCoord, SkyCoord]) => {
     const [a, b] = coords
-    dispatch(regionsSlice.actions.newCircularRegionAdded({
+    dispatch(trackAction(regionsSlice.actions.newCircularRegionAdded({
       type: 'Circular',
       center: normalizeSkyCoord(a),
       radius: a.angle(b).rad,
       visible: true,
-    }))
+    }), 'Add New Circular Region'))
     if (!toolPinned) {
       dispatch(regionsSlice.actions.toolChanged({ tool: 'pan' }))
     }
@@ -137,14 +138,14 @@ const NewRectangularRegionLayer = memo(() => {
 
   const addRegion = useCallback((coords: [SkyCoord, SkyCoord]) => {
     const [a, b] = coords
-    dispatch(regionsSlice.actions.newRectangularRegionAdded({
+    dispatch(trackAction(regionsSlice.actions.newRectangularRegionAdded({
       type: 'Rectangular',
       minRa: a.a.rad,
       maxRa: b.a.rad,
       minDec: a.d.rad,
       maxDec: b.d.rad,
       visible: true,
-    }))
+    }), 'Add New Rectangular Region'))
     if (!toolPinned) {
       dispatch(regionsSlice.actions.toolChanged({ tool: 'pan' }))
     }

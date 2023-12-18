@@ -1,7 +1,8 @@
 import { createSlice, nanoid } from "@reduxjs/toolkit"
 import { V4 } from "@stellar-globe/stellar-globe"
-import { readHashState } from "../../store/stateSync/hashSync"
 import { hsvToRgb } from "../../../utils/colorsys"
+import { readHashState } from "../../store/stateSync/hashSync"
+import { appStateHistoryActions } from "../../store/hooks"
 
 
 type ToolType = 'pan' | 'line' | 'rect' | 'circle'
@@ -98,14 +99,19 @@ export const regionsSlice = createSlice({
   }),
   selectors: {
     nextColor,
-  }
+  },
+  extraReducers(builder) {
+    builder.addCase(appStateHistoryActions.setState, (state, { payload: { regions: { regions } } }) => {
+      state.regions = regions
+    })
+  },
 })
 
 
+
 function nextColor(state: State): V4 {
-  console.log('nextColor')
   if (state.autoColor) {
-    return [...hsvToRgb((state.regions.length + 4) / 12, 0.75, 1), 1]
+    return [...hsvToRgb(5 * (state.regions.length + 4) / 12, 0.75, 1), 1]
   }
   if (state.regions.length > 0) {
     return state.regions[state.regions.length - 1].color

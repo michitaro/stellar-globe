@@ -6,11 +6,14 @@ import { develSlice } from "../features/devel/develSlice"
 import { regionsSlice } from "../features/regions/regionsSlice"
 import { tractTileLayersSlice } from '../features/tractTileLayers/tractTileLayersSlice'
 import { commonSlice } from "../features/common/commonSlice"
+import { makeStateHistory } from "./stateHistory"
 // import { jsonPatchLogger } from './JsonPatchLogger'
 
 
 export function makeStore() {
-  return configureStore({
+  const stateHistory = makeStateHistory()
+
+  const store = configureStore({
     reducer: {
       common: commonSlice.reducer,
       layers: appearanceLayersSlice.reducer,
@@ -20,18 +23,24 @@ export function makeStore() {
       regions: regionsSlice.reducer,
       devel: develSlice.reducer,
     },
-    // middleware: (getDefaultMiddleware) =>
-    //   getDefaultMiddleware().concat(jsonPatchLogger((patches) => console.log(patches))),
+    middleware: (getDefaultMiddleware) =>
+      // getDefaultMiddleware().concat(jsonPatchLogger((patches) => console.log(patches))),
+      getDefaultMiddleware().concat(stateHistory.middleware)
   })
+
+  return {
+    store,
+    stateHistory,
+  }
 }
 
 
-export type AppStore = ReturnType<typeof makeStore>
+export type AppStore = ReturnType<typeof makeStore>['store']
 export type AppDispatch = AppStore['dispatch']
-export type RootState = ReturnType<AppStore['getState']>
+export type AppState = ReturnType<AppStore['getState']>
 export type AppThunk<ReturnType = void> = ThunkAction<
   ReturnType,
-  RootState,
+  AppState,
   unknown,
   Action<string>
 >

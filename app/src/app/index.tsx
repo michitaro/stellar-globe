@@ -10,6 +10,7 @@ import { Panels } from "./Panels"
 import { useAppContext, wrapWithAppContext } from "./context"
 import { KeybindsProvider } from './keybindings'
 import { makeStore } from "./store"
+import { StateHistoryProvider } from './store/StateHistoryProvider'
 import { useLocalStorageSync } from './store/stateSync/StorageSync'
 import { useHashSync } from './store/stateSync/hashSync'
 import styles from './style.module.scss'
@@ -27,20 +28,22 @@ const App = wrapWithAppContext(({
   storageSync = false,
   catchAllKeyboardEvents = false,
 }: Props) => {
-  const store = useInstanceVariable(makeStore)
+  const { store, stateHistory } = useInstanceVariable(makeStore)
   const { rootElementRef } = useAppContext()
   useHashSync({ store, enabled: hashSync })
   useLocalStorageSync({ store, enabled: storageSync })
-
+  
   return (
     <Provider store={store}>
-      <KeybindsProvider containerRef={rootElementRef} catchAllEvents={catchAllKeyboardEvents}>
-        <div className={styles.main} ref={rootElementRef} tabIndex={-1}>
-          <MainViewer />
-          <Panels />
-          <MainMenu />
-        </div>
-      </KeybindsProvider>
+      <StateHistoryProvider stateHistory={stateHistory}>
+        <KeybindsProvider containerRef={rootElementRef} catchAllEvents={catchAllKeyboardEvents}>
+          <div className={styles.main} ref={rootElementRef} tabIndex={-1}>
+            <MainViewer />
+            <Panels />
+            <MainMenu />
+          </div>
+        </KeybindsProvider>
+      </StateHistoryProvider>
     </Provider>
   )
 })

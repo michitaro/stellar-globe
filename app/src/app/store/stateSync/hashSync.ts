@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { AppStore, RootState } from ".."
+import { AppStore, AppState } from ".."
 import { debounce } from "../../../utils/debounce"
 import { deserialize, serialize } from "../../../utils/serialize"
 import { createIs } from "../../typeGuard"
@@ -9,7 +9,7 @@ import { appOnChange } from "./appOnChange"
 export type HashState = Partial<ReturnType<typeof hashState>>
 
 
-function hashState(state: RootState) {
+function hashState(state: AppState) {
   return {
     tractTileLayerColorParams: state.tractTileLayers.colorParams,
     cameraParams: state.camera.params,

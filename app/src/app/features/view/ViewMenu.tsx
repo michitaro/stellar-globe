@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { AppearanceLayersMenu } from '../appearanceLayers/AppearanceLayerMenu'
 import { cameraSlice } from '../camera/cameraSlice'
 import { commonSlice } from '../common/commonSlice'
+import { Icon } from '../../../components/Icon'
 
 
 export function ViewMenu() {
@@ -17,7 +18,7 @@ export function ViewMenu() {
   const dispatch = useAppDispatch()
 
   return (
-    <MenuBarItem label="View">
+    <MenuBarItem label={<Icon type="visibility"/>}>
       <SubMenu label='Layers'>
         <AppearanceLayersMenu />
       </SubMenu>
