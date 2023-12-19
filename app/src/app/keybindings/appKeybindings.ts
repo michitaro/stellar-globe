@@ -1,6 +1,6 @@
 import { useMemo } from "react"
 import { makeKeybindsEnvironment } from "../../common/components/keybindings"
-import { usePanelKeyBindings } from "../Panels/panelKeybindings"
+import { usePanelsKeyBindings } from "../Panels/panelsKeybindings"
 import { useDevelKeybindings } from "../features/devel/develKeybindings"
 import { useToolsKeybindings } from "../features/regions/toolsKeybindings"
 import { useViewKeybindings } from "../features/view/viewKeybindings"
@@ -9,7 +9,7 @@ import { useHistoryKeybindings } from "../features/history/historyKeybindings"
 
 export function useAppKeybinds() {
   const viewKeyBindings = useViewKeybindings()
-  const panelKeyBindings = usePanelKeyBindings()
+  const panelKeyBindings = usePanelsKeyBindings()
   const develKeybindings = useDevelKeybindings()
   const toolsKeybindings = useToolsKeybindings()
   const historyKeybindings = useHistoryKeybindings()

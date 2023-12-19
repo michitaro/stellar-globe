@@ -1,5 +1,5 @@
 import { Action, ThunkAction, configureStore } from "@reduxjs/toolkit"
-import { panelSlice } from '../Panels/panelSlice'
+import { panelsSlice } from '../Panels/panelsSlice'
 import { appearanceLayersSlice } from "../features/appearanceLayers/appearanceLayersSlice"
 import { cameraSlice } from "../features/camera/cameraSlice"
 import { develSlice } from "../features/devel/develSlice"
@@ -18,7 +18,7 @@ export function makeStore() {
       common: commonSlice.reducer,
       layers: appearanceLayersSlice.reducer,
       camera: cameraSlice.reducer,
-      panel: panelSlice.reducer,
+      panel: panelsSlice.reducer,
       tractTileLayers: tractTileLayersSlice.reducer,
       regions: regionsSlice.reducer,
       devel: develSlice.reducer,

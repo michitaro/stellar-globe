@@ -1,16 +1,17 @@
 import { MenuItem } from "@szhsin/react-menu"
 import classNames from "classnames"
-import { Fragment, forwardRef, memo, useRef } from "react"
+import { ForwardedRef, Fragment, forwardRef, memo, useRef } from "react"
 import { CSSTransition } from "react-transition-group"
 import { Icon } from "../../common/components/Icon"
 import { HoverMenu } from "../../common/components/Menu/HoverMenu"
 import { Panel } from "../../common/components/Panel"
 import { setDisplayName } from "../../common/utils/setDisplayName"
+import { RegionsPanels } from "../features/regions/RegionsPanel"
 import { TonePanel } from "../features/tractTileLayers/TonePanel"
 import { useAppDispatch, useAppSelector } from "../store/hooks"
-import { panelSlice } from "./panelSlice"
+import { panelDefs, panelsSlice } from "./panelsSlice"
 import styles from './styles.module.scss'
-import { RegionsPanels } from "../features/regions/RegionsPanel"
+import { MenuItemWithKeybind } from "../keybindings/MenuItemWithKeybind"
 
 
 export function Panels() {
@@ -30,38 +31,49 @@ export function Panels() {
 }
 
 
-const PanelMenu = memo(forwardRef(({ className }: { className?: string }, ref) => {
+const PanelsMenu = memo(forwardRef(({ className }: { className?: string }, ref: ForwardedRef<HTMLButtonElement>) => {
   const dispatch = useAppDispatch()
   const selectedPanel = useAppSelector(state => state.panel.selectedPanel)
-  const setSelectedPanel = (panel: typeof selectedPanel) => dispatch(panelSlice.actions.selectPanel(panel))
+  const setSelectedPanel = (panel: typeof selectedPanel) => dispatch(panelsSlice.actions.selectPanel(panel))
+
+  const keybindings = {
+    tone: 'toggleTonePanel',
+    regions: 'toggleRegionPanel',
+  } as const
 
   return (
     <HoverMenu
       className={className}
       renderMenuButton={({ active }) =>
-        <button className={classNames(styles.menu, active && styles.active)}>
+        <button ref={ref} className={classNames(styles.menu, active && styles.active)}>
           <Icon type="picture_in_picture" />
         </button>
       }
     >
-      <MenuItem type={selectedPanel && 'checkbox'} checked={selectedPanel === 'tone'} onClick={() => setSelectedPanel('tone')} >
-        <Icon type="tune" marginRight />
-        Tone
-      </MenuItem>
-      <MenuItem type={selectedPanel && 'checkbox'} checked={selectedPanel === 'regions'} onClick={() => setSelectedPanel('regions')} >
-        <Icon type="straighten" marginRight />
-        Regions
-      </MenuItem>
+      {
+        panelDefs.map(({ icon, name, type }, index) => (
+          <MenuItemWithKeybind
+            key={index}
+            type={selectedPanel && 'checkbox'}
+            checked={selectedPanel === type}
+            onClick={() => setSelectedPanel(type)}
+            keybind={type && keybindings[type]}
+          >
+            <Icon type={icon} marginRight />
+            {name}
+          </MenuItemWithKeybind>
+        ))
+      }
     </HoverMenu>
   )
 }))
-setDisplayName({ PanelMenu })
+setDisplayName({ PanelMenu: PanelsMenu })
 
 
 const CloseButton = memo(() => {
   const dispatch = useAppDispatch()
   return (
-    <button className={styles.closeButton} onClick={() => dispatch(panelSlice.actions.selectPanel(undefined))}>
+    <button className={styles.closeButton} onClick={() => dispatch(panelsSlice.actions.selectPanel(undefined))}>
       <Icon type="close" />
     </button>
   )
@@ -72,7 +84,7 @@ setDisplayName({ CloseButton })
 const BottomMenu = memo(() => {
   return (
     <Fragment>
-      <PanelMenu />
+      <PanelsMenu />
       <CloseButton />
     </Fragment>
   )
@@ -97,7 +109,7 @@ const CornerPanelMenu = memo(() => {
         exitActive: styles.fadeExitActive,
       }}
     >
-      <PanelMenu ref={nodeRef} className={styles.corner} />
+      <PanelsMenu ref={nodeRef} className={styles.corner} />
     </CSSTransition>
   )
 })

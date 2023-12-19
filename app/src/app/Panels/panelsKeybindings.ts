@@ -1,10 +1,10 @@
 import { useMemo } from "react"
 import { Keybind } from "../../common/components/keybindings"
 import { useAppDispatch, useAppSelector } from "../store/hooks"
-import { panelSlice } from "./panelSlice"
+import { panelsSlice } from "./panelsSlice"
 
 
-export function usePanelKeyBindings() {
+export function usePanelsKeyBindings() {
   const dispatch = useAppDispatch()
   const selectedPanel = useAppSelector(state => state.panel.selectedPanel)
 
@@ -12,7 +12,7 @@ export function usePanelKeyBindings() {
     const makeKeybind = (panelType: typeof selectedPanel, shortcut: string) => {
       const keybind: Keybind = {
         action() {
-          dispatch(panelSlice.actions.selectPanel(selectedPanel === panelType ? undefined : panelType))
+          dispatch(panelsSlice.actions.selectPanel(selectedPanel === panelType ? undefined : panelType))
         },
         shortcut,
       }

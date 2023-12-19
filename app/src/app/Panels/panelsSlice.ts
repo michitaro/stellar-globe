@@ -1,5 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 import { regionsSlice } from "../features/regions/regionsSlice"
+import { MaterialSymbol } from "material-symbols"
 
 
 type PanelType = 'tone' | 'regions' | undefined
@@ -17,7 +18,7 @@ function initialState(): State {
 }
 
 
-export const panelSlice = createSlice({
+export const panelsSlice = createSlice({
   name: 'panels',
   initialState,
   reducers: {
@@ -35,3 +36,24 @@ export const panelSlice = createSlice({
     })
   },
 })
+
+
+export type PanelDef = {
+  name: string
+  icon: MaterialSymbol
+  type: PanelType
+}
+
+
+export const panelDefs: PanelDef[] = [
+  {
+    name: 'Tone',
+    icon: 'tune',
+    type: 'tone',
+  },
+  {
+    name: 'Region',
+    icon: 'architecture',
+    type: 'regions',
+  }
+] as const
