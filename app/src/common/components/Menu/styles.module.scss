@@ -25,10 +25,12 @@
 
 .menuItemWithAnnotation {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   width: 100%;
 
   &-body {
+    display: flex;
+    align-items: center;
     flex-grow: 1;
     padding-right: 1em;
   }

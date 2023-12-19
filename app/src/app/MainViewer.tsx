@@ -1,6 +1,6 @@
 import { BeautifulObjectLayer$, ConstellationLayer$, EsoMilkyWayLayer$, Globe$, GlobeEventLayer$, GridLayer$, HipparcosCatalogLayer$, TouchLayer$, TractTileLayer$, ZoomLayer$ } from "@stellar-globe/react-stellar-globe"
 import { Globe } from "@stellar-globe/stellar-globe"
-import { debounce } from "../utils/debounce"
+import { debounce } from "../common/utils/debounce"
 import { useAppContext } from "./context"
 import { CameraParams, cameraSlice } from "./features/camera/cameraSlice"
 import { RegionsLayer } from "./features/regions/RegionsLayer"

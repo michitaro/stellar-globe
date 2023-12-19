@@ -261,7 +261,7 @@ function cameraMatrix(p: CameraParams) {
 }
 
 function generateCameraMatrix(out: mat4, p: CameraParams) {
-  const fovy = p.fovy
+  const halfFovy = p.fovy / 2
   const ar = p.aspectRatio
   const cA = Math.cos(p.phi)
   const sA = Math.sin(p.phi)
@@ -272,27 +272,27 @@ function generateCameraMatrix(out: mat4, p: CameraParams) {
   switch (p.mode) {
     case 'GNOMONIC':
       mat4.set(out,
-        (cA * sD * sR + cR * sA) / (ar * fovy), (-cA * cR * sD + sA * sR) / fovy, 41 * cA * cD / 39, cA * cD,
-        (-cA * cR + sA * sD * sR) / (ar * fovy), -(cA * sR + cR * sA * sD) / fovy, 41 * cD * sA / 39, cD * sA,
-        -cD * sR / (ar * fovy), cD * cR / fovy, 41 * sD / 39, sD,
+        (cA * sD * sR + cR * sA) / (ar * halfFovy), (-cA * cR * sD + sA * sR) / halfFovy, 41 * cA * cD / 39, cA * cD,
+        (-cA * cR + sA * sD * sR) / (ar * halfFovy), -(cA * sR + cR * sA * sD) / halfFovy, 41 * cD * sA / 39, cD * sA,
+        -cD * sR / (ar * halfFovy), cD * cR / halfFovy, 41 * sD / 39, sD,
         0, 0, -4 / 39, 0)
       break
     case 'STEREOGRAPHIC':
       mat4.set(out,
-        2 * (cA * sD * sR + cR * sA) / (ar * fovy), 2 * (-cA * cR * sD + sA * sR) / fovy, 13 * cA * cD / 11, cA * cD,
+        2 * (cA * sD * sR + cR * sA) / (ar * halfFovy), 2 * (-cA * cR * sD + sA * sR) / halfFovy, 13 * cA * cD / 11, cA * cD,
         // tslint:disable-next-line:max-line-length
-        2 * (-cA * cR + sA * sD * sR) / (ar * fovy), -(2 * cA * sR + 2 * cR * sA * sD) / fovy, 13 * cD * sA / 11, cD * sA,
-        -2 * cD * sR / (ar * fovy), 2 * cD * cR / fovy, 13 * sD / 11, sD,
+        2 * (-cA * cR + sA * sD * sR) / (ar * halfFovy), -(2 * cA * sR + 2 * cR * sA * sD) / halfFovy, 13 * cD * sA / 11, cD * sA,
+        -2 * cD * sR / (ar * halfFovy), 2 * cD * cR / halfFovy, 13 * sD / 11, sD,
         0, 0, 7 / 11, 1)
       break
     case 'FLOATING_EYE':
       mat4.set(out,
         // tslint:disable-next-line:max-line-length
-        (fovy + 1) * (cA * sD * sR + cR * sA) / (ar * fovy), (fovy + 1) * (-cA * cR * sD + sA * sR) / fovy, 41 * cA * cD / 39, cA * cD,
+        (halfFovy + 1) * (cA * sD * sR + cR * sA) / (ar * halfFovy), (halfFovy + 1) * (-cA * cR * sD + sA * sR) / halfFovy, 41 * cA * cD / 39, cA * cD,
         // tslint:disable-next-line:max-line-length
-        (fovy + 1) * (-cA * cR + sA * sD * sR) / (ar * fovy), -(fovy + 1) * (cA * sR + cR * sA * sD) / fovy, 41 * cD * sA / 39, cD * sA,
-        -cD * sR * (fovy + 1) / (ar * fovy), cD * cR * (fovy + 1) / fovy, 41 * sD / 39, sD,
-        0, 0, 41 * fovy / 39 - 20 / 39, fovy,
+        (halfFovy + 1) * (-cA * cR + sA * sD * sR) / (ar * halfFovy), -(halfFovy + 1) * (cA * sR + cR * sA * sD) / halfFovy, 41 * cD * sA / 39, cD * sA,
+        -cD * sR * (halfFovy + 1) / (ar * halfFovy), cD * cR * (halfFovy + 1) / halfFovy, 41 * sD / 39, sD,
+        0, 0, 41 * halfFovy / 39 - 20 / 39, halfFovy,
       )
       break
   }

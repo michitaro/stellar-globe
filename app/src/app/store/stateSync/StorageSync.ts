@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { AppStore, AppState } from ".."
-import { debounce } from "../../../utils/debounce"
+import { debounce } from "../../../common/utils/debounce"
 import { createIs } from "../../typeGuard"
 import { appOnChange } from "./appOnChange"
 

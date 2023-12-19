@@ -1,6 +1,6 @@
 import { memo } from "react"
-import { Icon } from "../../../components/Icon"
-import { MenuBarItem } from "../../../components/Menu/MenuBarItem"
+import { Icon } from "../../../common/components/Icon"
+import { MenuBarItem } from "../../../common/components/Menu/MenuBarItem"
 import { MenuItemWithKeybind } from "../../keybindings/MenuItemWithKeybind"
 import { useAppSelector } from "../../store/hooks"
 

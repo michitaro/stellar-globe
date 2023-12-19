@@ -1,7 +1,7 @@
-import { CameraMode, angle } from "@stellar-globe/stellar-globe"
+import { CameraMode, angle, hips } from "@stellar-globe/stellar-globe"
 import { useMemo } from "react"
-import { Keybind } from "../../../components/keybindings"
-import { useFullscreen } from "../../../hooks/useFullscreen"
+import { Keybind } from "../../../common/components/keybindings"
+import { useFullscreen } from "../../../common/hooks/useFullscreen"
 import { useAppContext } from "../../context"
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
 import { cameraSlice } from "../camera/cameraSlice"
@@ -54,11 +54,65 @@ export function useViewKeybindings() {
       shortcut: 'Z',
     }
 
+    const zoom = (fovy: number) => {
+      globeHandle.current?.().camera.jumpTo({ fovy })
+    }
+
+    const zoom2arcmin: Keybind = {
+      action() {
+        zoom(angle.Angle.fromAmin(2).rad)
+      },
+      shortcut: '1',
+    }
+
+    const zoom20arcmin: Keybind = {
+      action() {
+        zoom(angle.Angle.fromAmin(20).rad)
+      },
+      shortcut: '2',
+    }
+
+    const zoom1deg: Keybind = {
+      action() {
+        zoom(angle.Angle.fromDeg(1).rad)
+      },
+      shortcut: '3',
+    }
+
+    const zoom2deg: Keybind = {
+      action() {
+        zoom(angle.Angle.fromDeg(2).rad)
+      },
+      shortcut: '4',
+    }
+
+    const zoomArctan2: Keybind = {
+      action() {
+        zoom(2)
+      },
+      shortcut: '5',
+    }
+
+    const zoomHscScale: Keybind = {
+      action() {
+        const vPixels = globeHandle.current!().gl.drawingBufferHeight
+        const fovy = vPixels * angle.Angle.fromAsec(0.168).rad
+        zoom(fovy)
+      },
+      shortcut: '0',
+    }
+
     return {
       moveToCoords,
       toggleFullscreen,
       toggleRetina,
       toggleProjection,
+      zoom2arcmin,
+      zoom20arcmin,
+      zoom1deg,
+      zoom2deg,
+      zoomArctan2,
+      zoomHscScale,
     }
   }, [dispatch, fullscreen, globeHandle, projection])
 }

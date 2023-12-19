@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { AppStore, AppState } from ".."
-import { debounce } from "../../../utils/debounce"
-import { deserialize, serialize } from "../../../utils/serialize"
+import { debounce } from "../../../common/utils/debounce"
+import { deserialize, serialize } from "../../../common/utils/serialize"
 import { createIs } from "../../typeGuard"
 import { appOnChange } from "./appOnChange"
 

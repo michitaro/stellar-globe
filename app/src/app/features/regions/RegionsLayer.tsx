@@ -1,13 +1,13 @@
 import { MenuItem } from "@szhsin/react-menu"
 import { Fragment, memo, useCallback, useMemo } from "react"
-import { Icon } from "../../../components/Icon"
-import { setDisplayName } from "../../../utils/setDisplayName"
+import { Icon } from "../../../common/components/Icon"
+import { setDisplayName } from "../../../common/utils/setDisplayName"
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
 import { CircleDef, CircularRegionLayer } from "./CircularRegionLayer"
 import { LineDef, LinearRegionLayer } from "./LinearRegionLayer"
 import { RectDef, RectangularRegionLayer } from "./RectangularRegionLayer"
-import { regionsSlice } from "./regionsSlice"
 import { normalizeSkyCoord, skyCoordFromCoordDef } from "./regionUtils"
+import { regionsSlice } from "./regionsSlice"
 
 
 export function RegionsLayer() {

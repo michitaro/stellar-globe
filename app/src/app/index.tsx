@@ -3,12 +3,12 @@ import '@szhsin/react-menu/dist/theme-dark.css'
 import '@szhsin/react-menu/dist/transitions/slide.css'
 import 'material-symbols'
 import { Provider } from "react-redux"
-import { useInstanceVariable } from '../hooks/useInstanceVaribale'
+import { useInstanceVariable } from '../common/hooks/useInstanceVaribale'
 import MainMenu from "./MainMenu"
 import { MainViewer } from "./MainViewer"
 import { Panels } from "./Panels"
 import { useAppContext, wrapWithAppContext } from "./context"
-import { KeybindsProvider } from './keybindings'
+import { KeybindsProvider } from './keybindings/appKeybindings'
 import { makeStore } from "./store"
 import { StateHistoryProvider } from './store/StateHistoryProvider'
 import { useLocalStorageSync } from './store/stateSync/StorageSync'

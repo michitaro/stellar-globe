@@ -1,6 +1,6 @@
 import { enableWebglProfiler } from '@stellar-globe/stellar-globe'
 import { useMemo, useRef } from "react"
-import { Keybind } from "../../../components/keybindings"
+import { Keybind } from "../../../common/components/keybindings"
 import { useAppContext } from "../../context"
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { develSlice } from './develSlice'

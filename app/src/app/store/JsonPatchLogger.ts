@@ -1,5 +1,5 @@
 import { Middleware } from 'redux'
-import { generateJsonPatch } from '../../utils/generateJsonPatch'
+import { generateJsonPatch } from '../../common/utils/generateJsonPatch'
 
 type OpList = ReturnType<typeof generateJsonPatch>
 

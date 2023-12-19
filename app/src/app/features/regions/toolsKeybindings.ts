@@ -1,5 +1,5 @@
 import { useMemo } from "react"
-import { Keybind } from "../../../components/keybindings"
+import { Keybind } from "../../../common/components/keybindings"
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
 import { regionsSlice } from "./regionsSlice"
 

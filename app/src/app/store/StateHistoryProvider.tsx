@@ -31,7 +31,7 @@ export function useStateHistory() {
 
   const makeState = useCallback(() => ({
     records: stateHistory.records,
-    currentIndex: stateHistory.currentIndex,
+    currentIndex: stateHistory.currentIndex(),
   }), [stateHistory])
 
   const [history, setHistory] = useState(makeState)

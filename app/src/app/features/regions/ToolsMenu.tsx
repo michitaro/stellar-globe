@@ -1,12 +1,11 @@
 import { MenuDivider, MenuItem } from "@szhsin/react-menu"
-import { MenuBarItem } from "../../../components/Menu/MenuBarItem"
+import { MaterialSymbol } from "material-symbols"
+import { useMemo } from "react"
+import { Icon } from "../../../common/components/Icon"
+import { MenuBarItem } from "../../../common/components/Menu/MenuBarItem"
+import { MenuItemWithKeybind } from "../../keybindings/MenuItemWithKeybind"
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
 import { regionsSlice } from "./regionsSlice"
-import { Icon } from "../../../components/Icon"
-import { MaterialSymbol } from "material-symbols"
-import { MenuItemWithKeybind } from "../../keybindings/MenuItemWithKeybind"
-import { createSelector } from "@reduxjs/toolkit"
-import { useMemo } from "react"
 
 
 type ToolType = ReturnType<typeof regionsSlice['getInitialState']>['tool']
@@ -18,7 +17,8 @@ const toolDefs: { [K in ToolType]: {
 }
 } = {
   pan: {
-    icon: 'open_with',
+    icon: '360',
+    // icon: 'open_with',
     displayName: 'Pan',
   },
   circle: {

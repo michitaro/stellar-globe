@@ -1,13 +1,13 @@
 import { MenuDivider, MenuItem, SubMenu } from '@szhsin/react-menu'
-import { MenuBarItem } from '../../../components/Menu/MenuBarItem'
-import { useFullscreen } from '../../../hooks/useFullscreen'
+import { MenuBarItem } from '../../../common/components/Menu/MenuBarItem'
+import { useFullscreen } from '../../../common/hooks/useFullscreen'
 import { useAppContext } from '../../context'
 import { MenuItemWithKeybind } from "../../keybindings/MenuItemWithKeybind"
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { AppearanceLayersMenu } from '../appearanceLayers/AppearanceLayerMenu'
 import { cameraSlice } from '../camera/cameraSlice'
 import { commonSlice } from '../common/commonSlice'
-import { Icon } from '../../../components/Icon'
+import { Icon } from '../../../common/components/Icon'
 
 
 export function ViewMenu() {
@@ -18,7 +18,7 @@ export function ViewMenu() {
   const dispatch = useAppDispatch()
 
   return (
-    <MenuBarItem label={<Icon type="visibility"/>}>
+    <MenuBarItem label={<Icon type="visibility" />}>
       <SubMenu label='Layers'>
         <AppearanceLayersMenu />
       </SubMenu>
@@ -33,6 +33,14 @@ export function ViewMenu() {
       <MenuItemWithKeybind type='checkbox' checked={camera.retina} keybind='toggleRetina' >Retina</MenuItemWithKeybind>
       <MenuItemWithKeybind type='checkbox' checked={isFullscreen} disabled={!document.fullscreenEnabled} keybind='toggleFullscreen'>Fullscreen</MenuItemWithKeybind>
       <MenuDivider />
+      <SubMenu label="Zoom">
+        <MenuItemWithKeybind keybind='zoom2arcmin'>2&prime;</MenuItemWithKeybind>
+        <MenuItemWithKeybind keybind='zoom20arcmin'>20&prime;</MenuItemWithKeybind>
+        <MenuItemWithKeybind keybind='zoom1deg'>1&deg;</MenuItemWithKeybind>
+        <MenuItemWithKeybind keybind='zoom2deg'>2&deg;</MenuItemWithKeybind>
+        <MenuItemWithKeybind keybind='zoomArctan2'>tan(&theta;)=2</MenuItemWithKeybind>
+        <MenuItemWithKeybind keybind='zoomHscScale'>1:1 Pixel Mapping</MenuItemWithKeybind>
+      </SubMenu>
       <MenuItemWithKeybind keybind='moveToCoords'>Move to Specified Coordinates</MenuItemWithKeybind>
       <MenuDivider />
       <SubMenu label="Angle Unit">

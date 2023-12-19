@@ -3,9 +3,9 @@ import { Globe, GlobePointerDragEvent, GlobePointerEvent, Layer, SkyCoord, V2, V
 import { Menu } from "@szhsin/react-menu"
 import { produce } from 'immer'
 import { Fragment, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { Icon } from "../../../components/Icon"
-import { AngleUnit, formatAngle } from '../../../utils/formatAngle'
-import { slerp } from "../../../utils/math"
+import { Icon } from "../../../common/components/Icon"
+import { AngleUnit, formatAngle } from '../../../common/utils/formatAngle'
+import { slerp } from "../../../common/utils/math"
 import styles from './styles.module.scss'
 const { mat3, vec3, mat4 } = glMatrix
 

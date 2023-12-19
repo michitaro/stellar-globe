@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { readStorageState } from "../../store/stateSync/StorageSync"
-import { AngleUnit } from "../../../utils/formatAngle"
+import { AngleUnit } from "../../../common/utils/formatAngle"
 
 
 type State = {

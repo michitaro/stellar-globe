@@ -3,9 +3,9 @@ import { CursorStyle, Globe, GlobePointerDragEvent, GlobePointerEvent, Layer, Sk
 import { Menu } from "@szhsin/react-menu"
 import { produce } from 'immer'
 import { Fragment, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { Icon } from "../../../components/Icon"
-import { AngleUnit, formatAngle } from "../../../utils/formatAngle"
-import { memoizeOne } from "../../../utils/memoizeOne"
+import { Icon } from "../../../common/components/Icon"
+import { AngleUnit, formatAngle } from "../../../common/utils/formatAngle"
+import { memoizeOne } from "../../../common/utils/memoizeOne"
 import { PointMarker } from './PointMarker'
 import styles from './styles.module.scss'
 

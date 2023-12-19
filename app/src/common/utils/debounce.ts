@@ -20,3 +20,20 @@ export function debounce<CB extends (...args: any[]) => void>(wait: number, cb: 
   }) as CB
   return Object.assign(f, { stop })
 }
+
+
+export function Debounce(delay: number) {
+  let timer: undefined | ReturnType<typeof setTimeout> = undefined
+  const f = (cb: () => void) => {
+    if (timer) {
+      clearTimeout(timer)
+    }
+    timer = setTimeout(() => {
+      timer = undefined
+      cb()
+    }, delay)
+  }
+  return Object.assign(f, {
+    stop: () => timer && clearTimeout(timer)
+  })
+}

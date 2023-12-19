@@ -3,8 +3,8 @@ import { LogScaleRange } from "@stellar-globe/react-stellar-globe"
 import { TractTileLayer, V3 } from "@stellar-globe/stellar-globe"
 import { produce } from 'immer'
 import { memo, useMemo } from "react"
-import { ColorPickerRgb } from '../../../../components/ColorPicker'
-import NumericInput from '../../../../components/NumericInput'
+import { ColorPickerRgb } from '../../../../common/components/ColorPicker'
+import NumericInput from '../../../../common/components/NumericInput'
 import styles from './styles.module.scss'
 import { defaultFilters, filterCandidates } from '../tractTileLayersSlice'
 

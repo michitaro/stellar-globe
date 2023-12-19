@@ -1,4 +1,5 @@
 import { Action, Dispatch, Middleware, MiddlewareAPI, createAction } from '@reduxjs/toolkit'
+import { Debounce } from '../../common/utils/debounce'
 
 
 const setStateKey = 'history/set_state'
@@ -39,6 +40,7 @@ export const makeStateHistory = ({ maxHistory = 20 }: Options = {}) => {
   const records: StateHistoryRecord[] = []
   let currentIndex = 0
   const changeCallbacks: ((e: HistoryChagneEvent) => void)[] = []
+  const debounce = Debounce(200)
 
   const middleware = (({ getState }: MiddlewareAPI<Dispatch<Action>, unknown>) => (next: Dispatch<Action>) => (action: Action) => {
     if (timeTravel.match(action)) {
@@ -58,13 +60,15 @@ export const makeStateHistory = ({ maxHistory = 20 }: Options = {}) => {
     const nextAction = next(action)
 
     if (shouldTrack(action)) {
-      records.splice(0, currentIndex)
-      currentIndex = 0
-      records.unshift({ state: getState(), summary: action.meta[trackKey].summary, type: action.type, id: ++seq })
-      while (records.length > maxHistory) {
-        records.pop()
-      }
-      changeCallbacks.forEach(cb => cb({}))
+      debounce(() => {
+        records.splice(0, currentIndex)
+        currentIndex = 0
+        records.unshift({ state: getState(), summary: action.meta[trackKey].summary, type: action.type, id: ++seq })
+        while (records.length > maxHistory) {
+          records.pop()
+        }
+        changeCallbacks.forEach(cb => cb({}))
+      })
     }
 
     return nextAction

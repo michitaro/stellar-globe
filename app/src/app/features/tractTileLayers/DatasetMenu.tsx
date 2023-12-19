@@ -1,8 +1,8 @@
 import { MenuItem } from '@szhsin/react-menu'
-import { MenuBarItem } from '../../../components/Menu/MenuBarItem'
+import { MenuBarItem } from '../../../common/components/Menu/MenuBarItem'
 import { tractTileLayersSlice } from './tractTileLayersSlice'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
-import { Icon } from '../../../components/Icon'
+import { Icon } from '../../../common/components/Icon'
 
 
 export function DatasetMenu() {

@@ -1,15 +1,14 @@
 import { PanLayer$ } from '@stellar-globe/react-stellar-globe'
 import { GlobePointerDragEvent, SkyCoord, V4 } from '@stellar-globe/stellar-globe'
 import { Fragment, ReactNode, memo, useCallback, useMemo, useState } from 'react'
-import { setDisplayName } from '../../../utils/setDisplayName'
+import { setDisplayName } from '../../../common/utils/setDisplayName'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { CircularRegionLayer } from './CircularRegionLayer'
 import { LinearRegionLayer } from './LinearRegionLayer'
 import { PointerDragAndUpLayer$ } from './PointerDragLayer'
-import { regionsSlice } from './regionsSlice'
-import { normalizeSkyCoord } from './regionUtils'
 import { RectDef, RectangularRegionLayer } from './RectangularRegionLayer'
-import { trackAction } from '../../store/stateHistory'
+import { normalizeSkyCoord } from './regionUtils'
+import { regionsSlice } from './regionsSlice'
 
 
 export const ToolsLayer = memo(() => {
@@ -62,12 +61,12 @@ const NewLinearRegionLayer = memo(() => {
 
   const addRegion = useCallback((coords: [SkyCoord, SkyCoord]) => {
     const [start, end] = coords
-    dispatch(trackAction(regionsSlice.actions.newLinearRegionAdded({
+    dispatch(regionsSlice.actions.newLinearRegionAdded({
       type: 'Linear',
       start: normalizeSkyCoord(start),
       end: normalizeSkyCoord(end),
       visible: true,
-    }), 'Add new Linear Region'))
+    }))
     if (!toolPinned) {
       dispatch(regionsSlice.actions.toolChanged({ tool: 'pan' }))
     }
@@ -100,12 +99,12 @@ const NewCircularRegionLayer = memo(() => {
 
   const addRegion = useCallback((coords: [SkyCoord, SkyCoord]) => {
     const [a, b] = coords
-    dispatch(trackAction(regionsSlice.actions.newCircularRegionAdded({
+    dispatch(regionsSlice.actions.newCircularRegionAdded({
       type: 'Circular',
       center: normalizeSkyCoord(a),
       radius: a.angle(b).rad,
       visible: true,
-    }), 'Add New Circular Region'))
+    }))
     if (!toolPinned) {
       dispatch(regionsSlice.actions.toolChanged({ tool: 'pan' }))
     }
@@ -138,14 +137,14 @@ const NewRectangularRegionLayer = memo(() => {
 
   const addRegion = useCallback((coords: [SkyCoord, SkyCoord]) => {
     const [a, b] = coords
-    dispatch(trackAction(regionsSlice.actions.newRectangularRegionAdded({
+    dispatch(regionsSlice.actions.newRectangularRegionAdded({
       type: 'Rectangular',
       minRa: a.a.rad,
       maxRa: b.a.rad,
       minDec: a.d.rad,
       maxDec: b.d.rad,
       visible: true,
-    }), 'Add New Rectangular Region'))
+    }))
     if (!toolPinned) {
       dispatch(regionsSlice.actions.toolChanged({ tool: 'pan' }))
     }

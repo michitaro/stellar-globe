@@ -21,8 +21,11 @@ function useMakeContext({
         const shortcut = generateShortcutFromEvent(e)
         const kb = shortcutMap.get(shortcut)
         if (kb) {
-          e.preventDefault()
-          kb()
+          const actionResult = kb()
+          const { preventDefault } = (actionResult instanceof Promise ? undefined : actionResult) ?? { preventDefault: true }
+          if (preventDefault) {
+            e.preventDefault()
+          }
         }
       }
     }
@@ -37,9 +40,12 @@ function useMakeContext({
   }), [keybinds])
 }
 const Context = createContext<ReturnType<typeof useMakeContext> | undefined>(undefined)
+
+type ActionResult = void | Promise<void> | { preventDefault?: boolean }
+
 export type Keybind = {
   shortcut: string
-  action: () => void
+  action: () => ActionResult
 }
 
 

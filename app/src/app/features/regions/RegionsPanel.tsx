@@ -1,11 +1,11 @@
 import styles from './styles.module.scss'
 import { memo, useCallback } from "react"
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
-import { Icon } from "../../../components/Icon"
+import { Icon } from "../../../common/components/Icon"
 import { Region, regionsSlice } from "./regionsSlice"
 import { MaterialSymbol } from "material-symbols"
-import { setDisplayName } from "../../../utils/setDisplayName"
-import { ColorPickerRgba } from "../../../components/ColorPicker"
+import { setDisplayName } from "../../../common/utils/setDisplayName"
+import { ColorPickerRgba } from "../../../common/components/ColorPicker"
 import { V4 } from "@stellar-globe/stellar-globe"
 
 export const RegionsPanels = memo(() => {

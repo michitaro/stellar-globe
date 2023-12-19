@@ -15,7 +15,6 @@ type Layer = {
 
 
 type State = {
-  outline: boolean
   colorParams: ColorParams
   layers: Layer[]
 }
@@ -58,7 +57,6 @@ function layerVisible(layerName: string) {
 function initialState(): State {
   return {
     colorParams: readHashState().tractTileLayerColorParams ?? TractTileLayer.defaultParams({ filters: defaultFilters }),
-    outline: true,
     layers: [
       {
         name: 'PDR3 Wide',

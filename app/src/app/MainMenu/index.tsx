@@ -1,4 +1,4 @@
-import { MenuBar } from '../../components/Menu/MenuBar'
+import { MenuBar } from '../../common/components/Menu/MenuBar'
 import { DevelMenu } from '../features/devel/DevelMenu'
 import { HistoryMenu } from '../features/history/HistoryMenu'
 import { ToolsMenu } from '../features/regions/ToolsMenu'

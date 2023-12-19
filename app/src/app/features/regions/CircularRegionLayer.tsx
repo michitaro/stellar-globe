@@ -3,8 +3,8 @@ import { Globe, GlobePointerDragEvent, Layer, SkyCoord, V2, V3, V4, glMatrix, ma
 import { Menu } from "@szhsin/react-menu"
 import { produce } from 'immer'
 import { Fragment, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { Icon } from "../../../components/Icon"
-import { AngleUnit, formatAngle } from '../../../utils/formatAngle'
+import { Icon } from "../../../common/components/Icon"
+import { AngleUnit, formatAngle } from '../../../common/utils/formatAngle'
 import { PointMarker } from "./PointMarker"
 import styles from './styles.module.scss'
 const { vec3 } = glMatrix

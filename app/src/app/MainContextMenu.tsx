@@ -1,6 +1,6 @@
 import { MenuItem } from '@szhsin/react-menu'
 import { ReactNode } from "react"
-import { ContextMenu } from '../components/ContextMenu'
+import { ContextMenu } from '../common/components/ContextMenu'
 
 
 export function MainContextMenu({ children }: { children: ReactNode }) {
