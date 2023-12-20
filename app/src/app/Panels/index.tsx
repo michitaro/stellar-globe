@@ -6,7 +6,7 @@ import { Icon } from "../../common/components/Icon"
 import { HoverMenu } from "../../common/components/Menu/HoverMenu"
 import { Panel } from "../../common/components/Panel"
 import { setDisplayName } from "../../common/utils/setDisplayName"
-import { RegionsPanels } from "../features/regions/RegionsPanel"
+import { RegionsPanel } from "../features/regions/RegionsPanel"
 import { TonePanel } from "../features/tractTileLayers/TonePanel"
 import { useAppDispatch, useAppSelector } from "../store/hooks"
 import { panelDefs, panelsSlice } from "./panelsSlice"
@@ -24,7 +24,7 @@ export function Panels() {
         <TonePanel />
       </Panel>
       <Panel show={selectedPanel === 'regions'} bottomMenu={<BottomMenu />}>
-        <RegionsPanels />
+        <RegionsPanel />
       </Panel>
     </div>
   )

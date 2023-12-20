@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from "./store/hooks"
 
 export function MainViewer() {
   const { globeHandle } = useAppContext()
-  const layers = useAppSelector(state => state.layers)
+  const layers = useAppSelector(state => state.appearance)
   const camera = useAppSelector(state => state.camera)
   const dispatch = useAppDispatch()
 

@@ -8,7 +8,7 @@ import { setDisplayName } from "../../../common/utils/setDisplayName"
 import { ColorPickerRgba } from "../../../common/components/ColorPicker"
 import { V4 } from "@stellar-globe/stellar-globe"
 
-export const RegionsPanels = memo(() => {
+export const RegionsPanel = memo(() => {
   const regions = useAppSelector(state => state.regions.regions)
 
   return (
@@ -30,7 +30,7 @@ export const RegionsPanels = memo(() => {
     </div>
   )
 })
-setDisplayName({ RegionsPanels })
+setDisplayName({ RegionsPanel })
 
 
 const RegionTr = memo(({ region }: { region: Region }) => {

@@ -17,7 +17,7 @@ export function makeStore() {
   const store = configureStore({
     reducer: {
       common: commonSlice.reducer,
-      layers: appearanceLayersSlice.reducer,
+      appearance: appearanceLayersSlice.reducer,
       camera: cameraSlice.reducer,
       panel: panelsSlice.reducer,
       tractTileLayers: tractTileLayersSlice.reducer,

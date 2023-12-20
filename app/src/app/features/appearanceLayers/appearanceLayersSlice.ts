@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import type { ConstellationLayer$, EsoMilkyWayLayer$ } from "@stellar-globe/react-stellar-globe"
 import { hipsLayersSlice } from "../hipsLayers/hipsLayersSlice"
+import { readHashState } from "../../store/stateSync/hashSync"
 
 
 type ExtractProps<T extends (...args: never[]) => unknown> = Parameters<T>[0]
@@ -22,7 +23,7 @@ type State = {
 
 
 function initialState(): State {
-  return {
+  return readHashState().appearance ?? {
     grid: {
       visible: true,
     },
