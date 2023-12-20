@@ -1,5 +1,6 @@
 import { MenuDivider, MenuItem, SubMenu } from "@szhsin/react-menu"
-import { Fragment, Suspense, memo, useMemo } from "react"
+import { Fragment, Suspense, memo } from "react"
+import { memoizeOne } from "../../../common/utils/memoizeOne"
 import { setDisplayName } from "../../../common/utils/setDisplayName"
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
 import { hipsLayersSlice } from "./hipsLayersSlice"
@@ -43,6 +44,8 @@ export const TomoegozenSubmenu = memo(() => {
 
 
 setDisplayName({ TomoegozenSubmenu })
+
+
 const tomoegozenEntries = (() => {
   let cache: TomoegozenEntry[] | undefined
   let promise: Promise<void> | undefined
@@ -60,22 +63,24 @@ const tomoegozenEntries = (() => {
 })()
 
 
+const groupedTomoegozenEntries = memoizeOne((entries: TomoegozenEntry[]) => {
+  const g = new Map<string, TomoegozenEntry[]>()
+  for (const e of entries) {
+    if (!g.has(e.obsmonth)) {
+      g.set(e.obsmonth, [])
+    }
+    g.get(e.obsmonth)!.push(e)
+  }
+  return [...g.entries()]
+    .map(([month, entries]) => [month, entries.sort((a, b) => -a.obsdate.localeCompare(b.obsdate))] as [string, TomoegozenEntry[]])
+    .sort(([a], [b]) => -a.localeCompare(b))
+})
+
+
 const TomoegozenEntries = memo(() => {
   const currentBaseUrl = useAppSelector(state => state.hipsLayers.baseUrl)
   const entries = tomoegozenEntries()
-  const grouped = useMemo(() => {
-    const g = new Map<string, TomoegozenEntry[]>()
-    for (const e of entries) {
-      if (!g.has(e.obsmonth)) {
-        g.set(e.obsmonth, [])
-      }
-      g.get(e.obsmonth)!.push(e)
-    }
-    return [...g.entries()]
-      .map(([month, entries]) => [month, entries.sort((a, b) => -a.obsdate.localeCompare(b.obsdate))] as [string, TomoegozenEntry[]])
-      .sort(([a], [b]) => -a.localeCompare(b))
-  }, [entries])
-
+  const grouped = groupedTomoegozenEntries(entries)
   const dispatch = useAppDispatch()
 
   return (

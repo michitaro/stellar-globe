@@ -21,10 +21,12 @@ export function usePanelsKeyBindings() {
 
     const toggleTonePanel = makeKeybind('tone', 'C')
     const toggleRegionPanel = makeKeybind('regions', 'R')
+    const toggleHipsPanel = makeKeybind('hips', 'Shift+H')
 
     return {
       toggleTonePanel,
       toggleRegionPanel,
+      toggleHipsPanel,
     }
   }, [dispatch, selectedPanel])
 }

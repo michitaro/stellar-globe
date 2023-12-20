@@ -1,3 +1,18 @@
 .search {
   font-size: large;
 }
+
+.hipsInspector {
+  font-size: small;
+  font-family: monospace;
+  tbody {
+    th {
+      text-align: right;
+      padding-right: 1em;
+      color: #aaa;
+    }
+    th, td {
+      max-width: 15vw;
+    }
+  }
+}

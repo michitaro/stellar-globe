@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from "../store/hooks"
 import { panelDefs, panelsSlice } from "./panelsSlice"
 import styles from './styles.module.scss'
 import { MenuItemWithKeybind } from "../keybindings/MenuItemWithKeybind"
+import { HipsPanel } from "../features/hipsLayers/HipsPanel"
 
 
 export function Panels() {
@@ -26,6 +27,9 @@ export function Panels() {
       <Panel show={selectedPanel === 'regions'} bottomMenu={<BottomMenu />}>
         <RegionsPanel />
       </Panel>
+      <Panel show={selectedPanel === 'hips'} bottomMenu={<BottomMenu />}>
+        <HipsPanel />
+      </Panel>
     </div>
   )
 }
@@ -39,6 +43,7 @@ const PanelsMenu = memo(forwardRef(({ className }: { className?: string }, ref: 
   const keybindings = {
     tone: 'toggleTonePanel',
     regions: 'toggleRegionPanel',
+    hips: 'toggleHipsPanel',
   } as const
 
   return (

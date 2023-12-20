@@ -11,7 +11,7 @@ export function DatasetMenu() {
   const dispatch = useAppDispatch()
 
   return (
-    <MenuBarItem label={<Icon type="folder" />}>
+    <MenuBarItem label={<Icon type="folder_open" />}>
       <MenuHeader>hscMap</MenuHeader>
       {layers.map(({ baseUrl, name, visible }) => (
         <MenuItem

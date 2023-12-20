@@ -1,5 +1,6 @@
-import { FocusableItem, MenuItem } from "@szhsin/react-menu"
+import { FocusableItem, MenuItem, SubMenu } from "@szhsin/react-menu"
 import { Fragment, Suspense, memo, useEffect, useState, useTransition } from "react"
+import { ErrorBoundary } from "react-error-boundary"
 import { useInstanceVariable } from "../../../common/hooks/useInstanceVaribale"
 import { Debounce } from "../../../common/utils/debounce"
 import { setDisplayName } from "../../../common/utils/setDisplayName"
@@ -11,13 +12,28 @@ import { TomoegozenSubmenu } from "./tomoegozen"
 
 export const HipsMenu = memo(() => {
   const dispatch = useAppDispatch()
+  const currentBaseUrl = useAppSelector(state => state.hipsLayers.baseUrl)
 
   return (
     <Fragment>
-      {/* <MenuItem onClick={() => dispatch(hipsLayersSlice.actions.baseUrlChanged({ baseUrl: '//alasky.cds.unistra.fr/Pan-STARRS/DR1/color-i-r-g' }))}>Pan-STARRS DR1</MenuItem> */}
       <HipsSearch />
-      <TomoegozenSubmenu />
+      <SubMenu label="Recommended">
+        <MenuItem
+          type='checkbox'
+          checked={currentBaseUrl === '//hscmap.mtk.nao.ac.jp/hscMap4/misc/hips/gaia'}
+          onClick={() => dispatch(hipsLayersSlice.actions.baseUrlChanged({ baseUrl: '//hscmap.mtk.nao.ac.jp/hscMap4/misc/hips/gaia' }))}>
+          GAIA DR2
+        </MenuItem>
+        <TomoegozenSubmenu />
+      </SubMenu>
       <MenuItem onClick={() => dispatch(hipsLayersSlice.actions.baseUrlChanged({ baseUrl: undefined }))}>Clear</MenuItem>
+      <MenuItem
+        href="http://aladin.cds.unistra.fr/hips/list"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        HiPS list aggregator @ CDS
+      </MenuItem>
     </Fragment>
   )
 })
@@ -32,17 +48,26 @@ function HipsSearch() {
     <Fragment>
       <FocusableItem>{({ ref }) => (
         <Fragment>
-          <input className={styles.search} ref={ref} type="search" value={searchText} placeholder="Search" onChange={e => {
-            setSearchText(e.currentTarget.value)
-          }} />
+          <input
+            className={styles.search}
+            ref={ref}
+            type="search"
+            value={searchText}
+            placeholder="Search on CDS"
+            onChange={e => {
+              setSearchText(e.currentTarget.value)
+            }}
+          />
           {
             isPending && <progress style={{ marginLeft: '2em' }} />
           }
         </Fragment>
       )}</FocusableItem>
-      <Suspense>
-        <SearchResults query={debouncedQuery} />
-      </Suspense>
+      <ErrorBoundary fallback={<MenuItem disabled>Something went wrong</MenuItem>}>
+        <Suspense>
+          <SearchResults query={debouncedQuery} />
+        </Suspense>
+      </ErrorBoundary>
     </Fragment>
   )
 }

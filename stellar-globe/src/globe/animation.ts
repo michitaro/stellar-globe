@@ -47,7 +47,9 @@ export class AnimationManager {
 
   private tick() {
     if (this.animations.length > 0 && this.rafId === undefined) {
-      this.rafId = requestAnimationFrame((now) => {
+      this.rafId = requestAnimationFrame(() => {
+        // requestAnimationFrame の引数をnowとすると t < 0 となることがある。
+        const now = performance.now()
         this.rafId = undefined
         let motionAnimation = 0
         for (const a of this.animations.slice()) {

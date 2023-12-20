@@ -1,4 +1,5 @@
 import { MenuDivider, MenuItem, SubMenu } from '@szhsin/react-menu'
+import { Icon } from '../../../common/components/Icon'
 import { MenuBarItem } from '../../../common/components/Menu/MenuBarItem'
 import { useFullscreen } from '../../../common/hooks/useFullscreen'
 import { useAppContext } from '../../context'
@@ -6,8 +7,6 @@ import { MenuItemWithKeybind } from "../../keybindings/MenuItemWithKeybind"
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { AppearanceLayersMenu } from '../appearanceLayers/AppearanceLayerMenu'
 import { cameraSlice } from '../camera/cameraSlice'
-import { commonSlice } from '../common/commonSlice'
-import { Icon } from '../../../common/components/Icon'
 
 
 export function ViewMenu() {
@@ -42,12 +41,6 @@ export function ViewMenu() {
         <MenuItemWithKeybind keybind='zoomHscScale'>1:1 Pixel Mapping</MenuItemWithKeybind>
       </SubMenu>
       <MenuItemWithKeybind keybind='moveToCoords'>Move to Specified Coordinates</MenuItemWithKeybind>
-      <MenuDivider />
-      <SubMenu label="Angle Unit">
-        <MenuItem type="checkbox" checked={angleUnit === 'sexadecimal'} onClick={() => dispatch(commonSlice.actions.unitChanged({ angleUnit: 'sexadecimal' }))}>Sexadecimal</MenuItem>
-        <MenuItem type="checkbox" checked={angleUnit === 'degree'} onClick={() => dispatch(commonSlice.actions.unitChanged({ angleUnit: 'degree' }))}>Degree</MenuItem>
-        <MenuItem type="checkbox" checked={angleUnit === 'radian'} onClick={() => dispatch(commonSlice.actions.unitChanged({ angleUnit: 'radian' }))}>Radian</MenuItem>
-      </SubMenu>
     </MenuBarItem>
   )
 }

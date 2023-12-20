@@ -108,11 +108,12 @@ type ColorPickerProps = {
 
 const ColorPicker = memo(({ color, onChange }: ColorPickerProps) => {
   return (
-    <FocusableItem>
-      {({ ref }) => (
-        <div ref={ref}>
+    <FocusableItem>{
+      () => (
+        <Fragment>
+          <Icon type="palette" marginRight />
           <ColorPickerRgba color={color} onChange={onChange} />
-        </div>
+        </Fragment>
       )}
     </FocusableItem>
   )

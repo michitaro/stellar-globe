@@ -1,9 +1,10 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 import { regionsSlice } from "../features/regions/regionsSlice"
 import { MaterialSymbol } from "material-symbols"
+import { hipsLayersSlice } from "../features/hipsLayers/hipsLayersSlice"
 
 
-type PanelType = 'tone' | 'regions' | undefined
+type PanelType = 'tone' | 'regions' | 'hips' | undefined
 
 
 type State = {
@@ -27,6 +28,11 @@ export const panelsSlice = createSlice({
     },
   },
   extraReducers(builder) {
+    builder.addCase(hipsLayersSlice.actions.baseUrlChanged, (state, { payload: { baseUrl } }) => {
+      if (baseUrl) {
+        state.selectedPanel = 'hips'
+      }
+    })
     builder.addMatcher(action => [
       regionsSlice.actions.newCircularRegionAdded.type,
       regionsSlice.actions.newLinearRegionAdded.type,
@@ -45,6 +51,7 @@ export type PanelDef = {
 }
 
 
+// ↓の ts-ignore は type-validators を作るときに必要
 // @ts-ignore
 export const panelDefs: PanelDef[] = [
   {
@@ -56,5 +63,10 @@ export const panelDefs: PanelDef[] = [
     name: 'Region',
     icon: 'architecture',
     type: 'regions',
+  },
+  {
+    name: 'HiPS',
+    icon: 'layers',
+    type: 'hips',
   }
 ] as const
