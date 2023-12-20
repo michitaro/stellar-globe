@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import type { ConstellationLayer$, EsoMilkyWayLayer$ } from "@stellar-globe/react-stellar-globe"
+import { hipsLayersSlice } from "../hipsLayers/hipsLayersSlice"
 
 
 type ExtractProps<T extends (...args: never[]) => unknown> = Parameters<T>[0]
@@ -58,5 +59,10 @@ export const appearanceLayersSlice = createSlice({
     >(state: State, { payload: { which, props } }: PayloadAction<{ which: Which, props: Props }>) {
       Object.assign(state[which], props)
     },
+  },
+  extraReducers(builder) {
+    builder.addCase(hipsLayersSlice.actions.baseUrlChanged, (state, { payload: { baseUrl } }) => {
+      state.esoMilkyWay.visible = !baseUrl
+    })
   },
 })

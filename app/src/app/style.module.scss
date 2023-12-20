@@ -19,7 +19,9 @@
   }
 
   input {
-    &[type="text"] {
+
+    &[type="text"],
+    &[type="search"] {
       background-color: transparent;
       border: 0;
       box-shadow: 0 0 2px rgba(white, 0.5);

@@ -45,6 +45,7 @@ export type PanelDef = {
 }
 
 
+// @ts-ignore
 export const panelDefs: PanelDef[] = [
   {
     name: 'Tone',

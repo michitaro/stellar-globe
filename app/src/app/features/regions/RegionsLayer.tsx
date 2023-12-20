@@ -1,5 +1,7 @@
-import { MenuItem } from "@szhsin/react-menu"
+import { V4 } from "@stellar-globe/stellar-globe"
+import { FocusableItem, MenuItem } from "@szhsin/react-menu"
 import { Fragment, memo, useCallback, useMemo } from "react"
+import { ColorPickerRgba } from "../../../common/components/ColorPicker"
 import { Icon } from "../../../common/components/Icon"
 import { setDisplayName } from "../../../common/utils/setDisplayName"
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
@@ -36,31 +38,48 @@ type SpecificRegionType<U extends RegionDef['type'], T = RegionDef> = T extends 
 
 const LinearRegionFromDefLayer = memo(({
   id,
-  start: startDef,
-  end: endDef,
+  start,
+  end,
   color,
   visible,
 }: SpecificRegionType<'Linear'>) => {
   const dispatch = useAppDispatch()
 
-  const onChange = useCallback(({ start, end }: LineDef) => {
+  const original = useMemo(() => ({
+    id,
+    start,
+    end,
+    color,
+    visible,
+  }), [color, end, id, start, visible])
+
+  const onLineDefChange = useCallback((e: LineDef) => {
     dispatch(regionsSlice.actions.regionUpdated({
       id,
       regionDef: {
         type: 'Linear',
-        id,
-        color,
-        start: normalizeSkyCoord(start),
-        end: normalizeSkyCoord(end),
-        visible,
+        ...original,
+        start: normalizeSkyCoord(e.start),
+        end: normalizeSkyCoord(e.end),
       },
     }))
-  }, [color, dispatch, id, visible])
+  }, [dispatch, id, original])
+
+  const onColorChange = useCallback((color: V4) => {
+    dispatch(regionsSlice.actions.regionUpdated({
+      id,
+      regionDef: {
+        type: 'Linear',
+        ...original,
+        color,
+      },
+    }))
+  }, [dispatch, id, original])
 
   const lineDef = useMemo(() => ({
-    start: skyCoordFromCoordDef(startDef),
-    end: skyCoordFromCoordDef(endDef),
-  }), [endDef, startDef])
+    start: skyCoordFromCoordDef(start),
+    end: skyCoordFromCoordDef(end),
+  }), [end, start])
 
   return (
     <LinearRegionLayer
@@ -68,46 +87,83 @@ const LinearRegionFromDefLayer = memo(({
       color={color}
       visible={visible}
       angleUnit={useAppSelector(state => state.common.angleUnit)}
-      onChange={onChange}
+      onChange={onLineDefChange}
     >
       <MenuItem
         onClick={() => {
           dispatch(regionsSlice.actions.regionDeleted({ id }))
         }}
       ><Icon type="delete" marginRight />Delete</MenuItem>
+      <ColorPicker color={color} onChange={onColorChange} />
     </LinearRegionLayer>)
 })
 setDisplayName({ LinearRegionFromDefLayer })
 
 
+type ColorPickerProps = {
+  color: V4
+  onChange: (color: V4) => void
+}
+
+
+const ColorPicker = memo(({ color, onChange }: ColorPickerProps) => {
+  return (
+    <FocusableItem>
+      {({ ref }) => (
+        <div ref={ref}>
+          <ColorPickerRgba color={color} onChange={onChange} />
+        </div>
+      )}
+    </FocusableItem>
+  )
+})
+
 
 const CircularRegionFromDefLayer = memo(({
   id,
-  center: centerDef,
-  radius: radiusDef,
+  center,
+  radius,
   color,
   visible,
 }: SpecificRegionType<'Circular'>) => {
   const dispatch = useAppDispatch()
 
-  const onChange = useCallback(({ center, radius }: CircleDef) => {
+  const original = useMemo(() => ({
+    id,
+    center,
+    radius,
+    color,
+    visible,
+  }), [center, color, id, radius, visible])
+
+  const onCircleDefChange = useCallback((e: CircleDef) => {
     dispatch(regionsSlice.actions.regionUpdated({
       id,
       regionDef: {
         type: 'Circular',
-        id,
-        color,
-        center: normalizeSkyCoord(center),
-        radius,
-        visible,
+        ...original,
+        center: normalizeSkyCoord(e.center),
+        radius: e.radius,
       },
     }))
-  }, [color, dispatch, id, visible])
+  }, [dispatch, id, original])
+
+  const onColorChange = useCallback((color: V4) => {
+    dispatch(regionsSlice.actions.regionUpdated({
+      id,
+      regionDef: {
+        type: 'Circular',
+        ...original,
+        color,
+      },
+    }))
+  }, [dispatch, id, original])
+
 
   const circleDef = useMemo(() => ({
-    center: skyCoordFromCoordDef(centerDef),
-    radius: radiusDef,
-  }), [centerDef, radiusDef])
+    center: skyCoordFromCoordDef(center),
+    radius: radius,
+  }), [center, radius])
 
   return (
     <CircularRegionLayer
@@ -115,13 +171,14 @@ const CircularRegionFromDefLayer = memo(({
       color={color}
       angleUnit={useAppSelector(state => state.common.angleUnit)}
       visible={visible}
-      onChange={onChange}
+      onChange={onCircleDefChange}
     >
       <MenuItem
         onClick={() => {
           dispatch(regionsSlice.actions.regionDeleted({ id }))
         }}
       ><Icon type="delete" marginRight />Delete</MenuItem>
+      <ColorPicker color={color} onChange={onColorChange} />
     </CircularRegionLayer>
   )
 })
@@ -130,37 +187,54 @@ setDisplayName({ CircularRegionFromDefLayer })
 
 const RectangularRegionFromDefLayer = memo(({
   id,
-  minRa: minRaDef,
-  maxRa: maxRaDef,
-  minDec: minDecDef,
-  maxDec: maxDecDef,
+  minRa,
+  maxRa,
+  minDec,
+  maxDec,
   color,
   visible,
 }: SpecificRegionType<'Rectangular'>) => {
   const dispatch = useAppDispatch()
 
-  const onChange = useCallback(({ minRa, maxRa, minDec, maxDec }: RectDef) => {
+  const original = useMemo(() => ({
+    id,
+    minRa,
+    maxRa,
+    minDec,
+    maxDec,
+    color,
+    visible,
+  }), [color, id, maxDec, maxRa, minDec, minRa, visible])
+
+  const onRectDefChange = useCallback(({ minRa, maxRa, minDec, maxDec }: RectDef) => {
     dispatch(regionsSlice.actions.regionUpdated({
       id,
       regionDef: {
         type: 'Rectangular',
-        id,
-        color,
-        minRa,
-        maxRa,
-        minDec,
-        maxDec,
-        visible,
+        ...original,
+        minRa, maxRa, minDec, maxDec,
       },
     }))
-  }, [color, dispatch, id, visible])
+  }, [dispatch, id, original])
+
+
+  const onColorChange = useCallback((color: V4) => {
+    dispatch(regionsSlice.actions.regionUpdated({
+      id,
+      regionDef: {
+        type: 'Rectangular',
+        ...original,
+        color,
+      },
+    }))
+  }, [dispatch, id, original])
 
   const rectDef = useMemo(() => ({
-    minRa: minRaDef,
-    maxRa: maxRaDef,
-    minDec: minDecDef,
-    maxDec: maxDecDef,
-  }), [maxDecDef, maxRaDef, minDecDef, minRaDef])
+    minRa,
+    maxRa,
+    minDec,
+    maxDec,
+  }), [maxDec, maxRa, minDec, minRa])
 
   return (
     <RectangularRegionLayer
@@ -168,13 +242,14 @@ const RectangularRegionFromDefLayer = memo(({
       color={color}
       angleUnit={useAppSelector(state => state.common.angleUnit)}
       visible={visible}
-      onChange={onChange}
+      onChange={onRectDefChange}
     >
       <MenuItem
         onClick={() => {
           dispatch(regionsSlice.actions.regionDeleted({ id }))
         }}
       ><Icon type="delete" marginRight />Delete</MenuItem>
+      <ColorPicker color={color} onChange={onColorChange} />
     </RectangularRegionLayer>
   )
 })

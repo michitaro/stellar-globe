@@ -52,7 +52,7 @@ export class Camera implements CameraParams {
   zp = 0
 
   min_fovy = asec2rad(5)
-  max_fovy = 2
+  max_fovy = 4
 
   // Apple製品でcanvas内の解像度を２倍にする。
   // この設定を変えてもサイズや太さが変わるのではなく、ぼやけたりくっきりするだけ。

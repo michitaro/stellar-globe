@@ -1,5 +1,5 @@
 import { ClickableMarkerLayer } from '~/layer/marker_layer'
-import { BeautifulObjectLayer, ConstellationLayer, EsoMilkyWayLayer, Globe, GridLayer, HipparcosCatalogLayer, Layer, SspTileLayer, V4, View, angle, triangleStrip } from '../src'
+import { BeautifulObjectLayer, ConstellationLayer, EsoMilkyWayLayer, Globe, GridLayer, HipparcosCatalogLayer, Layer, SspTileLayer, V4, View, angle, hips, triangleStrip } from '../src'
 import { SkyCoord, dms2deg } from '../src/lib/angle'
 import { zenithSkyCoord } from '../src/utils/date'
 // import { ClicakblePolygonLayer } from './ClickablePolygonLayer'
@@ -40,7 +40,7 @@ function main() {
   globe.addNewLayer(GridLayer)
   globe.addNewLayer(HipparcosCatalogLayer)
   globe.addNewLayer(ConstellationLayer, { showLines: true, showNames: true, lang: 'English' })
-  // globe.addNewLayer(hips.SimpleImageLayer, hipsUrl)
+  globe.addNewLayer(hips.SimpleImageLayer, hipsUrl)
   globe.addNewLayer(BeautifulObjectLayer, 'm31')
   globe.addNewLayer(EsoMilkyWayLayer)
   // globe.addNewLayer(SspTileLayer, { baseUrl: '//hscmap.mtk.nao.ac.jp/hscMap4/data/la2016', outline: true })

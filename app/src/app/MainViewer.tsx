@@ -1,4 +1,4 @@
-import { BeautifulObjectLayer$, ConstellationLayer$, EsoMilkyWayLayer$, Globe$, GlobeEventLayer$, GridLayer$, HipparcosCatalogLayer$, TouchLayer$, TractTileLayer$, ZoomLayer$ } from "@stellar-globe/react-stellar-globe"
+import { BeautifulObjectLayer$, ConstellationLayer$, EsoMilkyWayLayer$, Globe$, GlobeEventLayer$, GridLayer$, HipparcosCatalogLayer$, HipsSimpleLayer$, TouchLayer$, TractTileLayer$, ZoomLayer$ } from "@stellar-globe/react-stellar-globe"
 import { Globe } from "@stellar-globe/stellar-globe"
 import { debounce } from "../common/utils/debounce"
 import { useAppContext } from "./context"
@@ -21,6 +21,8 @@ export function MainViewer() {
   const params = useAppSelector(state => state.tractTileLayers.colorParams)
   const tractTilelayers = useAppSelector(state => state.tractTileLayers.layers)
 
+  const hips = useAppSelector(state => state.hipsLayers)
+
   return (
     // <MainContextMenu>
     <Globe$
@@ -33,7 +35,6 @@ export function MainViewer() {
       <GlobeEventLayer$ onCameraMove={onCameraMove} />
       <ZoomLayer$ />
       <TouchLayer$ />
-
       {
         tractTilelayers.map(({ baseUrl, visible, filterNameDictionary }) => (
           <TractTileLayer$
@@ -42,6 +43,8 @@ export function MainViewer() {
           />
         ))
       }
+
+      {hips.baseUrl && <HipsSimpleLayer$ baseUrl={hips.baseUrl} />}
 
       {/* Appearance Layers */}
       <BeautifulObjectLayer$ {...layers.nearbyGalaxiesAndNebulas} />

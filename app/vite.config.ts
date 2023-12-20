@@ -35,6 +35,13 @@ export default defineConfig({
         rewrite: path => path.replace(/^\/data\/s23b_wide\//, '/hsc_ssp/dr4/s23b/validation/hscmap-b4eac0dd1a53a105/data/'),
         auth: secrets.stars
       },
-    }
+      '/tomoegozen/': {
+        // target: 'https://tomoe.mtk.ioa.s.u-tokyo.ac.jp/skyatlas/hipslist.json',
+        target: 'https://tomoe.mtk.ioa.s.u-tokyo.ac.jp',
+        // changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/tomoegozen\//, '/skyatlas/'),
+        secure: false,
+      },
+    },
   }
 })

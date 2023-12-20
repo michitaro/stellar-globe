@@ -1,4 +1,4 @@
-import { ControlledMenu, useHover, useMenuState } from '@szhsin/react-menu'
+import { ControlledMenu, useClick, useHover, useMenuState } from '@szhsin/react-menu'
 import { Fragment, MutableRefObject, ReactNode, useEffect, useRef } from 'react'
 
 
@@ -15,6 +15,7 @@ type Props = {
 export function HoverMenu({ className, renderMenuButton, children }: Props) {
   const anchorRef = useRef(null)
   const [menuState, toggle] = useMenuState({ transition: { close: true } })
+  const clickProps = useClick(menuState.state, toggle)
   const { anchorProps, hoverProps } = useHover(menuState.state, toggle, { openDelay: 0 })
 
   useEffect(() => {
@@ -36,10 +37,11 @@ export function HoverMenu({ className, renderMenuButton, children }: Props) {
 
   return (
     <Fragment>
-      <div ref={anchorRef} {...anchorProps} className={className}>
+      <div ref={anchorRef} {...anchorProps} className={className} {...clickProps}>
         {renderMenuButton({ active: menuState.state === 'open' })}
       </div>
       <ControlledMenu
+        overflow='auto'
         {...hoverProps}
         {...menuState}
         theming='dark'

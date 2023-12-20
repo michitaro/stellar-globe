@@ -17,7 +17,12 @@ function useMakeContext({
 
   useEffect(function setupEventListener() {
     const cb = (e: KeyboardEvent) => {
-      if (catchAllEvents || e.target instanceof Node && containerRef.current?.contains(e.target)) {
+      if (
+        catchAllEvents ||
+        e.target instanceof Node &&
+        containerRef.current?.contains(e.target) &&
+        !['INPUT', 'TEXTAREA'].includes(e.target.nodeName)
+      ) {
         const shortcut = generateShortcutFromEvent(e)
         const kb = shortcutMap.get(shortcut)
         if (kb) {
