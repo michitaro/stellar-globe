@@ -1,9 +1,11 @@
 import { createSlice, nanoid } from "@reduxjs/toolkit"
-import { V4 } from "@stellar-globe/stellar-globe"
+import { SkyCoord, V4 } from "@stellar-globe/stellar-globe"
 import { hsvToRgb } from "../../../common/utils/colorsys"
 import { readHashState } from "../../store/stateSync/hashSync"
 import { appStateHistoryActions } from "../../store/hooks"
 import { trackAction } from "../../store/stateHistory"
+import { slerp } from "../../../common/utils/math"
+import { skyCoordFromCoordDef } from "./regionUtils"
 
 
 type ToolType = 'pan' | 'line' | 'rect' | 'circle'
@@ -161,4 +163,34 @@ export type RectangularRegion = RegionBase & {
   minDec: number
   maxDec: number
   color: V4
+}
+
+
+export function regionView(region: Region): { center: SkyCoord, fov: number } {
+  switch (region.type) {
+    case 'Linear': {
+      const start = skyCoordFromCoordDef(region.start)
+      const end = skyCoordFromCoordDef(region.end)
+      return {
+        center: SkyCoord.fromXyz(slerp(start.xyz, end.xyz, 0.5)),
+        fov: 2 * start.angle(end).rad,
+      }
+    }
+    case 'Circular': {
+      return {
+        center: skyCoordFromCoordDef(region.center),
+        fov: 2 * region.radius,
+      }
+    }
+    case 'Rectangular': {
+      const { maxDec, maxRa, minDec, minRa } = region
+      const center = SkyCoord.fromRad((minRa + maxRa) / 2, (minDec + maxDec) / 2)
+      const width = Math.max(Math.cos(maxDec), Math.cos(minDec)) * (maxRa - minRa)
+      const height = maxDec - minDec
+      return {
+        center,
+        fov: Math.max(width, height),
+      }
+    }
+  }
 }

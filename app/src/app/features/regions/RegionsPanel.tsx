@@ -2,11 +2,12 @@ import styles from './styles.module.scss'
 import { memo, useCallback } from "react"
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
 import { Icon } from "../../../common/components/Icon"
-import { Region, regionsSlice } from "./regionsSlice"
+import { Region, regionView, regionsSlice } from "./regionsSlice"
 import { MaterialSymbol } from "material-symbols"
 import { setDisplayName } from "../../../common/utils/setDisplayName"
 import { ColorPickerRgba } from "../../../common/components/ColorPicker"
 import { V4 } from "@stellar-globe/stellar-globe"
+import { useAppContext } from '../../context'
 
 export const RegionsPanel = memo(() => {
   const regions = useAppSelector(state => state.regions.regions)
@@ -14,15 +15,14 @@ export const RegionsPanel = memo(() => {
   return (
     <div>
       <table>
-        <caption>Regions</caption>
-        <thead>
+        {/* <caption>Regions</caption> */}
+        {/* <thead>
           <tr>
             <th>Type</th>
-            {/* <th>Name</th> */}
             <th></th>
             <th />
           </tr>
-        </thead>
+        </thead> */}
         <tbody>
           {regions.map(region => <RegionTr key={region.id} region={region} />)}
         </tbody>
@@ -41,6 +41,13 @@ const RegionTr = memo(({ region }: { region: Region }) => {
     dispatch(regionsSlice.actions.regionUpdated({ id, regionDef: { ...region, color } }))
   }, [dispatch, id, region])
 
+  const { globeHandle } = useAppContext()
+
+  const goToRegion = () => {
+    const { center, fov } = regionView(region)
+    globeHandle.current!().camera.jumpTo({ fovy: 2 * fov }, { coord: center })
+  }
+
   return (
     <tr>
       <td> <Icon type={typeIcon[type]} /></td>
@@ -52,6 +59,9 @@ const RegionTr = memo(({ region }: { region: Region }) => {
         <div className={styles.regionTrButtons}>
           <ColorPickerRgba color={color} onChange={onChangeColor} />
           <button
+            onClick={goToRegion}
+          ><Icon type="jump_to_element" /></button>
+          <button
             onClick={() => dispatch(regionsSlice.actions.regionDeleted({ id }))}
           ><Icon type="delete" /></button>
         </div>
@@ -59,6 +69,8 @@ const RegionTr = memo(({ region }: { region: Region }) => {
     </tr>
   )
 })
+
+setDisplayName({ RegionTr })
 
 
 type RegionType = ReturnType<typeof regionsSlice.getInitialState>['regions'][number]['type']
