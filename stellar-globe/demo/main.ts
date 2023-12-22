@@ -11,7 +11,7 @@ window.addEventListener('load', main)
 
 
 function main() {
-  // @ts-expect-error
+  // // @ts-expect-error
   const hipsUrl = '//alasky.cds.unistra.fr/Pan-STARRS/DR1/color-i-r-g'
   // const baseUrl = '//alasky.cds.unistra.fr/DSS/DSSColor'
   // const baseUrl = '//hscmap.mtk.nao.ac.jp/hscMap4/misc/hips/gaia'

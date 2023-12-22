@@ -61,15 +61,15 @@ export function webglProfileSupported() {
 }
 
 
-function isChromeVersionAtLeast70(): boolean {
-  const userAgent: string = navigator.userAgent
-  const chromeRegex: RegExp = /Chrome\/(\d+)/
-  const match: RegExpExecArray | null = chromeRegex.exec(userAgent)
+// function isChromeVersionAtLeast70(): boolean {
+//   const userAgent: string = navigator.userAgent
+//   const chromeRegex: RegExp = /Chrome\/(\d+)/
+//   const match: RegExpExecArray | null = chromeRegex.exec(userAgent)
 
-  if (match && match.length >= 2) {
-    const version: number = parseInt(match[1], 10)
-    return version >= 70
-  }
+//   if (match && match.length >= 2) {
+//     const version: number = parseInt(match[1], 10)
+//     return version >= 70
+//   }
 
-  return false
-}
+//   return false
+// }
