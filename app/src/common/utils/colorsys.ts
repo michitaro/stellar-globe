@@ -1,3 +1,5 @@
+import { V4 } from "@stellar-globe/stellar-globe"
+
 export function hsvToRgb(h: number, s: number, v: number): [number, number, number] {
   h *= 360
   let r = -1
@@ -19,4 +21,9 @@ export function hsvToRgb(h: number, s: number, v: number): [number, number, numb
   }
 
   return [r, g, b]
+}
+
+
+export function colorSeries(index: number, saturation = 0.5): V4 {
+  return [...hsvToRgb(5 * (index + 4) / 12, saturation, 1), 1]
 }

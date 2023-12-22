@@ -54,7 +54,10 @@ export function wegblProfile(gl: WebGL2RenderingContext, name: string, cb: () =>
 
 
 export function webglProfileSupported() {
-  return isChromeVersionAtLeast70()
+  return false
+  // figma-webgl-profilerはWebGL2では動かない
+  // see https://ics.media/web3d-maniacs/webgl2_ext_disjoint_timer_query_webgl2/
+  // return isChromeVersionAtLeast70()
 }
 
 

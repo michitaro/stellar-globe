@@ -14,6 +14,7 @@ import { StateHistoryProvider } from './store/StateHistoryProvider'
 import { useLocalStorageSync } from './store/stateSync/StorageSync'
 import { useHashSync } from './store/stateSync/hashSync'
 import styles from './style.module.scss'
+import { CatalogDragAndDrop } from './features/catalog/CatalogDragAndDrop'
 
 
 type Props = {
@@ -26,21 +27,23 @@ type Props = {
 const App = wrapWithAppContext(({
   hashSync = false,
   storageSync = false,
-  catchAllKeyboardEvents = false,
+  catchAllKeyboardEvents = true,
 }: Props) => {
   const { store, stateHistory } = useInstanceVariable(makeStore)
   const { rootElementRef } = useAppContext()
   useHashSync({ store, enabled: hashSync })
   useLocalStorageSync({ store, enabled: storageSync })
-  
+
   return (
     <Provider store={store}>
       <StateHistoryProvider stateHistory={stateHistory}>
         <KeybindsProvider containerRef={rootElementRef} catchAllEvents={catchAllKeyboardEvents}>
           <div className={styles.main} ref={rootElementRef} tabIndex={-1}>
-            <MainViewer />
-            <Panels />
-            <MainMenu />
+            <CatalogDragAndDrop>
+              <MainViewer />
+              <Panels />
+              <MainMenu />
+            </CatalogDragAndDrop>
           </div>
         </KeybindsProvider>
       </StateHistoryProvider>

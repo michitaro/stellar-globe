@@ -1,5 +1,5 @@
 import { Globe$, GlobeHandle } from './Globe'
-import { mountOndemand, useGetGlobe, useLayerBind } from "./GlobeContext"
+import { makePureLayerComponent, mountOndemand, useGetGlobe, useLayerBind } from "./GlobeContext"
 import { LogScaleRange } from "./LogScaleRange"
 import { BeautifulObjectLayer$ } from './layers/BeautifulObjectsLayer'
 import { ConstellationLayer$ } from "./layers/ConstellationLayer"
@@ -18,6 +18,7 @@ import { DomLayer$ } from './layers/DomLayer'
 export {
   BeautifulObjectLayer$, ClickableMarkerLayer$,
   ConstellationLayer$,
+  makePureLayerComponent,
   useGetGlobe,
   EsoMilkyWayLayer$, Globe$, GlobeEventLayer$, GridLayer$,
   HipparcosCatalogLayer$,

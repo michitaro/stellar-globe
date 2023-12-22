@@ -1,4 +1,4 @@
-import { ClickableMarkerLayer, Globe, LayerConstructorRestParameters, MarkerLayer } from "@stellar-globe/stellar-globe"
+import { ClickableMarkerLayer, Globe, MarkerLayer } from "@stellar-globe/stellar-globe"
 import React, { memo, useCallback, useEffect } from "react"
 import { useLayerBind } from ".."
 import { setDisplayName } from "../GlobeContext"

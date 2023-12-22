@@ -37,8 +37,9 @@ export function ViewMenu() {
         <MenuItemWithKeybind keybind='zoom20arcmin'>20&prime;</MenuItemWithKeybind>
         <MenuItemWithKeybind keybind='zoom1deg'>1&deg;</MenuItemWithKeybind>
         <MenuItemWithKeybind keybind='zoom2deg'>2&deg;</MenuItemWithKeybind>
+        <MenuItemWithKeybind keybind='zoom10deg'>10&deg;</MenuItemWithKeybind>
         <MenuItemWithKeybind keybind='zoomArctan2'>tan(&theta;)=2</MenuItemWithKeybind>
-        <MenuItemWithKeybind keybind='zoomHscScale'>1:1 Pixel Mapping</MenuItemWithKeybind>
+        <MenuItemWithKeybind keybind='zoomHscScale'>1:1 Pixel Mapping (HSC)</MenuItemWithKeybind>
       </SubMenu>
       <MenuItemWithKeybind keybind='moveToCoords'>Move to Specified Coordinates</MenuItemWithKeybind>
     </MenuBarItem>

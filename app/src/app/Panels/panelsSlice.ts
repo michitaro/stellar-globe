@@ -2,9 +2,10 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 import { regionsSlice } from "../features/regions/regionsSlice"
 import { MaterialSymbol } from "material-symbols"
 import { hipsLayersSlice } from "../features/hipsLayers/hipsLayersSlice"
+import { catalogsSlice } from "../features/catalog/catalogSlice"
 
 
-type PanelType = 'tone' | 'regions' | 'hips' | undefined
+type PanelType = 'tone' | 'regions' | 'hips' | 'catalogs' | undefined
 
 
 type State = {
@@ -33,13 +34,24 @@ export const panelsSlice = createSlice({
         state.selectedPanel = 'hips'
       }
     })
-    builder.addMatcher(action => [
-      regionsSlice.actions.newCircularRegionAdded.type,
-      regionsSlice.actions.newLinearRegionAdded.type,
-      regionsSlice.actions.newRectangularRegionAdded.type,
-    ].includes(action.type), state => {
-      state.selectedPanel = 'regions'
-    })
+    builder.addMatcher(
+      action => [
+        catalogsSlice.actions.csvTextSubmitted.type,
+      ].includes(action.type),
+      state => {
+        state.selectedPanel = 'catalogs'
+      },
+    )
+    builder.addMatcher(
+      action => [
+        regionsSlice.actions.newCircularRegionAdded.type,
+        regionsSlice.actions.newLinearRegionAdded.type,
+        regionsSlice.actions.newRectangularRegionAdded.type,
+      ].includes(action.type),
+      state => {
+        state.selectedPanel = 'regions'
+      },
+    )
   },
 })
 
@@ -68,5 +80,10 @@ export const panelDefs: PanelDef[] = [
     name: 'HiPS',
     icon: 'layers',
     type: 'hips',
+  },
+  {
+    name: 'Catalogs',
+    icon: 'table',
+    type: 'catalogs',
   }
 ] as const

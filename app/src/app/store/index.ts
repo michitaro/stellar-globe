@@ -8,6 +8,7 @@ import { hipsLayersSlice } from "../features/hipsLayers/hipsLayersSlice"
 import { regionsSlice } from "../features/regions/regionsSlice"
 import { tractTileLayersSlice } from '../features/tractTileLayers/tractTileLayersSlice'
 import { makeStateHistory } from "./stateHistory"
+import { catalogsSlice } from "../features/catalog/catalogSlice"
 // import { jsonPatchLogger } from './JsonPatchLogger'
 
 
@@ -23,6 +24,7 @@ export function makeStore() {
       tractTileLayers: tractTileLayersSlice.reducer,
       hipsLayers: hipsLayersSlice.reducer,
       regions: regionsSlice.reducer,
+      catalogs: catalogsSlice.reducer,
       devel: develSlice.reducer,
     },
     middleware: (getDefaultMiddleware) =>

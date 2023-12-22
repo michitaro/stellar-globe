@@ -8,6 +8,9 @@
   width: 100%;
   height: 100%;
 
+  // box-sizing: border-box;
+  // border: 15px solid #003;
+
   button,
   select {
     @include hoverable;

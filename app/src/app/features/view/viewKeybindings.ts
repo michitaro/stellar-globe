@@ -86,11 +86,18 @@ export function useViewKeybindings() {
       shortcut: '4',
     }
 
+    const zoom10deg: Keybind = {
+      action() {
+        zoom(angle.Angle.fromDeg(10).rad)
+      },
+      shortcut: '5',
+    }
+
     const zoomArctan2: Keybind = {
       action() {
         zoom(2)
       },
-      shortcut: '5',
+      shortcut: '6',
     }
 
     const zoomHscScale: Keybind = {
@@ -111,6 +118,7 @@ export function useViewKeybindings() {
       zoom20arcmin,
       zoom1deg,
       zoom2deg,
+      zoom10deg,
       zoomArctan2,
       zoomHscScale,
     }

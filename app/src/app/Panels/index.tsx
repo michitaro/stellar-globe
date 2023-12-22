@@ -13,6 +13,7 @@ import { panelDefs, panelsSlice } from "./panelsSlice"
 import styles from './styles.module.scss'
 import { MenuItemWithKeybind } from "../keybindings/MenuItemWithKeybind"
 import { HipsPanel } from "../features/hipsLayers/HipsPanel"
+import { CatalogsPanel } from "../features/catalog/catalogsPanel"
 
 
 export function Panels() {
@@ -30,6 +31,9 @@ export function Panels() {
       <Panel show={selectedPanel === 'hips'} bottomMenu={<BottomMenu />}>
         <HipsPanel />
       </Panel>
+      <Panel show={selectedPanel === 'catalogs'} bottomMenu={<BottomMenu />}>
+        <CatalogsPanel />
+      </Panel>
     </div>
   )
 }
@@ -44,6 +48,7 @@ const PanelsMenu = memo(forwardRef(({ className }: { className?: string }, ref: 
     tone: 'toggleTonePanel',
     regions: 'toggleRegionPanel',
     hips: 'toggleHipsPanel',
+    catalogs: 'toggleCatalogsPanel',
   } as const
 
   return (
@@ -61,7 +66,7 @@ const PanelsMenu = memo(forwardRef(({ className }: { className?: string }, ref: 
             key={index}
             type={selectedPanel && 'checkbox'}
             checked={selectedPanel === type}
-            onClick={() => setSelectedPanel(type)}
+            onClick={() => setSelectedPanel(type === selectedPanel ? undefined : type)}
             keybind={type && keybindings[type]}
           >
             <Icon type={icon} marginRight />

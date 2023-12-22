@@ -1,25 +1,25 @@
-import { BeautifulObjectLayer$, ConstellationLayer$, EsoMilkyWayLayer$, Globe$, GlobeEventLayer$, GridLayer$, HipparcosCatalogLayer$, HipsSimpleLayer$, TouchLayer$, TractTileLayer$, ZoomLayer$ } from "@stellar-globe/react-stellar-globe"
+import { BeautifulObjectLayer$, ConstellationLayer$, EsoMilkyWayLayer$, Globe$, GlobeEventLayer$, GridLayer$, HipparcosCatalogLayer$, HipsSimpleLayer$, TouchLayer$, ZoomLayer$ } from "@stellar-globe/react-stellar-globe"
 import { Globe } from "@stellar-globe/stellar-globe"
 import { debounce } from "../common/utils/debounce"
 import { useAppContext } from "./context"
 import { CameraParams, cameraSlice } from "./features/camera/cameraSlice"
+import { CatalogLayers } from "./features/catalog/CatalogLayers"
 import { RegionsLayer } from "./features/regions/RegionsLayer"
 import { ToolsLayer } from "./features/regions/ToolsLayer"
+import { TractTileLayers } from "./features/tractTileLayers/TractTileLayers"
 import { useAppDispatch, useAppSelector } from "./store/hooks"
 
 
 export function MainViewer() {
+  const dispatch = useAppDispatch()
   const { globeHandle } = useAppContext()
+
   const layers = useAppSelector(state => state.appearance)
   const camera = useAppSelector(state => state.camera)
-  const dispatch = useAppDispatch()
 
   const onCameraMove = debounce(200, () => {
     dispatch(cameraSlice.actions.paramsChanged(cameraParamsFromGlobe(globeHandle.current!())))
   })
-
-  const params = useAppSelector(state => state.tractTileLayers.colorParams)
-  const tractTilelayers = useAppSelector(state => state.tractTileLayers.layers)
 
   const hips = useAppSelector(state => state.hipsLayers)
 
@@ -35,14 +35,8 @@ export function MainViewer() {
       <GlobeEventLayer$ onCameraMove={onCameraMove} />
       <ZoomLayer$ />
       <TouchLayer$ />
-      {
-        tractTilelayers.map(({ baseUrl, visible, filterNameDictionary }) => (
-          <TractTileLayer$
-            key={baseUrl} baseUrl={baseUrl} outline colorParams={params} visible={visible}
-            filterNameDictionary={filterNameDictionary}
-          />
-        ))
-      }
+
+      <TractTileLayers />
 
       {hips.baseUrl && <HipsSimpleLayer$ baseUrl={hips.baseUrl} />}
 
@@ -52,6 +46,8 @@ export function MainViewer() {
       <HipparcosCatalogLayer$ {...layers.hipparcosCatalog} />
       <ConstellationLayer$ {...layers.constellation} />
       <GridLayer$ {...layers.grid} />
+
+      <CatalogLayers />
 
       <ToolsLayer />
       <RegionsLayer />

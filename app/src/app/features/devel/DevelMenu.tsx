@@ -15,7 +15,7 @@ export const DevelMenu = memo(() => {
         <MenuItemWithKeybind
           keybind="toggleProfiler"
           disabled={!profilerSupported}
-        >{profilerActive ? 'Stop Profiling' : 'Start Profiling'}</MenuItemWithKeybind>
+        >{profilerActive ? 'Stop WebGL Profiling' : 'Start WebGL Profiling'}</MenuItemWithKeybind>
       </MenuBarItem>
     )
   )

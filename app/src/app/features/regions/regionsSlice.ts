@@ -1,10 +1,10 @@
 import { createSlice, nanoid } from "@reduxjs/toolkit"
 import { SkyCoord, V4 } from "@stellar-globe/stellar-globe"
-import { hsvToRgb } from "../../../common/utils/colorsys"
-import { readHashState } from "../../store/stateSync/hashSync"
+import { colorSeries } from "../../../common/utils/colorsys"
+import { slerp } from "../../../common/utils/math"
 import { appStateHistoryActions } from "../../store/hooks"
 import { trackAction } from "../../store/stateHistory"
-import { slerp } from "../../../common/utils/math"
+import { readHashState } from "../../store/stateSync/hashSync"
 import { skyCoordFromCoordDef } from "./regionUtils"
 
 
@@ -120,13 +120,10 @@ export const regionsSlice = createSlice({
 
 
 function nextColor(state: State): V4 {
-  if (state.autoColor) {
-    return [...hsvToRgb(5 * (state.regions.length + 4) / 12, 0.75, 1), 1]
+  if (state.autoColor || state.regions.length === 0) {
+    return colorSeries(state.regions.length)
   }
-  if (state.regions.length > 0) {
-    return state.regions[state.regions.length - 1].color
-  }
-  return [0, 0.75, 0.25, 1]
+  return state.regions[state.regions.length - 1].color
 }
 
 

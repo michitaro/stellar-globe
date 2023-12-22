@@ -129,7 +129,7 @@ const markerMakers = {
   circledHollowAsterisk,
   triangle,
   pentagon,
-}
+} as const
 
 
 export type MarkerType = keyof typeof markerMakers
