@@ -24,6 +24,9 @@ export function hsvToRgb(h: number, s: number, v: number): [number, number, numb
 }
 
 
-export function colorSeries(index: number, saturation = 0.5): V4 {
-  return [...hsvToRgb(5 * (index + 4) / 12, saturation, 1), 1]
+export function colorSeries(
+  index: number,
+  options: { saturation?: number, alpha?: number } = {},
+): V4 {
+  return [...hsvToRgb(5 * (index + 4) / 12, options.saturation ?? 0.5, 1), options.alpha ?? 1]
 }

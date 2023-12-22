@@ -192,7 +192,7 @@ export type Catalog = {
 
 function nextColor(state: State): V4 {
   if (state.autoColor || state.catalogs.length === 0) {
-    return colorSeries(state.catalogs.length)
+    return colorSeries(state.catalogs.length, { alpha: 0.75 })
   }
   return state.catalogs[state.catalogs.length - 1].baseColor
 }
