@@ -1,13 +1,12 @@
 import { FocusableItem, MenuItem, SubMenu } from "@szhsin/react-menu"
-import { Fragment, Suspense, memo, useEffect, useState, useTransition } from "react"
+import { Fragment, Suspense, memo, useState } from "react"
 import { ErrorBoundary } from "react-error-boundary"
-import { useInstanceVariable } from "../../../common/hooks/useInstanceVaribale"
-import { Debounce } from "../../../common/utils/debounce"
 import { setDisplayName } from "../../../common/utils/setDisplayName"
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
 import { hipsLayersSlice } from "./hipsLayersSlice"
 import styles from './style.module.scss'
 import { TomoegozenSubmenu } from "./tomoegozen"
+import { useDebounceInTransition } from "../../../common/hooks/useDebounceInTransition"
 
 
 export const HipsMenu = memo(() => {
@@ -72,6 +71,7 @@ function HipsSearch() {
   )
 }
 
+// render中にエラーが起きるとuseRefが消えるので。
 // useSearchResults に useRef で持たせることはできない
 const searchCache = new Map<
   string,
@@ -122,21 +122,6 @@ const SearchResults = memo(({ query }: { query: string }) => {
 })
 
 setDisplayName({ SearchResults })
-
-
-function useDebounceInTransition<T>(delay: number, value: T): [T, boolean] {
-  const debounce = useInstanceVariable(() => Debounce(delay))
-  const [debounced, setDebounced] = useState(value)
-  const [isPending, startTransition] = useTransition()
-  useEffect(() => {
-    debounce(() => {
-      startTransition(() => {
-        setDebounced(value)
-      })
-    })
-  }, [debounce, value])
-  return [debounced, isPending]
-}
 
 
 async function queryHiPS(q: string) {

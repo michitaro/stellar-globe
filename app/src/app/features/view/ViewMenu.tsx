@@ -7,6 +7,7 @@ import { MenuItemWithKeybind } from "../../keybindings/MenuItemWithKeybind"
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { AppearanceLayersMenu } from '../appearanceLayers/AppearanceLayerMenu'
 import { cameraSlice } from '../camera/cameraSlice'
+import { SesameMenu } from '../sesame/SesameMenu'
 
 
 export function ViewMenu() {
@@ -42,6 +43,8 @@ export function ViewMenu() {
         <MenuItemWithKeybind keybind='zoomHscScale'>1:1 Pixel Mapping (HSC)</MenuItemWithKeybind>
       </SubMenu>
       <MenuItemWithKeybind keybind='moveToCoords'>Move to Specified Coordinates</MenuItemWithKeybind>
+      <MenuDivider />
+      <SesameMenu />
     </MenuBarItem>
   )
 }

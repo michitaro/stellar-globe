@@ -15,6 +15,7 @@ import { useLocalStorageSync } from './store/stateSync/StorageSync'
 import { useHashSync } from './store/stateSync/hashSync'
 import styles from './style.module.scss'
 import { CatalogDragAndDrop } from './features/catalog/CatalogDragAndDrop'
+import { BlockUIProvider } from '../common/components/BlockUI'
 
 
 type Props = {
@@ -37,15 +38,17 @@ const App = wrapWithAppContext(({
   return (
     <Provider store={store}>
       <StateHistoryProvider stateHistory={stateHistory}>
-        <KeybindsProvider containerRef={rootElementRef} catchAllEvents={catchAllKeyboardEvents}>
-          <div className={styles.main} ref={rootElementRef} tabIndex={-1}>
-            <CatalogDragAndDrop>
-              <MainViewer />
-              <Panels />
-              <MainMenu />
-            </CatalogDragAndDrop>
-          </div>
-        </KeybindsProvider>
+        <BlockUIProvider>
+          <KeybindsProvider containerRef={rootElementRef} catchAllEvents={catchAllKeyboardEvents}>
+            <div className={styles.main} ref={rootElementRef} tabIndex={-1}>
+              <CatalogDragAndDrop>
+                <MainViewer />
+                <Panels />
+                <MainMenu />
+              </CatalogDragAndDrop>
+            </div>
+          </KeybindsProvider>
+        </BlockUIProvider>
       </StateHistoryProvider>
     </Provider>
   )

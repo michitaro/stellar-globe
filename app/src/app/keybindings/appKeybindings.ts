@@ -5,6 +5,7 @@ import { useDevelKeybindings } from "../features/devel/develKeybindings"
 import { useToolsKeybindings } from "../features/regions/toolsKeybindings"
 import { useViewKeybindings } from "../features/view/viewKeybindings"
 import { useHistoryKeybindings } from "../features/history/historyKeybindings"
+import { useSesameKeybindings } from "../features/sesame/SesameKeybindings"
 
 
 export function useAppKeybinds() {
@@ -13,6 +14,7 @@ export function useAppKeybinds() {
   const develKeybindings = useDevelKeybindings()
   const toolsKeybindings = useToolsKeybindings()
   const historyKeybindings = useHistoryKeybindings()
+  const sesameKeybindings = useSesameKeybindings()
 
   return useMemo(() => ({
     ...viewKeyBindings,
@@ -20,7 +22,8 @@ export function useAppKeybinds() {
     ...develKeybindings,
     ...toolsKeybindings,
     ...historyKeybindings,
-  }), [develKeybindings, historyKeybindings, panelKeyBindings, toolsKeybindings, viewKeyBindings])
+    ...sesameKeybindings,
+  }), [develKeybindings, historyKeybindings, panelKeyBindings, sesameKeybindings, toolsKeybindings, viewKeyBindings])
 }
 
 

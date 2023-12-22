@@ -1,0 +1,31 @@
+.fade {
+  &-enter {
+    opacity: 0;
+  }
+
+  &-enter-active {
+    opacity: 1;
+    transition: opacity 0.1s;
+  }
+
+  &-exit {
+    opacity: 1;
+  }
+
+  &-exit-active {
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+}
+
+.block {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(#111, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

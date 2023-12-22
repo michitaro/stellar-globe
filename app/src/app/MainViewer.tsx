@@ -36,13 +36,13 @@ export function MainViewer() {
       <ZoomLayer$ />
       <TouchLayer$ />
 
-      <TractTileLayers />
-
-      {hips.baseUrl && <HipsSimpleLayer$ baseUrl={hips.baseUrl} />}
-
-      {/* Appearance Layers */}
       <BeautifulObjectLayer$ {...layers.nearbyGalaxiesAndNebulas} />
+
+      <TractTileLayers />
+      {hips.baseUrl && <HipsSimpleLayer$ baseUrl={hips.baseUrl} />}
+      
       <EsoMilkyWayLayer$ {...layers.esoMilkyWay} />
+
       <HipparcosCatalogLayer$ {...layers.hipparcosCatalog} />
       <ConstellationLayer$ {...layers.constellation} />
       <GridLayer$ {...layers.grid} />
