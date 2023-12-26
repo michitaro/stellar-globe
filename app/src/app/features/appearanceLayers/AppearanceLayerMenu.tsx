@@ -10,7 +10,11 @@ export function AppearanceLayersMenu() {
   return (
     <Fragment>
       <MenuItem type='checkbox' checked={layers.grid.visible} onClick={_ => dispatch(appearanceLayersSlice.actions.visibleToggled('grid'))} >Grid</MenuItem>
-      <MenuItem type='checkbox' checked={layers.esoMilkyWay.visible} onClick={_ => dispatch(appearanceLayersSlice.actions.visibleToggled('esoMilkyWay'))} >Eso Milky Way</MenuItem>
+      <MenuItem type='checkbox' checked={layers.esoMilkyWay.visible} onClick={_ => dispatch(appearanceLayersSlice.actions.visibleToggled('esoMilkyWay'))}
+      >
+        The Milky Way panorama
+        <a style={{ marginLeft: '1em' }} target="_blank" rel="noreferrer" href="https://www.eso.org/public/images/eso0932a/">(ESO/S. Brunier)</a>
+      </MenuItem>
       <MenuItem type='checkbox' checked={layers.hipparcosCatalog.visible} onClick={_ => dispatch(appearanceLayersSlice.actions.visibleToggled('hipparcosCatalog'))} >Hipparcos Catalog</MenuItem>
       <MenuItem type='checkbox' checked={layers.nearbyGalaxiesAndNebulas.visible} onClick={_ => dispatch(appearanceLayersSlice.actions.visibleToggled('nearbyGalaxiesAndNebulas'))} >Nearby Galaxies and Nebulas</MenuItem>
       <MenuDivider />

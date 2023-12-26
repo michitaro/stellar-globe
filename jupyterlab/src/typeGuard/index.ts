@@ -39,20 +39,19 @@ export function createIs<Type>(validatorName: keyof typeof validators) {
 }
 
 
-export function createAssert<Type>(validatorName: keyof typeof validators) {
-  function assert(
-    obj: any,
-  ): asserts obj is Type {
-    const v = validators[validatorName]
+export function createTypeCheckers(stem: string) {
+  function is(type: string, obj: any) {
+    const validatorName = `${stem}/${type}`.replace(/\//g, '$')
+    const v = (validators as any)[validatorName]
     if (!v) {
-      // @ts-ignore
-      throw new Error(`Validator not found: ${validatorName}`)
+      Object.assign(is, { errors: [`Validator not found: ${validatorName}`] })
+      return false
     }
-    if (!v(obj)) {
-      console.error(obj)
-      // @ts-ignore
-      throw new TypeGuardError(`TypeError for ${validatorName}\n${JSON.stringify(v.errors, null, 2)}`)
+    const ok = v(obj)
+    if (!ok) {
+      Object.assign(is, { errors: (v as any).errors as string[] })
     }
+    return ok
   }
-  return assert
+  return Object.assign(is, { errors: [] as string[] })
 }

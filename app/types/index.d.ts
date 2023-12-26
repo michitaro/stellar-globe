@@ -1,8 +1,18 @@
-import React from 'react'
-import { AppHandle, AppProps } from '../src/app/types'
+import { default as default_2 } from 'react';
+import { Globe } from '@stellar-globe/stellar-globe';
 
-declare const App: React.FC<AppProps & { ref: unknown }>
+declare const App: default_2.FC<AppProps & { ref: unknown }>;
+export default App;
 
-export default App
+export declare type AppHandle = {
+    globe: () => Globe
+    dispatchAction: (action: { type: string, payload: unknown }) => void
+}
 
-export type { AppHandle }
+declare type AppProps = {
+    hashSync?: boolean
+    storageSync?: boolean
+    catchAllKeyboardEvents?: boolean
+}
+
+export { }

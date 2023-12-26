@@ -1,45 +1,70 @@
-import { ReactNode, RefObject, createContext, useContext, useEffect, useMemo } from "react"
-import { generateShortcutFromEvent, normalizeShortcut } from "../utils/keybindings"
+import { ReactNode, RefObject, createContext, useContext, useEffect, useMemo, useRef } from "react"
+import { generateShortcutFromEvent, normalizeShortcut } from "../utils/keybindingsUtils"
 
 
 function useMakeContext({
   containerRef,
   keybinds,
-  catchAllEvents,
+  catchEventsOutsideContainer,
 }: {
   containerRef: RefObject<HTMLElement>
   keybinds: { [shortcut: string]: Keybind }
-  catchAllEvents: boolean,
+  catchEventsOutsideContainer: boolean,
 }) {
   const shortcutMap = useMemo(() => {
-    return new Map(Object.entries(keybinds).map(([_, { action, shortcut }]) => [normalizeShortcut(shortcut), action]))
+    return new Map(Object.entries(keybinds).map(([_, kb]) => [normalizeShortcut(kb.shortcut), kb]))
   }, [keybinds])
 
-  useEffect(function setupEventListener() {
-    const cb = (e: KeyboardEvent) => {
+  const activeKeybind = useRef<{ shortcut: string, stop: () => void } | undefined>(undefined)
+
+  useEffect(function setupKeybindsEventListeners() {
+    const keydown = (e: KeyboardEvent) => {
       if (
         e.target instanceof Node &&
         !['INPUT', 'TEXTAREA'].includes(e.target.nodeName) && (
-          catchAllEvents ||
+          catchEventsOutsideContainer ||
           containerRef.current?.contains(e.target)
         )
       ) {
         const shortcut = generateShortcutFromEvent(e)
+
+        if (activeKeybind.current && activeKeybind.current.shortcut !== shortcut) {
+          activeKeybind.current.stop()
+        }
+
         const kb = shortcutMap.get(shortcut)
         if (kb) {
-          const actionResult = kb()
-          const { preventDefault } = (actionResult instanceof Promise ? undefined : actionResult) ?? { preventDefault: true }
+          if (kb.press && activeKeybind.current?.shortcut !== shortcut) {
+            const stop = kb.press()
+            activeKeybind.current = {
+              shortcut,
+              stop,
+            }
+          }
+          const actionResult = kb.action?.()
+          const { preventDefault } =
+            (actionResult instanceof Promise ? undefined : actionResult) ?? { preventDefault: true }
           if (preventDefault) {
             e.preventDefault()
           }
         }
       }
     }
-    document.addEventListener('keydown', cb)
-    return () => {
-      document.removeEventListener('keydown', cb)
+    document.addEventListener('keydown', keydown)
+
+    const keyup = (e: KeyboardEvent) => {
+      if (activeKeybind.current) {
+        activeKeybind.current.stop()
+        activeKeybind.current = undefined
+      }
     }
-  }, [catchAllEvents, containerRef, keybinds, shortcutMap])
+    document.addEventListener('keyup', keyup)
+
+    return () => {
+      document.removeEventListener('keyup', keyup)
+      document.removeEventListener('keydown', keydown)
+    }
+  }, [catchEventsOutsideContainer, containerRef, keybinds, shortcutMap])
 
   return useMemo(() => ({
     keybinds,
@@ -49,9 +74,11 @@ const Context = createContext<ReturnType<typeof useMakeContext> | undefined>(und
 
 type ActionResult = void | Promise<void> | { preventDefault?: boolean }
 
+
 export type Keybind = {
   shortcut: string
-  action: () => ActionResult
+  action?: () => ActionResult
+  press?: () => () => void
 }
 
 
@@ -69,7 +96,7 @@ export function makeKeybindsEnvironment<T extends Record<string, Keybind>>(
     catchAllEvents = false,
   }: ProviderProps) => {
     const keybinds = useKeybinds()
-    const context = useMakeContext({ containerRef, keybinds, catchAllEvents })
+    const context = useMakeContext({ containerRef, keybinds, catchEventsOutsideContainer: catchAllEvents })
     return (
       <Context.Provider value={context}>
         {children}

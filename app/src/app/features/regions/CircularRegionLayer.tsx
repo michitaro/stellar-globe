@@ -18,7 +18,6 @@ export type CircleDef = {
 type Props = {
   circleDef: CircleDef
   color: V4
-  visible: boolean
   angleUnit: AngleUnit
   onChange?: (circleDef: CircleDef) => void
   children?: ReactNode
@@ -27,7 +26,6 @@ type Props = {
 export const CircularRegionLayer = ({
   circleDef: circleDefProp,
   color,
-  visible,
   angleUnit,
   onChange,
   children,
@@ -81,7 +79,6 @@ export const CircularRegionLayer = ({
     <Fragment>
       <PathLayer$
         paths={paths}
-        visible={visible}
         blendMode="NORMAL"
         dimOnZoom={false}
         darkenNarrowLine={false}

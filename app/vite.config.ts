@@ -42,9 +42,7 @@ export default defineConfig({
         auth: secrets.stars
       },
       '/tomoegozen/': {
-        // target: 'https://tomoe.mtk.ioa.s.u-tokyo.ac.jp/skyatlas/hipslist.json',
         target: 'https://tomoe.mtk.ioa.s.u-tokyo.ac.jp',
-        // changeOrigin: true,
         rewrite: (path) => path.replace(/^\/tomoegozen\//, '/skyatlas/'),
         secure: false,
       },

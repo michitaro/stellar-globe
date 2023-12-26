@@ -17,7 +17,7 @@ export function RegionsLayer() {
 
   return (
     <Fragment>
-      {regions.map((def) => {
+      {regions.filter(r => r.visible).map((def) => {
         switch (def.type) {
           case 'Linear':
             return <LinearRegionFromDefLayer key={def.id} {...def} />
@@ -81,14 +81,23 @@ const LinearRegionFromDefLayer = memo(({
     end: skyCoordFromCoordDef(end),
   }), [end, start])
 
+  const duplicate = useCallback(() => {
+    dispatch(regionsSlice.actions.newLinearRegionAdded({
+      type: 'Linear',
+      start,
+      end,
+      visible: true,
+    }))
+  }, [dispatch, end, start])
+
   return (
     <LinearRegionLayer
       lineDef={lineDef}
       color={color}
-      visible={visible}
       angleUnit={useAppSelector(state => state.common.angleUnit)}
       onChange={onLineDefChange}
     >
+      <MenuItem onClick={duplicate}><Icon type='content_copy' marginRight />Duplicate</MenuItem>
       <MenuItem
         onClick={() => {
           dispatch(regionsSlice.actions.regionDeleted({ id }))
@@ -160,26 +169,34 @@ const CircularRegionFromDefLayer = memo(({
     }))
   }, [dispatch, id, original])
 
-
   const circleDef = useMemo(() => ({
     center: skyCoordFromCoordDef(center),
     radius: radius,
   }), [center, radius])
+
+  const duplicate = useCallback(() => {
+    dispatch(regionsSlice.actions.newCircularRegionAdded({
+      type: 'Circular',
+      center,
+      radius,
+      visible: true,
+    }))
+  }, [center, dispatch, radius])
 
   return (
     <CircularRegionLayer
       circleDef={circleDef}
       color={color}
       angleUnit={useAppSelector(state => state.common.angleUnit)}
-      visible={visible}
       onChange={onCircleDefChange}
     >
+      <MenuItem onClick={duplicate}><Icon type='content_copy' marginRight />Duplicate</MenuItem>
+      <ColorPicker color={color} onChange={onColorChange} />
       <MenuItem
         onClick={() => {
           dispatch(regionsSlice.actions.regionDeleted({ id }))
         }}
       ><Icon type="delete" marginRight />Delete</MenuItem>
-      <ColorPicker color={color} onChange={onColorChange} />
     </CircularRegionLayer>
   )
 })
@@ -242,7 +259,6 @@ const RectangularRegionFromDefLayer = memo(({
       rectDef={rectDef}
       color={color}
       angleUnit={useAppSelector(state => state.common.angleUnit)}
-      visible={visible}
       onChange={onRectDefChange}
     >
       <MenuItem

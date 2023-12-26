@@ -21,7 +21,6 @@ export type RectDef = {
 type Props = {
   rectDef: RectDef
   color: V4
-  visible: boolean
   angleUnit: AngleUnit
   onChange?: (rectDef: RectDef) => void
   children?: ReactNode
@@ -30,7 +29,6 @@ type Props = {
 export const RectangularRegionLayer = ({
   rectDef: rectDefProp,
   color,
-  visible,
   angleUnit,
   onChange,
   children,
@@ -108,7 +106,6 @@ export const RectangularRegionLayer = ({
     <Fragment>
       <PathLayer$
         paths={paths}
-        visible={visible}
         blendMode="NORMAL"
         dimOnZoom={false}
         darkenNarrowLine={false}

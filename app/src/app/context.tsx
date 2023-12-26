@@ -1,10 +1,10 @@
+import { Action } from "@reduxjs/toolkit"
 import { GlobeHandle } from "@stellar-globe/react-stellar-globe"
 import { createContext, forwardRef, useContext, useImperativeHandle, useMemo, useRef } from "react"
 import { useInstanceVariable } from "../common/hooks/useInstanceVaribale"
 import { AppStore, makeStore } from "./store"
+import { createIs, createTypeCheckers } from "./typeGuard"
 import { AppHandle } from "./types"
-import { Action } from "@reduxjs/toolkit"
-import { createIs, createTypeCheckers as createTypeCheckers } from "./typeGuard"
 
 
 function useMakeContext() {
@@ -39,7 +39,7 @@ export function wrapWithAppContext<T>(Component: React.ComponentType<T>) {
     useImperativeHandle(ref, () => {
       const handle: AppHandle = {
         globe: () => context.globeHandle.current!(),
-        safeDispatch: makeSafeDispatch(context.store)
+        dispatchAction: makeTypeSafeDispatch(context.store)
       }
       return handle
     }, [context])
@@ -59,11 +59,12 @@ export type BaseAction = {
 }
 
 
+// @ts-ignore
 const isBaseAction = createIs<BaseAction>('BaseAction')
 const isValidAction = createTypeCheckers('Actions')
 
 
-function makeSafeDispatch(store: AppStore) {
+function makeTypeSafeDispatch(store: AppStore) {
   return (action: Action) => {
     if (isBaseAction(action)) {
       if (isValidAction(action.type, action)) {

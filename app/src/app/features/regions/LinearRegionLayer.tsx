@@ -18,7 +18,6 @@ export type LineDef = {
 type Props = {
   lineDef: LineDef
   color: V4
-  visible: boolean
   angleUnit: AngleUnit
   onChange?: (lineDef: LineDef) => void
   children?: ReactNode
@@ -27,7 +26,6 @@ type Props = {
 export const LinearRegionLayer = ({
   lineDef: lineDefProp,
   color,
-  visible,
   angleUnit,
   onChange,
   children,
@@ -77,7 +75,6 @@ export const LinearRegionLayer = ({
     <Fragment>
       <PathLayer$
         paths={paths}
-        visible={visible}
         blendMode="NORMAL"
         dimOnZoom={false}
         darkenNarrowLine={false}
@@ -111,14 +108,14 @@ class MouseLayer extends Layer {
   ) {
     super(globe)
     this.pointingObjects.push(
-      lineEndPicker(this),
-      lineBodyPicker(this),
+      lineEndsPointingObject(this),
+      lineBodyPointingObject(this),
     )
   }
 }
 
 
-function lineBodyPicker(layer: MouseLayer) {
+function lineBodyPointingObject(layer: MouseLayer) {
   const { globe } = layer
   const picker = makePointingObject({
     hoverIcon: 'grab',
@@ -166,7 +163,7 @@ function lineBodyPicker(layer: MouseLayer) {
 }
 
 
-function lineEndPicker(layer: MouseLayer) {
+function lineEndsPointingObject(layer: MouseLayer) {
   const globe = layer.globe
   return makePointingObject({
     hoverIcon: 'move',

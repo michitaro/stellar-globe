@@ -65,7 +65,8 @@ export const makeStateHistory = ({ maxHistory = 20 }: Options = {}) => {
       debounce(() => {
         records.splice(0, currentIndex)
         currentIndex = 0
-        records.unshift({ state: getState(), summary: action.meta[trackKey].summary, type: action.type, id: ++seq })
+        const summary = debounce.skippedCalls() > 1 ? `Batch updates` : action.meta[trackKey].summary
+        records.unshift({ state: getState(), summary, type: action.type, id: ++seq })
         while (records.length > maxHistory) {
           records.pop()
         }

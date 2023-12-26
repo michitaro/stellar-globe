@@ -84,7 +84,6 @@ const NewLinearRegionLayer = memo(() => {
           lineDef={lineDef(coords)}
           color={color}
           angleUnit={angleUnit}
-          visible
         />
       )}
     />
@@ -122,7 +121,6 @@ const NewCircularRegionLayer = memo(() => {
           circleDef={circleDef(coords)}
           color={color}
           angleUnit={angleUnit}
-          visible
         />
       )}
     />
@@ -167,7 +165,6 @@ const NewRectangularRegionLayer = memo(() => {
           rectDef={rectDef(coords)}
           color={color}
           angleUnit={angleUnit}
-          visible
         />
       )}
     />

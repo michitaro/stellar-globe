@@ -35,7 +35,7 @@
     "@stellar-globe/react-stellar-globe": "file:../react-stellar-globe",
     "@stellar-globe/stellar-globe": "file:../stellar-globe",
     "@szhsin/react-menu": "^4.1.0",
-    "classnames": "^2.3.2",
+    "classnames": "^2.3.3",
     "csv-stringify": "^6.4.5",
     "material-symbols": "^0.14.3",
     "papaparse": "^5.4.1",
@@ -54,8 +54,8 @@
     "@types/react": "^18.2.45",
     "@types/react-dom": "^18.2.18",
     "@types/react-transition-group": "^4.4.10",
-    "@typescript-eslint/eslint-plugin": "^6.15.0",
-    "@typescript-eslint/parser": "^6.15.0",
+    "@typescript-eslint/eslint-plugin": "^6.16.0",
+    "@typescript-eslint/parser": "^6.16.0",
     "@vitejs/plugin-react": "^4.2.1",
     "ajv": "^8.12.0",
     "eslint": "^8.56.0",
@@ -70,7 +70,6 @@
     "typescript": "^5.3.3",
     "typescript-json-schema": "^0.62.0",
     "vite": "^5.0.10",
-    "vite-plugin-dts": "^3.6.4",
     "vitest": "^1.1.0"
   }
 }

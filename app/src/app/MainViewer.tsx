@@ -1,4 +1,4 @@
-import { BeautifulObjectLayer$, ConstellationLayer$, EsoMilkyWayLayer$, Globe$, GlobeEventLayer$, GridLayer$, HipparcosCatalogLayer$, HipsSimpleLayer$, TouchLayer$, ZoomLayer$ } from "@stellar-globe/react-stellar-globe"
+import { BeautifulObjectLayer$, ConstellationLayer$, EsoMilkyWayLayer$, Globe$, GlobeEventLayer$, GridLayer$, HipparcosCatalogLayer$, HipsSimpleLayer$, RollLayer$, TouchLayer$, ZoomLayer$ } from "@stellar-globe/react-stellar-globe"
 import { Globe } from "@stellar-globe/stellar-globe"
 import { debounce } from "../common/utils/debounce"
 import { useAppContext } from "./context"
@@ -34,13 +34,14 @@ export function MainViewer() {
     >
       <GlobeEventLayer$ onCameraMove={onCameraMove} />
       <ZoomLayer$ />
+      <RollLayer$ />
       <TouchLayer$ />
 
       <BeautifulObjectLayer$ {...layers.nearbyGalaxiesAndNebulas} />
 
       <TractTileLayers />
       {hips.baseUrl && <HipsSimpleLayer$ baseUrl={hips.baseUrl} />}
-      
+
       <EsoMilkyWayLayer$ {...layers.esoMilkyWay} />
 
       <HipparcosCatalogLayer$ {...layers.hipparcosCatalog} />

@@ -43,6 +43,7 @@ export function ViewMenu() {
         <MenuItemWithKeybind keybind='zoomHscScale'>1:1 Pixel Mapping (HSC)</MenuItemWithKeybind>
       </SubMenu>
       <MenuItemWithKeybind keybind='moveToCoords'>Move to Specified Coordinates</MenuItemWithKeybind>
+      <MenuItemWithKeybind keybind='northUp'>NorthUp</MenuItemWithKeybind>
       <MenuDivider />
       <SesameMenu />
     </MenuBarItem>

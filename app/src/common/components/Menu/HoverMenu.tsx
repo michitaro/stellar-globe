@@ -9,14 +9,14 @@ type Props = {
   renderMenuButton: (state: { active: boolean }) => ReactNode
   children: ReactNode
   className?: string
-}
+} & Parameters<typeof ControlledMenu>[0]
 
 
-export function HoverMenu({ className, renderMenuButton, children }: Props) {
+export function HoverMenu({ className, renderMenuButton, children, ...menuProps }: Props) {
   const anchorRef = useRef(null)
   const [menuState, toggle] = useMenuState()
   const clickProps = useClick(menuState.state, toggle)
-  const { anchorProps, hoverProps } = useHover(menuState.state, toggle, { openDelay: 0 })
+  const { anchorProps, hoverProps } = useHover(menuState.state, toggle, { openDelay: 0, closeDelay: 1000 })
 
   useEffect(() => {
     closers.set(anchorRef, () => toggle(false))
@@ -49,6 +49,7 @@ export function HoverMenu({ className, renderMenuButton, children }: Props) {
         onClose={() => toggle(false)}
         submenuOpenDelay={0}
         submenuCloseDelay={0}
+        {...menuProps}
       >
         {children}
       </ControlledMenu>

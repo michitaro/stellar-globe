@@ -15,6 +15,7 @@ export function MenuBarItem({ children, label }: Props) {
       renderMenuButton={({ active }) => (
         <button className={classNames(styles.menuBarItem, active && styles.active)}>{label}</button>
       )}
+      position="anchor"
     >
       {children}
     </HoverMenu>

@@ -1,39 +1,34 @@
-export function debounce<CB extends (...args: any[]) => void>(wait: number, cb: CB) {
-  let timer: undefined | ReturnType<typeof setTimeout> = undefined
-  const stop = () => {
-    if (timer) {
-      clearTimeout(timer)
-      timer = undefined
-    }
-  }
-  const f = ((...args: unknown[]) => {
-    stop()
-    if (wait === 0) {
+export function debounce<CB extends (...args: any[]) => void>(delay: number, cb: CB): CB {
+  const d = Debounce(delay)
+  const f = (...args: Parameters<CB>) => {
+    d(() => {
       cb(...args)
-    }
-    else {
-      timer = setTimeout(() => {
-        timer = undefined
-        cb(...args)
-      }, wait)
-    }
-  }) as CB
-  return Object.assign(f, { stop })
+    })
+  }
+  const { stop, skippedCalls } = d
+  return Object.assign(f as CB, { stop, skippedCalls })
 }
-
 
 export function Debounce(delay: number) {
   let timer: undefined | ReturnType<typeof setTimeout> = undefined
+  let skippedCalls = 0
   const f = (cb: () => void) => {
     if (timer) {
       clearTimeout(timer)
+      ++skippedCalls
     }
     timer = setTimeout(() => {
-      timer = undefined
-      cb()
+      try {
+        cb()
+      }
+      finally {
+        timer = undefined
+        skippedCalls = 0
+      }
     }, delay)
   }
   return Object.assign(f, {
-    stop: () => timer && clearTimeout(timer)
+    stop: () => timer && clearTimeout(timer),
+    skippedCalls: () => skippedCalls,
   })
 }

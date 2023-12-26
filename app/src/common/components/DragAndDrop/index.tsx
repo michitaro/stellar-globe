@@ -1,5 +1,6 @@
-import { DragEvent, Fragment, ReactNode, useCallback, useState } from 'react'
+import { DragEvent, Fragment, ReactNode, useCallback, useRef, useState } from 'react'
 import styles from './style.module.scss'
+import { CSSTransition } from 'react-transition-group'
 
 type Props = {
   children: ReactNode
@@ -28,6 +29,8 @@ export function DragAndDrop({ children, onFileDrop }: Props) {
     }
   }, [onFileDrop])
 
+  const nodeRef = useRef(null)
+
   return (
     <Fragment>
       <div
@@ -38,7 +41,22 @@ export function DragAndDrop({ children, onFileDrop }: Props) {
       >
         {children}
       </div>
-      {active && <div className={styles.active} />}
+      <CSSTransition
+        in={active}
+        timeout={200}
+        nodeRef={nodeRef}
+        mountOnEnter
+        unmountOnExit
+        classNames={{
+          enter: styles.fadeEnter,
+          enterActive: styles.fadeEnterActive,
+          exit: styles.fadeExit,
+          exitActive: styles.fadeExitActive,
+        }}
+      >
+        <div ref={nodeRef} className={styles.active} />
+      </CSSTransition>
+
     </Fragment>
   )
 }

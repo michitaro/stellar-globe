@@ -2,7 +2,7 @@ import { MenuItemProps } from "@szhsin/react-menu"
 import { memo, useMemo } from "react"
 import { useAppKeybinds, useKeybindAction, useKeybindShortcut } from "./appKeybindings"
 import { MenuItemWithAnnotation } from "../../common/components/Menu/MenuItemWithAnnotation"
-import { convertShortcutToSymbols } from "../../common/utils/keybindings"
+import { convertShortcutToSymbols } from "../../common/utils/keybindingsUtils"
 
 
 type Props = MenuItemProps & {

@@ -8,5 +8,5 @@ export type AppProps = {
 
 export type AppHandle = {
   globe: () => Globe
-  safeDispatch: (action: { type: string, payload: unknown }) => void
+  dispatchAction: (action: { type: string, payload: unknown }) => void
 }
