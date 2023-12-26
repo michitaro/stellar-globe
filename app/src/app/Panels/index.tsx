@@ -42,13 +42,14 @@ export function Panels() {
 const PanelsMenu = memo(forwardRef(({ className }: { className?: string }, ref: ForwardedRef<HTMLButtonElement>) => {
   const dispatch = useAppDispatch()
   const selectedPanel = useAppSelector(state => state.panel.selectedPanel)
-  const setSelectedPanel = (panel: typeof selectedPanel) => dispatch(panelsSlice.actions.selectPanel(panel))
+  const setSelectedPanel = (panel: typeof selectedPanel) => dispatch(panelsSlice.actions.panelChanged(panel))
 
   const keybindings = {
     tone: 'toggleTonePanel',
     regions: 'toggleRegionPanel',
     hips: 'toggleHipsPanel',
     catalogs: 'toggleCatalogsPanel',
+    none: undefined
   } as const
 
   return (
@@ -66,8 +67,8 @@ const PanelsMenu = memo(forwardRef(({ className }: { className?: string }, ref: 
             key={index}
             type={selectedPanel && 'checkbox'}
             checked={selectedPanel === type}
-            onClick={() => setSelectedPanel(type === selectedPanel ? undefined : type)}
-            keybind={type && keybindings[type]}
+            onClick={() => setSelectedPanel(type === selectedPanel ? 'none' : type)}
+            keybind={keybindings[type]}
           >
             <Icon type={icon} marginRight />
             {name}
@@ -83,7 +84,7 @@ setDisplayName({ PanelMenu: PanelsMenu })
 const CloseButton = memo(() => {
   const dispatch = useAppDispatch()
   return (
-    <button className={styles.closeButton} onClick={() => dispatch(panelsSlice.actions.selectPanel(undefined))}>
+    <button className={styles.closeButton} onClick={() => dispatch(panelsSlice.actions.panelChanged('none'))}>
       <Icon type="close" />
     </button>
   )
@@ -103,7 +104,7 @@ setDisplayName({ BottomMenu })
 
 
 const CornerPanelMenu = memo(() => {
-  const show = useAppSelector(state => !state.panel.selectedPanel)
+  const show = useAppSelector(state => state.panel.selectedPanel === 'none')
   const nodeRef = useRef(null)
   return (
     <CSSTransition

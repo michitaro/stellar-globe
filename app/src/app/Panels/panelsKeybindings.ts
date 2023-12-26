@@ -12,7 +12,7 @@ export function usePanelsKeyBindings() {
     const makeKeybind = (panelType: typeof selectedPanel, shortcut: string) => {
       const keybind: Keybind = {
         action() {
-          dispatch(panelsSlice.actions.selectPanel(selectedPanel === panelType ? undefined : panelType))
+          dispatch(panelsSlice.actions.panelChanged(selectedPanel === panelType ? 'none' : panelType))
         },
         shortcut,
       }

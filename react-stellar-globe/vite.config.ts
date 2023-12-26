@@ -21,12 +21,6 @@ export default defineConfig({
     },
     rollupOptions: {
       external: ['react', 'react-dom', '@stellar-globe/stellar-globe'],
-      // output: {
-      //   globals: {
-      //     react: 'React',
-      //     'react-dom': 'ReactDOM',
-      //   },
-      // },
     },
   },
 })

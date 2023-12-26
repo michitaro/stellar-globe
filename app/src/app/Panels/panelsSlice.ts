@@ -5,7 +5,7 @@ import { hipsLayersSlice } from "../features/hipsLayers/hipsLayersSlice"
 import { catalogsSlice } from "../features/catalog/catalogSlice"
 
 
-type PanelType = 'tone' | 'regions' | 'hips' | 'catalogs' | undefined
+type PanelType = 'tone' | 'regions' | 'hips' | 'catalogs' | 'none'
 
 
 type State = {
@@ -24,7 +24,7 @@ export const panelsSlice = createSlice({
   name: 'panels',
   initialState,
   reducers: {
-    selectPanel(state, { payload: panel }: PayloadAction<PanelType>) {
+    panelChanged(state, { payload: panel }: PayloadAction<PanelType>) {
       state.selectedPanel = panel
     },
   },

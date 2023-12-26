@@ -14,6 +14,9 @@ type ToolType = 'pan' | 'line' | 'rect' | 'circle'
 export type Region = LinearRegion | CircularRegion | RectangularRegion
 
 
+type PartiallyPartial<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
+
+
 type State = {
   tool: ToolType
   toolPinned: boolean
@@ -44,12 +47,15 @@ export const regionsSlice = createSlice({
       state.autoColor = !state.autoColor
     }),
     newLinearRegionAdded: create.preparedReducer(
-      ({ id, ...rests }: Omit<LinearRegion, 'id' | 'color'> & { id?: string, color?: V4 }) => trackAction({
-        payload: {
-          id: id ?? nanoid(),
-          ...rests,
-        },
-      }, 'Linear Region Added'),
+      ({ id: _id, ...rests }: PartiallyPartial<LinearRegion, 'id' | 'color'>) => {
+        const id = _id ?? nanoid()
+        return trackAction({
+          payload: {
+            id,
+            ...rests,
+          },
+        }, 'Linear Region Added')
+      },
       (state, { payload: { color, id, ...rests } }) => {
         if (!state.regions.find(r => r.id === id)) {
           state.regions.push({ ...rests, id, color: color ?? nextColor(state) })
@@ -57,12 +63,15 @@ export const regionsSlice = createSlice({
       },
     ),
     newCircularRegionAdded: create.preparedReducer(
-      ({ id, ...rests }: Omit<CircularRegion, 'id' | 'color'> & { id?: string, color?: V4 }) => trackAction({
-        payload: {
-          id: id ?? nanoid(),
-          ...rests,
-        },
-      }, 'Circular Region Added'),
+      ({ id: _id, ...rests }: PartiallyPartial<CircularRegion, 'id' | 'color'>) => {
+        const id = _id ?? nanoid()
+        return trackAction({
+          payload: {
+            id,
+            ...rests,
+          },
+        }, 'Circular Region Added')
+      },
       (state, { payload: { id, color, ...rests } }) => {
         if (!state.regions.find(r => r.id === id)) {
           state.regions.push({ ...rests, id, color: color ?? nextColor(state) })
@@ -70,12 +79,15 @@ export const regionsSlice = createSlice({
       },
     ),
     newRectangularRegionAdded: create.preparedReducer(
-      ({ id, ...rests }: Omit<RectangularRegion, 'id' | 'color'> & { id?: string, color?: V4 }) => trackAction({
-        payload: {
-          id: id ?? nanoid(),
-          ...rests,
-        }
-      }, 'Rectangular Region Added'),
+      ({ id: _id, ...rests }: PartiallyPartial<RectangularRegion, 'id' | 'color'>) => {
+        const id = _id ?? nanoid()
+        return trackAction({
+          payload: {
+            id,
+            ...rests,
+          }
+        }, 'Rectangular Region Added')
+      },
       (state, { payload: { id, color, ...rests } }) => {
         if (!state.regions.find(r => r.id === id)) {
           state.regions.push({ ...rests, id, color: color ?? nextColor(state) })
@@ -92,7 +104,7 @@ export const regionsSlice = createSlice({
       }
     ),
     regionsCleared: create.preparedReducer(
-      (payload: void) => trackAction({ payload, }, 'All Regions Deleted'),
+      (payload: {}) => trackAction({ payload, }, 'All Regions Deleted'),
       state => {
         state.regions = []
       }
@@ -182,8 +194,8 @@ export function regionView(region: Region): { center: SkyCoord, fov: number } {
     case 'Rectangular': {
       const { maxDec, maxRa, minDec, minRa } = region
       const center = SkyCoord.fromRad((minRa + maxRa) / 2, (minDec + maxDec) / 2)
-      const width = Math.max(Math.cos(maxDec), Math.cos(minDec)) * (maxRa - minRa)
-      const height = maxDec - minDec
+      const width = Math.max(Math.cos(maxDec), Math.cos(minDec)) * Math.abs(maxRa - minRa)
+      const height = Math.abs(maxDec - minDec)
       return {
         center,
         fov: Math.max(width, height),

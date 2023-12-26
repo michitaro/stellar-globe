@@ -1,7 +1,7 @@
+import classNames from "classnames"
 import { ReactNode } from "react"
 import { HoverMenu } from "./HoverMenu"
 import styles from './styles.module.scss'
-import classNames from "classnames"
 
 
 type Props = {

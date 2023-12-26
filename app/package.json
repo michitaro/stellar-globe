@@ -3,6 +3,21 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "files": [
+    "dist",
+    "types"
+  ],
+  "types": "./types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/stellar-globe-app.es.js",
+      "types": "./types/index.d.ts",
+      "default": "./dist/stellar-globe-app.es.js"
+    }
+  },
+  "browser": {
+    "process/browser": false
+  },
   "scripts": {
     "dev": "vite",
     "start": "vite",
@@ -12,7 +27,7 @@
     "lint": "eslint .",
     "type-check": "tsc",
     "typed-scss-module": "typed-scss-modules src -n camel",
-    "make-type-validators": "typescript-json-schema -o ./devel/jsonschema/root.json --noExtraProps --required ./tsconfig.json JsonSchema && node ./devel/generate-js-type-validators.js"
+    "make-type-validators": "typescript-json-schema -o ./devel/jsonschema/root.json --noExtraProps --required ./tsconfig.json JsonSchema && node ./devel/generate-js-type-validators.mjs"
   },
   "dependencies": {
     "@floating-ui/react": "^0.26.4",

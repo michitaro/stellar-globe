@@ -14,7 +14,7 @@ type Props = {
 
 export function HoverMenu({ className, renderMenuButton, children }: Props) {
   const anchorRef = useRef(null)
-  const [menuState, toggle] = useMenuState({ transition: { close: true } })
+  const [menuState, toggle] = useMenuState()
   const clickProps = useClick(menuState.state, toggle)
   const { anchorProps, hoverProps } = useHover(menuState.state, toggle, { openDelay: 0 })
 

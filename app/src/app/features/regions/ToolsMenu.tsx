@@ -75,7 +75,7 @@ export function ToolsMenu() {
         type='checkbox'
         onClick={() => {
           if (confirm(`Are you sure to delete all regions?`)) {
-            dispatch(regionsSlice.actions.regionsCleared())
+            dispatch(regionsSlice.actions.regionsCleared({}))
           }
         }}
       >Clear All Regions</MenuItem>

@@ -1,6 +1,5 @@
 import react from "@vitejs/plugin-react"
 import { visualizer } from 'rollup-plugin-visualizer'
-import dts from 'vite-plugin-dts'
 import { defineConfig } from "vitest/config"
 import secrets from './secrets.json'
 
@@ -9,32 +8,19 @@ import secrets from './secrets.json'
 export default defineConfig({
   plugins: [
     react(),
-    dts({
-      outDir: `${__dirname}/'types`,
-      entryRoot: './src',
-    }),
     visualizer({ gzipSize: true }),
   ],
   build: {
     lib: {
-      entry: `${__dirname}/src/index.ts`,
+      entry: `${__dirname}/src/app/index.tsx`,
       formats: ['es'],
-      fileName: (format) => `react-stellar-globe.${format}.js`,
+      fileName: (format) => `stellar-globe-app.${format}.js`,
     },
     rollupOptions: {
       external: ['react', 'react-dom', '@stellar-globe/stellar-globe', '@stellar-globe/react-stellar-globe'],
-      // output: {
-      //   globals: {
-      //     react: 'React',
-      //     'react-dom': 'ReactDOM',
-      //   },
-      // },
     },
+    sourcemap: true,
   },
-  // build: {
-  //   outDir: "build",
-  //   sourcemap: true,
-  // },
   test: {
     globals: true,
     environment: "jsdom",

@@ -10,13 +10,13 @@ import styles from './styles.module.scss'
 
 export default function MainMenu() {
   return (
-    <MenuBar className={styles.menuBar}>
-      <CommonMenu />
-      <ViewMenu />
-      <DatasetMenu />
-      <ToolsMenu />
-      <HistoryMenu />
-      <DevelMenu />
-    </MenuBar >
+      <MenuBar className={styles.menuBar}>
+        <CommonMenu />
+        <ViewMenu />
+        <DatasetMenu />
+        <ToolsMenu />
+        <HistoryMenu />
+        <DevelMenu />
+      </MenuBar >
   )
 }

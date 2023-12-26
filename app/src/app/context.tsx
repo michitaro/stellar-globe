@@ -1,15 +1,23 @@
 import { GlobeHandle } from "@stellar-globe/react-stellar-globe"
-import { createContext, useContext, useMemo, useRef } from "react"
+import { createContext, forwardRef, useContext, useImperativeHandle, useMemo, useRef } from "react"
+import { useInstanceVariable } from "../common/hooks/useInstanceVaribale"
+import { AppStore, makeStore } from "./store"
+import { AppHandle } from "./types"
+import { Action } from "@reduxjs/toolkit"
+import { createIs, createTypeCheckers as createTypeCheckers } from "./typeGuard"
 
 
 function useMakeContext() {
   const globeHandle = useRef<GlobeHandle>(null)
   const rootElementRef = useRef<HTMLDivElement>(null)
+  const { store, stateHistory } = useInstanceVariable(makeStore)
 
   return useMemo(() => ({
     rootElementRef,
     globeHandle,
-  }), [])
+    store,
+    stateHistory
+  }), [stateHistory, store])
 }
 
 
@@ -26,13 +34,47 @@ export function useAppContext() {
 
 
 export function wrapWithAppContext<T>(Component: React.ComponentType<T>) {
-  return function WrappedComponent(props: T) {
+  return forwardRef(function WrappedComponent(props: T, ref) {
     const context = useMakeContext()
+    useImperativeHandle(ref, () => {
+      const handle: AppHandle = {
+        globe: () => context.globeHandle.current!(),
+        safeDispatch: makeSafeDispatch(context.store)
+      }
+      return handle
+    }, [context])
     return (
       <AppContext.Provider value={context}>
         {/* @ts-ignore */}
         <Component {...props} />
       </AppContext.Provider>
     )
+  })
+}
+
+
+export type BaseAction = {
+  type: string
+  payload: any
+}
+
+
+const isBaseAction = createIs<BaseAction>('BaseAction')
+const isValidAction = createTypeCheckers('Actions')
+
+
+function makeSafeDispatch(store: AppStore) {
+  return (action: Action) => {
+    if (isBaseAction(action)) {
+      if (isValidAction(action.type, action)) {
+        store.dispatch(action)
+      }
+      else {
+        alert(`Invalid Action: ${JSON.stringify(isValidAction.errors, null, 2)}`)
+      }
+    }
+    else {
+      alert(`Invalid Action: ${JSON.stringify(isBaseAction.errors, null, 2)}`)
+    }
   }
 }

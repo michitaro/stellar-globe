@@ -43,7 +43,7 @@ export const catalogsSlice = createSlice({
           }
           catch (error) {
             alert(error)
-            console.log(error)
+            console.error(error)
             return
           }
           const { hasColorCol, hasMarkerTypeCol, ...contents } = parsedResults

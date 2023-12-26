@@ -87,7 +87,8 @@ function initialState(): State {
         name: rerun,
         baseUrl: import.meta.env.DEV ? `./data/s23b_wide/${rerun}` : `../data/${rerun}`,
         // visible: !import.meta.env.DEV,
-        visible: layerVisible(rerun),
+        // visible: layerVisible(rerun),
+        visible: false,
       })),
     ],
   }

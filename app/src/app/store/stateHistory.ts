@@ -1,4 +1,4 @@
-import { Action, Dispatch, Middleware, MiddlewareAPI, createAction } from '@reduxjs/toolkit'
+import { Action, ActionCreator, ActionCreatorWithPayload, Dispatch, Middleware, MiddlewareAPI, createAction } from '@reduxjs/toolkit'
 import { Debounce } from '../../common/utils/debounce'
 
 
@@ -7,12 +7,14 @@ const timeTravel = createAction<{ index: number }>('history/time_travel')
 const setState = createAction<any>(setStateKey)
 
 
-export function makeStateHistoryActions<S>() {
-  const setState = createAction<S>(setStateKey)
+export function makeStateHistoryActions<S>(): {
+  setState: ActionCreatorWithPayload<S, 'history/set_state'>,
+  timeTravel: ActionCreatorWithPayload<{ index: number }, 'history/time_travel'>,
+} {
   return {
     setState,
     timeTravel,
-  }
+  } as any
 }
 
 

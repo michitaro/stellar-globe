@@ -1,18 +1,109 @@
 import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
-} from '@jupyterlab/application';
+} from '@jupyterlab/application'
+import { INotebookTracker } from '@jupyterlab/notebook'
+import { ConnectionParams, stellarGlobeConnection } from './StellarGlobeWidget'
+import { EventEmitter, eventEmitter } from './eventemitter'
+import { createIs } from './typeGuard'
+import { KernelType, StellarGlobeSessionEnv } from './types'
 
-/**
- * Initialization data for the @stellarglobe/jupyterlab extension.
- */
+
 const plugin: JupyterFrontEndPlugin<void> = {
   id: '@stellarglobe/jupyterlab:plugin',
   description: 'A JupyterLab extension for StellarGlobe.',
   autoStart: true,
-  activate: (app: JupyterFrontEnd) => {
-    console.log('JupyterLab extension @stellarglobe/jupyterlab is activated!');
-  }
-};
+  requires: [INotebookTracker],
+  activate: (app: JupyterFrontEnd, nbTracker: INotebookTracker) => {
+    connectToKernelChangedSignalForCommCreation(app, nbTracker)
+  },
+}
 
-export default plugin;
+
+export default plugin
+
+
+// registerCommTargetのあたらいは↓を参考に。
+// https://github.com/jupyter-widgets/ipywidgets/blob/52663ac472c38ba12575dfb4979fa2d250e79bc3/python/jupyterlab_widgets/src/plugin.ts#L174
+function connectToKernelChangedSignalForCommCreation(
+  app: JupyterFrontEnd,
+  notebooks: INotebookTracker,
+) {
+  notebooks.widgetAdded.connect((_, nbPanel) => {
+    const onSessionClosed = eventEmitter()
+    const cleanups = new WeakMap<KernelType, () => void>()
+
+    type KernelChangedArgs = Parameters<Parameters<(typeof nbPanel)["sessionContext"]["kernelChanged"]["connect"]>[0]>[1]
+
+    const handleKernelChanged = ({
+      oldValue,
+      newValue,
+    }: KernelChangedArgs): void => {
+      if (oldValue) {
+        cleanups.get(oldValue)?.()
+      }
+      if (newValue) {
+        const kernel = nbPanel.sessionContext.session!.kernel!
+        const cleanup = setupCommTarget({ app, kernel }, onSessionClosed)
+        cleanups.set(newValue, cleanup)
+      }
+    }
+
+    nbPanel.sessionContext.kernelChanged.connect(() => {
+      const kernel = nbPanel.sessionContext.session!.kernel!
+      const cleanup = setupCommTarget({ app, kernel }, onSessionClosed)
+      cleanups.set(kernel, cleanup)
+    })
+
+    if (nbPanel.sessionContext.session?.kernel) {
+      handleKernelChanged({
+        name: 'kernel',
+        oldValue: null,
+        newValue: nbPanel.sessionContext.session?.kernel,
+      })
+    }
+
+    nbPanel.sessionContext.statusChanged.connect((_slot, status) => {
+      switch (status) {
+        case 'autorestarting':
+        case 'dead':
+        case 'restarting':
+        case 'terminating':
+          onSessionClosed.emit()
+          break
+      }
+    })
+  })
+}
+
+
+const isValidConnectionParams = createIs<ConnectionParams>('ConnectionParams')
+
+
+function setupCommTarget(env: StellarGlobeSessionEnv, onSessionClosed: EventEmitter) {
+  const target = 'stellarglobe/new'
+  return registerCommTarget(env.kernel, target, function onConnected(comm, rawMsg) {
+    const msg = rawMsg.content.data
+    if (isValidConnectionParams(msg)) {
+      const connection = stellarGlobeConnection(env, comm, msg)
+      onSessionClosed.on(() => {
+        connection.close()
+      })
+    }
+    else {
+      alert(`Type error:\n${JSON.stringify(isValidConnectionParams.errors)}`)
+    }
+  })
+}
+
+
+function registerCommTarget(
+  kernel: KernelType,
+  target: string,
+  onConnected: Parameters<KernelType["registerCommTarget"]>[1],
+) {
+  kernel.registerCommTarget(target, onConnected)
+  return () => {
+    kernel.removeCommTarget(target, onConnected)
+  }
+}

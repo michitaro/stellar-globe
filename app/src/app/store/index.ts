@@ -2,14 +2,14 @@ import { Action, ThunkAction, configureStore } from "@reduxjs/toolkit"
 import { panelsSlice } from '../Panels/panelsSlice'
 import { appearanceLayersSlice } from "../features/appearanceLayers/appearanceLayersSlice"
 import { cameraSlice } from "../features/camera/cameraSlice"
+import { catalogsSlice } from "../features/catalog/catalogSlice"
 import { commonSlice } from "../features/common/commonSlice"
 import { develSlice } from "../features/devel/develSlice"
 import { hipsLayersSlice } from "../features/hipsLayers/hipsLayersSlice"
 import { regionsSlice } from "../features/regions/regionsSlice"
 import { tractTileLayersSlice } from '../features/tractTileLayers/tractTileLayersSlice'
+import { jsonPatchLogger } from './JsonPatchLogger'
 import { makeStateHistory } from "./stateHistory"
-import { catalogsSlice } from "../features/catalog/catalogSlice"
-// import { jsonPatchLogger } from './JsonPatchLogger'
 
 
 export function makeStore() {
@@ -28,8 +28,10 @@ export function makeStore() {
       devel: develSlice.reducer,
     },
     middleware: (getDefaultMiddleware) =>
-      // getDefaultMiddleware().concat(jsonPatchLogger((patches) => console.log(patches))),
-      getDefaultMiddleware().concat(stateHistory.middleware)
+      getDefaultMiddleware().concat(
+        stateHistory.middleware,
+        jsonPatchLogger((patches) => console.log(patches)),
+      )
   })
 
   return {

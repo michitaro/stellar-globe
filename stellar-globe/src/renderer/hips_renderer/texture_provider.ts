@@ -24,7 +24,10 @@ export abstract class TextureProvider {
 
   abstract get(hid: HID): TileTexture | undefined
   abstract request(hid: number, options?: { immediate: boolean }): void
+
+  /** @internal */
   abstract flushQueue(center: V3): void
+
   protected abstract makeTileTexture(ref: TextureRef, fadeIn: boolean): Promise<TileTexture>
 
   private _revision = 0
