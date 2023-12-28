@@ -182,7 +182,9 @@ export class SimpleImageTextureProvider extends AsyncTextureProvider {
     baseUrl: string,
     properties: HiPSProperties,
   ) {
-    const maxOrder = Number(properties.hips_order)
+    const hipsOrderLimit = 13
+    console.warn(`hips_order exceeded the limit: ${properties.hips_order} > ${hipsOrderLimit}`)
+    const maxOrder = Math.min(Number(properties.hips_order), hipsOrderLimit)
     const minOrder = properties.hips_order_min ? Number(properties.hips_order_min) : 3
     const tileSize = Number(properties.hips_tile_width)
     const coordFrame = ((cf: string) => {

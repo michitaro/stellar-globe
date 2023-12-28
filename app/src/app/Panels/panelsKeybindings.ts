@@ -19,10 +19,10 @@ export function usePanelsKeyBindings() {
       return keybind
     }
 
-    const toggleTonePanel = makeKeybind('tone', 'C')
+    const toggleTonePanel = makeKeybind('tone', 'T')
     const toggleRegionPanel = makeKeybind('regions', 'R')
-    const toggleHipsPanel = makeKeybind('hips', 'Shift+H')
-    const toggleCatalogsPanel = makeKeybind('catalogs', 'K')
+    const toggleHipsPanel = makeKeybind('hips', 'H')
+    const toggleCatalogsPanel = makeKeybind('catalogs', 'C')
 
     return {
       toggleTonePanel,

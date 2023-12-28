@@ -98,12 +98,12 @@ const LinearRegionFromDefLayer = memo(({
       onChange={onLineDefChange}
     >
       <MenuItem onClick={duplicate}><Icon type='content_copy' marginRight />Duplicate</MenuItem>
+      <ColorPicker color={color} onChange={onColorChange} />
       <MenuItem
         onClick={() => {
           dispatch(regionsSlice.actions.regionDeleted({ id }))
         }}
       ><Icon type="delete" marginRight />Delete</MenuItem>
-      <ColorPicker color={color} onChange={onColorChange} />
     </LinearRegionLayer>)
 })
 setDisplayName({ LinearRegionFromDefLayer })

@@ -9,7 +9,7 @@
   height: 100%;
 
   overflow: hidden;
-  
+
   // box-sizing: border-box;
   // border: 15px solid #003;
 
@@ -49,4 +49,39 @@
     border-width: 2px 0 0 0;
     border-color: #555;
   }
+
+  :global {
+    // Original: https://github.com/szhsin/react-menu/blob/master/dist/theme-dark.css
+
+    .szh-menu-container--theme-dark .szh-menu {
+      color: #cad1d8;
+      background-color: #22262c;
+      border: 1px solid #333;
+      // box-shadow: 0 2px 9px 3px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 0 4px rgba(#333, 1);
+    }
+
+    .szh-menu-container--theme-dark .szh-menu__arrow {
+      background-color: #22262c;
+      border-left-color: #333;
+      border-top-color: #333;
+    }
+
+    .szh-menu-container--theme-dark .szh-menu__item--hover {
+      background-color: #31363c;
+    }
+
+    .szh-menu-container--theme-dark .szh-menu__item--focusable {
+      background-color: inherit;
+    }
+
+    .szh-menu-container--theme-dark .szh-menu__item--disabled {
+      color: #666;
+    }
+
+    .szh-menu-container--theme-dark .szh-menu__divider {
+      background-color: #3a3a3a;
+    }
+  }
+
 }

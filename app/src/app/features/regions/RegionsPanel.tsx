@@ -1,28 +1,29 @@
-import styles from './styles.module.scss'
-import { memo, useCallback } from "react"
-import { useAppDispatch, useAppSelector } from "../../store/hooks"
-import { Icon } from "../../../common/components/Icon"
-import { Region, regionView, regionsSlice } from "./regionsSlice"
-import { MaterialSymbol } from "material-symbols"
-import { setDisplayName } from "../../../common/utils/setDisplayName"
-import { ColorPickerRgba } from "../../../common/components/ColorPicker"
 import { V4 } from "@stellar-globe/stellar-globe"
+import { MaterialSymbol } from "material-symbols"
+import { memo, useCallback } from "react"
+import { ColorPickerRgba } from "../../../common/components/ColorPicker"
+import { Icon } from "../../../common/components/Icon"
+import { setDisplayName } from "../../../common/utils/setDisplayName"
 import { useAppContext } from '../../context'
+import { useAppDispatch, useAppSelector } from "../../store/hooks"
+import { Region, regionView, regionsSlice } from "./regionsSlice"
+import styles from './styles.module.scss'
+import { HoverMenu } from "../../../common/components/Menu/HoverMenu"
+import { ToolsMenu } from "../../MainMenu/ToolsMenu"
+import { RegionsMenu } from "./RegionsMenu"
+
 
 export const RegionsPanel = memo(() => {
   const regions = useAppSelector(state => state.regions.regions)
 
   return (
     <div>
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <HoverMenu renderMenuButtonContents={() => <Icon type="menu" />} >
+          <RegionsMenu />
+        </HoverMenu>
+      </div>
       <table>
-        {/* <caption>Regions</caption> */}
-        {/* <thead>
-          <tr>
-            <th>Type</th>
-            <th></th>
-            <th />
-          </tr>
-        </thead> */}
         <tbody>
           {regions.map(region => <RegionTr key={region.id} region={region} />)}
         </tbody>

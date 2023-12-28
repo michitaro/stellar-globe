@@ -11,8 +11,9 @@
 
 .panel {
   @include background;
-  padding: 16px;
-  border-radius: 0 0 0 16px;
+  $padding: 16px;
+  padding: $padding;
+  border-radius: 0 0 0 $padding;
   flex-grow: 1;
   overflow-y: auto;
 }

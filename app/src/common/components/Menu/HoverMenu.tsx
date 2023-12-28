@@ -1,22 +1,30 @@
+import styles, { active } from './styles.module.scss'
 import { ControlledMenu, useClick, useHover, useMenuState } from '@szhsin/react-menu'
-import { Fragment, MutableRefObject, ReactNode, useEffect, useRef } from 'react'
+import classNames from 'classnames'
+import { Fragment, MutableRefObject, ReactNode, useEffect, useMemo, useRef } from 'react'
+import { useMenuContainer } from './MenuContext'
 
 
 const closers = new Map<MutableRefObject<null>, () => void>()
 
 
 type Props = {
-  renderMenuButton: (state: { active: boolean }) => ReactNode
+  renderMenuButton?: (state: { active: boolean }) => ReactNode
+  renderMenuButtonContents?: (state: { active: boolean }) => ReactNode
   children: ReactNode
   className?: string
 } & Parameters<typeof ControlledMenu>[0]
 
 
-export function HoverMenu({ className, renderMenuButton, children, ...menuProps }: Props) {
+export function HoverMenu({ className, children, renderMenuButton, renderMenuButtonContents, ...menuProps }: Props) {
   const anchorRef = useRef(null)
   const [menuState, toggle] = useMenuState()
   const clickProps = useClick(menuState.state, toggle)
   const { anchorProps, hoverProps } = useHover(menuState.state, toggle, { openDelay: 0, closeDelay: 1000 })
+
+  if (!!renderMenuButton === !!renderMenuButtonContents) {
+    throw new Error(`Either renderMenuButton or renderMenuButtonContents must be specified.`)
+  }
 
   useEffect(() => {
     closers.set(anchorRef, () => toggle(false))
@@ -35,10 +43,18 @@ export function HoverMenu({ className, renderMenuButton, children, ...menuProps 
     }
   }, [menuState.state])
 
+  const container = useMenuContainer()
+  const portal = useMemo(() => container && { target: container }, [container])
+
   return (
     <Fragment>
       <div ref={anchorRef} {...anchorProps} className={className} {...clickProps}>
-        {renderMenuButton({ active: menuState.state === 'open' })}
+        {renderMenuButton?.({ active: menuState.state === 'open' })}
+        {renderMenuButtonContents && (
+          <button className={classNames(styles.hoverMenuButton, menuState.state === 'open' && styles.active)}>
+            {renderMenuButtonContents({ active: menuState.state === 'open' })}
+          </button>
+        )}
       </div>
       <ControlledMenu
         overflow='auto'
@@ -49,6 +65,7 @@ export function HoverMenu({ className, renderMenuButton, children, ...menuProps 
         onClose={() => toggle(false)}
         submenuOpenDelay={0}
         submenuCloseDelay={0}
+        portal={portal}
         {...menuProps}
       >
         {children}

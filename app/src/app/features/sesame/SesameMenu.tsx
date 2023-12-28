@@ -11,7 +11,7 @@ export const SesameMenu = memo(() => {
       <MenuItem
         href="https://cds.unistra.fr/cgi-bin/Sesame"
         target="_blank"
-        rel="noopener noreferrer"
+        rel="noreferrer"
       >
         Sesame Name Resolver @ CDS
       </MenuItem>

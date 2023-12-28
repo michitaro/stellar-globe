@@ -96,7 +96,10 @@ function parseCsvText(csvText: string) {
   const parseResults = Papa.parse(csvText)
 
   if (parseResults.errors.length > 0) {
-    throw new CatalogParseError(parseResults.errors.join('\n'))
+    throw new CatalogParseError(
+      'CSV format error:\n' +
+      parseResults.errors.map(e => `${e.message}${e.row ? `@line ${e.row}` : ``}`).join('\n')
+    )
   }
 
   const rows = parseResults.data as string[][]

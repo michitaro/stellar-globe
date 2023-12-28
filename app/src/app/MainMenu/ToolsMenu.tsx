@@ -1,11 +1,11 @@
-import { MenuDivider, MenuItem } from "@szhsin/react-menu"
+import { MenuDivider, MenuHeader, MenuItem } from "@szhsin/react-menu"
 import { MaterialSymbol } from "material-symbols"
-import { useMemo } from "react"
-import { Icon } from "../../../common/components/Icon"
-import { MenuBarItem } from "../../../common/components/Menu/MenuBarItem"
-import { MenuItemWithKeybind } from "../../keybindings/MenuItemWithKeybind"
-import { useAppDispatch, useAppSelector } from "../../store/hooks"
-import { regionsSlice } from "./regionsSlice"
+import { Icon } from "../../common/components/Icon"
+import { MenuBarItem } from "../../common/components/Menu/MenuBarItem"
+import { RegionsMenu } from "../features/regions/RegionsMenu"
+import { regionsSlice } from "../features/regions/regionsSlice"
+import { MenuItemWithKeybind } from "../keybindings/MenuItemWithKeybind"
+import { useAppDispatch, useAppSelector } from "../store/hooks"
 
 
 type ToolType = ReturnType<typeof regionsSlice['getInitialState']>['tool']
@@ -39,10 +39,7 @@ const toolDefs: { [K in ToolType]: {
 export function ToolsMenu() {
   const selectedTool = useAppSelector(state => state.regions.tool)
   const toolPinned = useAppSelector(state => state.regions.toolPinned)
-  const autoColor = useAppSelector(state => state.regions.autoColor)
   const dispatch = useAppDispatch()
-  const regions = useAppSelector(state => state.regions.regions)
-  const clearRegionsDisabled = useMemo(() => regions.length === 0, [regions.length])
 
   const typeToKeybidn = {
     'line': 'toggleLineTool',
@@ -68,17 +65,9 @@ export function ToolsMenu() {
       ))}
       <MenuDivider />
       <MenuItem type="checkbox" checked={toolPinned} onClick={() => dispatch(regionsSlice.actions.toolPinnedToggled())}>Pin Tool</MenuItem>
-      <MenuItem type="checkbox" checked={autoColor} onClick={() => dispatch(regionsSlice.actions.autoColorToggled())}>Auto Color</MenuItem>
       <MenuDivider />
-      <MenuItem
-        disabled={clearRegionsDisabled}
-        type='checkbox'
-        onClick={() => {
-          if (confirm(`Are you sure to delete all regions?`)) {
-            dispatch(regionsSlice.actions.regionsCleared({}))
-          }
-        }}
-      >Clear All Regions</MenuItem>
+      <MenuHeader>Regions</MenuHeader>
+      <RegionsMenu />
     </MenuBarItem>
   )
 }

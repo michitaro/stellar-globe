@@ -1,32 +1,26 @@
-import styles from './style.module.scss'
-import { Fragment, Suspense, memo } from "react"
-import { useAppSelector } from "../../store/hooks"
-import { setDisplayName } from "../../../common/utils/setDisplayName"
+import { SkyCoord, angle } from '@stellar-globe/stellar-globe'
+import { Fragment, Suspense, memo, useCallback, useMemo } from "react"
 import { ErrorBoundary } from "react-error-boundary"
-import { Menu } from '@szhsin/react-menu'
-import { HipsMenu } from './hipsMenu'
-import { useAppContext } from '../../context'
+import { Icon } from '../../../common/components/Icon'
 import { Linkify } from '../../../common/components/Linkify'
+import { HoverMenu } from '../../../common/components/Menu/HoverMenu'
+import { setDisplayName } from "../../../common/utils/setDisplayName"
+import { useAppContext } from '../../context'
+import { useAppSelector } from "../../store/hooks"
+import { HipsMenu } from './hipsMenu'
+import styles from './style.module.scss'
+
 
 export const HipsPanel = memo(() => {
   const currentBaseUrl = useAppSelector(state => state.hipsLayers.baseUrl)
-  const { rootElementRef } = useAppContext()
 
   return (
     <Fragment>
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <Menu
-          theming='dark'
-          menuButton={<button>Set Source</button>}
-          portal={{ target: rootElementRef.current }}
-          submenuOpenDelay={0}
-          submenuCloseDelay={0}
-          transition={{ close: true }}
-        >
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <HoverMenu renderMenuButtonContents={() => <Icon type="menu" />} >
           <HipsMenu />
-        </Menu>
+        </HoverMenu>
       </div>
-      <hr />
       {currentBaseUrl && (
         <ErrorBoundary fallback={<div>Something went wrong</div>}>
           <Suspense fallback="Loading...">
@@ -46,12 +40,39 @@ type HipsInspectorProps = {
 const HipsInspector = memo(({ baseUrl }: HipsInspectorProps) => {
   const properties = useHipsProperties(baseUrl)
 
+  const initialPosition = useMemo(() => {
+    const safeNumber = (s: string | undefined) => {
+      const n = Number(s)
+      return Number.isFinite(n) ? n : undefined
+    }
+    const fov = safeNumber(properties.cards.find(c => c.key === 'hips_initial_fov')?.value)
+    const ra = safeNumber(properties.cards.find(c => c.key === 'hips_initial_ra')?.value)
+    const dec = safeNumber(properties.cards.find(c => c.key === 'hips_initial_dec')?.value)
+    if (ra !== undefined && dec !== undefined) {
+      return { ra, dec, fov }
+    }
+  }, [properties])
+
+  const { globeHandle } = useAppContext()
+
+  const goToInitialPosition = useCallback(() => {
+    if (initialPosition) {
+      const { ra, dec, fov } = initialPosition
+      console.log(initialPosition)
+      globeHandle.current!().camera.jumpTo({ fovy: fov ? angle.deg2rad(fov) : angle.amin2rad(1) }, { coord: SkyCoord.fromDeg(ra, dec) })
+    }
+  }, [globeHandle, initialPosition])
+
   return (
     <table className={styles.hipsInspector}>
       <tbody>
         {properties.cards.map((card, index) => (
           <tr key={index}>
-            <th>{card.key}</th>
+            <th>{
+              initialPosition && card.key.match(/hips_initial_(?:ra|dec|fov)$/)
+                ? <a href="./" onClick={e => { e.preventDefault(); goToInitialPosition() }}>{card.key}</a>
+                : card.key
+            }</th>
             <td>
               <Linkify text={card.value} />
             </td>

@@ -29,7 +29,7 @@ export const HipsMenu = memo(() => {
       <MenuItem
         href="http://aladin.cds.unistra.fr/hips/list"
         target="_blank"
-        rel="noopener noreferrer"
+        rel="noreferrer"
       >
         HiPS list aggregator @ CDS
       </MenuItem>

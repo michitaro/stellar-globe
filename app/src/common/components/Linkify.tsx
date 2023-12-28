@@ -9,7 +9,7 @@ export const Linkify = memo(({ text }: LinkifyProps) => {
     const urlRegex = /(\bhttps?:\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/gi
     return text.split(urlRegex).map((part, index) =>
       urlRegex.test(part) ? (
-        <a key={index} href={part} target="_blank" rel="noopener noreferrer">
+        <a key={index} href={part} target="_blank" rel="noreferrer">
           {part}
         </a>
       ) : (

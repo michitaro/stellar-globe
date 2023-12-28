@@ -35,3 +35,11 @@
     padding-right: 1em;
   }
 }
+
+button.hoverMenuButton {
+  font-size: x-small;
+
+  &.active {
+    @include active;
+  }
+}

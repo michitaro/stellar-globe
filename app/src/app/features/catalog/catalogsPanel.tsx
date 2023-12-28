@@ -1,11 +1,15 @@
 import { MarkerType, markerTypes } from '@stellar-globe/stellar-globe'
+import { MenuDivider, MenuItem, SubMenu } from '@szhsin/react-menu'
 import { Fragment, memo, useId } from "react"
 import { ColorPickerRgba } from "../../../common/components/ColorPicker"
 import { Icon } from "../../../common/components/Icon"
+import { HoverMenu } from '../../../common/components/Menu/HoverMenu'
 import { askLocalFileList } from '../../../common/utils/askLocalFileList'
 import { setDisplayName } from "../../../common/utils/setDisplayName"
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
 import { Catalog, catalogsSlice } from "./catalogSlice"
+import exampleCsvWithColor from './examples/with_color_column.csv?url'
+import exampleCsvWithColorAndMarker from './examples/with_color_marker_type_column.csv?url'
 import { useAddCatalogFileList, useGoToCatalog } from './useAddCatalogFileList'
 
 
@@ -17,12 +21,16 @@ export const CatalogsPanel = memo(() => {
       <table>
         <thead>
           <tr>
-            <th><Icon type='visibility' /></th>
-            <th>Name</th>
-            <th>Marker</th>
-            <th></th>
+            {catalogs.length > 0 && (
+              <Fragment>
+                <th><Icon type='visibility' /></th>
+                <th>Name</th>
+                <th>Marker</th>
+                <th></th>
+              </Fragment>
+            )}
             <th style={{ textAlign: 'right' }}>
-              <AddCatalogFromLocal />
+              <CatalogMenu />
             </th>
           </tr>
         </thead>
@@ -72,10 +80,10 @@ const CatalogTr = memo(({ catalog: c }: { catalog: Catalog }) => {
 setDisplayName({ CatalogTr })
 
 
-const AddCatalogFromLocal = memo(() => {
+const CatalogMenu = memo(() => {
   const addCatalogFiles = useAddCatalogFileList()
 
-  const onClick = async () => {
+  const upload = async () => {
     try {
       const filelist = await askLocalFileList({ multiple: true })
       addCatalogFiles(filelist)
@@ -86,8 +94,28 @@ const AddCatalogFromLocal = memo(() => {
   }
 
   return (
-    <button>
-      <Icon type='upload' onClick={onClick} />
-    </button>
+    <HoverMenu renderMenuButtonContents={() => <Icon type='menu' />} >
+      <MenuItem onClick={upload}>
+        <Icon type='upload' marginRight />
+        Upload
+      </MenuItem>
+      <MenuDivider />
+      <SubMenu label="Example Files">
+        <MenuItem
+          href={exampleCsvWithColor}
+          target="_blank"
+          rel="noreferrer"
+        >
+          With Color Column
+        </MenuItem>
+        <MenuItem
+          href={exampleCsvWithColorAndMarker}
+          target="_blank"
+          rel="noreferrer"
+        >
+          With Color Column and Marker Type Column
+        </MenuItem>
+      </SubMenu>
+    </HoverMenu>
   )
 })

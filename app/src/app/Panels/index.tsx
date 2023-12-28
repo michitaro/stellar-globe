@@ -1,4 +1,3 @@
-import { MenuItem } from "@szhsin/react-menu"
 import classNames from "classnames"
 import { ForwardedRef, Fragment, forwardRef, memo, useRef } from "react"
 import { CSSTransition } from "react-transition-group"
@@ -6,14 +5,14 @@ import { Icon } from "../../common/components/Icon"
 import { HoverMenu } from "../../common/components/Menu/HoverMenu"
 import { Panel } from "../../common/components/Panel"
 import { setDisplayName } from "../../common/utils/setDisplayName"
+import { CatalogsPanel } from "../features/catalog/catalogsPanel"
+import { HipsPanel } from "../features/hipsLayers/HipsPanel"
 import { RegionsPanel } from "../features/regions/RegionsPanel"
 import { TonePanel } from "../features/tractTileLayers/TonePanel"
+import { MenuItemWithKeybind } from "../keybindings/MenuItemWithKeybind"
 import { useAppDispatch, useAppSelector } from "../store/hooks"
 import { panelDefs, panelsSlice } from "./panelsSlice"
 import styles from './styles.module.scss'
-import { MenuItemWithKeybind } from "../keybindings/MenuItemWithKeybind"
-import { HipsPanel } from "../features/hipsLayers/HipsPanel"
-import { CatalogsPanel } from "../features/catalog/catalogsPanel"
 
 
 export function Panels() {
@@ -78,7 +77,7 @@ const PanelsMenu = memo(forwardRef(({ className }: { className?: string }, ref: 
     </HoverMenu>
   )
 }))
-setDisplayName({ PanelMenu: PanelsMenu })
+setDisplayName({ PanelsMenu })
 
 
 const CloseButton = memo(() => {
