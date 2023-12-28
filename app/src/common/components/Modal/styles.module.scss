@@ -29,3 +29,28 @@
   align-items: center;
   justify-content: center;
 }
+
+.prompt {
+  color: white;
+  background-color: rgba(#333, 0.95);
+  $padding: 16px;
+  padding: $padding;
+  border-radius: $padding;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 16px rgba(white, 0.25);
+
+  &>* {
+    margin: 0.5em 0;
+  }
+
+  &-buttons {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  input[type="text"] {
+    width: 400px;
+    max-width: 70vw;
+  }
+}

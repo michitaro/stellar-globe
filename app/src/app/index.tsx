@@ -1,7 +1,7 @@
 import '@szhsin/react-menu/dist/index.css'
 import 'material-symbols/outlined.css'
 import { Provider } from "react-redux"
-import { BlockUIProvider } from '../common/components/BlockUI'
+import { ModalProvider } from '../common/components/Modal'
 import MainMenu from "./MainMenu"
 import { MainViewer } from "./MainViewer"
 import { Panels } from "./Panels"
@@ -30,7 +30,7 @@ const App = wrapWithAppContext(({
       <div className={styles.main} ref={rootElementRef} tabIndex={-1}>
         <MenuContainer containerRef={rootElementRef}>
           <StateHistoryProvider stateHistory={stateHistory}>
-            <BlockUIProvider>
+            <ModalProvider rootElementRef={rootElementRef}>
               <KeybindsProvider containerRef={rootElementRef} catchAllEvents={catchAllKeyboardEvents}>
                 <CatalogDragAndDrop>
                   <MainViewer />
@@ -38,7 +38,7 @@ const App = wrapWithAppContext(({
                   <MainMenu />
                 </CatalogDragAndDrop>
               </KeybindsProvider>
-            </BlockUIProvider>
+            </ModalProvider>
           </StateHistoryProvider>
         </MenuContainer>
       </div>

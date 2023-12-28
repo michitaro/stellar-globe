@@ -1,6 +1,7 @@
 import { SkyCoord, angle, easing } from "@stellar-globe/stellar-globe"
 import { useMemo } from "react"
-import { useBlockUI } from "../../../common/components/BlockUI"
+import { useBlockUI } from "../../../common/components/Modal"
+import { useAsyncPrompt } from "../../../common/components/Modal/useAsyncPrompt"
 import { Keybind } from "../../../common/components/keybindings"
 import { useAppContext } from "../../context"
 
@@ -8,23 +9,22 @@ import { useAppContext } from "../../context"
 export function useSesameKeybindings() {
   const blockUI = useBlockUI()
   const { globeHandle } = useAppContext()
+  const prompt = useAsyncPrompt()
 
   return useMemo(() => {
     const inputSesameQuery: Keybind = {
       action: async () => {
         try {
-          blockUI.lock()
-          const query = prompt('Object Name ?')
-          if (query) {
-            const coord = await resolveObjectNameBySesame(query)
-            globeHandle.current!().camera.jumpTo({ fovy: angle.amin2rad(10) }, { coord, duration: 2000, easingFunction: easing.slowStartStop4 })
-          }
+          await blockUI(async () => {
+            const query = await prompt('Object Name ?')
+            if (query) {
+              const coord = await resolveObjectNameBySesame(query)
+              globeHandle.current!().camera.jumpTo({ fovy: angle.amin2rad(10) }, { coord, duration: 2000, easingFunction: easing.slowStartStop4 })
+            }
+          })
         }
         catch (e) {
           alert(e)
-        }
-        finally {
-          blockUI.unlock()
         }
       },
       shortcut: 'Shift+Ctrl+S',
@@ -32,7 +32,7 @@ export function useSesameKeybindings() {
     return {
       inputSesameQuery,
     }
-  }, [blockUI, globeHandle])
+  }, [blockUI, globeHandle, prompt])
 }
 
 

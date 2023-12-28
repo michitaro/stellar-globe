@@ -40,6 +40,10 @@
     }
   }
 
+  :focus {
+    outline: 4px solid rgba(cyan, 0.25);
+  }
+
   a {
     color: #0aa;
   }

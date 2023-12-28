@@ -1,5 +1,6 @@
-import { CameraMode, Globe, angle, hips } from "@stellar-globe/stellar-globe"
+import { CameraMode, Globe, angle } from "@stellar-globe/stellar-globe"
 import { useMemo } from "react"
+import { useAsyncPrompt } from "../../../common/components/Modal/useAsyncPrompt"
 import { Keybind } from "../../../common/components/keybindings"
 import { useFullscreen } from "../../../common/hooks/useFullscreen"
 import { useAppContext } from "../../context"
@@ -12,13 +13,14 @@ export function useViewKeybindings() {
   const projection = useAppSelector(state => state.camera.projection)
   const fullscreen = useFullscreen(rootElementRef)
   const dispatch = useAppDispatch()
+  const prompt = useAsyncPrompt()
 
   return useMemo(() => {
     const moveToCoords: Keybind = {
-      action() {
+      action: async () => {
         const globe = globeHandle.current!()
         const { a, d } = globe.camera.center()
-        const coords = prompt('Coords?', `${a.deg} ${d.deg}`)
+        const coords = await prompt('Coords?', `${a.deg} ${d.deg}`)
         if (coords) {
           const skyCoord = angle.SkyCoord.parse(coords)
           globe.camera.jumpTo({}, { coord: skyCoord })
@@ -110,10 +112,10 @@ export function useViewKeybindings() {
 
     const cameraMoveKeys = {
       northUp,
-      panLeft: makePanKeybind('ArrowLeft', (globe, dt) => globe.camera.phi += dt * globe.camera.fovy * 2.e-4),
-      panRight: makePanKeybind('ArrowRight', (globe, dt) => globe.camera.phi -= dt * globe.camera.fovy * 2.e-4),
-      panUp: makePanKeybind('ArrowUp', (globe, dt) => globe.camera.theta += dt * globe.camera.fovy * 2.e-4),
-      panDown: makePanKeybind('ArrowDown', (globe, dt) => globe.camera.theta -= dt * globe.camera.fovy * 2.e-4),
+      panLeft: makePanKeybind('ArrowLeft', (globe, dt) => globe.camera.phi += dt * globe.camera.fovy / Math.cos(globe.camera.theta) * 4.e-4),
+      panRight: makePanKeybind('ArrowRight', (globe, dt) => globe.camera.phi -= dt * globe.camera.fovy / Math.cos(globe.camera.theta) * 4.e-4),
+      panUp: makePanKeybind('ArrowUp', (globe, dt) => globe.camera.theta += dt * globe.camera.fovy * 4.e-4),
+      panDown: makePanKeybind('ArrowDown', (globe, dt) => globe.camera.theta -= dt * globe.camera.fovy * 4.e-4),
       zoomUp: makePanKeybind('Shift+ArrowUp', (globe, dt) => globe.camera.fovy *= Math.exp(-dt * 5.e-4)),
       zoomDown: makePanKeybind('Shift+ArrowDown', (globe, dt) => globe.camera.fovy *= Math.exp(dt * 5.e-4)),
       rollClockwise: makePanKeybind('Shift+ArrowRight', (globe, dt) => globe.camera.roll -= dt * 5.e-4),
