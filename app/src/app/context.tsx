@@ -79,3 +79,9 @@ function makeTypeSafeDispatch(store: AppStore) {
     }
   }
 }
+
+
+export function useAppGetState() {
+  const { store } = useAppContext()
+  return () => store.getState()
+}

@@ -40,8 +40,13 @@
     }
   }
 
-  :focus {
-    outline: 4px solid rgba(cyan, 0.25);
+  input,
+  button,
+  textarea,
+  select {
+    &:focus {
+      outline: 4px solid rgba(cyan, 0.25);
+    }
   }
 
   a {
