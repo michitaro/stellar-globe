@@ -24,11 +24,19 @@ export function usePanelsKeyBindings() {
     const toggleHipsPanel = makeKeybind('hips', 'H')
     const toggleCatalogsPanel = makeKeybind('catalogs', 'C')
 
+    const closePanel: Keybind = {
+      action: () => {
+        dispatch(panelsSlice.actions.panelChanged('none'))
+      },
+      shortcut: 'X',
+    }
+
     return {
       toggleTonePanel,
       toggleRegionPanel,
       toggleHipsPanel,
       toggleCatalogsPanel,
+      closePanel,
     }
   }, [dispatch, selectedPanel])
 }

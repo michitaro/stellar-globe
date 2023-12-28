@@ -1,44 +1,45 @@
-import classNames from "classnames"
-import { ForwardedRef, Fragment, forwardRef, memo, useRef } from "react"
+import { MenuDivider } from "@szhsin/react-menu"
+import { Fragment, memo, useRef } from "react"
 import { CSSTransition } from "react-transition-group"
 import { Icon } from "../../common/components/Icon"
-import { HoverMenu } from "../../common/components/Menu/HoverMenu"
 import { Panel } from "../../common/components/Panel"
 import { setDisplayName } from "../../common/utils/setDisplayName"
-import { CatalogsPanel } from "../features/catalog/catalogsPanel"
-import { HipsPanel } from "../features/hipsLayers/HipsPanel"
-import { RegionsPanel } from "../features/regions/RegionsPanel"
-import { TonePanel } from "../features/tractTileLayers/TonePanel"
 import { MenuItemWithKeybind } from "../keybindings/MenuItemWithKeybind"
 import { useAppDispatch, useAppSelector } from "../store/hooks"
-import { panelDefs, panelsSlice } from "./panelsSlice"
+import { panelDefs } from "./panelDefs"
+import { panelsSlice } from "./panelsSlice"
 import styles from './styles.module.scss'
+import { HoverMenu } from "../../common/components/Menu/HoverMenu"
+import classNames from "classnames"
+
 
 
 export function Panels() {
   const selectedPanel = useAppSelector(state => state.panel.selectedPanel)
 
   return (
-    <div className={styles.panels}>
-      <CornerPanelMenu />
-      <Panel show={selectedPanel === 'tone'} bottomMenu={<BottomMenu />}>
-        <TonePanel />
-      </Panel>
-      <Panel show={selectedPanel === 'regions'} bottomMenu={<BottomMenu />}>
-        <RegionsPanel />
-      </Panel>
-      <Panel show={selectedPanel === 'hips'} bottomMenu={<BottomMenu />}>
-        <HipsPanel />
-      </Panel>
-      <Panel show={selectedPanel === 'catalogs'} bottomMenu={<BottomMenu />}>
-        <CatalogsPanel />
-      </Panel>
-    </div>
+    <Fragment>
+      {panelDefs.map(({ content, icon, name, type, menu }) => (
+        <Panel key={type} show={selectedPanel === type} title={
+          <Fragment>
+            <Icon type={icon} marginRight />
+            {name}
+          </Fragment>
+        }
+          panelMenu={<PanelsMenu hasCloseMenu />}
+          menu={menu}
+        >
+          {content}
+        </Panel>
+      ))}
+      <CornerMenu />
+    </Fragment >
   )
 }
 
 
-const PanelsMenu = memo(forwardRef(({ className }: { className?: string }, ref: ForwardedRef<HTMLButtonElement>) => {
+
+const PanelsMenu = memo(({ hasCloseMenu = false }: { hasCloseMenu?: boolean }) => {
   const dispatch = useAppDispatch()
   const selectedPanel = useAppSelector(state => state.panel.selectedPanel)
   const setSelectedPanel = (panel: typeof selectedPanel) => dispatch(panelsSlice.actions.panelChanged(panel))
@@ -52,14 +53,13 @@ const PanelsMenu = memo(forwardRef(({ className }: { className?: string }, ref: 
   } as const
 
   return (
-    <HoverMenu
-      className={className}
-      renderMenuButton={({ active }) =>
-        <button ref={ref} className={classNames(styles.menu, active && styles.active)}>
-          <Icon type="picture_in_picture" />
-        </button>
-      }
-    >
+    <Fragment>
+      {hasCloseMenu && (
+        <Fragment>
+          <MenuItemWithKeybind keybind="closePanel" disabled={selectedPanel === 'none'} >Close</MenuItemWithKeybind>
+          <MenuDivider />
+        </Fragment>
+      )}
       {
         panelDefs.map(({ icon, name, type }, index) => (
           <MenuItemWithKeybind
@@ -74,37 +74,17 @@ const PanelsMenu = memo(forwardRef(({ className }: { className?: string }, ref: 
           </MenuItemWithKeybind>
         ))
       }
-    </HoverMenu>
-  )
-}))
-setDisplayName({ PanelsMenu })
-
-
-const CloseButton = memo(() => {
-  const dispatch = useAppDispatch()
-  return (
-    <button className={styles.closeButton} onClick={() => dispatch(panelsSlice.actions.panelChanged('none'))}>
-      <Icon type="close" />
-    </button>
-  )
-})
-setDisplayName({ CloseButton })
-
-
-const BottomMenu = memo(() => {
-  return (
-    <Fragment>
-      <PanelsMenu />
-      <CloseButton />
     </Fragment>
   )
 })
-setDisplayName({ BottomMenu })
+setDisplayName({ PanelsMenu })
 
 
-const CornerPanelMenu = memo(() => {
-  const show = useAppSelector(state => state.panel.selectedPanel === 'none')
+function CornerMenu() {
+  const selectedPanel = useAppSelector(state => state.panel.selectedPanel)
   const nodeRef = useRef(null)
+  const show = selectedPanel === 'none'
+
   return (
     <CSSTransition
       in={show}
@@ -119,8 +99,15 @@ const CornerPanelMenu = memo(() => {
         exitActive: styles.fadeExitActive,
       }}
     >
-      <PanelsMenu ref={nodeRef} className={styles.corner} />
+      <HoverMenu
+        position="anchor"
+        className={styles.corner}
+        renderMenuButton={({ active }) =>
+          <button ref={nodeRef} className={classNames(styles.button, active && styles.active)} ><Icon type="picture_in_picture" /></button>
+        }
+      >
+        <PanelsMenu />
+      </HoverMenu>
     </CSSTransition>
   )
-})
-setDisplayName({ CornerPanelMenu })
+}

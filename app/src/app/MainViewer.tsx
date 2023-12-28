@@ -39,8 +39,8 @@ export function MainViewer() {
 
       <BeautifulObjectLayer$ {...layers.nearbyGalaxiesAndNebulas} />
 
-      <TractTileLayers />
       {hips.baseUrl && <HipsSimpleLayer$ baseUrl={hips.baseUrl} />}
+      <TractTileLayers />
 
       <EsoMilkyWayLayer$ {...layers.esoMilkyWay} />
 

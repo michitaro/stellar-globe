@@ -64,10 +64,10 @@
 
     .szh-menu-container--theme-dark .szh-menu {
       color: #cad1d8;
-      background-color: #22262c;
+      background-color: rgba(#222, 0.95);
       border: 1px solid #333;
       // box-shadow: 0 2px 9px 3px rgba(0, 0, 0, 0.25);
-      box-shadow: 0 0 4px rgba(#333, 1);
+      box-shadow: 0 0 8px rgba(#222, 1), 0 0 4px rgba(#037, 1);
     }
 
     .szh-menu-container--theme-dark .szh-menu__arrow {
@@ -77,7 +77,7 @@
     }
 
     .szh-menu-container--theme-dark .szh-menu__item--hover {
-      background-color: #31363c;
+      background-color: rgba(#357, 0.25);
     }
 
     .szh-menu-container--theme-dark .szh-menu__item--focusable {

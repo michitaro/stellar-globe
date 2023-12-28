@@ -1,39 +1,10 @@
 @import 'src/theme.scss';
 
-.panels {
-  .corner {
-    position: absolute;
-    top: 0;
-    right: 0;
-  }
-
-  .menu {
-    @include reset;
-    border-radius: 0 0 0 8px;
-  }
-
-  .closeButton {
-    @include reset;
-  }
-
-  .panel {
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 8px;
-    border-radius: 0 0 0 8px;
-    @include background;
-  }
-
-  .active {
-    @include active;
-  }
-}
-
 .fade {
   &-enter {
     opacity: 0;
-    transform: translate(0, 8px);
+    // transform: translate(0, -100%);
+    transform: translate(32px, 0);
   }
 
   &-enter-active {
@@ -49,7 +20,28 @@
 
   &-exit-active {
     opacity: 0;
-    transform: translate(0, 8px);
+    // transform: translate(0, -100%);
+    transform: translate(32px, 0);
     transition: opacity 0.2s, transform 0.2s;
+  }
+}
+
+.corner {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  .button {
+    @include reset;
+    // background-color: transparent;
+    border-radius: 0 0 0 8px;
+    margin: 0;
+    padding: 8px 6px 8px 10px;
+  }
+
+  display: flex;
+
+  .button.active {
+    @include active;
   }
 }

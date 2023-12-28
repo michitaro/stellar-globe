@@ -9,26 +9,51 @@
   flex-direction: column;
 }
 
-.panel {
+.titleBar {
   @include background;
-  $padding: 16px;
-  padding: $padding;
-  border-radius: 0 0 0 $padding;
-  flex-grow: 1;
-  overflow-y: auto;
+  display: flex;
+  align-items: stretch;
+  font-size: large;
+  border: 0 solid rgba(#777, 0.25);
+  border-width: 0 0 1px 0;
+
+  .title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    padding: 8px 2em;
+  }
+
+  .menu {
+
+    button {
+      @include reset;
+      background-color: transparent;
+      margin: 0;
+    }
+
+    display: flex;
+
+    button.active {
+      @include active;
+    }
+  }
 }
 
-.bottomMenu {
-  display: flex;
-  align-items: flex-start;
-  justify-content: end;
+.panel {
+  @include background;
+  padding: 8px 16px;
+  border-radius: 0 0 0 16px;
+  flex-grow: 1;
+  overflow-y: auto;
 }
 
 .fade {
   &-enter {
     opacity: 0;
     // transform: translate(0, -100%);
-    transform: translate(0, -16px);
+    transform: translate(32px, 0);
   }
 
   &-enter-active {
@@ -45,7 +70,7 @@
   &-exit-active {
     opacity: 0;
     // transform: translate(0, -100%);
-    transform: translate(0, -16px);
+    transform: translate(32px, 0);
     transition: opacity 0.2s, transform 0.2s;
   }
 }

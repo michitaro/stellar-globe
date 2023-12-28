@@ -1,13 +1,10 @@
 import { SkyCoord, angle } from '@stellar-globe/stellar-globe'
 import { Fragment, Suspense, memo, useCallback, useMemo } from "react"
 import { ErrorBoundary } from "react-error-boundary"
-import { Icon } from '../../../common/components/Icon'
 import { Linkify } from '../../../common/components/Linkify'
-import { HoverMenu } from '../../../common/components/Menu/HoverMenu'
 import { setDisplayName } from "../../../common/utils/setDisplayName"
 import { useAppContext } from '../../context'
 import { useAppSelector } from "../../store/hooks"
-import { HipsMenu } from './hipsMenu'
 import styles from './style.module.scss'
 
 
@@ -16,11 +13,6 @@ export const HipsPanel = memo(() => {
 
   return (
     <Fragment>
-      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <HoverMenu renderMenuButtonContents={() => <Icon type="menu" />} >
-          <HipsMenu />
-        </HoverMenu>
-      </div>
       {currentBaseUrl && (
         <ErrorBoundary fallback={<div>Something went wrong</div>}>
           <Suspense fallback="Loading...">
@@ -58,13 +50,15 @@ const HipsInspector = memo(({ baseUrl }: HipsInspectorProps) => {
   const goToInitialPosition = useCallback(() => {
     if (initialPosition) {
       const { ra, dec, fov } = initialPosition
-      console.log(initialPosition)
       globeHandle.current!().camera.jumpTo({ fovy: fov ? angle.deg2rad(fov) : angle.amin2rad(1) }, { coord: SkyCoord.fromDeg(ra, dec) })
     }
   }, [globeHandle, initialPosition])
 
+  const title = useMemo(() => properties.cards.find(c => c.key === 'obs_title')?.value, [properties])
+
   return (
     <table className={styles.hipsInspector}>
+      <caption>{title}</caption>
       <tbody>
         {properties.cards.map((card, index) => (
           <tr key={index}>

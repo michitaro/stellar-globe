@@ -1,8 +1,8 @@
-import styles, { active } from './styles.module.scss'
 import { ControlledMenu, useClick, useHover, useMenuState } from '@szhsin/react-menu'
 import classNames from 'classnames'
 import { Fragment, MutableRefObject, ReactNode, useEffect, useMemo, useRef } from 'react'
 import { useMenuContainer } from './MenuContext'
+import styles from './styles.module.scss'
 
 
 const closers = new Map<MutableRefObject<null>, () => void>()
@@ -48,7 +48,12 @@ export function HoverMenu({ className, children, renderMenuButton, renderMenuBut
 
   return (
     <Fragment>
-      <div ref={anchorRef} {...anchorProps} className={className} {...clickProps}>
+      <div
+        ref={anchorRef}
+        {...anchorProps}
+        {...clickProps}
+        className={className}
+      >
         {renderMenuButton?.({ active: menuState.state === 'open' })}
         {renderMenuButtonContents && (
           <button className={classNames(styles.hoverMenuButton, menuState.state === 'open' && styles.active)}>

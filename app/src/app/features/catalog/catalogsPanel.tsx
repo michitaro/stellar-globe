@@ -27,11 +27,9 @@ export const CatalogsPanel = memo(() => {
                 <th>Name</th>
                 <th>Marker</th>
                 <th></th>
+                <th></th>
               </Fragment>
             )}
-            <th style={{ textAlign: 'right' }}>
-              <CatalogMenu />
-            </th>
           </tr>
         </thead>
         <tbody>
@@ -80,7 +78,7 @@ const CatalogTr = memo(({ catalog: c }: { catalog: Catalog }) => {
 setDisplayName({ CatalogTr })
 
 
-const CatalogMenu = memo(() => {
+export const CatalogsMenu = memo(() => {
   const addCatalogFiles = useAddCatalogFileList()
 
   const upload = async () => {
@@ -94,7 +92,7 @@ const CatalogMenu = memo(() => {
   }
 
   return (
-    <HoverMenu renderMenuButtonContents={() => <Icon type='menu' />} >
+    <Fragment>
       <MenuItem onClick={upload}>
         <Icon type='upload' marginRight />
         Upload
@@ -116,6 +114,7 @@ const CatalogMenu = memo(() => {
           With Color Column and Marker Type Column
         </MenuItem>
       </SubMenu>
-    </HoverMenu>
+    </Fragment>
   )
 })
+setDisplayName({ CatalogsMenu })

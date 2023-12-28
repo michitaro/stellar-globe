@@ -1,11 +1,10 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
-import { regionsSlice } from "../features/regions/regionsSlice"
-import { MaterialSymbol } from "material-symbols"
-import { hipsLayersSlice } from "../features/hipsLayers/hipsLayersSlice"
 import { catalogsSlice } from "../features/catalog/catalogSlice"
+import { hipsLayersSlice } from "../features/hipsLayers/hipsLayersSlice"
+import { regionsSlice } from "../features/regions/regionsSlice"
 
 
-type PanelType = 'tone' | 'regions' | 'hips' | 'catalogs' | 'none'
+export type PanelType = 'tone' | 'regions' | 'hips' | 'catalogs' | 'none'
 
 
 type State = {
@@ -54,36 +53,3 @@ export const panelsSlice = createSlice({
     )
   },
 })
-
-
-export type PanelDef = {
-  name: string
-  icon: MaterialSymbol
-  type: PanelType
-}
-
-
-// ↓の ts-ignore は type-validators を作るときに必要
-// @ts-ignore
-export const panelDefs: PanelDef[] = [
-  {
-    name: 'Tone',
-    icon: 'tune',
-    type: 'tone',
-  },
-  {
-    name: 'Region',
-    icon: 'architecture',
-    type: 'regions',
-  },
-  {
-    name: 'HiPS',
-    icon: 'layers',
-    type: 'hips',
-  },
-  {
-    name: 'Catalogs',
-    icon: 'table',
-    type: 'catalogs',
-  }
-] as const
