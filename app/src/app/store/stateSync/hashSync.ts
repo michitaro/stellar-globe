@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { AppStore, AppState } from ".."
+import { AppState, AppStore } from ".."
 import { debounce } from "../../../common/utils/debounce"
 import { deserialize, serialize } from "../../../common/utils/serialize"
 import { createIs } from "../../typeGuard"
@@ -9,13 +9,13 @@ import { appOnChange } from "./appOnChange"
 export type HashState = Partial<ReturnType<typeof hashState>>
 
 
-function hashState(state: AppState) {
+function hashState(state: AppState, { compact = false }: { compact?: boolean } = {}) {
   return {
     tractTileLayerColorParams: state.tractTileLayers.colorParams,
     cameraParams: state.camera.params,
     projection: state.camera.projection,
     datasets: state.tractTileLayers.layers.filter(l => l.visible).map(l => l.name),
-    regions: state.regions.regions,
+    regions: compact ? [] : state.regions.regions,
     hipsBaseUrl: state.hipsLayers.baseUrl,
     appearance: state.appearance,
   }
@@ -23,15 +23,22 @@ function hashState(state: AppState) {
 
 
 export function useHashSync({
-  store, enabled,
+  store,
+  enabled,
 }: {
-  store: AppStore,
-  enabled: boolean,
+  store: AppStore
+  enabled: boolean
 }) {
   useEffect(() => {
     if (enabled) {
       const sync = debounce(200, () => {
-        changeHashWithoutAddingToHistory(serialize(hashState(store.getState())))
+        const urlLengthLimit = 2048 // Limit of Google Chrome
+        const lengthLimit = urlLengthLimit - getUrlLengthWithoutHash()
+        const longHash = serialize(hashState(store.getState()))
+        const hash = longHash.length > lengthLimit
+          ? serialize(hashState(store.getState(), { compact: true }))
+          : longHash
+        changeHashWithoutAddingToHistory(hash)
       })
       const cleanup: (() => void)[] = [
         appOnChange(store, state => state.tractTileLayers.colorParams, sync),
@@ -49,8 +56,6 @@ export function useHashSync({
     }
   }, [enabled, store])
 }
-
-
 
 
 export const readHashState = (() => {
@@ -91,4 +96,11 @@ export const readHashState = (() => {
 function changeHashWithoutAddingToHistory(newHash: string) {
   const url = window.location.href.split('#')[0]
   history.replaceState(null, '', url + '#' + newHash)
+}
+
+
+function getUrlLengthWithoutHash() {
+  const urlLength = window.location.href.length
+  const hashLength = window.location.hash.length
+  return urlLength - hashLength
 }
