@@ -35,7 +35,7 @@ export const panelsSlice = createSlice({
     })
     builder.addMatcher(
       action => [
-        catalogsSlice.actions.csvTextSubmitted.type,
+        catalogsSlice.actions.catalogAdded.type,
       ].includes(action.type),
       state => {
         state.selectedPanel = 'catalogs'

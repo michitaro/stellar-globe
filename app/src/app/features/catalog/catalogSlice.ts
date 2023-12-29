@@ -25,8 +25,8 @@ export const catalogsSlice = createSlice({
   name: 'catalogs',
   initialState,
   reducers: create => ({
-    csvTextSubmitted: create.preparedReducer(
-      (params: { name: string, csvText: string, id?: string, defaultType?: MarkerType, defaultColor?: V4 }) => {
+    catalogAdded: create.preparedReducer(
+      (params: { name: string, id?: string, defaultType?: MarkerType, defaultColor?: V4 } & ReturnType<typeof parseCatalogCsvText>) => {
         const id = params.id ?? nanoid()
         return trackAction({
           payload: {
@@ -37,22 +37,15 @@ export const catalogsSlice = createSlice({
       },
       (state, { payload: { id, params } }) => {
         if (!state.catalogs.find(c => c.id === id)) {
-          let parsedResults: ReturnType<typeof parseCsvText>
-          try {
-            parsedResults = parseCsvText(params.csvText)
-          }
-          catch (error) {
-            alert(error)
-            console.error(error)
-            return
-          }
-          const { hasColorCol, hasMarkerTypeCol, ...contents } = parsedResults
+          const { name, markers, fields, attributes, hasColorCol, hasMarkerTypeCol } = params
           const catalog: Catalog = {
             id,
+            name,
             hasColorCol,
             hasMarkerTypeCol,
-            ...contents,
-            name: params.name,
+            markers,
+            fields,
+            attributes,
             baseColor: hasColorCol ? [1, 1, 1, 1] : nextColor(state),
             defaultType: params.defaultType ?? 'circle',
             defaultColor: params.defaultColor ?? [1, 1, 1, 1] as V4,
@@ -92,7 +85,7 @@ export const catalogsSlice = createSlice({
 class CatalogParseError extends Error { }
 
 
-function parseCsvText(csvText: string) {
+export function parseCatalogCsvText(csvText: string) {
   const parseResults = Papa.parse(csvText)
 
   if (parseResults.errors.length > 0) {
@@ -181,8 +174,8 @@ type Marker = Parameters<typeof ClickableMarkerLayer$>[0]['markers'][number]
 export type Catalog = {
   id: string
   name: string
-  fields: string[]
   markers: Marker[]
+  fields: string[]
   attributes: string[][]
   defaultType: MarkerType
   defaultColor: V4

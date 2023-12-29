@@ -1,15 +1,13 @@
 import { Globe, SkyCoord, angle } from "@stellar-globe/stellar-globe"
 import { useCallback } from "react"
 import { useAppContext, useAppGetState } from "../../context"
-import { AppState } from "../../store"
 import { useAppDispatch } from "../../store/hooks"
-import { Catalog, catalogsSlice } from "./catalogSlice"
+import { Catalog, catalogsSlice, parseCatalogCsvText } from "./catalogSlice"
 
 
 export function useAddCatalogFileList() {
   const dispatch = useAppDispatch()
   const getState = useAppGetState()
-  const stateChangeTrigger = useStateChangeTrigger()
   const { globeHandle } = useAppContext()
 
   return useCallback((filelist: FileList) => {
@@ -18,13 +16,16 @@ export function useAddCatalogFileList() {
         const reader = new FileReader()
         reader.onload = (e) => {
           const text = e.target?.result as string
-          if (text) {
-            stateChangeTrigger({
-              executeAction: () => dispatch(catalogsSlice.actions.csvTextSubmitted({ name: file.name, csvText: text })),
-              selectState: state => state.catalogs.catalogs.length,
-              onStateChange: () => goToCatalog(getState().catalogs.catalogs.slice(-1)[0], globeHandle.current!()),
-            })
+          let parsedResults: ReturnType<typeof parseCatalogCsvText>
+          try {
+            parsedResults = parseCatalogCsvText(text)
           }
+          catch (error) {
+            alert(error)
+            return
+          }
+          dispatch(catalogsSlice.actions.catalogAdded({ name: file.name, ...parsedResults }))
+          goToCatalog(getState().catalogs.catalogs.slice(-1)[0], globeHandle.current!())
         }
         reader.readAsText(file)
       }
@@ -32,7 +33,7 @@ export function useAddCatalogFileList() {
         alert(`Unsupported file type: ${file.name}: ${file.type}`)
       }
     }
-  }, [dispatch, getState, globeHandle, stateChangeTrigger])
+  }, [dispatch, getState, globeHandle])
 }
 
 
@@ -49,23 +50,4 @@ export function useGoToCatalog() {
   return useCallback((catalog: Catalog) => {
     goToCatalog(catalog, globeHandle.current!())
   }, [globeHandle])
-}
-
-
-function useStateChangeTrigger() {
-  const getState = useAppGetState()
-
-  const trigger = useCallback(({ selectState, executeAction, onStateChange }: {
-    selectState: (state: AppState) => unknown
-    executeAction: () => void
-    onStateChange: () => void
-  }) => {
-    const before = selectState(getState())
-    executeAction()
-    const after = selectState(getState())
-    if (!Object.is(before, after)) {
-      onStateChange()
-    }
-  }, [getState])
-  return trigger
 }
