@@ -4,7 +4,7 @@ import { hipsLayersSlice } from "../features/hipsLayers/hipsLayersSlice"
 import { regionsSlice } from "../features/regions/regionsSlice"
 
 
-export type PanelType = 'tone' | 'regions' | 'hips' | 'catalogs' | 'none'
+export type PanelType = 'tone' | 'regions' | 'hips' | 'catalogs' | 'catalog_inspector' | 'none'
 
 
 type State = {

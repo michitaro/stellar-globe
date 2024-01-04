@@ -36,3 +36,38 @@
     transition: opacity 0.2s;
   }
 }
+
+
+.inspector {
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+
+  .tableWrapper {
+    flex-grow: 1;
+    overflow-y: auto;
+    height: 50vh;
+  }
+
+  table {
+    width: 25%;
+    table-layout: fixed;
+    font-size: small;
+    font-family: monospace;
+  }
+
+  thead {
+
+    th,
+    td {
+      position: sticky;
+      top: 0
+    }
+  }
+
+  td,
+  th {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

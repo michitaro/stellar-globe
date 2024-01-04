@@ -14,7 +14,6 @@ export function ViewMenu() {
   const { rootElementRef } = useAppContext()
   const { isFullscreen } = useFullscreen(rootElementRef)
   const camera = useAppSelector(state => state.camera)
-  const angleUnit = useAppSelector(state => state.common.angleUnit)
   const dispatch = useAppDispatch()
 
   return (

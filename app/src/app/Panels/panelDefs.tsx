@@ -1,12 +1,13 @@
 import { MaterialSymbol } from "material-symbols"
-import { Fragment, ReactNode } from "react"
+import { ReactNode } from "react"
+import { CatalogInspector } from "../features/catalog/CatalogInspector"
 import { CatalogsMenu, CatalogsPanel } from "../features/catalog/catalogsPanel"
 import { HipsPanel } from "../features/hipsLayers/HipsPanel"
+import { HipsMenu } from "../features/hipsLayers/hipsMenu"
+import { RegionsMenu } from "../features/regions/RegionsMenu"
 import { RegionsPanel } from "../features/regions/RegionsPanel"
 import { TonePanel } from "../features/tractTileLayers/TonePanel"
 import { PanelType } from "./panelsSlice"
-import { RegionsMenu } from "../features/regions/RegionsMenu"
-import { HipsMenu } from "../features/hipsLayers/hipsMenu"
 
 
 export type PanelDef = {
@@ -41,9 +42,15 @@ export const panelDefs: PanelDef[] = [
   },
   {
     name: 'Catalogs',
-    icon: 'table',
+    icon: 'table_view',
     type: 'catalogs',
     content: <CatalogsPanel />,
     menu: <CatalogsMenu />,
+  },
+  {
+    name: 'Inspector',
+    icon: 'table',
+    type: 'catalog_inspector',
+    content: <CatalogInspector />,
   }
 ] 

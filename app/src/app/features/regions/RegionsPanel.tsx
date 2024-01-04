@@ -53,7 +53,7 @@ const RegionTr = memo(({ region }: { region: Region }) => {
           <ColorPickerRgba color={color} onChange={onChangeColor} />
           <button
             onClick={goToRegion}
-          ><Icon type="jump_to_element" /></button>
+          ><Icon type="location_on" /></button>
           <button
             onClick={() => dispatch(regionsSlice.actions.regionDeleted({ id }))}
           ><Icon type="delete" /></button>

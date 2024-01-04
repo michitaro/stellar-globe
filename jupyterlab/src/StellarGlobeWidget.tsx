@@ -37,7 +37,7 @@ function StellarGlobeAppWidget(env: StellarGlobeSessionEnv, comm: CommType) {
     const appRef = useRef<AppHandle>(null!)
 
     const dispatch = (msg: DispatchMessage) => {
-      appRef.current.safeDispatch(msg.action)
+      appRef.current.dispatchAction(msg.action)
     }
 
     useInit(() => {

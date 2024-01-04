@@ -11,12 +11,15 @@ import { trackAction } from "../../store/stateHistory"
 type State = {
   catalogs: Catalog[]
   autoColor: boolean
+  currentCatalogId: string | undefined
 }
+
 
 function initialState(): State {
   return {
     catalogs: [],
     autoColor: true,
+    currentCatalogId: undefined,
   }
 }
 
@@ -62,6 +65,9 @@ export const catalogsSlice = createSlice({
         if (i >= 0) {
           state.catalogs.splice(i, 1)
         }
+        if (state.currentCatalogId === id) {
+          state.currentCatalogId = undefined
+        }
       },
     ),
     catalogUpdated: create.preparedReducer(
@@ -73,7 +79,15 @@ export const catalogsSlice = createSlice({
         }
       },
     ),
+    catalogSelected: create.reducer(
+      (state, { payload: { id } }: { payload: { id: string } }) => {
+        state.currentCatalogId = id
+      },
+    ),
   }),
+  selectors: {
+    currentCatalog: state => state.catalogs.find(c => c.id === state.currentCatalogId),
+  },
   extraReducers(builder) {
     builder.addCase(appStateHistoryActions.setState, (state, action) => {
       state.catalogs = action.payload.catalogs.catalogs

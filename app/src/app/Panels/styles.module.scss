@@ -4,7 +4,7 @@
   &-enter {
     opacity: 0;
     // transform: translate(0, -100%);
-    transform: translate(32px, 0);
+    transform: translate(-32px, 0);
   }
 
   &-enter-active {
@@ -21,7 +21,7 @@
   &-exit-active {
     opacity: 0;
     // transform: translate(0, -100%);
-    transform: translate(32px, 0);
+    transform: translate(-32px, 0);
     transition: opacity 0.2s, transform 0.2s;
   }
 }

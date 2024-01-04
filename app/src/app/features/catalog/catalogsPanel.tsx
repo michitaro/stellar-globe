@@ -69,7 +69,7 @@ const CatalogTr = memo(({ catalog: c }: { catalog: Catalog }) => {
         } />
       </td>
       <td>
-        <button onClick={() => goToCatalog(c)}><Icon type='jump_to_element' /></button>
+        <button onClick={() => goToCatalog(c)}><Icon type='location_on' /></button>
         <button onClick={() => dispatch(catalogsSlice.actions.catalogDeleted({ id: c.id }))}><Icon type="delete" /></button>
       </td>
     </tr>

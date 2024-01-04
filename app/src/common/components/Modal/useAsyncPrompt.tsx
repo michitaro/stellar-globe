@@ -36,7 +36,7 @@ function Prompt({
   const inputEl = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    inputEl.current?.focus()
+    inputEl.current?.select()
   }, [])
 
   const { blockRef } = useModal()

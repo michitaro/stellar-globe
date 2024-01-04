@@ -130,5 +130,5 @@ export function useViewKeybindings() {
       ...zoomKeys,
       ...cameraMoveKeys,
     }
-  }, [dispatch, fullscreen, globeHandle, projection])
+  }, [dispatch, fullscreen, globeHandle, projection, prompt])
 }
