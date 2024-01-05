@@ -17,6 +17,7 @@ type Layer = {
 type State = {
   colorParams: ColorParams
   layers: Layer[]
+  toneDialogVisible: boolean
 }
 
 
@@ -91,6 +92,7 @@ function initialState(): State {
       //   visible: false,
       // })),
     ],
+    toneDialogVisible: true,
   }
 }
 
@@ -107,6 +109,9 @@ export const tractTileLayersSlice = createSlice({
       if (l) {
         l.visible = visible
       }
+    },
+    toggleToneDialog(state, { payload }: PayloadAction<{}>) {
+      state.toneDialogVisible = !state.toneDialogVisible
     },
   },
 })

@@ -25,6 +25,8 @@ export type DialogProps = {
   visible?: boolean
   fadeDuration?: number
   fadeClassNames?: CSSTransitionClassNames
+  rememberPosition?: boolean
+  minSize?: Size
 }
 
 
@@ -42,7 +44,12 @@ type ClassNames = {
 
 export function Dialog(props: DialogProps) {
   const { portal } = useDialogContext()
-  return createPortal(<PortalContent {...props} />, portal ?? document.body)
+  if (portal) {
+    return createPortal(<PortalContent {...props} />, portal)
+  }
+  else {
+    return <PortalContent {...props} />
+  }
 }
 
 
@@ -55,8 +62,8 @@ function PortalContent(props: DialogProps) {
   const [position, setPosition] = useState<Position | undefined>(undefined)
   const positionAtDragStart = useRef<Position | undefined>()
   const onDragStart = useCallback(({ active: { data } }: DragEndEvent) => {
-    const wrapperRef: React.RefObject<HTMLDivElement> = data.current?.wrapperRef
-    const { left, top } = wrapperRef.current!.getBoundingClientRect()
+    const sizeRef: React.RefObject<HTMLDivElement> = data.current?.sizeRef
+    const { left, top } = sizeRef.current!.getBoundingClientRect()
     positionAtDragStart.current = { left, top }
   }, [])
   const onDragEnd = useCallback(({ delta }: DragEndEvent) => {
@@ -94,18 +101,21 @@ export function DnDContent({
   visible = true,
   fadeClassNames,
   fadeDuration = 0,
+  rememberPosition = false,
+  minSize,
 }: DialogProps & {
   position: Position | undefined
   setPosition: React.Dispatch<React.SetStateAction<Position | undefined>>
 }) {
   const id = useSeqId()
   const zIndex = useZIndex(id)
-  const wrapperRef = useRef<HTMLDivElement>(null)
+  const wrapperRef = useRef<HTMLDivElement>(null!)
+  const sizeRef = useRef<HTMLDivElement>(null!)
   const [size, setSize] = useState<Size | undefined>(undefined)
 
   const { setNodeRef, listeners, transform, attributes, setActivatorNodeRef, active } = useDraggable({
     id: 'dialog',
-    data: { wrapperRef },
+    data: { sizeRef },
   })
 
   const style = useMemo(() => {
@@ -136,44 +146,61 @@ export function DnDContent({
     // 大きさはchildren, titleにもよる
     children
     title
-    // positionHintが指定されていない場合にここで位置調整
-    if (!(position || positionHint)) {
-      const { width, height } = wrapperRef.current!.getBoundingClientRect()
-      const newPosition = nextPosition({ width, height })
-      setPosition(newPosition)
-      dialogs.set(id, { rect: { ...newPosition, width, height }, visible })
-    }
-    else {
-      const { width, height, left, top } = wrapperRef.current!.getBoundingClientRect()
-      dialogs.set(id, { rect: { left, top, width, height }, visible })
-    }
-    return () => {
-      dialogs.delete(id)
+    if (visible) {
+      // 初回commit時などpositionが未指定の状態ではpositionHintによって場所が決まっている。
+      const { width, height, left, top } = sizeRef.current.getBoundingClientRect()
+      if (!position) {
+        const newPosition = nextPosition({ width, height }, { positionHint: positionHint && { left, top } })
+        setPosition(newPosition)
+        dialogs.set(id, { rect: { ...newPosition, width, height }, visible })
+      }
+      else {
+        dialogs.set(id, { rect: { left, top, width, height }, visible })
+      }
+      return () => {
+        dialogs.delete(id)
+      }
     }
   }, [children, dialogs, id, nextPosition, position, positionHint, setPosition, title, visible])
 
+  const onExited = useCallback(() => {
+    if (!rememberPosition) {
+      setPosition(undefined)
+    }
+  }, [rememberPosition, setPosition])
+
   return (
-    <CSSTransition nodeRef={wrapperRef} in={visible} timeout={fadeDuration} classNames={fadeClassNames} mountOnEnter appear>
-      <div className={styles.wrapper} style={style} ref={wrapperRef} onMouseDown={() => raiseWindow(id)}>
-        <Resizable container={wrapperRef} position={position} setPosition={setPosition} setSize={setSize} >
-          <div
-            className={classNames(styles.dialog, $classNames.dialog, active && $classNames.active)}
-            ref={setNodeRef}
-          >
+    <CSSTransition
+      nodeRef={wrapperRef}
+      in={visible}
+      timeout={fadeDuration}
+      classNames={fadeClassNames}
+      mountOnEnter
+      appear
+      onExited={onExited}
+    >
+      <div ref={sizeRef} style={{ ...style, position: 'fixed' }}>
+        <Resizable container={sizeRef} position={position} setPosition={setPosition} setSize={setSize} minSize={minSize}>
+          <div className={styles.wrapper} ref={wrapperRef} onMouseDown={() => raiseWindow(id)}>
             <div
-              className={classNames(styles.titlebar, $classNames.titlebar)}
-              ref={setActivatorNodeRef}
-              {...listeners}
-              {...attributes}
+              className={classNames(styles.dialog, $classNames.dialog, active && $classNames.active)}
+              ref={setNodeRef}
             >
-              {title}
-            </div>
-            <div
-              className={classNames(styles.content, $classNames.content)}
-            >
-              {children}
-            </div>
-          </div >
+              <div
+                className={classNames(styles.titlebar, $classNames.titlebar)}
+                ref={setActivatorNodeRef}
+                {...listeners}
+                {...attributes}
+              >
+                {title}
+              </div>
+              <div
+                className={classNames(styles.content, $classNames.content)}
+              >
+                {children}
+              </div>
+            </div >
+          </div>
         </Resizable>
       </div>
     </CSSTransition>

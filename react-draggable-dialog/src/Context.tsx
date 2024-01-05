@@ -1,6 +1,6 @@
 import { ReactNode, createContext, useCallback, useContext, useEffect, useMemo, useState } from "react"
 import { useInstanceVariable } from "./hooks"
-import { nonOverlappingWindowPosition } from "./nonOverlappingWindowPosition"
+import { defaultPositionFinder } from "./positionFinder/defaultPositionFinder"
 import { Position, Rect, Size } from "./types"
 
 
@@ -13,7 +13,7 @@ export type DialogState = {
 type ContextType = {
   portal?: HTMLElement
   dialogs: Map<number, DialogState>
-  nextPosition: (size: Size) => Position
+  nextPosition: (size: Size, options: { positionHint?: Position }) => Position
   zIndex: Map<number, number>
   raiseWindow: (id: number) => void
 }
@@ -25,13 +25,14 @@ const Context = createContext<ContextType | undefined>(undefined)
 type Props = {
   children: ReactNode
   portal?: HTMLElement
-  positionStart?: Position
+  positionFinder?: (rects: Rect[], size: Size, options: { positionHint?: Position }) => Position
 }
 
 
 export function DialogContext({
   children,
   portal,
+  positionFinder = defaultPositionFinder,
 }: Props) {
   const dialogs = useInstanceVariable(() => new Map<number, DialogState>())
   const [zIndex, setZIndex] = useState(new Map<number, number>())
@@ -48,10 +49,14 @@ export function DialogContext({
   const context: ContextType = useMemo(() => ({
     dialogs,
     portal,
-    nextPosition: (size: Size) => nonOverlappingWindowPosition([...dialogs.values()].filter(d => d.visible).map(d => d.rect), size),
+    nextPosition: (size: Size, options: { positionHint?: Position }) => positionFinder(
+      [...dialogs.values()].filter(d => d.visible).map(d => d.rect),
+      size,
+      { positionHint: options.positionHint },
+    ),
     zIndex,
     raiseWindow,
-  }), [dialogs, portal, raiseWindow, zIndex])
+  }), [dialogs, portal, positionFinder, raiseWindow, zIndex])
 
   return (
     <Context.Provider value={context}>

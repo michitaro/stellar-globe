@@ -1,6 +1,7 @@
 import { MenuBar } from '../../common/components/Menu/MenuBar'
 import { CommonMenu } from '../features/common/CommonMenu'
 import { DevelMenu } from '../features/devel/DevelMenu'
+import { DialogsMenu } from '../features/dialogs/DialogsMenu'
 import { HistoryMenu } from '../features/history/HistoryMenu'
 import { ViewMenu } from '../features/view/ViewMenu'
 import { DatasetMenu } from './DatasetMenu'
@@ -16,6 +17,7 @@ export default function MainMenu() {
       <DatasetMenu />
       <ToolsMenu />
       <HistoryMenu />
+      <DialogsMenu />
       <DevelMenu />
     </MenuBar >
   )

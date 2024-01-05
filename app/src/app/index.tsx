@@ -1,3 +1,4 @@
+import '@stellar-globe/react-draggable-dialog/style.css'
 import '@szhsin/react-menu/dist/index.css'
 import 'material-symbols/outlined.css'
 import { Provider } from "react-redux"
@@ -14,6 +15,8 @@ import { useHashSync } from './store/stateSync/hashSync'
 import styles from './style.module.scss'
 import { AppProps } from './types'
 import { MenuContainer } from '../common/components/Menu/MenuContext'
+import { DarkDialog, DialogContext } from '@stellar-globe/react-draggable-dialog'
+import { Dialogs } from './features/dialogs/Dialogs'
 
 
 
@@ -28,19 +31,22 @@ const App = wrapWithAppContext(({
   return (
     <Provider store={store}>
       <div className={styles.main} ref={rootElementRef} tabIndex={-1}>
-        <MenuContainer containerRef={rootElementRef}>
-          <StateHistoryProvider stateHistory={stateHistory}>
-            <ModalProvider rootElementRef={rootElementRef}>
-              <KeybindsProvider containerRef={rootElementRef} catchAllEvents={catchAllKeyboardEvents}>
-                <CatalogDragAndDrop>
-                  <MainViewer />
-                  <Panels />
-                  <MainMenu />
-                </CatalogDragAndDrop>
-              </KeybindsProvider>
-            </ModalProvider>
-          </StateHistoryProvider>
-        </MenuContainer>
+        <DialogContext>
+          <MenuContainer containerRef={rootElementRef}>
+            <StateHistoryProvider stateHistory={stateHistory}>
+              <ModalProvider rootElementRef={rootElementRef}>
+                <KeybindsProvider containerRef={rootElementRef} catchAllEvents={catchAllKeyboardEvents}>
+                  <CatalogDragAndDrop>
+                    <MainViewer />
+                    <Panels />
+                    <MainMenu />
+                  </CatalogDragAndDrop>
+                  <Dialogs />
+                </KeybindsProvider>
+              </ModalProvider>
+            </StateHistoryProvider>
+          </MenuContainer>
+        </DialogContext>
       </div>
     </Provider >
   )

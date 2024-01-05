@@ -1,6 +1,9 @@
 import { Fragment, useMemo } from 'react'
-import { Dialog, DialogProps } from '../Dialog'
+import { Dialog } from '@stellar-globe/react-draggable-dialog'
 import styles from './style.module.scss'
+
+
+type DialogProps = Parameters<typeof Dialog>[0]
 
 
 const classNames = {
@@ -37,7 +40,7 @@ type Props = Omit<DialogProps, 'classNames' | 'fadeClassNames' | 'fadeDuration'>
   onCloseButtonClick?: () => void
 }
 
-export function DarkDialog({
+export function AppDialog({
   title: rawTitle,
   onCloseButtonClick,
   ...rests

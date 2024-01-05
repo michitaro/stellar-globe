@@ -1,7 +1,7 @@
 import { DndContext, useDraggable } from '@dnd-kit/core'
 import { DragMoveEvent } from "@dnd-kit/core/dist/types"
 import { restrictToWindowEdges } from '@dnd-kit/modifiers'
-import { CSSProperties, ReactNode, RefObject, useCallback, useLayoutEffect, useMemo, useRef } from 'react'
+import { CSSProperties, ReactNode, RefObject, useCallback, useMemo, useRef } from 'react'
 import { Position, Size } from './types'
 
 
@@ -15,12 +15,15 @@ type ResizableProps = {
 }
 
 
+const defaultMinSize = { width: 40, height: 40 } as const
+
+
 export function Resizable({
   children,
   container,
   setPosition,
   setSize,
-  minSize = { width: 120, height: 120 },
+  minSize = defaultMinSize,
 }: ResizableProps) {
   const positionAtDragStart = useRef<(Size & Position) | undefined>(undefined)
 
@@ -57,6 +60,10 @@ export function Resizable({
       const { width, height } = positionAtDragStart.current!
 
       setSize(size => {
+        console.log({
+          ...(size ?? { width, height }),
+          [wh]: Math.max(min, positionAtDragStart.current![wh] + sign * e.delta[axis]),
+        })
         return {
           ...(size ?? { width, height }),
           [wh]: Math.max(min, positionAtDragStart.current![wh] + sign * e.delta[axis]),
@@ -109,7 +116,7 @@ type Direction = 'n' | 'e' | 'w' | 's'
 
 function ResizeHandle({ n, w, e, s, size = 8 }: Partial<Record<Direction, boolean>> & { size?: number }) {
   const boxPosition = useMemo<CSSProperties>(() => ({
-    // border: 'solid 1px orange',
+    // backgroundColor: 'rgba(0, 255, 0, 0.25)',
     position: 'absolute',
     left: w ? `${-size}px` : e ? undefined : `${size}px`,
     right: e ? `${-size}px` : w ? undefined : `${size}px`,

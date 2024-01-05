@@ -1,13 +1,17 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { DarkDialog } from '../src/DarkDialog'
 import { DialogContext } from '../src/Context'
+import { DarkDialog } from '../src/DarkDialog'
 import './style.scss'
 
 
 export function App() {
+  const [count, setCount] = useState(10)
+
   return (
     <DialogContext>
-      {Array.from({ length: 20 }).map((_, i) => (
+      <button onClick={() => setCount(_ => _ + 1)}>+</button>
+      <button onClick={() => setCount(_ => 0)}>Clear</button>
+      {Array.from({ length: count }).map((_, i) => (
         <MyDialog key={i} />
       ))}
     </DialogContext>
@@ -22,7 +26,7 @@ function MyDialog() {
     if (!visible) {
       setTimeout(() => {
         setVisible(true)
-      }, 1000)
+      }, 2000)
     }
   }, [visible])
 
@@ -39,6 +43,7 @@ function MyDialog() {
       visible={visible}
       sizeHint={sizeHint}
       onCloseButtonClick={onClick}
+      positionHint={{ left: 8, bottom: 8 }}
     >
       {text}
     </DarkDialog >

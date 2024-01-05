@@ -1,3 +1,10 @@
+* 検討
+  * [x] 初期visible=falseの場合
+  * [x] hintされている場所がすでに埋まっている場合
+  * [x] rememberPosition prop
+    * falseの場合、初回表示時にreposition
+  * [x] contextにpositionFinderを指定可能に
+
 * Dialog
   * 概要
     * dragできる
