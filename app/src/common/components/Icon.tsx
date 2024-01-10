@@ -13,9 +13,10 @@ export function Icon({ type, marginLeft, marginRight, style, ...rests }: Props) 
     <span className="material-symbols-outlined" style={
       {
         display: 'flex',
+        justifyContent: 'center',
         ...style,
-        ...(marginLeft ? { marginLeft: '0.5em' } : {}),
-        ...(marginRight ? { marginRight: '0.5em' } : {}),
+        ...(marginLeft && { marginLeft: '0.5em' }),
+        ...(marginRight && { marginRight: '0.5em' }),
       }} {...rests}>{type}</span>
   )
 }

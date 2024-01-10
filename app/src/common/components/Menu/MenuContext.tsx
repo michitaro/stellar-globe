@@ -23,7 +23,7 @@ type ProviderProps = {
 }
 
 
-export function MenuContainer({ children, containerRef }: ProviderProps) {
+export function MenuProvider({ children, containerRef }: ProviderProps) {
   const context = useMakeContext(containerRef)
   return <Context.Provider value={context}>{children}</Context.Provider>
 }

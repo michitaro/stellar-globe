@@ -12,6 +12,7 @@ type State = {
   catalogs: Catalog[]
   autoColor: boolean
   currentCatalogId: string | undefined
+  catalogsDialogVisible: boolean
 }
 
 
@@ -20,6 +21,7 @@ function initialState(): State {
     catalogs: [],
     autoColor: true,
     currentCatalogId: undefined,
+    catalogsDialogVisible: false,
   }
 }
 
@@ -84,6 +86,9 @@ export const catalogsSlice = createSlice({
         state.currentCatalogId = id
       },
     ),
+    catalogsDialogToggled: create.reducer<{}>((state) => {
+      state.catalogsDialogVisible = !state.catalogsDialogVisible
+    }),
   }),
   selectors: {
     currentCatalog: state => state.catalogs.find(c => c.id === state.currentCatalogId),
@@ -92,6 +97,20 @@ export const catalogsSlice = createSlice({
     builder.addCase(appStateHistoryActions.setState, (state, action) => {
       state.catalogs = action.payload.catalogs.catalogs
     })
+    builder.addMatcher(
+      action => [catalogsSlice.actions.catalogAdded.type].includes(action.type),
+      state => {
+        state.catalogsDialogVisible = true
+      },
+    )
+    builder.addMatcher(
+      action => [catalogsSlice.actions.catalogDeleted.type].includes(action.type),
+      state => {
+        if (state.catalogs.length === 0) {
+          state.catalogsDialogVisible = false
+        }
+      },
+    )
   },
 })
 

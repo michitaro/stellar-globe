@@ -4,6 +4,7 @@ export type AppProps = {
   hashSync?: boolean
   storageSync?: boolean
   catchAllKeyboardEvents?: boolean
+  floatingLayerElement?: HTMLElement
 }
 
 export type AppHandle = {

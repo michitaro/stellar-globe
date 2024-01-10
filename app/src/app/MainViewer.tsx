@@ -14,7 +14,7 @@ export function MainViewer() {
   const dispatch = useAppDispatch()
   const { globeHandle } = useAppContext()
 
-  const layers = useAppSelector(state => state.appearance)
+  const layers = useAppSelector(state => state.appearanceLayers)
   const camera = useAppSelector(state => state.camera)
 
   const onCameraMove = debounce(200, () => {

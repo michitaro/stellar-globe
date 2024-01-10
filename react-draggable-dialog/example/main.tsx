@@ -1,13 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { App } from './App'
+import { Example } from './Example'
 import './style.scss'
 
 
 function main() {
   ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
-      <App />
+      <Example />
     </React.StrictMode>,
   )
 }

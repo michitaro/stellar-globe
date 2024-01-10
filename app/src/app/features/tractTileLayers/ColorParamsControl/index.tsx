@@ -5,29 +5,25 @@ import { produce } from 'immer'
 import { memo, useMemo } from "react"
 import { ColorPickerRgb } from '../../../../common/components/ColorPicker'
 import NumericInput from '../../../../common/components/NumericInput'
+import { defaultFilters } from '../tractTileLayersSlice'
 import styles from './styles.module.scss'
-import { defaultFilters, filterCandidates } from '../tractTileLayersSlice'
 
 
 type ColorParams = NonNullable<Parameters<typeof TractTileLayer$>[0]['colorParams']>
 type MixerType = ColorParams['type']
-type FilterCandidate = {
-  short: string
-  full: string
-}
 
 
 type Props = {
   params: ColorParams
   onChange: (params: ColorParams) => void
+  filterCandidates: string[]
 }
 
 
 const paramsMemo = new Map<MixerType, ColorParams>()
 
 
-
-export const ColorParamsControl = memo(({ params, onChange }: Props) => {
+export const ColorParamsControl = memo(({ params, onChange, filterCandidates }: Props) => {
   return (
     <div className={styles.colorParamsControl}>
       <div style={{ display: 'flex' }}>
@@ -82,7 +78,7 @@ export const ColorParamsControl = memo(({ params, onChange }: Props) => {
 
 
 type MatrixControlProps = {
-  filterCandidates: FilterCandidate[]
+  filterCandidates: string[]
   filters: ColorParams['filters']
   colors: V3[]
   onChange: (newValue: { colors: V3[], filters: ColorParams['filters'] }) => void
@@ -97,7 +93,7 @@ function MatrixControl({
 }: MatrixControlProps) {
   // filterCandidates → colors のインデックスの変換
   const indexMap = useMemo(() => {
-    return Object.fromEntries(filterCandidates.map((f, i) => [i, filters.indexOf(f.full)]))
+    return Object.fromEntries(filterCandidates.map((f, i) => [i, filters.indexOf(f)]))
   }, [filterCandidates, filters])
 
   return (
@@ -106,10 +102,12 @@ function MatrixControl({
         <tr>
           {filterCandidates.map((f, i) => (
             <td key={i}>
-              <button onClick={() => {
-                onChange({ colors: [[1, 1, 1]], filters: [f.full] })
-              }} >
-                {f.short}
+              <button
+                className={styles.filterSwitch}
+                onClick={() => {
+                  onChange({ colors: [[1, 1, 1]], filters: [f] })
+                }} >
+                {f}
               </button>
             </td>
           ))}
@@ -117,15 +115,15 @@ function MatrixControl({
         <tr>
           {filterCandidates.map((f, i) => (
             <td key={i}>
-              <input type="checkbox" checked={filters.includes(f.full)} onChange={e => {
+              <input type="checkbox" checked={filters.includes(f)} onChange={e => {
                 const newValue = produce({ colors, filters }, _ => {
                   if (e.currentTarget.checked) {
-                    _.filters.push(f.full)
+                    _.filters.push(f)
                     _.colors.push([0, 0, 0])
                   }
                   else {
                     if (filters.length > 1) {
-                      const i = _.filters.indexOf(f.full)
+                      const i = _.filters.indexOf(f)
                       if (i >= 0) {
                         _.filters.splice(i, 1)
                         _.colors.splice(i, 1)
@@ -173,7 +171,7 @@ function MatrixControl({
 
 
 type FilterSelectorProps = {
-  filterCandidates: FilterCandidate[]
+  filterCandidates: string[]
   filters: ColorParams['filters']
   onChange: (filters: ColorParams['filters']) => void
 }
@@ -196,20 +194,20 @@ function FilterSelector({
         <tr>
           <th />
           {filterCandidates.map(f => (
-            <td key={f.short}><button onClick={() => onChange([f.full, f.full, f.full])} >{f.short}</button></td>
+            <td key={f}><button className={styles.filterSwitch} onClick={() => onChange([f, f, f])} >{f}</button></td>
           ))}
         </tr>
         {[0, 1, 2].map(i => (
           <tr key={i}>
             <th style={{ color: rgb[i].color }}>{rgb[i].name}</th>
             {filterCandidates.map(f => (
-              <td key={f.short}>
+              <td key={f}>
                 <input
                   type="radio"
-                  checked={f.full === filters[i]}
+                  checked={f === filters[i]}
                   onChange={() => {
                     onChange(produce(filters, _ => {
-                      _[i] = f.full
+                      _[i] = f
                     }))
                   }}
                 />

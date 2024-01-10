@@ -1,5 +1,5 @@
 import { Slice } from "@reduxjs/toolkit"
-import { panelsSlice } from "../Panels/panelsSlice"
+import { BaseAction } from "../context"
 import { appearanceLayersSlice } from "../features/appearanceLayers/appearanceLayersSlice"
 import { cameraSlice } from "../features/camera/cameraSlice"
 import { catalogsSlice } from "../features/catalog/catalogSlice"
@@ -10,7 +10,6 @@ import { regionsSlice } from "../features/regions/regionsSlice"
 import { tractTileLayersSlice } from "../features/tractTileLayers/tractTileLayersSlice"
 import { StorageState } from "./stateSync/StorageSync"
 import { HashState } from "./stateSync/hashSync"
-import { BaseAction } from "../context"
 
 
 type PickAction<A> = A extends { type: string, payload: any } ? A : never
@@ -30,7 +29,6 @@ export type JsonSchema = {
     ActionsByType<typeof commonSlice> &
     ActionsByType<typeof appearanceLayersSlice> &
     ActionsByType<typeof cameraSlice> &
-    ActionsByType<typeof panelsSlice> &
     ActionsByType<typeof tractTileLayersSlice> &
     ActionsByType<typeof hipsLayersSlice> &
     ActionsByType<typeof regionsSlice> &

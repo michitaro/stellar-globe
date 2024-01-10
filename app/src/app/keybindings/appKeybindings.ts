@@ -1,29 +1,29 @@
 import { useMemo } from "react"
 import { makeKeybindsEnvironment } from "../../common/components/keybindings"
-import { usePanelsKeyBindings } from "../Panels/panelsKeybindings"
 import { useDevelKeybindings } from "../features/devel/develKeybindings"
 import { useToolsKeybindings } from "../features/regions/toolsKeybindings"
 import { useViewKeybindings } from "../features/view/viewKeybindings"
 import { useHistoryKeybindings } from "../features/history/historyKeybindings"
 import { useSesameKeybindings } from "../features/sesame/SesameKeybindings"
+import { useDialogsKeybindings } from "../features/dialogs/dialogsKeybindings"
 
 
 export function useAppKeybinds() {
   const viewKeyBindings = useViewKeybindings()
-  const panelKeyBindings = usePanelsKeyBindings()
   const develKeybindings = useDevelKeybindings()
   const toolsKeybindings = useToolsKeybindings()
   const historyKeybindings = useHistoryKeybindings()
   const sesameKeybindings = useSesameKeybindings()
+  const dialogsKeybindings = useDialogsKeybindings()
 
   return useMemo(() => ({
     ...viewKeyBindings,
-    ...panelKeyBindings,
     ...develKeybindings,
     ...toolsKeybindings,
     ...historyKeybindings,
     ...sesameKeybindings,
-  }), [develKeybindings, historyKeybindings, panelKeyBindings, sesameKeybindings, toolsKeybindings, viewKeyBindings])
+    ...dialogsKeybindings,
+  }), [develKeybindings, dialogsKeybindings, historyKeybindings, sesameKeybindings, toolsKeybindings, viewKeyBindings])
 }
 
 

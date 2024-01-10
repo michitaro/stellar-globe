@@ -7,6 +7,7 @@ const classNames = {
   dialog: styles.dialog,
   titlebar: styles.titlebar,
   content: styles.content,
+  active: styles.active,
 }
 
 const {

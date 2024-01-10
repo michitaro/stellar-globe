@@ -22,6 +22,7 @@ type State = {
   toolPinned: boolean
   autoColor: boolean
   regions: Region[]
+  regionsDialogVisible: boolean
 }
 
 function initialState(): State {
@@ -30,6 +31,7 @@ function initialState(): State {
     toolPinned: false,
     autoColor: true,
     regions: readHashState().regions ?? [],
+    regionsDialogVisible: false,
   }
 }
 
@@ -118,6 +120,9 @@ export const regionsSlice = createSlice({
         }
       },
     ),
+    regionsDialogToggled: create.reducer<{}>((state, action) => {
+      state.regionsDialogVisible = !state.regionsDialogVisible
+    }),
   }),
   selectors: {
     nextColor,
@@ -126,6 +131,26 @@ export const regionsSlice = createSlice({
     builder.addCase(appStateHistoryActions.setState, (state, { payload: { regions: { regions } } }) => {
       state.regions = regions
     })
+    builder.addMatcher(
+      action => [
+        regionsSlice.actions.newCircularRegionAdded.type,
+        regionsSlice.actions.newLinearRegionAdded.type,
+        regionsSlice.actions.newRectangularRegionAdded.type,
+      ].includes(action.type),
+      state => {
+        state.regionsDialogVisible = true
+      },
+    )
+    builder.addMatcher(
+      action => [
+        regionsSlice.actions.regionDeleted.type,
+      ].includes(action.type),
+      state => {
+        if (state.regions.length === 0) {
+          state.regionsDialogVisible = false
+        }
+      },
+    )
   },
 })
 
@@ -148,6 +173,7 @@ type SkyCoordType = {
 type RegionBase = {
   id: string
   visible: boolean
+  showLabel: boolean
 }
 
 

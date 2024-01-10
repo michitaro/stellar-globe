@@ -1,4 +1,13 @@
 * 検討
+  * [ ] drag中にrenderingが起きると位置が飛ぶ
+    * dnd-kitに由来するようだ
+      * transformの値がジャンプしている
+  * [x] 初回移動まではpositionHintを反映
+    * positionHintにright, bottomが指定された場合や、leftが50vwなどの場合に初回移動まではその設定を反映する
+  * [x] minmax
+    * sizeHintで指定？
+    * CSSの指定ができるとよい
+  * [ ] タイトルバーにフォーカスが当たってる時に矢印キーを押すとキーボードイベントがstopされない
   * [x] 初期visible=falseの場合
   * [x] hintされている場所がすでに埋まっている場合
   * [x] rememberPosition prop

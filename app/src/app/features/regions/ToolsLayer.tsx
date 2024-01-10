@@ -66,6 +66,7 @@ const NewLinearRegionLayer = memo(() => {
       start: normalizeSkyCoord(start),
       end: normalizeSkyCoord(end),
       visible: true,
+      showLabel: true,
     }))
     if (!toolPinned) {
       dispatch(regionsSlice.actions.toolChanged({ tool: 'pan' }))
@@ -84,6 +85,7 @@ const NewLinearRegionLayer = memo(() => {
           lineDef={lineDef(coords)}
           color={color}
           angleUnit={angleUnit}
+          showLabel
         />
       )}
     />
@@ -103,6 +105,7 @@ const NewCircularRegionLayer = memo(() => {
       center: normalizeSkyCoord(a),
       radius: a.angle(b).rad,
       visible: true,
+      showLabel: true,
     }))
     if (!toolPinned) {
       dispatch(regionsSlice.actions.toolChanged({ tool: 'pan' }))
@@ -121,6 +124,7 @@ const NewCircularRegionLayer = memo(() => {
           circleDef={circleDef(coords)}
           color={color}
           angleUnit={angleUnit}
+          showLabel
         />
       )}
     />
@@ -142,6 +146,7 @@ const NewRectangularRegionLayer = memo(() => {
       minDec: a.d.rad,
       maxDec: b.d.rad,
       visible: true,
+      showLabel: true,
     }))
     if (!toolPinned) {
       dispatch(regionsSlice.actions.toolChanged({ tool: 'pan' }))
@@ -165,6 +170,7 @@ const NewRectangularRegionLayer = memo(() => {
           rectDef={rectDef(coords)}
           color={color}
           angleUnit={angleUnit}
+          showLabel
         />
       )}
     />

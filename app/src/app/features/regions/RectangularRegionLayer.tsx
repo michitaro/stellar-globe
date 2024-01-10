@@ -23,6 +23,7 @@ type Props = {
   color: V4
   angleUnit: AngleUnit
   onChange?: (rectDef: RectDef) => void
+  showLabel?: boolean
   children?: ReactNode
 }
 
@@ -31,6 +32,7 @@ export const RectangularRegionLayer = ({
   color,
   angleUnit,
   onChange,
+  showLabel,
   children,
 }: Props) => {
   type Paths = Parameters<typeof PathLayer$>[0]['paths']
@@ -115,19 +117,21 @@ export const RectangularRegionLayer = ({
         position={centerXyz}
         markerType='diamond'
       />
-      <DomLayer$ position={menuXyz} offset={offset} >
-        <Menu
-          menuButton={
-            <div className={styles.lineInfo} >
-              {infoText}
-              <Icon type="expand_more" />
-            </div>
-          }
-          theming="dark"
-        >
-          {children}
-        </Menu>
-      </DomLayer$>
+      {showLabel &&
+        <DomLayer$ position={menuXyz} offset={offset} >
+          <Menu
+            menuButton={
+              <div className={styles.lineInfo} >
+                {infoText}
+                <Icon type="expand_more" />
+              </div>
+            }
+            theming="dark"
+          >
+            {children}
+          </Menu>
+        </DomLayer$>
+      }
       {onChange && (
         <MouseLayer$ rectDef={rectDef} onChange={setRectDef} onSubmit={onSubmit} />
       )}

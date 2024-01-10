@@ -1,9 +1,9 @@
 import { DomLayer$, PathLayer$, useLayerBind } from "@stellar-globe/react-stellar-globe"
 import { Globe, GlobePointerDragEvent, GlobePointerEvent, Layer, SkyCoord, V2, V3, V4, glMatrix, makePointingObject } from "@stellar-globe/stellar-globe"
-import { Menu } from "@szhsin/react-menu"
 import { produce } from 'immer'
 import { Fragment, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Icon } from "../../../common/components/Icon"
+import { RegularMenu } from "../../../common/components/Menu/RegularMenu"
 import { AngleUnit, formatAngle } from '../../../common/utils/formatAngle'
 import { slerp } from "../../../common/utils/math"
 import styles from './styles.module.scss'
@@ -21,6 +21,7 @@ type Props = {
   angleUnit: AngleUnit
   onChange?: (lineDef: LineDef) => void
   children?: ReactNode
+  showLabel?: boolean
 }
 
 export const LinearRegionLayer = ({
@@ -29,6 +30,7 @@ export const LinearRegionLayer = ({
   angleUnit,
   onChange,
   children,
+  showLabel,
 }: Props) => {
   type Paths = Parameters<typeof PathLayer$>[0]['paths']
 
@@ -79,19 +81,19 @@ export const LinearRegionLayer = ({
         dimOnZoom={false}
         darkenNarrowLine={false}
       />
-      <DomLayer$ position={position} offset={offset} >
-        <Menu
-          transition={{ close: true }}
-          menuButton={
-            <div className={styles.lineInfo} >
-              {infoText}
-            </div>
-          }
-          theming="dark"
-        >
-          {children}
-        </Menu>
-      </DomLayer$>
+      {showLabel &&
+        <DomLayer$ position={position} offset={offset} >
+          <RegularMenu
+            renderMenuButton={() =>
+              <div className={styles.lineInfo} >
+                {infoText}
+              </div>
+            }
+          >
+            {children}
+          </RegularMenu>
+        </DomLayer$>
+      }
       {onChange && (
         <MouseLayer$ lineDef={lineDef} onChange={setLineDef} onSubmit={onSubmit} />
       )}

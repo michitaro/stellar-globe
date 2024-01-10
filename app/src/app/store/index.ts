@@ -1,5 +1,4 @@
 import { Action, ThunkAction, configureStore } from "@reduxjs/toolkit"
-import { panelsSlice } from '../Panels/panelsSlice'
 import { appearanceLayersSlice } from "../features/appearanceLayers/appearanceLayersSlice"
 import { cameraSlice } from "../features/camera/cameraSlice"
 import { catalogsSlice } from "../features/catalog/catalogSlice"
@@ -10,6 +9,7 @@ import { regionsSlice } from "../features/regions/regionsSlice"
 import { tractTileLayersSlice } from '../features/tractTileLayers/tractTileLayersSlice'
 import { jsonPatchLogger } from './JsonPatchLogger'
 import { makeStateHistory } from "./stateHistory"
+// import { tractTileApi } from "../features/tractTileLayers/FilterDef"
 
 
 export function makeStore() {
@@ -17,18 +17,19 @@ export function makeStore() {
 
   const store = configureStore({
     reducer: {
-      common: commonSlice.reducer,
-      appearance: appearanceLayersSlice.reducer,
-      camera: cameraSlice.reducer,
-      panel: panelsSlice.reducer,
-      tractTileLayers: tractTileLayersSlice.reducer,
-      hipsLayers: hipsLayersSlice.reducer,
-      regions: regionsSlice.reducer,
-      catalogs: catalogsSlice.reducer,
-      devel: develSlice.reducer,
+      [commonSlice.name]: commonSlice.reducer,
+      [appearanceLayersSlice.name]: appearanceLayersSlice.reducer,
+      [cameraSlice.name]: cameraSlice.reducer,
+      [tractTileLayersSlice.name]: tractTileLayersSlice.reducer,
+      [hipsLayersSlice.name]: hipsLayersSlice.reducer,
+      [regionsSlice.name]: regionsSlice.reducer,
+      [catalogsSlice.name]: catalogsSlice.reducer,
+      [develSlice.name]: develSlice.reducer,
+      // [tractTileApi.reducerPath]: tractTileApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(
+        // tractTileApi.middleware,
         stateHistory.middleware,
         jsonPatchLogger((patches) => console.log(patches)),
       )

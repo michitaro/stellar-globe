@@ -1,3 +1,4 @@
+export declare const active: string;
 export declare const appear: string;
 export declare const appearActive: string;
 export declare const appearDone: string;
@@ -8,7 +9,6 @@ export declare const enterActive: string;
 export declare const enterDone: string;
 export declare const exit: string;
 export declare const exitActive: string;
-export declare const exitDone: string;
 export declare const titlebar: string;
 export declare const titlebarCloseButton: string;
 export declare const titlebarText: string;

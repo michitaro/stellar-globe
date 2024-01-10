@@ -55,10 +55,10 @@ type filterNameDictionary = { [altName: string]: string }
 function applyFilterNameTranslation(colorParams: ColorParams, dict: filterNameDictionary | undefined) {
   if (dict) {
     const filters = colorParams.filters.map(f => {
-      if (dict[f] === undefined) {
-        throw new Error(`Filter name lookup failed: ${f} for ${JSON.stringify(dict)}`)
-      }
-      return dict[f]
+      // if (dict[f] === undefined) {
+      //   throw new Error(`Filter name lookup failed: ${f} for ${JSON.stringify(dict)}`)
+      // }
+      return dict[f] ?? f
     })
     return { ...colorParams, filters }
   }

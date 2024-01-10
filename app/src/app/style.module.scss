@@ -1,17 +1,21 @@
 @import 'src/theme.scss';
 
 .main {
-  background-color: black;
-  font-family: sans-serif;
-
-  position: relative;
-  width: 100%;
+  // background-color: black;
+  // position: relative;
+  // width: 100%;
   height: 100%;
+  // overflow: hidden;
+  box-sizing: border-box;
+  // border: 15px solid #035;
+}
 
-  overflow: hidden;
+.floatingLayer {
+  position: absolute;
+}
 
-  // box-sizing: border-box;
-  // border: 15px solid #003;
+.thema {
+  font-family: sans-serif;
 
   button,
   select {
@@ -64,7 +68,7 @@
 
     .szh-menu-container--theme-dark .szh-menu {
       color: #cad1d8;
-      background-color: rgba(#222, 0.95);
+      background-color: rgba(#222, 0.99);
       border: 1px solid #333;
       // box-shadow: 0 2px 9px 3px rgba(0, 0, 0, 0.25);
       box-shadow: 0 0 8px rgba(#222, 1), 0 0 4px rgba(#037, 1);
@@ -81,7 +85,8 @@
     }
 
     .szh-menu-container--theme-dark .szh-menu__item--focusable {
-      background-color: inherit;
+      // background-color: rgba(#222, 0.95);
+      background-color: transparent;
     }
 
     .szh-menu-container--theme-dark .szh-menu__item--disabled {

@@ -1,14 +1,16 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { DialogContext } from '../src/Context'
 import { DarkDialog } from '../src/DarkDialog'
+import { CSSSize } from '../src/types'
 import './style.scss'
 
 
-export function App() {
+export function Example() {
   const [count, setCount] = useState(10)
 
   return (
     <DialogContext>
+      <RightBottom />
       <button onClick={() => setCount(_ => _ + 1)}>+</button>
       <button onClick={() => setCount(_ => 0)}>Clear</button>
       {Array.from({ length: count }).map((_, i) => (
@@ -35,7 +37,9 @@ function MyDialog() {
   }, [])
 
   const text = useMemo(() => generateRandomSentence(1, 8, 20), [])
-  const sizeHint = useMemo(() => ({ width: 100 + Math.floor(200 * Math.random()) }), [])
+  const sizeHint = useMemo<CSSSize>(() => ({
+    width: 100 + Math.floor(200 * Math.random()),
+  }), [])
 
   return (
     <DarkDialog
@@ -44,9 +48,40 @@ function MyDialog() {
       sizeHint={sizeHint}
       onCloseButtonClick={onClick}
       positionHint={{ left: 8, bottom: 8 }}
+      resizable
+      minmaxSize={{
+        minWidth: '80px',
+        minHeight: '80px',
+        maxWidth: '300px',
+        maxHeight: '50vh',
+      }}
     >
       {text}
     </DarkDialog >
+  )
+}
+
+
+function RightBottom() {
+  const [text, setText] = useState('')
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setText(generateRandomSentence(1, 8, 10))
+    }, 1000)
+    return () => {
+      clearInterval(interval)
+    }
+  }, [])
+
+  return (
+    <DarkDialog
+      title="RightBottom"
+      positionHint={{ right: '10px', bottom: '10px' }}
+      sizeHint={{ width: '200px' }}
+    >
+      {text}
+    </DarkDialog>
   )
 }
 

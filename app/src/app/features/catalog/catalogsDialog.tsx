@@ -3,9 +3,10 @@ import { MenuDivider, MenuItem, SubMenu } from '@szhsin/react-menu'
 import { Fragment, memo, useId } from "react"
 import { ColorPickerRgba } from "../../../common/components/ColorPicker"
 import { Icon } from "../../../common/components/Icon"
-import { HoverMenu } from '../../../common/components/Menu/HoverMenu'
+import { RegularMenu } from '../../../common/components/Menu/RegularMenu'
 import { askLocalFileList } from '../../../common/utils/askLocalFileList'
 import { setDisplayName } from "../../../common/utils/setDisplayName"
+import { AppDialog } from '../../AppDialog'
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
 import { Catalog, catalogsSlice } from "./catalogSlice"
 import exampleCsvWithColor from './examples/with_color_column.csv?url'
@@ -13,11 +14,18 @@ import exampleCsvWithColorAndMarker from './examples/with_color_marker_type_colu
 import { useAddCatalogFileList, useGoToCatalog } from './useAddCatalogFileList'
 
 
-export const CatalogsPanel = memo(() => {
+export const CatalogsDialog = memo(() => {
   const catalogs = useAppSelector(state => state.catalogs.catalogs)
+  const visible = useAppSelector(state => state.catalogs.catalogsDialogVisible)
+  const dispatch = useAppDispatch()
 
   return (
-    <Fragment>
+    <AppDialog
+      title={<Fragment><Icon type='table' marginRight />Catalogs</Fragment>}
+      visible={visible}
+      onCloseButtonClick={() => dispatch(catalogsSlice.actions.catalogsDialogToggled({}))}
+      menu={<CatalogsMenu />}
+    >
       <table>
         <thead>
           <tr>
@@ -36,7 +44,7 @@ export const CatalogsPanel = memo(() => {
           {catalogs.map(c => <CatalogTr key={c.id} catalog={c} />)}
         </tbody>
       </table>
-    </Fragment>
+    </AppDialog>
   )
 })
 

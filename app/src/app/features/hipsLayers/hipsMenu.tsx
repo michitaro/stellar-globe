@@ -7,6 +7,7 @@ import { hipsLayersSlice } from "./hipsLayersSlice"
 import styles from './style.module.scss'
 import { TomoegozenSubmenu } from "./tomoegozen"
 import { useDebounceInTransition } from "../../../common/hooks/useDebounceInTransition"
+import { Loader, SmallLoader } from "../../../common/components/Loader"
 
 
 export const HipsMenu = memo(() => {
@@ -58,7 +59,7 @@ function HipsSearch() {
             }}
           />
           {
-            isPending && <progress style={{ marginLeft: '2em' }} />
+            isPending && <SmallLoader />
           }
         </Fragment>
       )}</FocusableItem>
@@ -71,8 +72,8 @@ function HipsSearch() {
   )
 }
 
-// render中にエラーが起きるとuseRefが消えるので。
 // useSearchResults に useRef で持たせることはできない
+// render中にエラーが起きるとuseRefが消えるので。
 const searchCache = new Map<
   string,
   {

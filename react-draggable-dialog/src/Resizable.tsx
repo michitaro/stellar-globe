@@ -1,7 +1,7 @@
 import { DndContext, useDraggable } from '@dnd-kit/core'
 import { DragMoveEvent } from "@dnd-kit/core/dist/types"
 import { restrictToWindowEdges } from '@dnd-kit/modifiers'
-import { CSSProperties, ReactNode, RefObject, useCallback, useMemo, useRef } from 'react'
+import { CSSProperties, ReactNode, RefObject, useCallback, useLayoutEffect, useMemo, useRef } from 'react'
 import { Position, Size } from './types'
 
 
@@ -9,92 +9,114 @@ type ResizableProps = {
   children: ReactNode
   position: Position | undefined
   setPosition: React.Dispatch<React.SetStateAction<Position | undefined>>
+  size: Size | undefined
   setSize: React.Dispatch<React.SetStateAction<Size | undefined>>
   container: RefObject<HTMLElement>
   minSize?: Size
 }
 
 
-const defaultMinSize = { width: 40, height: 40 } as const
+const defaultMinSize = { width: 8, height: 8 } as const
 
 
-export function Resizable({
+export function Resizable({ enabled, ...props }: ResizableProps & { enabled: boolean }) {
+  if (enabled) {
+    return <EnabledResizable {...props} />
+  }
+  else {
+    return props.children
+  }
+}
+
+
+const directions = {
+  n: { x: 0, y: -1 },
+  e: { x: 1, y: 0 },
+  s: { x: 0, y: 1 },
+  w: { x: -1, y: 0 },
+  ne: { x: 1, y: -1 },
+  nw: { x: -1, y: -1 },
+  se: { x: 1, y: 1 },
+  sw: { x: -1, y: 1 },
+} as const
+
+const xy2widthHeight = {
+  x: 'width',
+  y: 'height',
+} as const
+
+type DragState = {
+  initialPosition: Size & Position
+  direction: keyof typeof directions
+}
+
+
+function EnabledResizable({
   children,
   container,
   setPosition,
+  size,
   setSize,
   minSize = defaultMinSize,
 }: ResizableProps) {
-  const positionAtDragStart = useRef<(Size & Position) | undefined>(undefined)
+  // const positionAtDragStart = useRef<(Size & Position) | undefined>(undefined)
+  const dragState = useRef<DragState | undefined>()
 
   const onDragStart = useCallback((e: DragMoveEvent) => {
     const { left, top, width, height } = container.current!.getBoundingClientRect()
-    positionAtDragStart.current = { left, top, width, height }
+    dragState.current = {
+      initialPosition: { left, top, width, height },
+      direction: e.active.id as DragState['direction']
+    }
   }, [container])
 
+  const onDragEnd = useCallback(() => {
+    dragState.current = undefined
+  }, [])
+
   const onDragMove = useCallback((e: DragMoveEvent) => {
-    const xy2widthHeight = {
-      x: 'width',
-      y: 'height',
-    } as const
-
-    const xy2leftTop = {
-      x: 'left',
-      y: 'top',
-    } as const
-
-    const directions = {
-      n: { x: 0, y: -1 },
-      e: { x: 1, y: 0 },
-      s: { x: 0, y: 1 },
-      w: { x: -1, y: 0 },
-      ne: { x: 1, y: -1 },
-      nw: { x: -1, y: -1 },
-      se: { x: 1, y: 1 },
-      sw: { x: -1, y: 1 },
-    } as const
-
     const updateSize = (axis: 'x' | 'y', sign: number) => {
       const wh = xy2widthHeight[axis]
-      const min = minSize[wh]
-      const { width, height } = positionAtDragStart.current!
-
+      const p0 = dragState.current!.initialPosition
+      const newSize = Math.max(minSize[wh], p0[wh] + sign * e.delta[axis])
+      const { width, height } = p0
       setSize(size => {
-        console.log({
-          ...(size ?? { width, height }),
-          [wh]: Math.max(min, positionAtDragStart.current![wh] + sign * e.delta[axis]),
-        })
         return {
           ...(size ?? { width, height }),
-          [wh]: Math.max(min, positionAtDragStart.current![wh] + sign * e.delta[axis]),
+          [wh]: newSize,
         }
       })
     }
-
-    const updateCoordinates = (axis: 'x' | 'y', sign: number) => {
-      const wh = xy2widthHeight[axis]
-      const leftTop = xy2leftTop[axis]
-      const p0 = positionAtDragStart.current!
-      const max = p0[leftTop] + p0[wh] - minSize[wh]
-      setPosition(_ => _ && ({
-        ..._,
-        [leftTop]: Math.min(max, positionAtDragStart.current![leftTop] + sign * e.delta[axis]),
-      }))
-    }
-
     const dir = directions[e.active.id as keyof typeof directions]
-    if (dir) {
-      updateSize('x', dir.x)
-      updateSize('y', dir.y)
-      dir.x < 0 && updateCoordinates('x', 1)
-      dir.y < 0 && updateCoordinates('y', 1)
+    updateSize('x', dir.x)
+    updateSize('y', dir.y)
+  }, [minSize, setSize])
+
+  useLayoutEffect(() => {
+    // sizeの変更に基づいて位置を調整する。
+    // n, wのハンドルで大きさが変わった場合、変化の分だけleft, topを調整する必要がある
+    // render phaseではminmaxSize適用の結果が得られないので、ここで調整
+    if (dragState.current) {
+      const p0 = dragState.current.initialPosition
+      const rect = container.current!.getBoundingClientRect()
+      let { left, top } = rect
+      const { width, height } = rect
+      const dir = directions[dragState.current.direction]
+      if (dir.x < 0) {
+        left = p0.left - (width - p0.width)
+      }
+      if (dir.y < 0) {
+        top = p0.top - (height - p0.height)
+      }
+      setPosition({ left, top })
     }
-  }, [minSize, setPosition, setSize])
+  }, [container, setPosition, size])
 
   return (
     <DndContext
       onDragStart={onDragStart}
       onDragMove={onDragMove}
+      onDragEnd={onDragEnd}
       modifiers={[restrictToWindowEdges]}
     >
       {children}

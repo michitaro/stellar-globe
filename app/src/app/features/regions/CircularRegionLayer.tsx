@@ -21,6 +21,7 @@ type Props = {
   angleUnit: AngleUnit
   onChange?: (circleDef: CircleDef) => void
   children?: ReactNode
+  showLabel?: boolean
 }
 
 export const CircularRegionLayer = ({
@@ -28,6 +29,7 @@ export const CircularRegionLayer = ({
   color,
   angleUnit,
   onChange,
+  showLabel,
   children,
 }: Props) => {
   type Paths = Parameters<typeof PathLayer$>[0]['paths']
@@ -88,18 +90,20 @@ export const CircularRegionLayer = ({
         color={color}
         markerType="hollowPlus"
       />
-      <DomLayer$ position={menuXyz} offset={offset} >
-        <Menu
-          menuButton={
-            <div className={styles.lineInfo} >
-              {infoText}
-            </div>
-          }
-          theming="dark"
-        >
-          {children}
-        </Menu>
-      </DomLayer$>
+      {showLabel &&
+        <DomLayer$ position={menuXyz} offset={offset} >
+          <Menu
+            menuButton={
+              <div className={styles.lineInfo} >
+                {infoText}
+              </div>
+            }
+            theming="dark"
+          >
+            {children}
+          </Menu>
+        </DomLayer$>
+      }
       {onChange && (
         <MouseLayer$ circleDef={circleDef} onChange={setCircleDef} onSubmit={onSubmit} />
       )}

@@ -48,7 +48,7 @@ function initialState(): State {
 
 
 export const appearanceLayersSlice = createSlice({
-  name: 'layers',
+  name: 'appearanceLayers',
   initialState,
   reducers: {
     visibleToggled(state, { payload: which }: PayloadAction<keyof State>) {

@@ -5,11 +5,13 @@ import { readHashState } from "../../store/stateSync/hashSync"
 
 type State = {
   baseUrl: string | undefined
+  hipsDialogVisible: boolean
 }
 
 function initialState(): State {
   return {
     baseUrl: readHashState().hipsBaseUrl,
+    hipsDialogVisible: false,
   }
 }
 
@@ -23,6 +25,9 @@ export const hipsLayersSlice = createSlice({
         state.baseUrl = baseUrl
       },
     ),
+    hipsDialogToggled: create.reducer<{}>((state, action) => {
+      state.hipsDialogVisible = !state.hipsDialogVisible
+    }),
     // visibleToggled: create.preparedReducer(
     //   (payload: { visible: boolean }) => trackAction({ payload }, 'HiPS toggled'),
     //   (state, { payload: { visible } }) => {
@@ -34,5 +39,13 @@ export const hipsLayersSlice = createSlice({
     builder.addCase(appStateHistoryActions.setState, (state, { payload: { hipsLayers } }) => {
       state.baseUrl = hipsLayers.baseUrl
     })
+    // builder.addMatcher(
+    //   action => [hipsLayersSlice.actions.baseUrlChanged.type].includes(action.type),
+    //   state => {
+    //     if (state.baseUrl) {
+    //       state.hipsDialogVisible = true
+    //     }
+    //   }
+    // )
   },
 })

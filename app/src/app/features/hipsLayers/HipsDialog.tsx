@@ -1,26 +1,45 @@
 import { SkyCoord, angle } from '@stellar-globe/stellar-globe'
 import { Fragment, Suspense, memo, useCallback, useMemo } from "react"
 import { ErrorBoundary } from "react-error-boundary"
+import { Icon } from '../../../common/components/Icon'
 import { Linkify } from '../../../common/components/Linkify'
+import { Loader } from '../../../common/components/Loader'
 import { setDisplayName } from "../../../common/utils/setDisplayName"
+import { AppDialog } from '../../AppDialog'
 import { useAppContext } from '../../context'
-import { useAppSelector } from "../../store/hooks"
+import { useAppDispatch, useAppSelector } from "../../store/hooks"
+import { hipsLayersSlice } from './hipsLayersSlice'
+import { HipsMenu } from './hipsMenu'
 import styles from './style.module.scss'
 
 
-export const HipsPanel = memo(() => {
+export const HipsDialog = memo(() => {
   const currentBaseUrl = useAppSelector(state => state.hipsLayers.baseUrl)
+  const dispatch = useAppDispatch()
+  const visible = useAppSelector(state => state.hipsLayers.hipsDialogVisible)
 
   return (
-    <Fragment>
+    <AppDialog
+      title={<Fragment><Icon type="layers" marginRight />HiPS</Fragment>}
+      visible={visible}
+      onCloseButtonClick={() => dispatch(hipsLayersSlice.actions.hipsDialogToggled({}))}
+      resizable
+      minmaxSize={{
+        minWidth: '400px',
+        maxWidth: '400px',
+        maxHeight: '800px',
+      }}
+      sizeHint={{ height: '400px' }}
+      menu={<HipsMenu />}
+    >
       {currentBaseUrl && (
         <ErrorBoundary fallback={<div>Something went wrong</div>}>
-          <Suspense fallback="Loading...">
+          <Suspense fallback={<Loader />}>
             <HipsInspector baseUrl={currentBaseUrl} />
           </Suspense>
         </ErrorBoundary>
       )}
-    </Fragment >
+    </AppDialog>
   )
 })
 

@@ -17,7 +17,7 @@ function hashState(state: AppState, { compact = false }: { compact?: boolean } =
     datasets: state.tractTileLayers.layers.filter(l => l.visible).map(l => l.name),
     regions: compact ? [] : state.regions.regions,
     hipsBaseUrl: state.hipsLayers.baseUrl,
-    appearance: state.appearance,
+    appearance: state.appearanceLayers,
   }
 }
 
@@ -46,7 +46,7 @@ export function useHashSync({
         appOnChange(store, state => state.camera.projection, sync),
         appOnChange(store, state => state.regions, sync),
         appOnChange(store, state => state.hipsLayers.baseUrl, sync),
-        appOnChange(store, state => state.appearance, sync),
+        appOnChange(store, state => state.appearanceLayers, sync),
       ]
       return () => {
         while (cleanup.length > 0) {

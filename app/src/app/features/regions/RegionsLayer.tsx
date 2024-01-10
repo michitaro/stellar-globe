@@ -42,6 +42,7 @@ const LinearRegionFromDefLayer = memo(({
   end,
   color,
   visible,
+  showLabel,
 }: SpecificRegionType<'Linear'>) => {
   const dispatch = useAppDispatch()
 
@@ -51,7 +52,8 @@ const LinearRegionFromDefLayer = memo(({
     end,
     color,
     visible,
-  }), [color, end, id, start, visible])
+    showLabel,
+  }), [color, end, id, showLabel, start, visible])
 
   const onLineDefChange = useCallback((e: LineDef) => {
     dispatch(regionsSlice.actions.regionUpdated({
@@ -87,8 +89,9 @@ const LinearRegionFromDefLayer = memo(({
       start,
       end,
       visible: true,
+      showLabel,
     }))
-  }, [dispatch, end, start])
+  }, [dispatch, end, showLabel, start])
 
   return (
     <LinearRegionLayer
@@ -96,6 +99,7 @@ const LinearRegionFromDefLayer = memo(({
       color={color}
       angleUnit={useAppSelector(state => state.common.angleUnit)}
       onChange={onLineDefChange}
+      showLabel={showLabel}
     >
       <MenuItem onClick={duplicate}><Icon type='content_copy' marginRight />Duplicate</MenuItem>
       <ColorPicker color={color} onChange={onColorChange} />
@@ -135,6 +139,7 @@ const CircularRegionFromDefLayer = memo(({
   radius,
   color,
   visible,
+  showLabel,
 }: SpecificRegionType<'Circular'>) => {
   const dispatch = useAppDispatch()
 
@@ -144,7 +149,8 @@ const CircularRegionFromDefLayer = memo(({
     radius,
     color,
     visible,
-  }), [center, color, id, radius, visible])
+    showLabel,
+  }), [center, color, id, radius, showLabel, visible])
 
   const onCircleDefChange = useCallback((e: CircleDef) => {
     dispatch(regionsSlice.actions.regionUpdated({
@@ -180,6 +186,7 @@ const CircularRegionFromDefLayer = memo(({
       center,
       radius,
       visible: true,
+      showLabel: true,
     }))
   }, [center, dispatch, radius])
 
@@ -189,6 +196,7 @@ const CircularRegionFromDefLayer = memo(({
       color={color}
       angleUnit={useAppSelector(state => state.common.angleUnit)}
       onChange={onCircleDefChange}
+      showLabel={showLabel}
     >
       <MenuItem onClick={duplicate}><Icon type='content_copy' marginRight />Duplicate</MenuItem>
       <ColorPicker color={color} onChange={onColorChange} />
@@ -211,6 +219,7 @@ const RectangularRegionFromDefLayer = memo(({
   maxDec,
   color,
   visible,
+  showLabel,
 }: SpecificRegionType<'Rectangular'>) => {
   const dispatch = useAppDispatch()
 
@@ -222,7 +231,8 @@ const RectangularRegionFromDefLayer = memo(({
     maxDec,
     color,
     visible,
-  }), [color, id, maxDec, maxRa, minDec, minRa, visible])
+    showLabel,
+  }), [color, id, maxDec, maxRa, minDec, minRa, showLabel, visible])
 
   const onRectDefChange = useCallback(({ minRa, maxRa, minDec, maxDec }: RectDef) => {
     dispatch(regionsSlice.actions.regionUpdated({
@@ -260,6 +270,7 @@ const RectangularRegionFromDefLayer = memo(({
       color={color}
       angleUnit={useAppSelector(state => state.common.angleUnit)}
       onChange={onRectDefChange}
+      showLabel={showLabel}
     >
       <MenuItem
         onClick={() => {

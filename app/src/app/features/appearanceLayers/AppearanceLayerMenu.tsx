@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks"
 import { appearanceLayersSlice } from "./appearanceLayersSlice"
 
 export function AppearanceLayersMenu() {
-  const layers = useAppSelector(state => state.appearance)
+  const layers = useAppSelector(state => state.appearanceLayers)
   const dispatch = useAppDispatch()
 
   return (

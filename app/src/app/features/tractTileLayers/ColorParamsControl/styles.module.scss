@@ -3,7 +3,7 @@
     width: 100%;
 
     input[type="range"] {
-      width: 100%;
+      min-width: 200px;
     }
   }
 }
@@ -26,6 +26,7 @@
       display: flex;
       flex-flow: column;
       align-items: center;
+
       input {
         width: 2em;
       }
@@ -37,7 +38,20 @@
 
   th,
   td {
-    width: 2em;
     text-align: center;
+  }
+}
+
+.filterSelector,
+.matrixControl {
+  button.filterSwitch {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    box-shadow: none;
+    border-radius: 0;
+    text-decoration: underline;
   }
 }

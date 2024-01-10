@@ -19,7 +19,7 @@ export function DatasetMenu() {
           key={baseUrl}
           checked={visible}
           onClick={() => {
-            dispatch(tractTileLayersSlice.actions.toggleLayer({ name, visible: !visible }))
+            dispatch(tractTileLayersSlice.actions.layerToggled({ name, visible: !visible }))
           }}
         >{name}</MenuItem>
       ))}

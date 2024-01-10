@@ -1,20 +1,16 @@
-import { MenuItem } from "@szhsin/react-menu"
-import { memo, useCallback } from "react"
+import { memo } from "react"
 import { Icon } from "../../../common/components/Icon"
 import { MenuBarItem } from "../../../common/components/Menu/MenuBarItem"
 import { setDisplayName } from "../../../common/utils/setDisplayName"
-import { useAppDispatch, useAppSelector } from "../../store/hooks"
-import { tractTileLayersSlice } from "../tractTileLayers/tractTileLayersSlice"
+import { MenuItemWithKeybind } from "../../keybindings/MenuItemWithKeybind"
 
 export const DialogsMenu = memo(() => {
-  const dispatch = useAppDispatch()
-  const ToneVisible = useAppSelector(state => state.tractTileLayers.toneDialogVisible)
-  const toneToggle = useCallback(() => dispatch(tractTileLayersSlice.actions.toggleToneDialog({})), [dispatch])
-
-
   return (
     <MenuBarItem label={<Icon type='select_window' />} >
-      <MenuItem type='checkbox' onClick={toneToggle} checked={ToneVisible}>Tone</MenuItem>
+      <MenuItemWithKeybind keybind="toggleToneDialog"><Icon type='tune' marginRight />Tone</MenuItemWithKeybind>
+      <MenuItemWithKeybind keybind="toggleRegionsDialog"><Icon type='architecture' marginRight />Regions</MenuItemWithKeybind>
+      <MenuItemWithKeybind keybind="toggleHipsDialog"><Icon type='layers' marginRight />HiPS</MenuItemWithKeybind>
+      <MenuItemWithKeybind keybind="toggleCatalogsDialog"><Icon type='table' marginRight />Catalogs</MenuItemWithKeybind>
     </MenuBarItem>
   )
 })
