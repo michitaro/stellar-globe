@@ -12,17 +12,13 @@ export class TouchLayer extends Layer {
     globe: Globe,
   ) {
     super(globe)
-    this.mc = new Hammer(this.canvas)
+    this.mc = new Hammer(this.globe.canvas.domElement)
     this.handlePinch()
     this.handleDoubleTap()
     this.handleTap2()
     this.onRelease(() => {
       this.mc.destroy()
     })
-  }
-
-  get canvas() {
-    return this.globe.canvas.domElement
   }
 
   private handleDoubleTap() {

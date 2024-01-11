@@ -5,7 +5,7 @@ export class RingsTract {
   private ringNums: number[] = [] // Number of tracts for each ring
   private numTracts: number
 
-  constructor(readonly numRings: number) {
+  private constructor(readonly numRings: number) {
     this.ringSize = Math.PI / (numRings + 1)
     this.numTracts = 2 // north and south polar cap
     for (let i = 0; i < numRings; ++i) {
@@ -95,5 +95,14 @@ export class RingsTract {
         }
       }
     }
+  }
+
+  private static cache = new Map<number, RingsTract>
+
+  static numRings(numRings: number) {
+    if (!this.cache.has(numRings)) {
+      this.cache.set(numRings, new this(numRings))
+    }
+    return this.cache.get(numRings)!
   }
 }

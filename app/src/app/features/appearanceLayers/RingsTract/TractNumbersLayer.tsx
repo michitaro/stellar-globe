@@ -1,12 +1,11 @@
 import { DomLayer$, GlobeEventLayer$ } from "@stellar-globe/react-stellar-globe"
 import { GlobeEventMap, V3, angle } from "@stellar-globe/stellar-globe"
 import { Fragment, useCallback, useMemo, useState } from "react"
-import { useAppContext } from "../../../context"
 import { RingsTract } from "./RingsTract"
 import styles from './styles.module.scss'
 
 export function TractNumbersLayer() {
-  const ringsTract = useMemo(() => new RingsTract(120), [])
+  const ringsTract = useMemo(() => RingsTract.numRings(120), [])
   const [tracts, setTracts] = useState<{ position: V3, index: number }[]>([])
   const [fov, setFov] = useState(99)
 

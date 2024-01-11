@@ -11,7 +11,7 @@ export function PointerEventManager(
   globe: Globe,
 ) {
   const releaseCallbacks = ReleaseCallbacks()
-  const domElement = globe.canvas.domElement
+  const domElement = globe.containerElement
   let pointerPressed = false
   const view = () => globe.camera.view()
 

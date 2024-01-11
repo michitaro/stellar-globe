@@ -36,7 +36,7 @@ export class Globe {
   private readonly distorter?: Distorter
 
   constructor(
-    el: HTMLElement,
+    readonly containerElement: HTMLElement,
     options: GlobeOptions = {},
   ) {
     this.dataRepository = options.dataRepository ?? `${location.protocol}//hscmap.mtk.nao.ac.jp/stellar-globe/static`
@@ -44,8 +44,8 @@ export class Globe {
     this.canvas = new Canvas(this, options)
     this.onRelease(() => this.canvas.release())
 
-    el.appendChild(this.canvas.domElement)
-    this.onRelease(() => el.removeChild(this.canvas.domElement))
+    containerElement.appendChild(this.canvas.domElement)
+    this.onRelease(() => containerElement.removeChild(this.canvas.domElement))
 
     this.animations = new AnimationManager(this)
     this.onRelease(() => this.animations.clear())
@@ -206,6 +206,7 @@ export class Globe {
         gl.clear(gl.COLOR_BUFFER_BIT)
         // asyncでwebglが呼ばれたときのためにリセット
         gl.colorMask(true, true, true, true)
+        gl.flush()
       }
     })
   }

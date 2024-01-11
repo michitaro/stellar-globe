@@ -2,14 +2,14 @@ import { BeautifulObjectLayer$, ConstellationLayer$, EsoMilkyWayLayer$, Globe$, 
 import { Globe } from "@stellar-globe/stellar-globe"
 import { debounce } from "../common/utils/debounce"
 import { useAppContext } from "./context"
+import { TractFrameLayer$ } from "./features/appearanceLayers/RingsTract/TractFrameLayer"
+import { TractNumbersLayer } from "./features/appearanceLayers/RingsTract/TractNumbersLayer"
 import { CameraParams, cameraSlice } from "./features/camera/cameraSlice"
 import { CatalogLayers } from "./features/catalog/CatalogLayers"
 import { RegionsLayer } from "./features/regions/RegionsLayer"
 import { ToolsLayer } from "./features/regions/ToolsLayer"
 import { TractTileLayers } from "./features/tractTileLayers/TractTileLayers"
 import { useAppDispatch, useAppSelector } from "./store/hooks"
-import { TractFrameLayer$ } from "./features/appearanceLayers/RingsTract/TractFrameLayer"
-import { TractNumbersLayer } from "./features/appearanceLayers/RingsTract/TractNumbersLayer"
 
 
 export function MainViewer() {

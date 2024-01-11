@@ -39,7 +39,11 @@ const App = wrapWithAppContext(({
 
   return (
     <Provider store={store}>
-      <div className={classNames(styles.main, styles.thema)} ref={rootElementRef} tabIndex={-1}>
+      <div
+        className={classNames(styles.main, styles.thema)}
+        ref={rootElementRef}
+        tabIndex={catchAllKeyboardEvents ? undefined : -1}
+      >
         <DialogContext
           defaultPositionHint={defaultPositionHint}
           portal={isFullscreen && rootElementRef.current || dialogLayerElement}

@@ -1,15 +1,31 @@
 import { makePureLayerComponent } from '@stellar-globe/react-stellar-globe'
-import { Globe, Layer, V4, View, angle, glMatrix, path } from '@stellar-globe/stellar-globe'
+import { Globe, Layer, SkyCoord, V4, View, angle, glMatrix, path } from '@stellar-globe/stellar-globe'
 import { RingsTract } from './RingsTract'
 const { mat4 } = glMatrix
 
 
 class Renderer extends path.Renderer {
-  constructor(gl: WebGL2RenderingContext) {
+  private ringsTract = RingsTract.numRings(120)
+
+  constructor(gl: WebGL2RenderingContext, showPatch: boolean) {
     super(gl)
+    const pixelScale = 0.168 // arcsec / pixel
+    const tractSize = 36000 // in pixels
+    const size = 0.5 * tractSize * angle.deg2rad(pixelScale / 3600)
+    this.refreshArray(size, showPatch)
   }
 
-  refreshArray(size: number, showPatch: boolean) {
+  render(view: View) {
+    const { a, d } = SkyCoord.fromXyz(view.mvp.fovCenter)
+    const numTractsX = 3
+    const numTractsY = 3
+    this.ringsTract.tractCenters(a.rad, d.rad, numTractsX, numTractsY, (aa, dd) => {
+      this.modelMatrix = modelMatrix(aa, -dd)
+      super.render(view)
+    })
+  }
+
+  private refreshArray(size: number, showPatch: boolean) {
     this.darkenNarrowLine = false
     this.minWidth = 3
     const s = size
@@ -52,51 +68,33 @@ class Renderer extends path.Renderer {
     }
     this.setPaths(paths)
   }
+}
 
-  a = 0
-  d = 0
 
-  mMatirx() {
-    const cA = Math.cos(this.a)
-    const sA = Math.sin(this.a)
-    const cD = Math.cos(this.d)
-    const sD = Math.sin(this.d)
-    return mat4.fromValues(
-      cA * cD, cD * sA, -sD, 0,
-      -sA, cA, 0, 0,
-      cA * sD, sA * sD, cD, 0,
-      0, 0, 0, 1)
-  }
+function modelMatrix(a: number, d: number) {
+  const cA = Math.cos(a)
+  const sA = Math.sin(a)
+  const cD = Math.cos(d)
+  const sD = Math.sin(d)
+  return mat4.fromValues(
+    cA * cD, cD * sA, -sD, 0,
+    -sA, cA, 0, 0,
+    cA * sD, sA * sD, cD, 0,
+    0, 0, 0, 1)
 }
 
 
 class TractFrameLayer extends Layer {
   private renderer: Renderer
-  private ringsTract: RingsTract
 
   constructor(globe: Globe, showPatch: boolean) {
     super(globe)
-    this.renderer = new Renderer(globe.gl)
+    this.renderer = new Renderer(globe.gl, showPatch)
     this.onRelease(() => this.renderer.release())
-
-    this.ringsTract = new RingsTract(120)
-
-    const pixelScale = 0.168 // arcsec / pixel
-    const tractSize = 36000 // in pixels
-    const size = 0.5 * tractSize * angle.deg2rad(pixelScale / 3600)
-    this.renderer.refreshArray(size, showPatch)
   }
 
   render(view: View) {
-    const { a, d } = this.globe.camera.center()
-    const numTractsX = 3
-    const numTractsY = 3
-    this.ringsTract.tractCenters(a.rad, d.rad, numTractsX, numTractsY, (aa, dd) => {
-      this.renderer.modelMatrix = this.renderer.mMatirx()
-      this.renderer.a = aa
-      this.renderer.d = -dd
-      this.renderer.render(view)
-    })
+    this.renderer.render(view)
   }
 }
 

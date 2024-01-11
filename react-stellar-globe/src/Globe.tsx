@@ -27,9 +27,9 @@ export const Globe$ = forwardRef<GlobeHandle, GlobeProps>(function Globe$(
 
   return (
     <GlobeContext.Provider value={context}>
-      <div style={{ height: '100%', width: '100%', position: 'relative', overflow: 'hidden' }}>
-        <div ref={containerRef} style={{ height: '100%', width: '100%', position: 'absolute' }} />
+      <div ref={containerRef} style={{ height: '100%', position: 'relative' }} >
         {children}
+        {/* ここにcanvasができる */}
       </div>
     </GlobeContext.Provider>
   )

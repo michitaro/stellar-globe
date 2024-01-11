@@ -20,6 +20,8 @@ export class ZoomLayer extends Layer {
 
   protected onAddToGlobe() {
     let animation: Animation | undefined = undefined
+    const domElement = this.globe.containerElement
+
     const wheelEventNormalizer = new WheelEventNormalizer(e => {
       this.inertia.dragTo(e.deltaY)
       if (animation === undefined) {
@@ -40,13 +42,13 @@ export class ZoomLayer extends Layer {
       hotDuration: 150,
     })
 
-    const offWheel = on(this.globe.canvas.domElement, 'wheel', rawEvent => {
+    const offWheel = on(domElement, 'wheel', rawEvent => {
       rawEvent.preventDefault()
       wheelEventNormalizer.feedRawEvent(rawEvent)
     }, { passive: false })
     this.onRemoveFromGlobe(offWheel)
 
-    const offDown = SinglePointerEvent.onDown(this.globe.canvas.domElement, () => {
+    const offDown = SinglePointerEvent.onDown(domElement, () => {
       animation?.stop()
     })
     this.onRemoveFromGlobe(offDown)

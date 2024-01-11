@@ -90,7 +90,7 @@ export class PanLayer extends Layer {
   }
 
   protected onAddToGlobe() {
-    const el = this.globe.canvas.domElement
+    const el = this.globe.containerElement
     const offDblclick = on(el, 'dblclick', (e: MouseEvent) => {
       const coord = this.globe.canvas.coordFromClientCoord(e)
       const [theta, phi] = this.globe.camera.coord2thetaphi(coord)

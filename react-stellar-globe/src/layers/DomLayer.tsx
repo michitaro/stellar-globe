@@ -60,21 +60,21 @@ export function DomLayer$({
     if (visible) {
       const globe = getGlobe()
       const { width, height } = (globe.gl.canvas as HTMLCanvasElement).getBoundingClientRect()
-      const left = `${Math.round(width * (x + 1) / 2. + offset[0])}px`
-      const top = `${Math.round(height * (1 - (y + 1) / 2.) + offset[1])}px`
-      // const transform = `translateX(${left}) translateY(${top})`
+      const left = `${(width * (x + 1) / 2. + offset[0])}px`
+      const top = `${(height * (1 - (y + 1) / 2.) + offset[1])}px`
+      // const left = `${Math.round(width * (x + 1) / 2. + offset[0])}px`
+      // const top = `${Math.round(height * (1 - (y + 1) / 2.) + offset[1])}px`
+      const transform = `translateX(${left}) translateY(${top})`
       Object.assign(containerRef.current!.style, {
-        position: 'absolute',
         display: 'block',
-        left,
-        top,
-        // transform,
+        left: 0,
+        top: 0,
+        transform,
       })
     }
     else {
       Object.assign(containerRef.current!.style, {
         display: 'none',
-        PointerEvent: 'auto',
       })
     }
   }, [getGlobe, offset])
@@ -93,26 +93,12 @@ export function DomLayer$({
 
   const containerRef = useRef<HTMLDivElement>(null)
 
-  useLayoutEffect(() => {
-    Object.assign(containerRef.current!.style, {
-      display: 'none',
-    })
-    const el = containerRef.current!
-    const onWheel = (e: WheelEvent) => {
-      const globe = getGlobe()
-      const e2 = new WheelEvent(e.type, e)
-      globe.gl.canvas.dispatchEvent(e2)
-    }
-    el.addEventListener('wheel', onWheel, { passive: true })
-    return () => {
-      el.removeEventListener('wheel', onWheel)
-    }
-  }, [getGlobe])
-
   return (
     <Fragment>
       {node}
-      <div ref={containerRef}>
+      <div ref={containerRef} style={{
+        position: 'absolute',
+      }}>
         {children}
       </div>
     </Fragment>
