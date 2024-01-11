@@ -25,6 +25,10 @@ export function AppearanceLayersMenu() {
         <MenuItem type='checkbox' checked={layers.constellation.lang === 'English'} onClick={_ => dispatch(appearanceLayersSlice.actions.propsUpdated({ which: 'constellation', props: { lang: 'English' } }))}>English</MenuItem>
         <MenuItem type='checkbox' checked={layers.constellation.lang === 'Kanji'} onClick={_ => dispatch(appearanceLayersSlice.actions.propsUpdated({ which: 'constellation', props: { lang: 'Kanji' } }))}>Japanese</MenuItem>
       </SubMenu>
+      <SubMenu label="Tract Frames">
+        <MenuItem type='checkbox' checked={layers.tracts.visible} onClick={_ => dispatch(appearanceLayersSlice.actions.visibleToggled("tracts"))} >Show</MenuItem>
+        <MenuItem type='checkbox' checked={layers.tracts.patch} onClick={_ => dispatch(appearanceLayersSlice.actions.propsUpdated({ which: 'tracts', props: { patch: !layers.tracts.patch } }))} >Patch</MenuItem>
+      </SubMenu>
     </Fragment>
   )
 }

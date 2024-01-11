@@ -18,7 +18,12 @@ type State = {
   }
   hipparcosCatalog: {
     visible: boolean
-  }
+  },
+  tracts: {
+    visible: boolean
+    frame: boolean
+    patch: boolean
+  },
 }
 
 
@@ -42,6 +47,11 @@ function initialState(): State {
     },
     hipparcosCatalog: {
       visible: true,
+    },
+    tracts: {
+      visible: false,
+      frame: false,
+      patch: false,
     },
   }
 }

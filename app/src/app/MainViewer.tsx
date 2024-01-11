@@ -8,6 +8,8 @@ import { RegionsLayer } from "./features/regions/RegionsLayer"
 import { ToolsLayer } from "./features/regions/ToolsLayer"
 import { TractTileLayers } from "./features/tractTileLayers/TractTileLayers"
 import { useAppDispatch, useAppSelector } from "./store/hooks"
+import { TractFrameLayer$ } from "./features/appearanceLayers/RingsTract/TractFrameLayer"
+import { TractNumbersLayer } from "./features/appearanceLayers/RingsTract/TractNumbersLayer"
 
 
 export function MainViewer() {
@@ -47,6 +49,11 @@ export function MainViewer() {
       <HipparcosCatalogLayer$ {...layers.hipparcosCatalog} />
       <ConstellationLayer$ {...layers.constellation} />
       <GridLayer$ {...layers.grid} />
+
+      <TractFrameLayer$ showPatch={layers.tracts.patch} visible={layers.tracts.visible} />
+      {layers.tracts.visible &&
+        <TractNumbersLayer />
+      }
 
       <CatalogLayers />
 
