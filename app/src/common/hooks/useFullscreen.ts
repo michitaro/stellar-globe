@@ -1,19 +1,27 @@
 import { RefObject, useCallback, useEffect, useState } from "react"
 
 
-export function useFullscreen(ref: RefObject<HTMLDivElement>) {
-  const [isFullscreen, setIsFullscreen] = useState(false)
+export function useIsFullscreen() {
+  const [isFullscreen, setIsFullscreen] = useState(!!document.fullscreenElement)
 
   useEffect(() => {
-    const el = ref.current!
     const cb = () => {
       setIsFullscreen(!!document.fullscreenElement)
     }
-    el.addEventListener('fullscreenchange', cb)
+    document.addEventListener('fullscreenchange', cb)
     return () => {
-      el.removeEventListener('fullscreenchange', cb)
+      document.removeEventListener('fullscreenchange', cb)
     }
-  }, [ref])
+  }, [])
+
+  return {
+    isFullscreen,
+  }
+}
+
+
+export function useFullscreen(ref: RefObject<HTMLDivElement>) {
+  const { isFullscreen } = useIsFullscreen()
 
   const enterFullscreen = useCallback(() => {
     ref.current?.requestFullscreen()

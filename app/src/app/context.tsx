@@ -1,6 +1,6 @@
 import { Action } from "@reduxjs/toolkit"
 import { GlobeHandle } from "@stellar-globe/react-stellar-globe"
-import { createContext, forwardRef, useContext, useImperativeHandle, useMemo, useRef } from "react"
+import { createContext, forwardRef, useContext, useImperativeHandle, useMemo, useRef, useState } from "react"
 import { useInstanceVariable } from "../common/hooks/useInstanceVaribale"
 import { AppStore, makeStore } from "./store"
 import { createIs, createTypeCheckers } from "./typeGuard"
@@ -10,14 +10,17 @@ import { AppHandle } from "./types"
 function useMakeContext() {
   const globeHandle = useRef<GlobeHandle>(null)
   const rootElementRef = useRef<HTMLDivElement>(null)
+  const [active, setActive] = useState(true)
   const { store, stateHistory } = useInstanceVariable(makeStore)
 
   return useMemo(() => ({
     rootElementRef,
     globeHandle,
     store,
-    stateHistory
-  }), [stateHistory, store])
+    stateHistory,
+    active,
+    setActive,
+  }), [active, stateHistory, store])
 }
 
 
@@ -29,7 +32,14 @@ export function useAppContext() {
   if (context === undefined) {
     throw new Error(`use of useMiniAppContext outside the provider`)
   }
-  return context
+  const { globeHandle, active, rootElementRef, stateHistory, store } = context
+  return {
+    globeHandle,
+    rootElementRef,
+    stateHistory,
+    active,
+    store,
+  }
 }
 
 
@@ -39,7 +49,9 @@ export function wrapWithAppContext<T>(Component: React.ComponentType<T>) {
     useImperativeHandle(ref, () => {
       const handle: AppHandle = {
         globe: () => context.globeHandle.current!(),
-        dispatchAction: makeTypeSafeDispatch(context.store)
+        dispatchAction: makeTypeSafeDispatch(context.store),
+        activate: () => context.setActive(true),
+        deactivate: () => context.setActive(false),
       }
       return handle
     }, [context])

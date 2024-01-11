@@ -20,7 +20,7 @@ export const deferredFilterMap = (() => {
   return (baseUrl: string) => {
     if (!cache.has(baseUrl)) {
       const promise = (async () => {
-        return ((await (await fetch(`${baseUrl}/filter.json`)).json()) as any[])
+        return ((await (await fetch(`${baseUrl}/filter.json`)).json().catch(() => [])) as any[])
           .map(normalizeFilterDef)
           .filter(f => !f.commonName.startsWith('.'))
       })()

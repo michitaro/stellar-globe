@@ -1,10 +1,10 @@
-import { Fragment, ReactNode, useMemo } from 'react'
 import { Dialog } from '@stellar-globe/react-draggable-dialog'
-import styles from './style.module.scss'
-import { RegularMenu } from '../../common/components/Menu/RegularMenu'
-import { Menu, MenuItem } from '@szhsin/react-menu'
+import { Fragment, ReactNode, useMemo } from 'react'
 import { Icon } from '../../common/components/Icon'
 import { useMenuContainer } from '../../common/components/Menu/MenuContext'
+import { RegularMenu } from '../../common/components/Menu/RegularMenu'
+import { useAppContext } from '../context'
+import styles from './style.module.scss'
 
 
 type DialogProps = Parameters<typeof Dialog>[0]
@@ -50,9 +50,11 @@ export function AppDialog({
   title: rawTitle,
   onCloseButtonClick,
   menu,
+  visible,
+  rememberPosition,
   ...rests
 }: Props) {
-
+  const { active } = useAppContext()
   const container = useMenuContainer()
 
   const title = useMemo(() => {
@@ -83,6 +85,8 @@ export function AppDialog({
       title={title}
       fadeClassNames={fadeClassNames}
       fadeDuration={200}
+      visible={visible && active}
+      rememberPosition={rememberPosition || !active}
       {...rests}
     />
   )

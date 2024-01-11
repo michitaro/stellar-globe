@@ -1,5 +1,6 @@
 import classNames from "classnames"
-import { HTMLAttributes, ReactNode } from "react"
+import { HTMLAttributes, ReactNode, forwardRef } from "react"
+import { setDisplayName } from "../../utils/setDisplayName"
 import styles from './styles.module.scss'
 
 
@@ -8,10 +9,12 @@ type Props = {
 } & HTMLAttributes<HTMLDivElement>
 
 
-export function MenuBar({ className, children, ...rests }: Props) {
+export const MenuBar = forwardRef<HTMLDivElement, Props>(({ children, className, ...rests }, ref) => {
   return (
-    <div className={classNames(className, styles.menuBar)} {...rests}>
+    <div ref={ref} className={classNames(className, styles.menuBar)} {...rests}>
       {children}
     </div>
   )
-}
+})
+
+setDisplayName({ MenuBar })

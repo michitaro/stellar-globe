@@ -41,11 +41,13 @@ export function DialogContext({
 
   const raiseDialog = useCallback((id0: number) => {
     const z0 = zIndex.get(id0)!
-    setZIndex(zIndex => new Map(function* () {
-      for (const [id, z] of zIndex) {
-        yield [id, z === z0 ? zIndex.size - 1 : z < z0 ? z : z - 1]
-      }
-    }()))
+    setZIndex(zIndex => {
+      return new Map(
+        [...zIndex.entries()]
+          .sort((a, b) => a[1] - b[1])
+          .map(([id, z], i) => [id, z === z0 ? zIndex.size - 1 : z > z0 ? i - 1 : i])
+      )
+    })
   }, [zIndex])
 
   const context: ContextType = useMemo(() => ({

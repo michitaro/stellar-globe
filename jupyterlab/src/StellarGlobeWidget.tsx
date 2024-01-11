@@ -1,10 +1,11 @@
 import { ReactWidget } from '@jupyterlab/ui-components'
 import { Widget } from '@lumino/widgets'
 import StellarGlobeApp, { AppHandle } from '@stellar-globe/app'
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { createIs } from './typeGuard'
 import { CommType, StellarGlobeSessionEnv } from "./types"
 import { uid } from './uid'
+import { LabShell } from '@jupyterlab/application'
 
 
 export type ConnectionParams = {
@@ -18,27 +19,44 @@ export function stellarGlobeConnection(
     layout = 'split-right'
   }: ConnectionParams,
 ) {
-  const widget = StellarGlobeAppWidget(env, comm)
+  let appHandle: AppHandle | undefined
+  const widget = StellarGlobeAppWidget(env, comm, _ => { appHandle = _; appHandle.deactivate() })
   widget.id = `StellarGlobe-${uid()}`
   widget.title.label = `StellarGlobe`
   widget.title.closable = true
-  env.app.shell.add(widget, 'main', { mode: layout, activate: false })
+  env.app.shell.add(widget, 'main', { mode: layout })
+
+  const onActivate = () => {
+    if (env.app.shell.currentWidget === widget) {
+      appHandle?.activate()
+    }
+    else {
+      appHandle?.deactivate()
+    }
+  }
+  null; (env.app.shell as LabShell).currentChanged?.connect(onActivate)
+
   return {
     close: () => {
       comm.close()
       comm.dispose()
+      null; (env.app.shell as LabShell).currentChanged?.disconnect(onActivate)
     },
   }
 }
 
 
-function StellarGlobeAppWidget(env: StellarGlobeSessionEnv, comm: CommType) {
+function StellarGlobeAppWidget(env: StellarGlobeSessionEnv, comm: CommType, captureAppHandle: (appHandle: AppHandle) => void) {
   const WrappedStellarGlobeApp = () => {
     const appRef = useRef<AppHandle>(null!)
 
     const dispatch = (msg: DispatchMessage) => {
       appRef.current.dispatchAction(msg.action)
     }
+
+    useEffect(() => {
+      captureAppHandle(appRef.current)
+    }, [])
 
     useInit(() => {
       comm.onMsg = (e) => {
@@ -63,6 +81,7 @@ function StellarGlobeAppWidget(env: StellarGlobeSessionEnv, comm: CommType) {
         catchAllKeyboardEvents={false}
         hashSync={false}
         storageSync={false}
+        floatingLayerZIndex={99}
       />
     )
   }

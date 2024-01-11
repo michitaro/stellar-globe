@@ -1,16 +1,10 @@
 import { ReactNode, RefObject, createContext, useContext, useEffect, useMemo, useRef, useState } from "react"
 
 
-function useMakeContext(containerRef: RefObject<HTMLElement>) {
-  const [container, setContainer] = useState<HTMLElement>()
-
-  useEffect(() => {
-    setContainer(containerRef.current!)
-  }, [containerRef])
-
+function useMakeContext({ portal }: { portal: HTMLElement | undefined }) {
   return useMemo(() => ({
-    container,
-  }), [container])
+    container: portal,
+  }), [portal])
 }
 
 
@@ -19,12 +13,12 @@ const Context = createContext<ReturnType<typeof useMakeContext> | undefined>(und
 
 type ProviderProps = {
   children: ReactNode
-  containerRef: RefObject<HTMLElement>
+  portal?: HTMLElement
 }
 
 
-export function MenuProvider({ children, containerRef }: ProviderProps) {
-  const context = useMakeContext(containerRef)
+export function MenuProvider({ children, portal }: ProviderProps) {
+  const context = useMakeContext({ portal })
   return <Context.Provider value={context}>{children}</Context.Provider>
 }
 
