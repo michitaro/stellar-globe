@@ -23,21 +23,8 @@ type State = {
 export const defaultFilters = ['i', 'r', 'g']
 
 
-const reruns = [
-  'PDR3 Wide',
-  'PDR3 DUD',
-  'Legacy Archive 2016',
-  's23b_wide_20231116T053220Z',
-  's23b_wide_20231120T084248Z',
-  's23b_wide_20231125T044351Z',
-  's22a_test_step3_minIter15_alltracts_correct2_20221206T050622Z',
-  'test_s22a_step3_20220721T111750Z',
-  's23b_deep_step3a_20231229T123743Z',
-]
-
-
 function layerVisible(layerName: string) {
-  return (readHashState().datasets ?? reruns).includes(layerName)
+  return (readHashState().datasets ?? []).includes(layerName)
 }
 
 
@@ -68,7 +55,6 @@ function initialState(): State {
         'test_s22a_step3_20220721T111750Z',
         's23b_deep_step3a_20231229T123743Z',
         // 'test_s22a_step3_20221010T234451Z',
-
       ].map(rerun => ({
         name: rerun,
         baseUrl: import.meta.env.DEV ? `./data/s23b_wide/${rerun}` : `../data/${rerun}`,
