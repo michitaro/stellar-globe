@@ -32,7 +32,5 @@ type GlobeResizeEvent = {}
 
 
 export function cameraToCameraMoveEvent(camera: Camera) {
-  const { a, d } = camera.center()
-  const { theta, phi, za, zd, zp, fovy, roll } = camera
-  return { theta, phi, za, zd, zp, fovy, roll, skyCoord: { ra: a.rad, dec: d.rad } }
+  return { camera }
 }

@@ -24,7 +24,7 @@ export const defaultFilters = ['i', 'r', 'g']
 
 
 function layerVisible(layerName: string) {
-  return (readHashState().datasets ?? []).includes(layerName)
+  return (readHashState().datasets ?? ['PDR3 Wide', 'PDR3 DUD']).includes(layerName)
 }
 
 
@@ -54,6 +54,7 @@ function initialState(): State {
         's22a_test_step3_minIter15_alltracts_correct2_20221206T050622Z',
         'test_s22a_step3_20220721T111750Z',
         's23b_deep_step3a_20231229T123743Z',
+        's23b_wide_step3a_20231228T070512Z',
         // 'test_s22a_step3_20221010T234451Z',
       ].map(rerun => ({
         name: rerun,

@@ -57,25 +57,27 @@ export function DomLayer$({
   const getGlobe = useGetGlobe()
 
   const onProject = useCallback(({ visible, x, y }: Projected) => {
-    if (visible) {
-      const globe = getGlobe()
-      const { width, height } = (globe.gl.canvas as HTMLCanvasElement).getBoundingClientRect()
-      const left = `${(width * (x + 1) / 2. + offset[0])}px`
-      const top = `${(height * (1 - (y + 1) / 2.) + offset[1])}px`
-      // const left = `${Math.round(width * (x + 1) / 2. + offset[0])}px`
-      // const top = `${Math.round(height * (1 - (y + 1) / 2.) + offset[1])}px`
-      const transform = `translateX(${left}) translateY(${top})`
-      Object.assign(containerRef.current!.style, {
-        display: 'block',
-        left: 0,
-        top: 0,
-        transform,
-      })
-    }
-    else {
-      Object.assign(containerRef.current!.style, {
-        display: 'none',
-      })
+    if (containerRef.current) {
+      if (visible) {
+        const globe = getGlobe()
+        const { width, height } = (globe.gl.canvas as HTMLCanvasElement).getBoundingClientRect()
+        const left = `${(width * (x + 1) / 2. + offset[0])}px`
+        const top = `${(height * (1 - (y + 1) / 2.) + offset[1])}px`
+        // const left = `${Math.round(width * (x + 1) / 2. + offset[0])}px`
+        // const top = `${Math.round(height * (1 - (y + 1) / 2.) + offset[1])}px`
+        const transform = `translateX(${left}) translateY(${top})`
+        Object.assign(containerRef.current!.style, {
+          display: 'block',
+          left: 0,
+          top: 0,
+          transform,
+        })
+      }
+      else {
+        Object.assign(containerRef.current!.style, {
+          display: 'none',
+        })
+      }
     }
   }, [getGlobe, offset])
 

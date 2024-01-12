@@ -32,6 +32,10 @@ const toolDefs: { [K in ToolType]: {
   rect: {
     icon: 'crop_square',
     displayName: 'Rectangular Region',
+  },
+  text: {
+    icon: 'title',
+    displayName: 'Text',
   }
 } as const
 
@@ -45,14 +49,15 @@ export function ToolsMenu() {
     'line': 'toggleLineTool',
     'circle': 'toggleCircleTool',
     'rect': 'toggleRectTool',
-    'pan': undefined
+    'pan': undefined,
+    'text': 'toggleTextTool',
   } as const
 
   return (
     <MenuBarItem
       label={<Icon type={toolDefs[selectedTool].icon} />}
     >
-      {(['pan', 'line', 'circle', 'rect'] as const).map(tool => (
+      {(['pan', 'line', 'circle', 'rect', 'text'] as const).map(tool => (
         <MenuItemWithKeybind
           key={tool}
           type='checkbox'

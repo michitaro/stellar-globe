@@ -219,7 +219,8 @@ export class Globe {
   setCursor(cursor: CursorStyle) {
     if (this.cursorMemo !== cursor) {
       this.cursorMemo = cursor
-      this.canvas.domElement.style.cursor = cursor
+      // this.canvas.domElement.style.cursor = cursor
+      this.containerElement.style.cursor = cursor
     }
   }
 }

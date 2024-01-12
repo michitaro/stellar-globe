@@ -1,5 +1,6 @@
 import { createSlice, nanoid } from "@reduxjs/toolkit"
-import { SkyCoord, V4 } from "@stellar-globe/stellar-globe"
+import { SkyCoord, V4, angle } from "@stellar-globe/stellar-globe"
+import { CSSProperties } from "react"
 import { colorSeries } from "../../../common/utils/colorsys"
 import { slerp } from "../../../common/utils/math"
 import { appStateHistoryActions } from "../../store/hooks"
@@ -8,10 +9,10 @@ import { readHashState } from "../../store/stateSync/hashSync"
 import { skyCoordFromCoordDef } from "./regionUtils"
 
 
-type ToolType = 'pan' | 'line' | 'rect' | 'circle'
+type ToolType = 'pan' | 'line' | 'rect' | 'circle' | 'text'
 
 
-export type Region = LinearRegion | CircularRegion | RectangularRegion
+export type Region = LinearRegion | CircularRegion | RectangularRegion | TextRegion
 
 
 type PartiallyPartial<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
@@ -200,6 +201,14 @@ export type RectangularRegion = RegionBase & {
   color: V4
 }
 
+export type TextRegion = RegionBase & {
+  type: 'Text'
+  text: string
+  position: SkyCoordType
+  color: V4
+  style?: CSSProperties
+}
+
 
 export function regionView(region: Region): { center: SkyCoord, fov: number } {
   switch (region.type) {
@@ -225,6 +234,13 @@ export function regionView(region: Region): { center: SkyCoord, fov: number } {
       return {
         center,
         fov: Math.max(width, height),
+      }
+    }
+    case 'Text': {
+      const { position } = region
+      return {
+        center: SkyCoord.fromRad(position.ra, position.dec),
+        fov: angle.amin2rad(10),
       }
     }
   }

@@ -10,7 +10,7 @@
 }
 
 .active {
-  box-shadow: 0 0 8px rgba(#037, 1);
+  box-shadow: 0 0 8px rgba(#07f, 1);
 }
 
 .titlebar {
@@ -23,9 +23,12 @@
   border: solid 0 #777;
   padding: 4px;
 
-  // &:focus {
-  //   background-color: #333;
-  // }
+  transition: background-color 0.2s;
+
+  &:focus {
+    outline: none;
+    background-color: #235;
+  }
 }
 
 .titlebarText {

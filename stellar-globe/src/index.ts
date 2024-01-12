@@ -27,6 +27,7 @@ export * as dateUtils from './utils/date'
 export type { View } from './view'
 export * as matrixUtils from './utils/matrilx-utils'
 export type { CameraMode } from './globe/Camera'
+export { cameraCenter } from './globe/Camera'
 export { BeautifulObjectLayer } from './layer/beautiful_object'
 export { baseAlpha, overlayAlpha } from './layer/overlayAlpha'
 export { angle }

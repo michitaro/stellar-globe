@@ -21,6 +21,7 @@ export function useToolsKeybindings() {
       toggleLineTool: makeToggleTool('line', 'Shift+E'),
       toggleCircleTool: makeToggleTool('circle', 'Shift+C'),
       toggleRectTool: makeToggleTool('rect', 'Shift+R'),
+      toggleTextTool: makeToggleTool('text', 'Shift+T'),
     }
   }, [dispatch, currentTool])
 }

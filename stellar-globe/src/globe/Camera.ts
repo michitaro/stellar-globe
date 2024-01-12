@@ -62,7 +62,14 @@ export class Camera implements CameraParams {
     private globe: Globe,
     options: CameraOptions = {},
   ) {
-    Object.assign(this, options)
+    const keys: (keyof typeof options & keyof typeof this)[] = ['aspectRatio', 'fovy', 'lodBias', 'mode', 'phi', 'retina', 'roll', 'theta', 'za', 'zd', 'zp']
+    for (const k of keys) {
+      const v = options[k]
+      if (v !== undefined) {
+        // @ts-ignore
+        this[k] = options[k]
+      }
+    }
     this.setLodHooks()
   }
 
@@ -75,16 +82,12 @@ export class Camera implements CameraParams {
     return this.coord2thetaphi(SkyCoord.fromXyz(v))
   }
 
-  thetaphi2xyz(theta: number, phi: number): V3 {
-    return vec3.transformMat3([0, 0, 0] as any, thetaphi2xyz(theta, phi), izenith3(this.za, this.zd, this.zp)) as any
-  }
-
-  thetaphi2coord(theta: number, phi: number) {
-    return SkyCoord.fromXyz(this.thetaphi2xyz(theta, phi))
+  thetaphi2xyz(theta: number, phi: number) {
+    return vec3.transformMat3([0, 0, 0], thetaphi2xyz(theta, phi), izenith3(this.za, this.zd, this.zp)) as V3
   }
 
   center() {
-    return this.thetaphi2coord(this.theta, this.phi)
+    return cameraCenter(this)
   }
 
   jumpTo(params2: Partial<CameraParams>, options: Partial<JumpToOptions> = {}) {
@@ -296,4 +299,11 @@ function generateCameraMatrix(out: mat4, p: CameraParams) {
       )
       break
   }
+}
+
+
+export function cameraCenter(params: Pick<CameraParams, 'theta' | 'phi' | 'za' | 'zd' | 'zp'>) {
+  const { theta, phi, za, zd, zp } = params
+  const xyz = vec3.transformMat3([0, 0, 0], thetaphi2xyz(theta, phi), izenith3(za, zd, zp)) as V3
+  return SkyCoord.fromXyz(xyz)
 }
