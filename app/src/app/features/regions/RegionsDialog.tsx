@@ -1,15 +1,17 @@
+import { resizableY } from "@stellar-globe/react-draggable-dialog"
 import { V4 } from "@stellar-globe/stellar-globe"
 import { MaterialSymbol } from "material-symbols"
 import { Fragment, memo, useCallback } from "react"
 import { ColorPickerRgba } from "../../../common/components/ColorPicker"
+import EditableSpan from "../../../common/components/EditableSpan"
 import { Icon } from "../../../common/components/Icon"
 import { setDisplayName } from "../../../common/utils/setDisplayName"
 import { AppDialog } from "../../AppDialog"
 import { useAppContext } from '../../context'
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
+import { RegionsMenu } from "./RegionsMenu"
 import { Region, regionView, regionsSlice } from "./regionsSlice"
 import styles from './styles.module.scss'
-import { RegionsMenu } from "./RegionsMenu"
 
 
 export const RegionsDialog = memo(() => {
@@ -21,7 +23,7 @@ export const RegionsDialog = memo(() => {
     <AppDialog
       title={<Fragment><Icon type="architecture" marginRight />Regions</Fragment>}
       visible={visible}
-      resizable
+      resizable={resizableY}
       onCloseButtonClick={() => dispatch(regionsSlice.actions.regionsDialogToggled({}))}
       menu={<RegionsMenu />}
     >
@@ -32,6 +34,7 @@ export const RegionsDialog = memo(() => {
             <th><Icon type='visibility' /></th>
             <th><Icon type='label' /></th>
             <th><Icon type='palette' /></th>
+            <th><Icon type='summarize' /></th>
             <th />
           </tr>
         </thead>
@@ -77,6 +80,11 @@ const RegionTr = memo(({ region }: { region: Region }) => {
         <ColorPickerRgba color={color} onChange={onChangeColor} />
       </td>
       <td>
+        <EditableSpan
+          value={region.name}
+          onChange={newName => dispatch(regionsSlice.actions.regionUpdated({ id, regionDef: { ...region, name: newName } }))} />
+      </td>
+      <td>
         <div>
           <button
             onClick={goToRegion}
@@ -100,4 +108,5 @@ const typeIcon: { [K in RegionType]: MaterialSymbol } = {
   Linear: 'straighten',
   Circular: 'circle',
   Rectangular: 'rectangle',
+  Text: 'title',
 } as const

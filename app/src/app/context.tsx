@@ -1,17 +1,19 @@
 import { Action } from "@reduxjs/toolkit"
+import { DialogContextHandle } from "@stellar-globe/react-draggable-dialog"
 import { GlobeHandle } from "@stellar-globe/react-stellar-globe"
-import { createContext, forwardRef, useContext, useImperativeHandle, useMemo, useRef, useState } from "react"
+import { ForwardedRef, ReactNode, createContext, useContext, useImperativeHandle, useMemo, useRef, useState } from "react"
 import { useInstanceVariable } from "../common/hooks/useInstanceVaribale"
 import { AppStore, makeStore } from "./store"
 import { createIs, createTypeCheckers } from "./typeGuard"
 import { AppHandle } from "./types"
 
 
-function useMakeContext() {
+export function useMakeContext(params: { active: boolean }) {
   const globeHandle = useRef<GlobeHandle>(null)
   const rootElementRef = useRef<HTMLDivElement>(null)
-  const [active, setActive] = useState(true)
+  const [active, setActive] = useState(params.active)
   const { store, stateHistory } = useInstanceVariable(makeStore)
+  const dialogContext = useRef<DialogContextHandle>(null)
 
   return useMemo(() => ({
     rootElementRef,
@@ -20,11 +22,22 @@ function useMakeContext() {
     stateHistory,
     active,
     setActive,
+    dialogContext,
   }), [active, stateHistory, store])
 }
 
 
-const AppContext = createContext<undefined | ReturnType<typeof useMakeContext>>(undefined)
+type AppContextType = ReturnType<typeof useMakeContext>
+const AppContext = createContext<undefined | AppContextType>(undefined)
+
+
+export function AppContextProvider({ children, context }: { children: ReactNode, context: AppContextType }) {
+  return (
+    <AppContext.Provider value={context}>
+      {children}
+    </AppContext.Provider>
+  )
+}
 
 
 export function useAppContext() {
@@ -32,36 +45,25 @@ export function useAppContext() {
   if (context === undefined) {
     throw new Error(`use of useMiniAppContext outside the provider`)
   }
-  const { globeHandle, active, rootElementRef, stateHistory, store } = context
+  const { globeHandle, active, rootElementRef, stateHistory, store, dialogContext } = context
   return {
     globeHandle,
     rootElementRef,
     stateHistory,
     active,
     store,
+    dialogContext,
   }
 }
 
 
-export function wrapWithAppContext<T>(Component: React.ComponentType<T>) {
-  return forwardRef(function WrappedComponent(props: T, ref) {
-    const context = useMakeContext()
-    useImperativeHandle(ref, () => {
-      const handle: AppHandle = {
-        globe: () => context.globeHandle.current!(),
-        dispatchAction: makeTypeSafeDispatch(context.store),
-        activate: () => context.setActive(true),
-        deactivate: () => context.setActive(false),
-      }
-      return handle
-    }, [context])
-    return (
-      <AppContext.Provider value={context}>
-        {/* @ts-ignore */}
-        <Component {...props} />
-      </AppContext.Provider>
-    )
-  })
+export function useSetupAppHandle(ref: ForwardedRef<AppHandle>, context: AppContextType) {
+  useImperativeHandle(ref, () => ({
+    globe: () => context.globeHandle.current!(),
+    dispatchAction: makeTypeSafeDispatch(context.store),
+    activate: () => context.setActive(true),
+    deactivate: () => context.setActive(false),
+  }), [context])
 }
 
 

@@ -1,6 +1,5 @@
 import { createSlice, nanoid } from "@reduxjs/toolkit"
 import { SkyCoord, V4, angle } from "@stellar-globe/stellar-globe"
-import { CSSProperties } from "react"
 import { colorSeries } from "../../../common/utils/colorsys"
 import { slerp } from "../../../common/utils/math"
 import { appStateHistoryActions } from "../../store/hooks"
@@ -97,6 +96,22 @@ export const regionsSlice = createSlice({
         }
       },
     ),
+    newTextRegionAdded: create.preparedReducer(
+      ({ id: _id, ...props }: PartiallyPartial<TextRegion, 'id' | 'color'>) => {
+        const id = _id ?? nanoid()
+        return trackAction({
+          payload: {
+            id,
+            ...props,
+          }
+        }, 'Text Region Added')
+      },
+      (state, { payload: { id, color, ...rests } }) => {
+        if (!state.regions.find(r => r.id === id)) {
+          state.regions.push({ ...rests, id, color: color ?? nextColor(state) })
+        }
+      },
+    ),
     regionUpdated: create.preparedReducer(
       (payload: { id: string, regionDef: Region }) => trackAction({ payload }, 'Region Updated'),
       (state, { payload: { id, regionDef } }) => {
@@ -121,8 +136,11 @@ export const regionsSlice = createSlice({
         }
       },
     ),
-    regionsDialogToggled: create.reducer<{}>((state, action) => {
-      state.regionsDialogVisible = !state.regionsDialogVisible
+    regionsDialogToggled: create.reducer<{ open?: boolean }>((state, { payload: { open } }) => {
+      state.regionsDialogVisible = open ?? !state.regionsDialogVisible
+    }),
+    regionsImported: create.reducer<{ regions: Region[] }>((state, { payload: { regions } }) => {
+      state.regions.push(...regions)
     }),
   }),
   selectors: {
@@ -137,6 +155,7 @@ export const regionsSlice = createSlice({
         regionsSlice.actions.newCircularRegionAdded.type,
         regionsSlice.actions.newLinearRegionAdded.type,
         regionsSlice.actions.newRectangularRegionAdded.type,
+        regionsSlice.actions.newTextRegionAdded.type,
       ].includes(action.type),
       state => {
         state.regionsDialogVisible = true
@@ -175,6 +194,7 @@ type RegionBase = {
   id: string
   visible: boolean
   showLabel: boolean
+  name: string
 }
 
 
@@ -203,10 +223,8 @@ export type RectangularRegion = RegionBase & {
 
 export type TextRegion = RegionBase & {
   type: 'Text'
-  text: string
   position: SkyCoordType
   color: V4
-  style?: CSSProperties
 }
 
 

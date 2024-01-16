@@ -1,9 +1,8 @@
-import { DialogContext } from '@stellar-globe/react-draggable-dialog'
 import '@stellar-globe/react-draggable-dialog/style.css'
 import '@szhsin/react-menu/dist/index.css'
 import classNames from 'classnames'
 import 'material-symbols/outlined.css'
-import { CSSProperties, useEffect, useRef, useState } from 'react'
+import { forwardRef, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Provider } from "react-redux"
 import { MenuProvider } from '../common/components/Menu/MenuContext'
@@ -11,7 +10,7 @@ import { ModalProvider } from '../common/components/Modal'
 import { useIsFullscreen } from '../common/hooks/useFullscreen'
 import MainMenu from "./MainMenu"
 import { MainViewer } from "./MainViewer"
-import { useAppContext, wrapWithAppContext } from "./context"
+import { AppContextProvider, useMakeContext, useSetupAppHandle } from "./context"
 import { CatalogDragAndDrop } from './features/catalog/CatalogDragAndDrop'
 import { Dialogs } from './features/dialogs/Dialogs'
 import { KeybindsProvider } from './keybindings/appKeybindings'
@@ -19,36 +18,37 @@ import { StateHistoryProvider } from './store/StateHistoryProvider'
 import { useLocalStorageSync } from './store/stateSync/StorageSync'
 import { useHashSync } from './store/stateSync/hashSync'
 import styles from './style.module.scss'
-import { AppProps } from './types'
+import { AppHandle, AppProps } from './types'
 
 
-const App = wrapWithAppContext(({
+const App = forwardRef<AppHandle, AppProps>(({
   hashSync = false,
   storageSync = false,
   catchAllKeyboardEvents = true,
-  floatingLayerElement,
+  floatingLayerElement, // Dialogs, Menuはここに作られる
   floatingLayerZIndex,
-}: AppProps) => {
-  const { rootElementRef, store, stateHistory } = useAppContext()
-  const { element: menuLayerElement, ref: menuLayer } = useElement<HTMLDivElement>()
-  const { element: dialogLayerElement, ref: dialogLayer } = useElement<HTMLDivElement>()
+  activeOnInit = true,
+}, ref) => {
+  const context = useMakeContext({ active: activeOnInit })
+  useSetupAppHandle(ref, context)
+  const { rootElementRef, store, stateHistory } = context
   const { isFullscreen } = useIsFullscreen()
+  const { element: menuLayerElement, ref: menuLayer } = useElement<HTMLDivElement>([isFullscreen])
+  const { element: dialogLayerElement, ref: dialogLayer } = useElement<HTMLDivElement>([isFullscreen])
 
   useHashSync({ store, enabled: hashSync })
   useLocalStorageSync({ store, enabled: storageSync })
 
   return (
-    <Provider store={store}>
-      <div
-        className={classNames(styles.main, styles.thema)}
-        ref={rootElementRef}
-        tabIndex={catchAllKeyboardEvents ? undefined : -1}
-      >
-        <DialogContext
-          defaultPositionHint={defaultPositionHint}
-          portal={isFullscreen && rootElementRef.current || dialogLayerElement}
+    <AppContextProvider context={context} >
+      <Provider store={store}>
+        <div
+          className={classNames(styles.main, styles.thema)}
+          ref={rootElementRef}
+          tabIndex={catchAllKeyboardEvents ? undefined : -1}
         >
-          <MenuProvider portal={isFullscreen && rootElementRef.current || menuLayerElement}>
+          <MenuProvider portal={menuLayerElement}>
+            <Dialogs portal={dialogLayerElement} />
             <StateHistoryProvider stateHistory={stateHistory}>
               <ModalProvider rootElementRef={rootElementRef}>
                 <KeybindsProvider containerRef={rootElementRef} catchAllEvents={catchAllKeyboardEvents}>
@@ -56,38 +56,35 @@ const App = wrapWithAppContext(({
                     <MainViewer />
                     <MainMenu />
                   </CatalogDragAndDrop>
-                  <Dialogs />
                 </KeybindsProvider>
               </ModalProvider>
             </StateHistoryProvider>
           </MenuProvider>
-        </DialogContext>
-      </div>
-      {createPortal((
-        <div className={classNames(styles.thema, styles.floatingLayer)} style={{ zIndex: floatingLayerZIndex }} >
-          <div ref={dialogLayer} />
-          <div data-no-dnd ref={menuLayer} />
         </div>
-      ), floatingLayerElement ?? document.body)}
-    </Provider >
+        {createPortal((
+          <div className={classNames(styles.thema, styles.floatingLayer)} style={{ zIndex: floatingLayerZIndex }} >
+            <div ref={dialogLayer} />
+            <div data-no-dnd ref={menuLayer} />
+          </div>
+        ), isFullscreen && rootElementRef.current || (floatingLayerElement ?? document.body))}
+      </Provider >
+    </AppContextProvider>
   )
 })
 
 
-export default App
-
-
-const defaultPositionHint: CSSProperties = {
-  top: 8,
-  right: 8,
-}
-
-
-function useElement<T extends HTMLElement>() {
+function useElement<T extends HTMLElement>(deps: unknown[]) {
   const ref = useRef<T>(null)
   const [element, setElement] = useState<T>()
-  useEffect(() => {
-    setElement(ref.current ?? undefined)
-  }, [])
+  useEffect(
+    () => {
+      setElement(ref.current ?? undefined)
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    deps,
+  )
   return { element, ref }
 }
+
+
+export default App

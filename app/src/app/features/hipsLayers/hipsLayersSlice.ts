@@ -25,27 +25,21 @@ export const hipsLayersSlice = createSlice({
         state.baseUrl = baseUrl
       },
     ),
-    hipsDialogToggled: create.reducer<{}>((state, action) => {
-      state.hipsDialogVisible = !state.hipsDialogVisible
+    hipsDialogToggled: create.reducer<{ open?: boolean }>((state, { payload: { open } }) => {
+      state.hipsDialogVisible = open ?? !state.hipsDialogVisible
     }),
-    // visibleToggled: create.preparedReducer(
-    //   (payload: { visible: boolean }) => trackAction({ payload }, 'HiPS toggled'),
-    //   (state, { payload: { visible } }) => {
-    //     state.visible = visible
-    //   },
-    // ),
   }),
   extraReducers(builder) {
     builder.addCase(appStateHistoryActions.setState, (state, { payload: { hipsLayers } }) => {
       state.baseUrl = hipsLayers.baseUrl
     })
-    // builder.addMatcher(
-    //   action => [hipsLayersSlice.actions.baseUrlChanged.type].includes(action.type),
-    //   state => {
-    //     if (state.baseUrl) {
-    //       state.hipsDialogVisible = true
-    //     }
-    //   }
-    // )
+    builder.addMatcher(
+      action => [hipsLayersSlice.actions.baseUrlChanged.type].includes(action.type),
+      state => {
+        if (state.baseUrl) {
+          state.hipsDialogVisible = true
+        }
+      }
+    )
   },
 })

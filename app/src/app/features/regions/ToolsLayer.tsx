@@ -1,11 +1,11 @@
 import { PanLayer$ } from '@stellar-globe/react-stellar-globe'
-import { GlobePointerDragEvent, SkyCoord, V4 } from '@stellar-globe/stellar-globe'
+import { GlobePointerDragEvent, GlobePointerEvent, SkyCoord, V4 } from '@stellar-globe/stellar-globe'
 import { Fragment, ReactNode, memo, useCallback, useMemo, useState } from 'react'
 import { setDisplayName } from '../../../common/utils/setDisplayName'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { CircularRegionLayer } from './CircularRegionLayer'
 import { LinearRegionLayer } from './LinearRegionLayer'
-import { PointerDragAndUpLayer$ } from './PointerDragLayer'
+import { PointeLayer$ } from './PointerLayer'
 import { RectDef, RectangularRegionLayer } from './RectangularRegionLayer'
 import { normalizeSkyCoord } from './regionUtils'
 import { regionsSlice } from './regionsSlice'
@@ -20,19 +20,20 @@ export const ToolsLayer = memo(() => {
       {tool === 'line' && <NewLinearRegionLayer />}
       {tool === 'circle' && <NewCircularRegionLayer />}
       {tool === 'rect' && <NewRectangularRegionLayer />}
+      {tool === 'text' && <NewTextRegionLayer />}
     </Fragment>
   )
 })
 setDisplayName({ ToolsLayer })
 
 
-type NewRegionLayerProps = {
+type NewTwoPointsRegionLayerProps = {
   render: (coords: [SkyCoord, SkyCoord]) => ReactNode
   onSubmit: (coords: [SkyCoord, SkyCoord]) => void
 }
 
 
-function NewRegionLayer({ render, onSubmit }: NewRegionLayerProps) {
+function NewTwoPointsRegionLayer({ render, onSubmit }: NewTwoPointsRegionLayerProps) {
   const [coords, setCoords] = useState<[SkyCoord, SkyCoord] | null>(null)
 
   const onDrag = useCallback((e: GlobePointerDragEvent) => {
@@ -49,7 +50,7 @@ function NewRegionLayer({ render, onSubmit }: NewRegionLayerProps) {
   return (
     <Fragment>
       {coords && render(coords)}
-      <PointerDragAndUpLayer$ onDrag={onDrag} onUp={onUp} />
+      <PointeLayer$ onDrag={onDrag} onUp={onUp} />
     </Fragment>
   )
 }
@@ -67,6 +68,7 @@ const NewLinearRegionLayer = memo(() => {
       end: normalizeSkyCoord(end),
       visible: true,
       showLabel: true,
+      name: '',
     }))
     if (!toolPinned) {
       dispatch(regionsSlice.actions.toolChanged({ tool: 'pan' }))
@@ -78,7 +80,7 @@ const NewLinearRegionLayer = memo(() => {
   const angleUnit = useAppSelector(state => state.common.angleUnit)
 
   return (
-    <NewRegionLayer
+    <NewTwoPointsRegionLayer
       onSubmit={addRegion}
       render={coords => (
         <LinearRegionLayer
@@ -106,6 +108,7 @@ const NewCircularRegionLayer = memo(() => {
       radius: a.angle(b).rad,
       visible: true,
       showLabel: true,
+      name: '',
     }))
     if (!toolPinned) {
       dispatch(regionsSlice.actions.toolChanged({ tool: 'pan' }))
@@ -117,7 +120,7 @@ const NewCircularRegionLayer = memo(() => {
   const angleUnit = useAppSelector(state => state.common.angleUnit)
 
   return (
-    <NewRegionLayer
+    <NewTwoPointsRegionLayer
       onSubmit={addRegion}
       render={coords => (
         <CircularRegionLayer
@@ -130,7 +133,7 @@ const NewCircularRegionLayer = memo(() => {
     />
   )
 })
-setDisplayName({ NewLinearRegionLayer })
+setDisplayName({ NewCircularRegionLayer })
 
 
 const NewRectangularRegionLayer = memo(() => {
@@ -147,6 +150,7 @@ const NewRectangularRegionLayer = memo(() => {
       maxDec: b.d.rad,
       visible: true,
       showLabel: true,
+      name: '',
     }))
     if (!toolPinned) {
       dispatch(regionsSlice.actions.toolChanged({ tool: 'pan' }))
@@ -163,7 +167,7 @@ const NewRectangularRegionLayer = memo(() => {
   const angleUnit = useAppSelector(state => state.common.angleUnit)
 
   return (
-    <NewRegionLayer
+    <NewTwoPointsRegionLayer
       onSubmit={addRegion}
       render={coords => (
         <RectangularRegionLayer
@@ -176,4 +180,34 @@ const NewRectangularRegionLayer = memo(() => {
     />
   )
 })
-setDisplayName({ NewLinearRegionLayer })
+setDisplayName({ NewRectangularRegionLayer })
+
+
+
+
+const NewTextRegionLayer = memo(() => {
+  const toolPinned = useAppSelector(state => state.regions.toolPinned)
+  const dispatch = useAppDispatch()
+
+  const addRegion = useCallback((coord: SkyCoord) => {
+    dispatch(regionsSlice.actions.newTextRegionAdded({
+      type: 'Text',
+      position: normalizeSkyCoord(coord),
+      name: 'Edit me...',
+      visible: true,
+      showLabel: true,
+    }))
+    if (!toolPinned) {
+      dispatch(regionsSlice.actions.toolChanged({ tool: 'pan' }))
+    }
+  }, [dispatch, toolPinned])
+
+  const onClick = useCallback((e: GlobePointerEvent) => {
+    addRegion(e.coord)
+  }, [addRegion])
+
+  return (
+    <PointeLayer$ onClick={onClick} />
+  )
+})
+setDisplayName({ NewTextRegionLayer })

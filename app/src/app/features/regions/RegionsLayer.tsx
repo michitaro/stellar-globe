@@ -25,6 +25,8 @@ export function RegionsLayer() {
             return <CircularRegionFromDefLayer key={def.id} {...def} />
           case 'Rectangular':
             return <RectangularRegionFromDefLayer key={def.id} {...def} />
+          case 'Text':
+            return <TextRegionFromDefLayer key={def.id} {...def} />
         }
       })}
     </Fragment>
@@ -43,6 +45,7 @@ const LinearRegionFromDefLayer = memo(({
   color,
   visible,
   showLabel,
+  name,
 }: SpecificRegionType<'Linear'>) => {
   const dispatch = useAppDispatch()
 
@@ -53,7 +56,8 @@ const LinearRegionFromDefLayer = memo(({
     color,
     visible,
     showLabel,
-  }), [color, end, id, showLabel, start, visible])
+    name,
+  }), [color, end, id, name, showLabel, start, visible])
 
   const onLineDefChange = useCallback((e: LineDef) => {
     dispatch(regionsSlice.actions.regionUpdated({
@@ -90,8 +94,9 @@ const LinearRegionFromDefLayer = memo(({
       end,
       visible: true,
       showLabel,
+      name,
     }))
-  }, [dispatch, end, showLabel, start])
+  }, [dispatch, end, name, showLabel, start])
 
   return (
     <LinearRegionLayer
@@ -140,6 +145,7 @@ const CircularRegionFromDefLayer = memo(({
   color,
   visible,
   showLabel,
+  name,
 }: SpecificRegionType<'Circular'>) => {
   const dispatch = useAppDispatch()
 
@@ -150,7 +156,8 @@ const CircularRegionFromDefLayer = memo(({
     color,
     visible,
     showLabel,
-  }), [center, color, id, radius, showLabel, visible])
+    name,
+  }), [center, color, id, name, radius, showLabel, visible])
 
   const onCircleDefChange = useCallback((e: CircleDef) => {
     dispatch(regionsSlice.actions.regionUpdated({
@@ -185,10 +192,11 @@ const CircularRegionFromDefLayer = memo(({
       type: 'Circular',
       center,
       radius,
+      name,
       visible: true,
       showLabel: true,
     }))
-  }, [center, dispatch, radius])
+  }, [center, dispatch, name, radius])
 
   return (
     <CircularRegionLayer
@@ -220,6 +228,7 @@ const RectangularRegionFromDefLayer = memo(({
   color,
   visible,
   showLabel,
+  name,
 }: SpecificRegionType<'Rectangular'>) => {
   const dispatch = useAppDispatch()
 
@@ -232,7 +241,8 @@ const RectangularRegionFromDefLayer = memo(({
     color,
     visible,
     showLabel,
-  }), [color, id, maxDec, maxRa, minDec, minRa, showLabel, visible])
+    name,
+  }), [color, id, maxDec, maxRa, minDec, minRa, name, showLabel, visible])
 
   const onRectDefChange = useCallback(({ minRa, maxRa, minDec, maxDec }: RectDef) => {
     dispatch(regionsSlice.actions.regionUpdated({
@@ -282,3 +292,102 @@ const RectangularRegionFromDefLayer = memo(({
   )
 })
 setDisplayName({ CircularRegionFromDefLayer })
+
+
+const TextRegionFromDefLayer = memo(({
+  id,
+  position,
+  name,
+  color,
+  visible,
+  showLabel,
+}: SpecificRegionType<'Text'>) => {
+  const dispatch = useAppDispatch()
+
+  const original = useMemo(() => ({
+    id,
+    position,
+    name,
+    color,
+    visible,
+    showLabel,
+  }), [color, id, name, position, showLabel, visible])
+
+  const onCircleDefChange = useCallback((e: CircleDef) => {
+    dispatch(regionsSlice.actions.regionUpdated({
+      id,
+      regionDef: {
+        type: 'Text',
+        ...original,
+        position: normalizeSkyCoord(e.center),
+      },
+    }))
+  }, [dispatch, id, original])
+
+  type RegionDef = Partial<Parameters<typeof regionsSlice.actions.regionUpdated>[0]['regionDef']>
+
+  const onChange = useCallback(({ name, color }: { name?: string, color?: V4 }) => {
+    const overwrite: RegionDef = { type: 'Text' }
+    if (name !== undefined) {
+      overwrite.name = name
+    }
+    if (color) {
+      overwrite.color = color
+    }
+    dispatch(regionsSlice.actions.regionUpdated({
+      id,
+      regionDef: {
+        type: 'Text',
+        ...original,
+        ...overwrite,
+      },
+    }))
+  }, [dispatch, id, original])
+
+  const circleDef = useMemo(() => ({
+    center: skyCoordFromCoordDef(position),
+    radius: 0,
+  }), [position])
+
+  const duplicate = useCallback(() => {
+    dispatch(regionsSlice.actions.newTextRegionAdded({
+      type: 'Text',
+      position,
+      name,
+      visible: true,
+      showLabel: true,
+    }))
+  }, [dispatch, name, position])
+
+  return (
+    <CircularRegionLayer
+      onlyCenter
+      circleDef={circleDef}
+      color={color}
+      angleUnit={useAppSelector(state => state.common.angleUnit)}
+      onChange={onCircleDefChange}
+      showLabel={showLabel}
+      menuButton={<span style={{ color: v4ToColorString(color) }}>{name}</span>}
+    >
+      <FocusableItem>
+        {({ ref }) => (
+          <input ref={ref} type='text' value={name} onChange={e => onChange({ name: e.currentTarget.value })} />
+        )}
+      </FocusableItem>
+      <MenuItem onClick={duplicate}><Icon type='content_copy' marginRight />Duplicate</MenuItem>
+      <ColorPicker color={color} onChange={color => onChange({ color })} />
+      <MenuItem
+        onClick={() => {
+          dispatch(regionsSlice.actions.regionDeleted({ id }))
+        }}
+      ><Icon type="delete" marginRight />Delete</MenuItem>
+    </CircularRegionLayer>
+  )
+})
+setDisplayName({ TextRegionFromDefLayer })
+
+
+function v4ToColorString(color: V4) {
+  const [r, g, b, a] = color
+  return `rgba(${Math.round(255 * r)}, ${Math.round(255 * g)}, ${Math.round(255 * b)}, ${a})`
+}

@@ -2,22 +2,23 @@ import { gzip } from '@stellar-globe/stellar-globe'
 
 
 export function serialize(obj: any) {
+  const utf8encoder = new TextEncoder()
   return makeBase64UrlSafe(
     encodeArrayToBase64(
-      gzip.zip(
-        JSON.stringify(obj)
-      )
+      gzip.zip(utf8encoder.encode(JSON.stringify(obj, undefined)))
     )
   )
 }
 
 
 export function deserialize(serializedString: string): any {
+  const utf8decoder = new TextDecoder()
   const regularBase64 = convertUrlSafeBase64ToRegular(serializedString)
   const binaryString = atob(regularBase64)
   const binaryArray = binaryString.split('').map(char => char.charCodeAt(0))
-  const decompressed = gzip.unzip(binaryArray)
-  return JSON.parse(String.fromCharCode(...decompressed))
+  const decompressed = new Uint8Array(gzip.unzip(binaryArray))
+  const text = utf8decoder.decode(decompressed)
+  return JSON.parse(text)
 }
 
 

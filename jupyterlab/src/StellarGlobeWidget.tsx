@@ -20,7 +20,7 @@ export function stellarGlobeConnection(
   }: ConnectionParams,
 ) {
   let appHandle: AppHandle | undefined
-  const widget = StellarGlobeAppWidget(env, comm, _ => { appHandle = _; appHandle.deactivate() })
+  const widget = StellarGlobeAppWidget(env, comm, _ => { appHandle = _ })
   widget.id = `StellarGlobe-${uid()}`
   widget.title.label = `StellarGlobe`
   widget.title.closable = true
@@ -82,6 +82,7 @@ function StellarGlobeAppWidget(env: StellarGlobeSessionEnv, comm: CommType, capt
         hashSync={false}
         storageSync={false}
         floatingLayerZIndex={99}
+        activeOnInit={false}
       />
     )
   }

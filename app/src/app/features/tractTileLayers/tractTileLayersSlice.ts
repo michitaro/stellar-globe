@@ -82,8 +82,8 @@ export const tractTileLayersSlice = createSlice({
         l.visible = visible
       }
     },
-    toneDialogToggled(state, { payload }: PayloadAction<{}>) {
-      state.toneDialogVisible = !state.toneDialogVisible
+    toneDialogToggled(state, { payload: { open } }: PayloadAction<{ open?: boolean }>) {
+      state.toneDialogVisible = open ?? !state.toneDialogVisible
     },
   },
   selectors: {

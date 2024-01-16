@@ -1,17 +1,29 @@
-import { Fragment } from "react"
-import { ToneDialog } from "../tractTileLayers/ToneDialog"
-import { RegionsDialog } from "../regions/RegionsDialog"
-import { HipsDialog } from "../hipsLayers/HipsDialog"
+import { DialogContext } from "@stellar-globe/react-draggable-dialog"
+import { memo } from "react"
+import { setDisplayName } from "../../../common/utils/setDisplayName"
+import { useAppContext } from "../../context"
+import { useAppSelector } from "../../store/hooks"
 import { CatalogsDialog } from "../catalog/catalogsDialog"
+import { HipsDialog } from "../hipsLayers/HipsDialog"
+import { RegionsDialog } from "../regions/RegionsDialog"
+import { ToneDialog } from "../tractTileLayers/ToneDialog"
 
 
-export function Dialogs() {
+export const Dialogs = memo(({ portal }: { portal: HTMLElement | undefined }) => {
+  const { dialogContext } = useAppContext()
+  const positionHint = useAppSelector(state => state.common.dialogPositionHint)
+
   return (
-    <Fragment>
+    <DialogContext
+      ref={dialogContext}
+      defaultPositionHint={positionHint}
+      portal={portal}
+    >
       <ToneDialog />
       <RegionsDialog />
       <HipsDialog />
       <CatalogsDialog />
-    </Fragment>
+    </DialogContext>
   )
-}
+})
+setDisplayName({ Dialogs })

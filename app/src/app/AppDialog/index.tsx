@@ -1,7 +1,6 @@
-import { Dialog } from '@stellar-globe/react-draggable-dialog'
-import { Fragment, ReactNode, useMemo } from 'react'
+import { Dialog, DialogHandle } from '@stellar-globe/react-draggable-dialog'
+import { Fragment, ReactNode, useCallback, useMemo, useRef } from 'react'
 import { Icon } from '../../common/components/Icon'
-import { useMenuContainer } from '../../common/components/Menu/MenuContext'
 import { RegularMenu } from '../../common/components/Menu/RegularMenu'
 import { useAppContext } from '../context'
 import styles from './style.module.scss'
@@ -52,10 +51,18 @@ export function AppDialog({
   menu,
   visible,
   rememberPosition,
+  resizable = false,
   ...rests
 }: Props) {
   const { active } = useAppContext()
-  const container = useMenuContainer()
+  const dialog = useRef<DialogHandle>(null)
+  const showResizeButton = useMemo(
+    () => typeof resizable === 'boolean' ? resizable : (resizable.x || resizable.y),
+    [resizable],
+  )
+  const resizeAuto = useCallback(() => {
+    dialog.current?.autoResize()
+  }, [])
 
   const title = useMemo(() => {
     return (
@@ -69,6 +76,11 @@ export function AppDialog({
               {menu}
             </RegularMenu>
           )}
+          {showResizeButton && (
+            <button data-no-dnd onClick={resizeAuto}>
+              <Icon type='close_fullscreen' />
+            </button>
+          )}
           {onCloseButtonClick && (
             <button data-no-dnd onClick={onCloseButtonClick}>
               <Icon type='close' />
@@ -77,16 +89,18 @@ export function AppDialog({
         </div>
       </Fragment>
     )
-  }, [menu, onCloseButtonClick, rawTitle])
+  }, [menu, onCloseButtonClick, rawTitle, resizeAuto, showResizeButton])
 
   return (
     <Dialog
+      ref={dialog}
       classNames={classNames}
       title={title}
       fadeClassNames={fadeClassNames}
       fadeDuration={200}
       visible={visible && active}
       rememberPosition={rememberPosition || !active}
+      resizable={resizable}
       {...rests}
     />
   )

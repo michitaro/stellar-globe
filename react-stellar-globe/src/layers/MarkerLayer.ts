@@ -24,6 +24,7 @@ const MarkerLayer$: React.FC<MarkerLayerProps> = memo(props => {
   useEffect(() => {
     ifLayerReady(layer => {
       layer.baseColor = baseColor
+      layer.globe.requestRefresh()
     })
   }, [baseColor, ifLayerReady])
 
@@ -58,6 +59,7 @@ const ClickableMarkerLayer$: React.FC<ClickableMarkerLayerProps> = memo(props =>
       layer.baseColor = baseColor
       layer.onClick = onClick
       layer.onHoverChange = onHoverChange
+      layer.globe.requestRefresh()
     })
   }, [baseColor, dimmAlpha, ifLayerReady, onClick, onHoverChange])
 

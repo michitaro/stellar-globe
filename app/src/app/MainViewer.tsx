@@ -18,15 +18,11 @@ export function MainViewer() {
 
   const layers = useAppSelector(state => state.appearanceLayers)
   const camera = useAppSelector(state => state.camera)
-
-  const onCameraMove = (e: GlobeEventMap['camera-move']) => {
+  
+  const onCameraMove = debounce(200, (e: GlobeEventMap['camera-move']) => {
     const { fovy, phi, roll, theta, za, zd, zp } = e.camera
     dispatch(cameraSlice.actions.paramsChanged({ fovy, phi, roll, theta, za, zd, zp }))
-  }
-  // const onCameraMove = debounce(200, (e: GlobeEventMap['camera-move']) => {
-  //   const { fovy, phi, roll, theta, za, zd, zp } = e.camera
-  //   dispatch(cameraSlice.actions.paramsChanged({ fovy, phi, roll, theta, za, zd, zp }))
-  // })
+  })
 
   const hips = useAppSelector(state => state.hipsLayers)
 

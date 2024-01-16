@@ -1,22 +1,79 @@
+import { MenuDivider, MenuItem, SubMenu } from "@szhsin/react-menu"
 import { memo } from "react"
 import { Icon } from "../../../common/components/Icon"
 import { MenuBarItem } from "../../../common/components/Menu/MenuBarItem"
 import { setDisplayName } from "../../../common/utils/setDisplayName"
 import { MenuItemWithKeybind } from "../../keybindings/MenuItemWithKeybind"
-import { useAppSelector } from "../../store/hooks"
+import { useAppDispatch, useAppSelector } from "../../store/hooks"
+import { commonSlice } from "../common/commonSlice"
+import { useAppContext } from "../../context"
 
 export const DialogsMenu = memo(() => {
   const tone = useAppSelector(state => state.tractTileLayers.toneDialogVisible)
   const regions = useAppSelector(state => state.regions.regionsDialogVisible)
   const hips = useAppSelector(state => state.hipsLayers.hipsDialogVisible)
   const catalogs = useAppSelector(state => state.catalogs.catalogsDialogVisible)
+  const currentPositionHint = useAppSelector(state => state.common.dialogPositionHint)
+  const dispatch = useAppDispatch()
+  const { dialogContext } = useAppContext()
+
+  const positionMenu = (label: string, positionHint: PositionHint) => {
+    return (
+      <MenuItem
+        type="checkbox"
+        onClick={() => {
+          dispatch(commonSlice.actions.dialogPositionHintChanged(positionHint))
+          dialogContext.current?.rearrange()
+        }}
+        checked={positionHintName(currentPositionHint) === positionHintName(positionHint)}
+      >
+        {label}
+      </MenuItem>
+    )
+  }
+
   return (
     <MenuBarItem label={<Icon type='select_window' />} >
       <MenuItemWithKeybind type='checkbox' checked={tone} keybind="toggleToneDialog"><Icon type='tune' marginRight />Tone</MenuItemWithKeybind>
       <MenuItemWithKeybind type='checkbox' checked={regions} keybind="toggleRegionsDialog"><Icon type='architecture' marginRight />Regions</MenuItemWithKeybind>
       <MenuItemWithKeybind type='checkbox' checked={hips} keybind="toggleHipsDialog"><Icon type='layers' marginRight />HiPS</MenuItemWithKeybind>
       <MenuItemWithKeybind type='checkbox' checked={catalogs} keybind="toggleCatalogsDialog"><Icon type='table' marginRight />Catalogs</MenuItemWithKeybind>
+      <MenuDivider />
+      <MenuItemWithKeybind keybind="rearrangeDialogs" ><Icon marginRight type='grid_view' />Rearrange</MenuItemWithKeybind>
+      <MenuItemWithKeybind keybind="closeAllDialogs" ><Icon marginRight type='close' />Close All</MenuItemWithKeybind>
+      <MenuDivider />
+      <SubMenu label="Default Position">
+        {positionMenu('Top Left', { top: 8, left: 8 })}
+        {positionMenu('Top Right', { top: 8, right: 8 })}
+        {positionMenu('Bottom Left', { bottom: 8, left: 8 })}
+        {positionMenu('Bottom Right', { bottom: 8, right: 8 })}
+      </SubMenu>
     </MenuBarItem>
   )
 })
 setDisplayName({ DialogsMenu })
+
+
+type PositionHint = Parameters<typeof commonSlice.actions.dialogPositionHintChanged>[0]
+
+
+const positionPresets = {
+  topleft: {
+    top: 8, left: 8,
+  },
+  topright: {
+    top: 8, right: 8,
+  },
+  bottomleft: {
+    bottom: 8, left: 8,
+  },
+  bottomright: {
+    bottom: 8, right: 8,
+  },
+}
+
+
+function positionHintName(hint: PositionHint) {
+  const { bottom, left, right, top } = hint
+  return JSON.stringify([top, bottom, left, right])
+}

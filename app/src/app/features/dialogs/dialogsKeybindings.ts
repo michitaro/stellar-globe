@@ -5,10 +5,12 @@ import { catalogsSlice } from "../catalog/catalogSlice"
 import { hipsLayersSlice } from "../hipsLayers/hipsLayersSlice"
 import { regionsSlice } from "../regions/regionsSlice"
 import { tractTileLayersSlice } from "../tractTileLayers/tractTileLayersSlice"
+import { useAppContext } from "../../context"
 
 
 export function useDialogsKeybindings() {
   const dispatch = useAppDispatch()
+  const { dialogContext } = useAppContext()
 
   return useMemo(() => {
     const toggleToneDialog: Keybind = {
@@ -35,12 +37,29 @@ export function useDialogsKeybindings() {
       },
       shortcut: 'C',
     }
+    const rearrangeDialogs: Keybind = {
+      action: () => {
+        dialogContext.current!.rearrange()
+      },
+      shortcut: 'A',
+    }
+    const closeAllDialogs: Keybind = {
+      action: () => {
+        dispatch(tractTileLayersSlice.actions.toneDialogToggled({ open: false }))
+        dispatch(regionsSlice.actions.regionsDialogToggled({ open: false }))
+        dispatch(hipsLayersSlice.actions.hipsDialogToggled({ open: false }))
+        dispatch(catalogsSlice.actions.catalogsDialogToggled({ open: false }))
+      },
+      shortcut: 'X',
+    }
 
     return {
       toggleToneDialog,
       toggleRegionsDialog,
       toggleHipsDialog,
       toggleCatalogsDialog,
+      rearrangeDialogs,
+      closeAllDialogs,
     }
-  }, [dispatch])
+  }, [dialogContext, dispatch])
 }

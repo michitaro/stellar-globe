@@ -86,8 +86,8 @@ export const catalogsSlice = createSlice({
         state.currentCatalogId = id
       },
     ),
-    catalogsDialogToggled: create.reducer<{}>((state) => {
-      state.catalogsDialogVisible = !state.catalogsDialogVisible
+    catalogsDialogToggled: create.reducer<{ open?: boolean }>((state, { payload: { open } }) => {
+      state.catalogsDialogVisible = open ?? !state.catalogsDialogVisible
     }),
   }),
   selectors: {

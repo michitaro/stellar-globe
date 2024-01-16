@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks"
 import { hipsLayersSlice } from './hipsLayersSlice'
 import { HipsMenu } from './hipsMenu'
 import styles from './style.module.scss'
+import { resizableY } from '@stellar-globe/react-draggable-dialog'
 
 
 export const HipsDialog = memo(() => {
@@ -23,13 +24,9 @@ export const HipsDialog = memo(() => {
       title={<Fragment><Icon type="layers" marginRight />HiPS</Fragment>}
       visible={visible}
       onCloseButtonClick={() => dispatch(hipsLayersSlice.actions.hipsDialogToggled({}))}
-      resizable
-      minmaxSize={{
-        minWidth: '400px',
-        maxWidth: '400px',
-        maxHeight: '800px',
-      }}
-      sizeHint={{ height: '400px' }}
+      resizable={resizableY}
+      sizeHint={{ width: '400px' }}
+      minmaxSize={{ maxHeight: '600px' }}
       menu={<HipsMenu />}
     >
       {currentBaseUrl && (

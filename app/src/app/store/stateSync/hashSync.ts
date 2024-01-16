@@ -72,8 +72,8 @@ export const readHashState = (() => {
         return unvalidated
       }
     }
-    catch {
-      /* */
+    catch (e) {
+      console.warn('readHashState', e)
     }
     alert(`Invalid hash string`)
     location.hash = '#'

@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { AppStore, AppState } from ".."
+import { AppState, AppStore } from ".."
 import { debounce } from "../../../common/utils/debounce"
 import { createIs } from "../../typeGuard"
 import { appOnChange } from "./appOnChange"
@@ -12,6 +12,7 @@ function localStorageState(state: AppState) {
   return {
     retina: state.camera.retina,
     angleUnit: state.common.angleUnit,
+    dialogPositionHint: state.common.dialogPositionHint,
   }
 }
 
@@ -33,6 +34,8 @@ export function useLocalStorageSync({
       })
       const cleanup: (() => void)[] = [
         appOnChange(store, state => state.camera.retina, sync),
+        appOnChange(store, state => state.common.angleUnit, sync),
+        appOnChange(store, state => state.common.dialogPositionHint, sync),
       ]
       return () => {
         while (cleanup.length > 0) {

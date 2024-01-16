@@ -4,12 +4,12 @@ import { Globe } from '~/globe/index'
 import { Cache } from '~/lib/cache'
 import { Texture } from '~/lib/gl-wrapper'
 import { V3 } from '~/types'
+import { ReleaseCallbacks } from '~/utils/EventManager'
 import { loadImage } from '~/utils/image'
 import { izenith3 } from '~/utils/matrilx-utils'
 import { CoordFrame, HID } from '.'
 import { size2order } from './healpix'
 import { HiPSProperties, fetchHiPSProperties } from './properties'
-import { ReleaseCallbacks } from '~/utils/EventManager'
 
 
 export abstract class TextureProvider {
@@ -183,7 +183,9 @@ export class SimpleImageTextureProvider extends AsyncTextureProvider {
     properties: HiPSProperties,
   ) {
     const hipsOrderLimit = 13
-    console.warn(`hips_order exceeded the limit: ${properties.hips_order} > ${hipsOrderLimit}`)
+    if (Number(properties.hips_order) > hipsOrderLimit) {
+      console.warn(`hips_order exceeded the limit: ${properties.hips_order} > ${hipsOrderLimit}`)
+    }
     const maxOrder = Math.min(Number(properties.hips_order), hipsOrderLimit)
     const minOrder = properties.hips_order_min ? Number(properties.hips_order_min) : 3
     const tileSize = Number(properties.hips_tile_width)

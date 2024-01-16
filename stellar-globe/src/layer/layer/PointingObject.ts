@@ -126,6 +126,7 @@ export type PointingObjectDef = {
     onPointerUp?: (e: GlobePointerDragEvent) => void
   } | void,
   onContextMenu?: (e: GlobePointerEvent) => void
+  onClick?: (e: GlobePointerEvent) => void
   hoverIcon?: CursorStyle | ((e: GlobePointerEvent) => CursorStyle)
   dragIcon?: CursorStyle | ((e: GlobePointerEvent) => CursorStyle)
   dragDetectiveDelay?: number
@@ -166,6 +167,10 @@ export function makePointingObject(def: PointingObjectDef): PointingObject {
 
     protected onContextMenu(e: GlobePointerEvent): void {
       def.onContextMenu?.(e)
+    }
+
+    protected onClick(e: GlobePointerEvent): void {
+      def.onClick?.(e)
     }
   }
 }

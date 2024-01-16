@@ -1,9 +1,9 @@
 import { DomLayer$, PathLayer$, useLayerBind } from "@stellar-globe/react-stellar-globe"
-import { CursorStyle, Globe, GlobePointerDragEvent, GlobePointerEvent, Layer, SkyCoord, V2, V3, V4, glMatrix, makePointingObject } from "@stellar-globe/stellar-globe"
-import { Menu } from "@szhsin/react-menu"
+import { CursorStyle, Globe, GlobePointerDragEvent, GlobePointerEvent, Layer, SkyCoord, V2, V3, V4, makePointingObject } from "@stellar-globe/stellar-globe"
 import { produce } from 'immer'
 import { Fragment, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Icon } from "../../../common/components/Icon"
+import { RegularMenu } from "../../../common/components/Menu/RegularMenu"
 import { AngleUnit, formatAngle } from "../../../common/utils/formatAngle"
 import { memoizeOne } from "../../../common/utils/memoizeOne"
 import { PointMarker } from './PointMarker'
@@ -119,17 +119,16 @@ export const RectangularRegionLayer = ({
       />
       {showLabel &&
         <DomLayer$ position={menuXyz} offset={offset} >
-          <Menu
-            menuButton={
+          <RegularMenu
+            renderMenuButton={() => (
               <div className={styles.lineInfo} >
                 {infoText}
                 <Icon type="expand_more" />
               </div>
-            }
-            theming="dark"
+            )}
           >
             {children}
-          </Menu>
+          </RegularMenu>
         </DomLayer$>
       }
       {onChange && (

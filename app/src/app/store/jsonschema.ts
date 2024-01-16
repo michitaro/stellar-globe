@@ -22,19 +22,19 @@ type ActionsByType<S extends Slice> = {
 }
 
 export type JsonSchema = {
-  HashState: HashState
-  StorageState: StorageState
-  BaseAction: BaseAction
-  Actions: (
-    ActionsByType<typeof commonSlice> &
-    ActionsByType<typeof appearanceLayersSlice> &
-    ActionsByType<typeof cameraSlice> &
-    ActionsByType<typeof tractTileLayersSlice> &
-    ActionsByType<typeof hipsLayersSlice> &
-    ActionsByType<typeof regionsSlice> &
-    ActionsByType<typeof catalogsSlice> &
-    ActionsByType<typeof develSlice> &
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    {}
-  )
+  // HashState: HashState
+  // StorageState: StorageState
+  // BaseAction: BaseAction
+  // Actions: (
+  //   ActionsByType<typeof commonSlice> &
+  //   ActionsByType<typeof appearanceLayersSlice> &
+  //   ActionsByType<typeof cameraSlice> &
+  //   ActionsByType<typeof tractTileLayersSlice> &
+  //   ActionsByType<typeof hipsLayersSlice> &
+  //   ActionsByType<typeof regionsSlice> &
+  //   ActionsByType<typeof catalogsSlice> &
+  //   ActionsByType<typeof develSlice> &
+  //   // eslint-disable-next-line @typescript-eslint/ban-types
+  //   {}
+  // )
 }

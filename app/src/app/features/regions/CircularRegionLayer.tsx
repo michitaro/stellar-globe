@@ -1,9 +1,9 @@
 import { DomLayer$, PathLayer$, useLayerBind } from "@stellar-globe/react-stellar-globe"
 import { Globe, GlobePointerDragEvent, Layer, SkyCoord, V2, V3, V4, glMatrix, makePointingObject } from "@stellar-globe/stellar-globe"
-import { Menu } from "@szhsin/react-menu"
 import { produce } from 'immer'
 import { Fragment, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Icon } from "../../../common/components/Icon"
+import { RegularMenu } from "../../../common/components/Menu/RegularMenu"
 import { AngleUnit, formatAngle } from '../../../common/utils/formatAngle'
 import { PointMarker } from "./PointMarker"
 import styles from './styles.module.scss'
@@ -22,6 +22,8 @@ type Props = {
   onChange?: (circleDef: CircleDef) => void
   children?: ReactNode
   showLabel?: boolean
+  onlyCenter?: boolean
+  menuButton?: ReactNode
 }
 
 export const CircularRegionLayer = ({
@@ -31,6 +33,8 @@ export const CircularRegionLayer = ({
   onChange,
   showLabel,
   children,
+  onlyCenter = false,
+  menuButton,
 }: Props) => {
   type Paths = Parameters<typeof PathLayer$>[0]['paths']
 
@@ -73,37 +77,38 @@ export const CircularRegionLayer = ({
     <Fragment>
       <Icon type='architecture' />
       {formatAngle(circleDef.radius, angleUnit)}
-      <Icon type="expand_more" />
     </Fragment>
   ), [angleUnit, circleDef])
 
   return (
     <Fragment>
-      <PathLayer$
-        paths={paths}
-        blendMode="NORMAL"
-        dimOnZoom={false}
-        darkenNarrowLine={false}
-      />
+      {onlyCenter ||
+        <PathLayer$
+          paths={paths}
+          blendMode="NORMAL"
+          dimOnZoom={false}
+          darkenNarrowLine={false}
+        />
+      }
       <PointMarker
         position={centerXyz}
         color={color}
         markerType="hollowPlus"
       />
-      {showLabel &&
+      {showLabel && (
         <DomLayer$ position={menuXyz} offset={offset} >
-          <Menu
-            menuButton={
+          <RegularMenu
+            renderMenuButton={() => (
               <div className={styles.lineInfo} >
-                {infoText}
+                {menuButton ?? infoText}
+                <Icon type="expand_more" />
               </div>
-            }
-            theming="dark"
+            )}
           >
             {children}
-          </Menu>
+          </RegularMenu>
         </DomLayer$>
-      }
+      )}
       {onChange && (
         <MouseLayer$ circleDef={circleDef} onChange={setCircleDef} onSubmit={onSubmit} />
       )}

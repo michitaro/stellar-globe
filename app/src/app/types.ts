@@ -7,6 +7,7 @@ export type AppProps = {
   catchAllKeyboardEvents?: boolean
   floatingLayerElement?: HTMLElement
   floatingLayerZIndex?: CSSProperties['zIndex']
+  activeOnInit?: boolean
 }
 
 export type AppHandle = {

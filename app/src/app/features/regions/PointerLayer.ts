@@ -1,15 +1,16 @@
 import { useLayerBind } from "@stellar-globe/react-stellar-globe"
-import { Globe, GlobePointerDragEvent, Layer, SkyCoord, makePointingObject } from "@stellar-globe/stellar-globe"
+import { Globe, GlobePointerDragEvent, GlobePointerEvent, Layer, makePointingObject } from "@stellar-globe/stellar-globe"
 import { useCallback } from "react"
 
 
 type Callbacks = {
-  onDrag: (e: GlobePointerDragEvent) => void
-  onUp: (e: GlobePointerDragEvent) => void
+  onDrag?: (e: GlobePointerDragEvent) => void
+  onUp?: (e: GlobePointerDragEvent) => void
+  onClick?: (e: GlobePointerEvent) => void
 }
 
 
-class PointerDragLayer extends Layer {
+class PointerLayer extends Layer {
   constructor(
     globe: Globe,
     callbacks: Callbacks,
@@ -25,13 +26,16 @@ class PointerDragLayer extends Layer {
         onPointerDown(downEvent) {
           return {
             onDrag(dragEvent) {
-              callbacks.onDrag(dragEvent)
+              callbacks.onDrag?.(dragEvent)
             },
             onPointerUp(upEvent) {
-              callbacks.onUp(upEvent)
+              callbacks.onUp?.(upEvent)
             },
           }
         },
+        onClick: e => {
+          callbacks.onClick?.(e)
+        }
       }),
     )
   }
@@ -43,8 +47,11 @@ type Props = {
 } & Callbacks
 
 
-export function PointerDragAndUpLayer$({ enabled = true, onDrag, onUp }: Props) {
-  const factory = useCallback((globe: Globe) => new PointerDragLayer(globe, { onDrag, onUp }), [onDrag, onUp])
+export function PointeLayer$({ enabled = true, onDrag, onUp, onClick }: Props) {
+  const factory = useCallback(
+    (globe: Globe) => new PointerLayer(globe, { onDrag, onUp, onClick }),
+    [onDrag, onUp, onClick],
+  )
   const { node } = useLayerBind(factory, enabled)
   return node
 }
