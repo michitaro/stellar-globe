@@ -1,5 +1,5 @@
-import { Fragment, useMemo } from 'react'
-import { Dialog, DialogProps } from '../Dialog'
+import { Fragment, useCallback, useMemo, useRef } from 'react'
+import { Dialog, DialogHandle, DialogProps } from '../Dialog'
 import styles from './style.module.scss'
 
 
@@ -36,13 +36,19 @@ const fadeClassNames = {
 
 type Props = Omit<DialogProps, 'classNames' | 'fadeClassNames' | 'fadeDuration'> & {
   onCloseButtonClick?: () => void
+  resizeButton?: boolean
 }
 
 export function DarkDialog({
   title: rawTitle,
   onCloseButtonClick,
+  resizeButton,
   ...rests
 }: Props) {
+
+  const autoResize = useCallback(() => {
+    dialog.current?.autoResize()
+  }, [])
 
   const title = useMemo(() => {
     if (onCloseButtonClick) {
@@ -51,6 +57,13 @@ export function DarkDialog({
           <div className={styles.titlebarText}>
             {rawTitle}
           </div>
+          {resizeButton &&
+            <button
+              className={styles.titlebarCloseButton}
+              data-no-dnd onClick={autoResize}>
+              +
+            </button>
+          }
           <button
             className={styles.titlebarCloseButton}
             data-no-dnd onClick={onCloseButtonClick}>
@@ -62,10 +75,13 @@ export function DarkDialog({
     else {
       return rawTitle
     }
-  }, [onCloseButtonClick, rawTitle])
+  }, [autoResize, onCloseButtonClick, rawTitle, resizeButton])
+
+  const dialog = useRef<DialogHandle>(null)
 
   return (
     <Dialog
+      ref={dialog}
       classNames={classNames}
       title={title}
       fadeClassNames={fadeClassNames}

@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { DialogContext } from '../src/Context'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { DialogContext, DialogContextHandle } from '../src/Context'
 import { DarkDialog } from '../src/DarkDialog'
 import { CSSSize } from '../src/types'
 import './style.scss'
@@ -7,12 +7,19 @@ import './style.scss'
 
 export function Example() {
   const [count, setCount] = useState(10)
+  const dialogContext = useRef<DialogContextHandle>(null)
+
+  const defaultPositionHint = useMemo(() => ({
+    right: 8,
+    bottom: 8,
+  }), [])
 
   return (
-    <DialogContext>
+    <DialogContext ref={dialogContext} defaultPositionHint={defaultPositionHint} >
       <RightBottom />
       <button onClick={() => setCount(_ => _ + 1)}>+</button>
       <button onClick={() => setCount(_ => 0)}>Clear</button>
+      <button onClick={() => dialogContext.current?.rearrange()}>Rearrange</button>
       {Array.from({ length: count }).map((_, i) => (
         <MyDialog key={i} />
       ))}
@@ -23,6 +30,15 @@ export function Example() {
 
 function MyDialog() {
   const [visible, setVisible] = useState(true)
+  const [resizable,] = useState(() => ({
+    x: true,
+    y: true,
+
+    // x: Math.random() < 0.5,
+    // y: Math.random() < 0.5,
+  }))
+
+  const autoResize = useMemo(() => resizable.x || resizable.y, [resizable])
 
   useEffect(() => {
     if (!visible) {
@@ -47,16 +63,17 @@ function MyDialog() {
       visible={visible}
       sizeHint={sizeHint}
       onCloseButtonClick={onClick}
-      positionHint={{ left: 8, bottom: 8 }}
-      resizable
+      resizable={resizable}
       minmaxSize={{
         minWidth: '80px',
         minHeight: '80px',
         maxWidth: '300px',
         maxHeight: '50vh',
       }}
+      resizeButton
     >
       {text}
+      <code><pre>{JSON.stringify(resizable)}</pre></code>
     </DarkDialog >
   )
 }

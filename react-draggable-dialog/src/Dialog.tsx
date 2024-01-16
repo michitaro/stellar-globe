@@ -4,7 +4,7 @@ import { CSS } from '@dnd-kit/utilities'
 import { DragEndEvent } from "@dnd-kit/core/dist/types"
 import { restrictToWindowEdges } from '@dnd-kit/modifiers'
 import classNames from 'classnames'
-import { CSSProperties, ReactNode, RefObject, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { CSSProperties, ReactNode, RefObject, forwardRef, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import CSSTransition, { CSSTransitionClassNames } from 'react-transition-group/CSSTransition'
 import { useDialogContext } from './Context'
@@ -12,20 +12,21 @@ import { Resizable } from './Resizable'
 import { PointerSensor } from './dnd'
 import { useSeqId } from './hooks'
 import styles from './styles.module.scss'
-import { CSSPosition, CSSSize, CSSSizeLimit, Position, Size } from './types'
+import { CSSPosition, CSSSize, CSSSizeLimit, Origin, PartialSize, Position } from './types'
+import { pickXY, position2origin, position2topleft } from './utils'
 
 
 export type DialogProps = {
   title: ReactNode
   children: ReactNode
-  resizable?: boolean
+  resizable?: boolean | { y?: boolean, x?: boolean }
   positionHint?: CSSPosition
-  sizeHint?: CSSSize
   classNames: ClassNames
   visible?: boolean
   fadeDuration?: number
   fadeClassNames?: CSSTransitionClassNames
   rememberPosition?: boolean
+  sizeHint?: CSSSize
   minmaxSize?: CSSSizeLimit
 }
 
@@ -38,19 +39,31 @@ type ClassNames = {
 }
 
 
-export function Dialog(props: DialogProps) {
-  const { portal } = useDialogContext()
-  if (portal) {
-    return createPortal(<DialogDraggable {...props} />, portal)
-  }
-  else {
-    return <DialogDraggable {...props} />
-  }
+export type DialogHandle = {
+  autoResize: () => void
 }
 
 
+export const Dialog = forwardRef<DialogHandle, DialogProps>(function Dialog(props, ref) {
+  const [autoResizeTrigger, setAutoSizeTrigger] = useState({})
 
-function DialogDraggable(props: DialogProps) {
+  useImperativeHandle(ref, () => ({
+    autoResize: () => setAutoSizeTrigger({})
+  }), [])
+
+  const { portal } = useDialogContext()
+  const props2 = { ...props, autoResizeTrigger }
+
+  if (portal) {
+    return createPortal(<DialogDraggable {...props2} />, portal)
+  }
+  else {
+    return <DialogDraggable {...props2} />
+  }
+})
+
+
+function DialogDraggable(props: DialogProps & { autoResizeTrigger: unknown }) {
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor),
@@ -65,11 +78,10 @@ function DialogDraggable(props: DialogProps) {
   const onDragEnd = useCallback(({ delta }: DragEndEvent) => {
     setPosition(() => {
       if (positionAtDragStart.current) {
-        const { left, top } = positionAtDragStart.current
-        return {
-          left: left + delta.x,
-          top: top + delta.y,
-        }
+        return pickXY(positionAtDragStart.current, ([[xkey, xvalue], [ykey, yvalue]]) => ({
+          [xkey]: xvalue + delta.x,
+          [ykey]: yvalue + delta.y,
+        })) as Position
       }
     })
   }, [])
@@ -98,18 +110,43 @@ function DnDContent({
   fadeClassNames,
   fadeDuration = 0,
   rememberPosition = false,
-  resizable = false,
+  resizable: resizableProp = false,
   minmaxSize,
+  autoResizeTrigger,
 }: DialogProps & {
+  autoResizeTrigger: unknown,
   position: Position | undefined
   setPosition: React.Dispatch<React.SetStateAction<Position | undefined>>
 }) {
   const id = useSeqId()
   const zIndex = useZIndex(id)
   const sizeRef = useRef<HTMLDivElement>(null)
-  const [size, setSize] = useState<Size | undefined>(undefined)
+  const [size, setSize] = useState<PartialSize | undefined>(undefined)
   const { raiseDialog, defaultPositionHint, portal } = useDialogContext()
   const positionHint = intrinsicPositionHint ?? defaultPositionHint
+
+  const resizable = useMemo(() => {
+    if (typeof resizableProp === 'boolean') {
+      return {
+        x: resizableProp,
+        y: resizableProp,
+      }
+    }
+    return {
+      x: !!resizableProp.x,
+      y: !!resizableProp.y,
+    }
+  }, [resizableProp])
+
+  const _origin = useMemo((): Origin => {
+    const p = position ?? positionHint
+    return p ? position2origin(p) : { x: 'left', y: 'top' }
+  }, [position, positionHint])
+
+  const origin = useMemo((): Origin => ({
+    x: _origin.x,
+    y: _origin.y,
+  }), [_origin.x, _origin.y])
 
   usePositionRegistry({
     id,
@@ -118,6 +155,7 @@ function DnDContent({
     positionHint,
     sizeRef,
     visible,
+    origin,
   })
 
   const { setNodeRef, listeners, transform, attributes, setActivatorNodeRef, active } = useDraggable({
@@ -134,10 +172,10 @@ function DnDContent({
     () => ({
       ...(
         position
-          ? {
-            left: `${position.left}px`,
-            top: `${position.top}px`,
-          }
+          ? pickXY(position, ([[xkey, xvalue], [ykey, yvalue]]) => ({
+            [xkey]: `${xvalue}px`,
+            [ykey]: `${yvalue}px`,
+          }))
           : positionHint
       ),
       transform: CSS.Translate.toString(transform),
@@ -147,15 +185,24 @@ function DnDContent({
     [position, positionHint, transform, zIndex],
   )
 
-  const sizeStyle: CSSProperties = useMemo(() => ({
-    ...(size ?
-      {
-        width: `${size.width}px`,
-        height: `${size.height}px`,
-      } : sizeHint),
-    maxHeight: maxHeight - 16,
-    ...minmaxSize,
-  }), [maxHeight, minmaxSize, size, sizeHint])
+  const sizeStyle: CSSProperties = useMemo(() => {
+    const overwrite: {
+      width?: string
+      height?: string
+    } = {}
+    if (size?.width !== undefined) {
+      overwrite.width = `${size.width}px`
+    }
+    if (size?.height !== undefined) {
+      overwrite.height = `${size.height}px`
+    }
+    return {
+      ...sizeHint,
+      ...overwrite,
+      maxHeight: maxHeight - 16,
+      ...minmaxSize,
+    }
+  }, [maxHeight, minmaxSize, size, sizeHint])
 
   const onExited = useCallback(() => {
     if (!rememberPosition) {
@@ -164,6 +211,10 @@ function DnDContent({
   }, [rememberPosition, setPosition])
 
   const transitionRef = useRef<HTMLDivElement>(null)
+
+  useLayoutEffect(() => {
+    setSize(undefined)
+  }, [autoResizeTrigger])
 
   return (
     <CSSTransition
@@ -176,6 +227,7 @@ function DnDContent({
       appear
     >{state => (
       <div
+        className={styles.position}
         ref={sizeRef}
         style={{
           ...positionStyle,
@@ -189,6 +241,7 @@ function DnDContent({
           setPosition={setPosition}
           size={size}
           setSize={setSize}
+          origin={origin}
         >
           <div ref={transitionRef} className={styles.transitionWrapper}>
             <div
@@ -226,6 +279,7 @@ type PositionRegistryProps = {
   position: Position | undefined
   setPosition: React.Dispatch<React.SetStateAction<Position | undefined>>
   positionHint: CSSPosition | undefined
+  origin: Origin
 }
 
 function usePositionRegistry({
@@ -235,23 +289,57 @@ function usePositionRegistry({
   positionHint,
   sizeRef,
   visible,
+  origin,
 }: PositionRegistryProps) {
-  const { dialogs, nextPosition } = useDialogContext()
+  const { dialogs, nextPosition, rearrangeTrigger } = useDialogContext()
+
+  const positionBeforeRearrange = useRef<Position>()
+
+  useLayoutEffect(
+    () => {
+      const el = sizeRef.current
+      if (visible && el && position) {
+        positionBeforeRearrange.current = el.getBoundingClientRect()
+        setPosition(undefined)
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [rearrangeTrigger, setPosition, sizeRef],
+  )
 
   useLayoutEffect(() => {
     const el = sizeRef.current
     if (el && visible) {
-      // 初回commit時などpositionが未指定の状態ではpositionHintによって場所が決まっている。
+      // 初回commit時などpositionが未指定の状態ではpositionHintによって配置されている
       const { width, height, left, top } = sizeRef.current!.getBoundingClientRect()
-      if (!position) {
-        const newPosition = nextPosition({ width, height }, { positionHint: positionHint && { left, top } })
-        dialogs.set(id, { rect: { ...newPosition, width, height } })
-        if (!(newPosition.left === left && newPosition.top === top)) {
-          setPosition(newPosition)
-        }
+      if (position) {
+        dialogs.set(id, { rect: { left, top, width, height } })
       }
       else {
-        dialogs.set(id, { rect: { left, top, width, height } })
+        const newPosition = nextPosition(
+          { width, height },
+          {
+            positionHint: positionHint && { left, top },
+            origin,
+          },
+        )
+        const newTopLeft = position2topleft(newPosition, { width, height })
+        dialogs.set(id, { rect: { ...newTopLeft, width, height } })
+        setPosition(newPosition)
+        if (positionBeforeRearrange.current) {
+          const p0 = position2topleft(positionBeforeRearrange.current, { width, height })
+          const p1 = newTopLeft
+          const dx = p0.left - p1.left
+          const dy = p0.top - p1.top
+          sizeRef.current.animate?.([
+            { transform: `translate(${dx}px, ${dy}px)` },
+            { transform: `translate(0, 0)`, },
+          ], {
+            duration: 200,
+            easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
+          })
+          positionBeforeRearrange.current = undefined
+        }
       }
       return () => {
         dialogs.delete(id)
@@ -260,7 +348,7 @@ function usePositionRegistry({
     else {
       dialogs.delete(id)
     }
-  }, [dialogs, id, nextPosition, position, positionHint, setPosition, sizeRef, visible])
+  }, [dialogs, id, nextPosition, origin, position, positionHint, setPosition, sizeRef, visible])
 
   useEffect(() => {
     const el = sizeRef.current
@@ -278,7 +366,6 @@ function usePositionRegistry({
     }
   }, [dialogs, id, sizeRef, visible])
 }
-
 
 
 function useZIndex(id: number) {

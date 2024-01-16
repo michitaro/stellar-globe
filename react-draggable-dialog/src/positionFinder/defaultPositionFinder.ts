@@ -1,23 +1,25 @@
-import { Position, Rect, Size } from "../types"
+import { Origin, Position, Rect, Size, TopLeft } from "../types"
+import { convertOrigin } from "../utils"
 
 type Options = {
   margin?: number
   container?: Rect
-  positionHint?: Position
+  positionHint?: TopLeft
+  origin: Origin
 }
 
 export function defaultPositionFinder(
   rects: Rect[],
   size: Size,
   options: Options,
-) {
+): Position {
   const {
     positionHint,
     margin = 8,
     container = defaultContainer(margin),
   } = options
 
-  const isValidPosition = (p: Position) => {
+  const isValidPosition = (p: TopLeft) => {
     const { left, top } = p
     const { width, height } = size
     if (
@@ -34,9 +36,9 @@ export function defaultPositionFinder(
 
   const target = positionHint ?? { left: container.left, top: container.top }
   let minDistance = Number.POSITIVE_INFINITY
-  let bestPosition: Position = target
+  let bestPosition: TopLeft = target
 
-  for (const p of (function* (): Generator<Position> {
+  for (const p of (function* (): Generator<TopLeft> {
     yield target
     for (const r of rects) {
       for (const top of [
@@ -67,11 +69,11 @@ export function defaultPositionFinder(
     }
   }
 
-  return bestPosition
+  return convertOrigin(bestPosition, size, options.origin)
 }
 
 
-function distance(a: Position, b: Position): number {
+function distance(a: TopLeft, b: TopLeft): number {
   return (
     (a.left - b.left) ** 2 +
     (a.top - b.top) ** 2

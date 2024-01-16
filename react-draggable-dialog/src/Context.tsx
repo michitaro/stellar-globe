@@ -1,7 +1,8 @@
-import { ReactNode, createContext, useCallback, useContext, useEffect, useMemo, useState } from "react"
+import { ReactNode, createContext, forwardRef, useCallback, useContext, useImperativeHandle, useMemo, useState } from "react"
 import { useInstanceVariable } from "./hooks"
 import { defaultPositionFinder } from "./positionFinder/defaultPositionFinder"
-import { CSSPosition, Position, Rect, Size } from "./types"
+import { setDisplayName } from "./setDisplayName"
+import { CSSPosition, Origin, Position, Rect, Size, TopLeft } from "./types"
 
 
 export type DialogState = {
@@ -12,10 +13,11 @@ export type DialogState = {
 type ContextType = {
   portal?: HTMLElement
   dialogs: Map<number, DialogState>
-  nextPosition: (size: Size, options: { positionHint?: Position }) => Position
+  nextPosition: (size: Size, options: { positionHint?: TopLeft, origin: Origin }) => Position
   zIndex: Map<number, number>
   defaultPositionHint: CSSPosition | undefined
   raiseDialog: (id: number) => void
+  rearrangeTrigger: unknown
 }
 
 
@@ -30,14 +32,28 @@ type Props = {
 }
 
 
-export function DialogContext({
+export type DialogContextHandle = {
+  rearrange: () => void
+}
+
+
+// eslint-disable-next-line react/display-name
+export const DialogContext = forwardRef<DialogContextHandle, Props>(({
   children,
   portal,
   positionFinder = defaultPositionFinder,
   defaultPositionHint,
-}: Props) {
+}, ref) => {
   const dialogs = useInstanceVariable(() => new Map<number, DialogState>())
   const [zIndex, setZIndex] = useState(new Map<number, number>())
+  const [rearrangeTrigger, rearrange] = useState({})
+
+  useImperativeHandle(ref, () => ({
+    rearrange: () => {
+      dialogs.clear()
+      rearrange({})
+    },
+  }), [dialogs])
 
   const raiseDialog = useCallback((id0: number) => {
     const z0 = zIndex.get(id0)!
@@ -53,22 +69,27 @@ export function DialogContext({
   const context: ContextType = useMemo(() => ({
     dialogs,
     portal,
-    nextPosition: (size: Size, options: { positionHint?: Position }) => positionFinder(
+    nextPosition: (size: Size, options: { positionHint?: TopLeft, origin: Origin }) => positionFinder(
       [...dialogs.values()].map(d => d.rect),
       size,
-      { positionHint: options.positionHint },
+      {
+        positionHint: options.positionHint,
+        origin: options.origin,
+      },
     ),
     zIndex,
     raiseDialog,
     defaultPositionHint,
-  }), [defaultPositionHint, dialogs, portal, positionFinder, raiseDialog, zIndex])
+    rearrangeTrigger,
+  }), [defaultPositionHint, dialogs, portal, positionFinder, raiseDialog, rearrangeTrigger, zIndex])
 
   return (
     <Context.Provider value={context}>
       {children}
     </Context.Provider>
   )
-}
+})
+setDisplayName({ DialogContext })
 
 
 export function useDialogContext() {
