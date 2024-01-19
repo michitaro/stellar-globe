@@ -1,10 +1,12 @@
-import { CameraMode, Globe, angle } from "@stellar-globe/stellar-globe"
-import { useMemo } from "react"
+import { CameraMode, Globe, SkyCoord, angle } from "@stellar-globe/stellar-globe"
+import { useCallback, useMemo } from "react"
 import { useAsyncPrompt } from "../../../common/components/Modal/useAsyncPrompt"
 import { Keybind } from "../../../common/components/keybindings"
 import { useFullscreen } from "../../../common/hooks/useFullscreen"
 import { useAppContext } from "../../context"
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
+import { RingsTract } from "../appearanceLayers/RingsTract/RingsTract"
+import { appearanceLayersSlice } from "../appearanceLayers/appearanceLayersSlice"
 import { cameraSlice } from "../camera/cameraSlice"
 
 
@@ -13,18 +15,12 @@ export function useViewKeybindings() {
   const projection = useAppSelector(state => state.camera.projection)
   const fullscreen = useFullscreen(rootElementRef)
   const dispatch = useAppDispatch()
-  const prompt = useAsyncPrompt()
+  const runMoveToCoords = useMoveToCoords()
 
   return useMemo(() => {
     const moveToCoords: Keybind = {
       action: async () => {
-        const globe = globeHandle.current!()
-        const { a, d } = globe.camera.center()
-        const coords = await prompt('Coords?', `${a.deg} ${d.deg}`)
-        if (coords) {
-          const skyCoord = angle.SkyCoord.parse(coords)
-          globe.camera.jumpTo({}, { coord: skyCoord })
-        }
+        await runMoveToCoords()
       },
       shortcut: 'Ctrl+G',
     }
@@ -130,5 +126,57 @@ export function useViewKeybindings() {
       ...zoomKeys,
       ...cameraMoveKeys,
     }
-  }, [dispatch, fullscreen, globeHandle, projection, prompt])
+  }, [dispatch, fullscreen, globeHandle, projection, runMoveToCoords])
+}
+
+
+function useMoveToCoords() {
+  const { globeHandle } = useAppContext()
+  const help = `\
+format:
+
+$ra $dec
+150.0903 2.2103
+  OR
+10:00:21.67 +02:12:37.19
+
+tract=$tract
+tract=9813`
+
+  const prompt = useAsyncPrompt()
+  const ringsTract = useMemo(() => RingsTract.numRings(120), [])
+  const tractsVisible = useAppSelector(state => state.appearanceLayers.tracts.visible)
+  const dispatch = useAppDispatch()
+
+  const moveToCoords = useCallback(async () => {
+    const globe = globeHandle.current!()
+    const current = globe.camera.center()
+
+    const input = await prompt(help, `${current.a.deg} ${current.d.deg}`)
+
+    if (input !== null && input !== '') {
+      const m = input.match(/^tract\s*=\s*(\d+)\s*$/)
+      if (m) {
+        const tractIndex = Number(m[1])
+        const [a, d] = ringsTract.index2ad(tractIndex)
+        if (!tractsVisible) {
+          dispatch(appearanceLayersSlice.actions.visibleToggled('tracts'))
+          setTimeout(() => {
+            dispatch(appearanceLayersSlice.actions.visibleToggled('tracts'))
+          }, 1000)
+        }
+        globe.camera.jumpTo({ fovy: angle.deg2rad(2) }, { coord: SkyCoord.fromRad(a, d) })
+      }
+      else {
+        try {
+          const coord = SkyCoord.parse(input)
+          globe.camera.jumpTo({}, { coord })
+        } catch (e) {
+          alert(`Parse Error: ${e}`)
+        }
+      }
+    }
+  }, [dispatch, globeHandle, help, prompt, ringsTract, tractsVisible])
+
+  return moveToCoords
 }

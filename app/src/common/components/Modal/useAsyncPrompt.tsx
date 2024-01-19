@@ -52,7 +52,7 @@ function Prompt({
   return (
     <div className={styles.prompt} tabIndex={-1} onKeyDown={onKeyDown} >
       {message && (
-        <div>{message}</div>
+        <div className={styles.message}>{message}</div>
       )}
       <form onSubmit={e => {
         e.preventDefault()
