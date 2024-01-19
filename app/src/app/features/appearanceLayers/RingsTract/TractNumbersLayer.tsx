@@ -1,6 +1,7 @@
-import { DomLayer$ } from "@stellar-globe/react-stellar-globe"
+import { DomLayer$, GlobeEventLayer$ } from "@stellar-globe/react-stellar-globe"
 import { V3, angle } from "@stellar-globe/stellar-globe"
-import { Fragment, useMemo } from "react"
+import { Fragment, useCallback, useMemo, useState } from "react"
+import { useAppContext } from "../../../context"
 import { useAppSelector } from "../../../store/hooks"
 import { cameraSlice } from "../../camera/cameraSlice"
 import { RingsTract } from "./RingsTract"
@@ -8,11 +9,21 @@ import styles from './styles.module.scss'
 
 export function TractNumbersLayer() {
   const ringsTract = useMemo(() => RingsTract.numRings(120), [])
-  const { fovy } = useAppSelector(state => state.camera.params)
-  const center = useAppSelector(cameraSlice.selectors.center)
+
+  const [camera, setCamera] = useState({
+    fovy: useAppSelector(state => state.camera.params).fovy,
+    center: useAppSelector(cameraSlice.selectors.center),
+  })
+
+  const { globeHandle } = useAppContext()
+
+  const updateCameraParams = useCallback(() => {
+    const camera = globeHandle.current!().camera
+    setCamera({ center: camera.center(), fovy: camera.fovy })
+  }, [globeHandle])
 
   const tracts = useMemo(() => {
-    const { a, d } = center
+    const { a, d } = camera.center
     const tracts: { position: V3, index: number }[] = []
     const i = ringsTract.d2ringIndex(d.rad)
     const size = 3
@@ -28,11 +39,12 @@ export function TractNumbersLayer() {
       }
     }
     return tracts
-  }, [center, ringsTract])
+  }, [camera, ringsTract])
 
   return (
     <Fragment>
-      {fovy <= 0.2 &&
+      <GlobeEventLayer$ onCameraMove={updateCameraParams} />
+      {camera.fovy <= 0.2 &&
         tracts.map(({ position, index }) => (
           <DomLayer$ key={index} position={position}>
             <div className={styles.tractNumber}>{index}</div>
