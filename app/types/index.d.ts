@@ -5,3 +5,4 @@ declare const App: FC<AppProps & { ref: unknown }>
 export default App
 
 export type { AppHandle }
+

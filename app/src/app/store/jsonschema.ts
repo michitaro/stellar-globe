@@ -10,6 +10,7 @@ import { regionsSlice } from "../features/regions/regionsSlice"
 import { tractTileLayersSlice } from "../features/tractTileLayers/tractTileLayersSlice"
 import { StorageState } from "./stateSync/StorageSync"
 import { HashState } from "./stateSync/hashSync"
+import { AppState } from "."
 
 
 type PickAction<A> = A extends { type: string, payload: any } ? A : never
@@ -21,20 +22,23 @@ type ActionsByType<S extends Slice> = {
   }
 }
 
+interface AppStateInterface extends AppState { } // without this bypassing, typescript-json-schema generates an error
+
 export type JsonSchema = {
-  // HashState: HashState
-  // StorageState: StorageState
-  // BaseAction: BaseAction
-  // Actions: (
-  //   ActionsByType<typeof commonSlice> &
-  //   ActionsByType<typeof appearanceLayersSlice> &
-  //   ActionsByType<typeof cameraSlice> &
-  //   ActionsByType<typeof tractTileLayersSlice> &
-  //   ActionsByType<typeof hipsLayersSlice> &
-  //   ActionsByType<typeof regionsSlice> &
-  //   ActionsByType<typeof catalogsSlice> &
-  //   ActionsByType<typeof develSlice> &
-  //   // eslint-disable-next-line @typescript-eslint/ban-types
-  //   {}
-  // )
+  HashState: HashState
+  StorageState: StorageState
+  BaseAction: BaseAction
+  StoreState: AppStateInterface
+  Actions: (
+    ActionsByType<typeof commonSlice> &
+    ActionsByType<typeof appearanceLayersSlice> &
+    ActionsByType<typeof cameraSlice> &
+    ActionsByType<typeof tractTileLayersSlice> &
+    ActionsByType<typeof hipsLayersSlice> &
+    ActionsByType<typeof regionsSlice> &
+    ActionsByType<typeof catalogsSlice> &
+    ActionsByType<typeof develSlice> &
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    {}
+  )
 }

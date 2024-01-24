@@ -5,11 +5,10 @@ import root from './jsonschema/root.json' assert { type: "json" }
 
 
 function main() {
-  const keys = Object.keys(root.properties)
+  const keys = Object.keys(extractSchema(root, ['PythonToFrontend']).properties)
   const schemata = keys.map(key => ({
     $id: key,
-    ...extractSchema(root, [key])
-    ,
+    ...extractSchema(root, ['PythonToFrontend', key]),
   }))
   const ajv = new Ajv({ schemas: schemata, code: { source: true, esm: true, es5: true, lines: true, optimize: true } })
   let moduleCode = standaloneCode(ajv)

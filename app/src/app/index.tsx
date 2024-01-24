@@ -28,8 +28,11 @@ const App = forwardRef<AppHandle, AppProps>(({
   floatingLayerElement, // Dialogs, Menuはここに作られる
   floatingLayerZIndex,
   activeOnInit = true,
+  storageKey = '@stellar-globe/app/store-settings',
+  onStoreChange,
+  initialState,
 }, ref) => {
-  const context = useMakeContext({ active: activeOnInit })
+  const context = useMakeContext({ active: activeOnInit, storageKey, onStoreChange, initialState })
   useSetupAppHandle(ref, context)
   const { rootElementRef, store, stateHistory } = context
   const { isFullscreen } = useIsFullscreen()
@@ -37,7 +40,7 @@ const App = forwardRef<AppHandle, AppProps>(({
   const { element: dialogLayerElement, ref: dialogLayer } = useElement<HTMLDivElement>([isFullscreen])
 
   useHashSync({ store, enabled: hashSync })
-  useLocalStorageSync({ store, enabled: storageSync })
+  useLocalStorageSync({ store, enabled: storageSync, storageKey: store.getState().initializerParams.storageKey })
 
   return (
     <AppContextProvider context={context} >

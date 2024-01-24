@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-type Op =
+export type JsonPatchOp =
   | { op: "add", path: string, value: any }
   | { op: "remove", path: string }
   | { op: "replace", path: string, value: any }
@@ -16,7 +16,7 @@ type Options = {
 }
 
 
-function compareValues(patches: Op[], oldValue: any, newValue: any, path: string, options: Options) {
+function compareValues(patches: JsonPatchOp[], oldValue: any, newValue: any, path: string, options: Options) {
   if (Object.is(oldValue, newValue)) {
     return
   }
@@ -33,7 +33,7 @@ function compareValues(patches: Op[], oldValue: any, newValue: any, path: string
 }
 
 
-function compareArrays(patches: Op[], oldArray: any[], newArray: any[], path: string, options: Options) {
+function compareArrays(patches: JsonPatchOp[], oldArray: any[], newArray: any[], path: string, options: Options) {
   const getKey = options.getKey
   if (
     getKey &&
@@ -81,7 +81,7 @@ function compareArrays(patches: Op[], oldArray: any[], newArray: any[], path: st
 }
 
 
-function compareObjects(patches: Op[], oldObj: Record<string, any>, newObj: Record<string, any>, basePath: string, options: Options) {
+function compareObjects(patches: JsonPatchOp[], oldObj: Record<string, any>, newObj: Record<string, any>, basePath: string, options: Options) {
   for (const key in oldObj) {
     if (!(key in newObj)) {
       patches.push({ op: "remove", path: `${basePath}/${key}` })
@@ -103,8 +103,8 @@ export function generateJsonPatch(
   oldObj: Record<string, any>,
   newObj: Record<string, any>,
   options: Options = { getKey: (elem) => elem.id }
-): Op[] {
-  const patches: Op[] = []
+): JsonPatchOp[] {
+  const patches: JsonPatchOp[] = []
   compareValues(patches, oldObj, newObj, '', options)
   return patches
 }

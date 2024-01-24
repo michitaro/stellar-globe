@@ -1,7 +1,8 @@
 import { useEffect } from "react"
-import { AppState, AppStore } from ".."
+import { AppState, AppStore, storeInitializerParams } from ".."
 import { debounce } from "../../../common/utils/debounce"
 import { createIs } from "../../typeGuard"
+import { useAppSelector } from "../hooks"
 import { appOnChange } from "./appOnChange"
 
 
@@ -17,20 +18,25 @@ function localStorageState(state: AppState) {
 }
 
 
-const STORAGE_KEY = 'stellarglobe5-app'
+function storageKey() {
+  return storeInitializerParams.current().storageKey
+}
 
 
 export function useLocalStorageSync({
   store,
   enabled,
+  storageKey,
 }: {
   store: AppStore,
   enabled: boolean,
+  storageKey: string,
 }) {
   useEffect(() => {
     if (enabled) {
       const sync = debounce(200, () => {
-        setValue(localStorageState(store.getState()))
+        const value = localStorageState(store.getState())
+        window.localStorage.setItem(storageKey, JSON.stringify(value))
       })
       const cleanup: (() => void)[] = [
         appOnChange(store, state => state.camera.retina, sync),
@@ -43,17 +49,12 @@ export function useLocalStorageSync({
         }
       }
     }
-  }, [enabled, store])
-}
-
-
-function setValue(value: StorageState) {
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(value))
+  }, [enabled, storageKey, store])
 }
 
 
 export const readStorageState = (() => {
-  const getRaw = () => window.localStorage.getItem(STORAGE_KEY)
+  const getRaw = () => window.localStorage.getItem(storageKey())
   const isValidStorageState = createIs<StorageState>('StorageState')
 
   const decode = (raw: string | null) => {
@@ -70,14 +71,18 @@ export const readStorageState = (() => {
       /* */
     }
     alert(`Invalid storage value`)
-    window.localStorage.removeItem(STORAGE_KEY)
+    window.localStorage.removeItem(storageKey())
     return {}
   }
 
-  const raw = getRaw()
-  const value = decode(raw)
+  let raw: ReturnType<typeof getRaw>
+  let value: ReturnType<typeof decode>
 
   return (): StorageState => {
+    if (raw === undefined) {
+      raw = getRaw()
+      value = decode(raw)
+    }
     if (raw !== getRaw()) {
       throw new Error(`Read on localStorage after load.`)
     }

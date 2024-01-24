@@ -1,5 +1,6 @@
 import { Globe } from "@stellar-globe/stellar-globe"
 import { CSSProperties } from "react"
+import { JsonPatchOp } from "../common/utils/generateJsonPatch"
 
 export type AppProps = {
   hashSync?: boolean
@@ -8,6 +9,13 @@ export type AppProps = {
   floatingLayerElement?: HTMLElement
   floatingLayerZIndex?: CSSProperties['zIndex']
   activeOnInit?: boolean
+  storageKey?: string
+  onStoreChange?: (e: StoreChangeEvent) => void
+  initialState?: unknown
+}
+
+export type StoreChangeEvent = {
+  diff: JsonPatchOp[]
 }
 
 export type AppHandle = {
@@ -15,4 +23,5 @@ export type AppHandle = {
   dispatchAction: (action: { type: string, payload: unknown }) => void
   activate: () => void
   deactivate: () => void
+  getState: () => unknown,
 }

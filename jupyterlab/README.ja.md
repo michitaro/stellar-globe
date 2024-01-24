@@ -12,3 +12,13 @@
     ```
     
     のような行を追加した。(`jlpm add`で`npm link`のようなことをする方法がわからなかった)
+
+## storeの同期
+
+* frontendは1つとは限らない?
+  * １つと限られる
+    * windowの作成が必ずPythonから行われるので。
+* Python側とfrontend側でstoreを同期したい。
+* storeの本体はfrontendにある。
+  * storeの更新ロジックはfrontendにあるので
+  * frontendのstoreの更新時には

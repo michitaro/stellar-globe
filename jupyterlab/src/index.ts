@@ -3,8 +3,8 @@ import {
   JupyterFrontEndPlugin
 } from '@jupyterlab/application'
 import { INotebookTracker } from '@jupyterlab/notebook'
-import { ConnectionParams, stellarGlobeConnection } from './StellarGlobeWidget'
-import { EventEmitter, eventEmitter } from './eventemitter'
+import { StellarGlobeWidgetParams, makeStellarGlobeWidget } from './StellarGlobeWidget'
+import { EventEmitter } from './eventemitter'
 import { createIs } from './typeGuard'
 import { KernelType, StellarGlobeSessionEnv } from './types'
 
@@ -30,7 +30,7 @@ function connectToKernelChangedSignalForCommCreation(
   notebooks: INotebookTracker,
 ) {
   notebooks.widgetAdded.connect((_, nbPanel) => {
-    const onSessionClosed = eventEmitter()
+    const onSessionClosed = EventEmitter({ once: true })
     const cleanups = new WeakMap<KernelType, () => void>()
 
     type KernelChangedArgs = Parameters<Parameters<(typeof nbPanel)["sessionContext"]["kernelChanged"]["connect"]>[0]>[1]
@@ -77,21 +77,21 @@ function connectToKernelChangedSignalForCommCreation(
 }
 
 
-const isValidConnectionParams = createIs<ConnectionParams>('ConnectionParams')
+const isValidStellarGlobeWidgetParams = createIs<StellarGlobeWidgetParams>('StellarGlobeWidgetParams')
 
 
 function setupCommTarget(env: StellarGlobeSessionEnv, onSessionClosed: EventEmitter) {
   const target = 'stellarglobe/new'
   return registerCommTarget(env.kernel, target, function onConnected(comm, rawMsg) {
     const msg = rawMsg.content.data
-    if (isValidConnectionParams(msg)) {
-      const connection = stellarGlobeConnection(env, comm, msg)
+    if (isValidStellarGlobeWidgetParams(msg)) {
+      const widget = makeStellarGlobeWidget(env, comm, msg)
       onSessionClosed.on(() => {
-        connection.close()
+        widget.close()
       })
     }
     else {
-      alert(`Type error:\n${JSON.stringify(isValidConnectionParams.errors)}`)
+      alert(`Type error:\n${JSON.stringify(isValidStellarGlobeWidgetParams.errors, null, 2)}`)
     }
   })
 }

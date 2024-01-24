@@ -7,3 +7,4 @@ export type StellarGlobeSessionEnv = {
   app: JupyterFrontEnd
 }
 export type CommType = Parameters<Parameters<KernelType['registerCommTarget']>[1]>[0]
+

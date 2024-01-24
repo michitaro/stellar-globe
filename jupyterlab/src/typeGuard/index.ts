@@ -20,10 +20,11 @@ export function catchTypeGuardError(cb: () => void) {
 }
 
 
-export function createIs<Type>(validatorName: keyof typeof validators) {
+export function createIs<Type>(validatorName: (keyof typeof validators) | string) {
   function is(
     obj: any,
   ): obj is Type {
+    // @ts-ignore
     const v = validators[validatorName]
     if (!v) {
       // @ts-ignore

@@ -1,8 +1,6 @@
-import { CloseMessage, ConnectionParams, DispatchMessage, ReopenMessage } from "./StellarGlobeWidget"
+import { FrontendToPython, PythonToFrontend, StellarGlobeWidgetParams } from "./StellarGlobeWidget"
 
 export type JsonSchema = {
-  ConnectionParams: ConnectionParams
-  CloseMessage: CloseMessage
-  ReopenMessage: ReopenMessage
-  DispatchMessage: DispatchMessage
+  PythonToFrontend: PythonToFrontend & { StellarGlobeWidgetParams: StellarGlobeWidgetParams }
+  FrontendToPython: FrontendToPython
 }

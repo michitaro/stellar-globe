@@ -3,16 +3,25 @@ import { DialogContextHandle } from "@stellar-globe/react-draggable-dialog"
 import { GlobeHandle } from "@stellar-globe/react-stellar-globe"
 import { ForwardedRef, ReactNode, createContext, useContext, useImperativeHandle, useMemo, useRef, useState } from "react"
 import { useInstanceVariable } from "../common/hooks/useInstanceVaribale"
-import { AppStore, makeStore } from "./store"
+import { AppState, AppStore, makeStore } from "./store"
 import { createIs, createTypeCheckers } from "./typeGuard"
-import { AppHandle } from "./types"
+import { AppHandle, StoreChangeEvent } from "./types"
 
 
-export function useMakeContext(params: { active: boolean }) {
+type Params = {
+  active: boolean
+  storageKey: string
+  onStoreChange?: (e: StoreChangeEvent) => void
+  initialState?: unknown
+}
+
+
+export function useMakeContext(params: Params) {
+  const { storageKey, onStoreChange } = params
   const globeHandle = useRef<GlobeHandle>(null)
   const rootElementRef = useRef<HTMLDivElement>(null)
   const [active, setActive] = useState(params.active)
-  const { store, stateHistory } = useInstanceVariable(makeStore)
+  const { store, stateHistory } = useInstanceVariable(() => makeStore({ storageKey, onStoreChange, initialState: params.initialState }))
   const dialogContext = useRef<DialogContextHandle>(null)
 
   return useMemo(() => ({
@@ -63,6 +72,7 @@ export function useSetupAppHandle(ref: ForwardedRef<AppHandle>, context: AppCont
     dispatchAction: makeTypeSafeDispatch(context.store),
     activate: () => context.setActive(true),
     deactivate: () => context.setActive(false),
+    getState: () => context.store.getState(),
   }), [context])
 }
 
