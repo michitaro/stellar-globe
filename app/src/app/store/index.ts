@@ -10,6 +10,7 @@ import { regionsSlice } from "../features/regions/regionsSlice"
 import { tractTileLayersSlice } from '../features/tractTileLayers/tractTileLayersSlice'
 import { StoreChangeEvent } from "../types"
 import { jsonPatchLogger } from './JsonPatchLogger'
+import { computedState } from "./computedState"
 import { makeStateHistory } from "./stateHistory"
 // import { tractTileApi } from "../features/tractTileLayers/FilterDef"
 
@@ -43,7 +44,13 @@ export function makeStore({
         getDefaultMiddleware().concat(
           // tractTileApi.middleware,
           stateHistory.middleware,
-          ...(onStoreChange ? [jsonPatchLogger((patches) => onStoreChange({ diff: patches }))] : []),
+          ...(onStoreChange ? [
+            jsonPatchLogger(
+              // as any などが現れるのはcyclic dependencyを避けるため
+              (state: any) => ({ ...state, computed: (computedState as any)(state) }),
+              (patches) => onStoreChange({ diff: patches }),
+            )
+          ] : []) as [],
         ),
       preloadedState: initialState,
     })

@@ -100,8 +100,8 @@ function compareObjects(patches: JsonPatchOp[], oldObj: Record<string, any>, new
 
 
 export function generateJsonPatch(
-  oldObj: Record<string, any>,
-  newObj: Record<string, any>,
+  oldObj: unknown,
+  newObj: unknown,
   options: Options = { getKey: (elem) => elem.id }
 ): JsonPatchOp[] {
   const patches: JsonPatchOp[] = []
