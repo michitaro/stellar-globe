@@ -2,7 +2,6 @@ import { useEffect } from "react"
 import { AppState, AppStore, storeInitializerParams } from ".."
 import { debounce } from "../../../common/utils/debounce"
 import { createIs } from "../../typeGuard"
-import { useAppSelector } from "../hooks"
 import { appOnChange } from "./appOnChange"
 
 

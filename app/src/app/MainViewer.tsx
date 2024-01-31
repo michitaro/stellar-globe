@@ -34,6 +34,7 @@ export function MainViewer() {
       retina={camera.retina}
       cameraParams={camera.params}
       noDefaultLayers
+      preserveBuffer
     >
       <GlobeEventLayer$ onCameraMove={onCameraMove} />
       <ZoomLayer$ />

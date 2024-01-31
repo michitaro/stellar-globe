@@ -10,7 +10,8 @@ type State = {
 
 function initialState(): State {
   return {
-    enabled: import.meta.env.DEV,
+    // @ts-ignore
+    enabled: import.meta.env.DEV as boolean,
     profilerActive: false,
     profilerSupported: webglProfileSupported(),
   }

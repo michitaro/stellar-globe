@@ -2,6 +2,8 @@ import react from "@vitejs/plugin-react"
 import { visualizer } from 'rollup-plugin-visualizer'
 import { defineConfig } from "vitest/config"
 import secrets from './secrets.json'
+// import dts from 'vite-plugin-dts'
+
 
 
 // https://vitejs.dev/config/
@@ -9,6 +11,10 @@ export default defineConfig({
   plugins: [
     react(),
     visualizer({ gzipSize: true }),
+    // dts({
+    //   outDir: './newtypes',
+    //   entryRoot: './src',
+    // }),
   ],
   build: {
     lib: {

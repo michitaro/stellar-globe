@@ -15,17 +15,19 @@ from .pycodemanipulate import replace_definition, replace_type_annotation
 def main():
     logging.basicConfig(level=logging.INFO)
 
-    models_dir = Path('./stellarglobe_jupyterlab/models')
+    tmp_dir = Path('./tmp/models')
+    dest_dir = Path('./stellarglobe_jupyterlab/models')
     app_schema = load_json_file(Path('../app/devel/jsonschema/root.json'))
     jupyter_schema = load_json_file(Path('./devel/jsonschema/root.json'))
-    shutil.rmtree(models_dir, ignore_errors=True)
+
+    shutil.rmtree(tmp_dir, ignore_errors=True)
 
     with make_models_parallel() as make_model:
         for model_name in extractSchema(jupyter_schema, ['PythonToFrontend'])['properties'].keys():
             schema = extractSchema(jupyter_schema, ['PythonToFrontend', model_name])
             make_model(
                 schema,
-                models_dir / f'{model_name}.py',
+                tmp_dir / f'{model_name}.py',
                 {'Model.type': f"type: Literal[{repr(model_name)}]"},
             )
 
@@ -33,13 +35,13 @@ def main():
             schema = extractSchema(jupyter_schema, ['FrontendToPython', model_name])
             make_model(
                 schema,
-                models_dir / 'frontend' / f'{model_name}.py',
+                tmp_dir / 'frontend' / f'{model_name}.py',
                 {'Model.type': f"type: Literal[{repr(model_name)}]"},
             )
 
         make_model(
             extractSchema(app_schema, ['StoreState']),
-            models_dir / f'store.py',
+            tmp_dir / f'store.py',
         )
 
         action_names = extractSchema(app_schema, ['Actions'])['properties'].keys()
@@ -48,10 +50,12 @@ def main():
             schema = extractSchema(app_schema, ['Actions', action_name])
             make_model(
                 schema,
-                models_dir / 'actions' / f'{action_name}.py',
+                tmp_dir / 'actions' / f'{action_name}.py',
                 {'Model.type': f"type: Literal[{repr(action_name)}]"},
             )
 
+    subprocess.check_call(['rsync', '-av', '--delete', f'{tmp_dir}/', dest_dir])
+    shutil.rmtree(tmp_dir, ignore_errors=True)
 
 
 @contextlib.contextmanager

@@ -1,6 +1,8 @@
 import { Globe } from "@stellar-globe/stellar-globe"
 import { CSSProperties } from "react"
-import { JsonPatchOp } from "../common/utils/generateJsonPatch"
+import { AppState } from "./store"
+import { AppStateWithComputed } from "./store/computedState"
+export type { AppState }
 
 export type AppProps = {
   hashSync?: boolean
@@ -11,17 +13,17 @@ export type AppProps = {
   activeOnInit?: boolean
   storageKey?: string
   onStoreChange?: (e: StoreChangeEvent) => void
-  initialState?: unknown
+  initialState?: AppState
 }
 
 export type StoreChangeEvent = {
-  diff: JsonPatchOp[]
+  state: AppStateWithComputed
 }
 
 export type AppHandle = {
   globe: () => Globe
   dispatchAction: (action: { type: string, payload: unknown }) => void
+  getState: () => AppStateWithComputed,
   activate: () => void
   deactivate: () => void
-  getState: () => unknown,
 }

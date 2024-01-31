@@ -22,3 +22,24 @@
 * storeの本体はfrontendにある。
   * storeの更新ロジックはfrontendにあるので
   * frontendのstoreの更新時には
+
+
+## 制限
+
+* セルの実行中は comm._on_msg が呼ばれないようだ。
+  * ということは・・セルの実行によってフロントエンドの何かを待つことはできない
+  * 例えば python から 何かリクエストをfrontendに出して、結果が来るのを待つ、など。
+  * これは別のセルを手動で実行しないといけない
+
+## セルの実行中にfrontendからPythonへメッセージを通知する方法
+
+* commによらない方法が必要。
+* ファイルやソケットなどプロセス間通信の手段を使う。
+* JupyterLab Extension内でContentsManagerを使うことでファイル操作が可能。
+  * これはcommとは別の経路での通信の様だ。
+* これを使いセルの実行中にfrontendからのレスポンスを待ち受けることができる。
+* FrontendはContentsManager経由で次の様なUTF8のファイルを作る。
+  ```typescript
+  `${contents.length}\n${contents}`
+  ```
+* Python側では↑の形式であることを仮定し、ファイルの完成を待つ。

@@ -17,10 +17,9 @@ export function EventEmitter<T = void>({ once }: { once: boolean }) {
         cbs.shift()!(value)
       }
     } else {
-      throw Error('NotImplemented')
-      // for (let i = cbs.length - 1; i >= 0; --i) {
-      //   cbs[i](value)
-      // }
+      for (const cb of cbs) {
+        cb(value)
+      }
     }
   }
 

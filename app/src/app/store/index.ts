@@ -9,10 +9,8 @@ import { hipsLayersSlice } from "../features/hipsLayers/hipsLayersSlice"
 import { regionsSlice } from "../features/regions/regionsSlice"
 import { tractTileLayersSlice } from '../features/tractTileLayers/tractTileLayersSlice'
 import { StoreChangeEvent } from "../types"
-import { jsonPatchLogger } from './JsonPatchLogger'
-import { computedState } from "./computedState"
+import { stateWithComputed } from "./computedState"
 import { makeStateHistory } from "./stateHistory"
-// import { tractTileApi } from "../features/tractTileLayers/FilterDef"
 
 
 export function makeStore({
@@ -38,23 +36,21 @@ export function makeStore({
         [regionsSlice.name]: regionsSlice.reducer,
         [catalogsSlice.name]: catalogsSlice.reducer,
         [develSlice.name]: develSlice.reducer,
-        // [tractTileApi.reducerPath]: tractTileApi.reducer,
       },
       middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(
-          // tractTileApi.middleware,
           stateHistory.middleware,
-          ...(onStoreChange ? [
-            jsonPatchLogger(
-              // as any などが現れるのはcyclic dependencyを避けるため
-              (state: any) => ({ ...state, computed: (computedState as any)(state) }),
-              (patches) => onStoreChange({ diff: patches }),
-            )
-          ] : []) as [],
         ),
       preloadedState: initialState,
     })
   })
+
+  if (onStoreChange) {
+    store.subscribe(() => {
+      const state = store.getState()
+      onStoreChange({ state: stateWithComputed(state) })
+    })
+  }
 
   return {
     store,

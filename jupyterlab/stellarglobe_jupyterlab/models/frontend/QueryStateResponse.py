@@ -6,4 +6,4 @@ from typing_extensions import NotRequired, TypedDict
 class Model(TypedDict):
     revision: float
     state: Any
-    type: Literal['Ready']
+    type: Literal['QueryStateResponse']

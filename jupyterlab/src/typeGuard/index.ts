@@ -5,21 +5,6 @@ import * as validators from './typeValidators'
 export class TypeGuardError extends Error { }
 
 
-export function catchTypeGuardError(cb: () => void) {
-  try {
-    cb()
-  }
-  catch (e) {
-    if (e instanceof TypeGuardError) {
-      alert(e.message)
-    }
-    else {
-      throw e
-    }
-  }
-}
-
-
 export function createIs<Type>(validatorName: (keyof typeof validators) | string) {
   function is(
     obj: any,
@@ -29,24 +14,6 @@ export function createIs<Type>(validatorName: (keyof typeof validators) | string
     if (!v) {
       // @ts-ignore
       throw new Error(`Validator not found: ${validatorName}`)
-    }
-    const ok = v(obj)
-    if (!ok) {
-      Object.assign(is, { errors: (v as any).errors as string[] })
-    }
-    return ok
-  }
-  return Object.assign(is, { errors: [] as string[] })
-}
-
-
-export function createTypeCheckers(stem: string) {
-  function is(type: string, obj: any) {
-    const validatorName = `${stem}/${type}`.replace(/\//g, '$')
-    const v = (validators as any)[validatorName]
-    if (!v) {
-      Object.assign(is, { errors: [`Validator not found: ${validatorName}`] })
-      return false
     }
     const ok = v(obj)
     if (!ok) {

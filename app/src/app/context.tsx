@@ -6,6 +6,7 @@ import { useInstanceVariable } from "../common/hooks/useInstanceVaribale"
 import { AppStore, makeStore } from "./store"
 import { createIs, createTypeCheckers } from "./typeGuard"
 import { AppHandle, StoreChangeEvent } from "./types"
+import { stateWithComputed } from "./store/computedState"
 
 
 type Params = {
@@ -72,7 +73,7 @@ export function useSetupAppHandle(ref: ForwardedRef<AppHandle>, context: AppCont
     dispatchAction: makeTypeSafeDispatch(context.store),
     activate: () => context.setActive(true),
     deactivate: () => context.setActive(false),
-    getState: () => context.store.getState(),
+    getState: () => stateWithComputed(context.store.getState()),
   }), [context])
 }
 

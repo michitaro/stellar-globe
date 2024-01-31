@@ -21,4 +21,5 @@ JsonPatchOp = Union[JsonPatchOp1, JsonPatchOp2, JsonPatchOp3, JsonPatchOp4]
 
 class Model(TypedDict):
     diff: List[JsonPatchOp]
+    revision: float
     type: Literal['StoreChanged']

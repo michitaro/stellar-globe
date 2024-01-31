@@ -1,6 +1,7 @@
 import { applyPatch } from "fast-json-patch"
 import { produce } from "immer"
 import { generateJsonPatch } from './generateJsonPatch'
+import { test, expect } from 'vitest'
 
 
 test("detects deep changes in a nested object using immer", () => {

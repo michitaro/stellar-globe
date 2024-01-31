@@ -8,10 +8,9 @@ import { develSlice } from "../features/devel/develSlice"
 import { hipsLayersSlice } from "../features/hipsLayers/hipsLayersSlice"
 import { regionsSlice } from "../features/regions/regionsSlice"
 import { tractTileLayersSlice } from "../features/tractTileLayers/tractTileLayersSlice"
+import { AppStateWithComputed } from "./computedState"
 import { StorageState } from "./stateSync/StorageSync"
 import { HashState } from "./stateSync/hashSync"
-import { AppState } from "."
-import { computedState } from "./computedState"
 
 
 type PickAction<A> = A extends { type: string, payload: any } ? A : never
@@ -23,15 +22,11 @@ type ActionsByType<S extends Slice> = {
   }
 }
 
-interface StoreState extends AppState {
-  computed: ReturnType<typeof computedState>
-} // if we use type instead of interface, we'll get an error from typescript-json-schema.
-
 export type JsonSchema = {
   HashState: HashState
   StorageState: StorageState
   BaseAction: BaseAction
-  StoreState: StoreState
+  StoreState: AppStateWithComputed
   Actions: (
     ActionsByType<typeof commonSlice> &
     ActionsByType<typeof appearanceLayersSlice> &

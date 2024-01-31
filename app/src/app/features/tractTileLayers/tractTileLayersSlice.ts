@@ -58,6 +58,7 @@ function initialState(): State {
         // 'test_s22a_step3_20221010T234451Z',
       ].map(rerun => ({
         name: rerun,
+        // @ts-ignore
         baseUrl: import.meta.env.DEV ? `./data/s23b_wide/${rerun}` : `../data/${rerun}`,
         // visible: !import.meta.env.DEV,
         // visible: layerVisible(rerun),

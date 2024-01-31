@@ -13,3 +13,11 @@ function normalizeSkyCoord(c: SkyCoord) {
   const { a, d } = c
   return [a.rad, d.rad] as [number, number]
 }
+
+export function stateWithComputed(state: AppState): AppStateWithComputed {
+  return { ...state, computed: computedState(state) }
+}
+
+export interface AppStateWithComputed extends AppState {
+  computed: ReturnType<typeof computedState>
+}
