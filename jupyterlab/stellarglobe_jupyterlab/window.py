@@ -1,4 +1,5 @@
 import json
+from .angle import Angle
 import time
 from pathlib import Path
 from typing import Any, List, Literal, Optional, cast
@@ -7,10 +8,10 @@ from .comm import create_comm
 from .jsonpatchapply import apply_patch
 from .models.Close import Model as CloseMessage
 from .models.Dispatch import Model as DispatchMessage
-from .models.frontend.QueryStateResponse import \
-    Model as QueryStateResponseMessage
+from .models.frontend.QueryStateResponse import Model as QueryStateResponseMessage
 from .models.frontend.Ready import Model as FrontendReadyMessage
 from .models.frontend.StoreChanged import Model as StoreChangedMessage
+from .models.JumpTo import Model as JumpToMessage
 from .models.LockFrame import Model as LockFrameMessage
 from .models.QuerySnapshot import Model as QuerySnapshotMessage
 from .models.QueryState import Model as QueryStateMessage
@@ -45,11 +46,21 @@ class Window:
     _store_state: StoreState = None  # type: ignore
     _msg_log: List[Any]
 
-    def __init__(self, title: Optional[str] = None, layout: Optional[Layout] = None):
+    def __init__(
+        self,
+        *,
+        title: Optional[str] = None,
+        layout: Optional[Layout] = None,
+        angle_unit: Angle.Unit = 'degree',
+    ):
         self._id = tinyid()
         self._msg_log = []
         self._title = title or 'hscMap'
         self._open_new_window(layout=layout)
+        self._angle_input, self._angle_output = Angle.converter(angle_unit)
+
+    def __repr__(self):
+        return f'<window title={self._title} id={self._id}>'
 
     def _open_new_window(self, *, layout: Optional[Layout]):
         response_file = f'~query-{tinyid()}'
@@ -121,6 +132,9 @@ class Window:
 
         #     on_callback(msg, on_error=show_error)
 
+    def _dispatch(self, action):
+        self._post_message(DispatchMessage(type='Dispatch', action=action))
+
     def _on_closed(self):
         self._connection_status = 'disconnected'
 
@@ -132,14 +146,6 @@ class Window:
         if self._connection_status == 'disconnected':
             self._open_new_window(layout=layout)
 
-    def _dispatch(self, action):
-        self._post_message(DispatchMessage(type='Dispatch', action=action))
-
-    # @property
-    # def camera_center(self):
-    #     center = self._store_state['computed']['center']
-    #     return cast(tuple[float, float], center)
-
     @property
     def title(self):
         return self._title
@@ -148,10 +154,6 @@ class Window:
     def title(self, new_title: str):
         self._title = new_title
         self._post_message(UpdateWidgetStateMessage(type='UpdateWidgetState', title=new_title))
-
-    @property
-    def last_region(self):
-        return self._store_state['regions']['regions'][-1]
 
     def lock(self, *windows: 'Window'):
         ids = [self._id, *[w._id for w in windows]]
@@ -181,6 +183,29 @@ class Window:
         image_data = base64.b64decode(encoded)
         image = Image(data=image_data)
         return image
+
+    def jump_to(
+        self,
+        ra: float,
+        dec: float,
+        *,
+        fov: Optional[float] = None,
+        duration=0.2,
+        non_block=False,
+        easing: Optional[Literal['fastStart2', 'fastStart4', 'linear', 'slowStart2', 'slowStart4', 'slowStartStop2', 'slowStartStop4']] = None,
+    ):
+        self._post_message(
+            JumpToMessage(
+                type='JumpTo',
+                ra=self._angle_input(ra).radian,
+                dec=self._angle_input(dec).radian,
+                fov=self._angle_input(fov).radian if fov is not None else None,
+                duration=duration,
+                easingFunction=easing,  # type: ignore
+            )
+        )
+        if not non_block:
+            time.sleep(duration)
 
 
 def _wait_for_query_response(response_file: str, *, timeout=10, poll_interval=0.1) -> str:

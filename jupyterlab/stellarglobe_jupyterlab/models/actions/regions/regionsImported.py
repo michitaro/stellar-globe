@@ -3,6 +3,19 @@ from typing import Optional, Literal
 from typing import List, Union
 from typing_extensions import NotRequired, TypedDict
 
+class Position(TypedDict):
+    dec: float
+    ra: float
+
+class TextRegion(TypedDict):
+    color: List[float]
+    id: str
+    name: str
+    position: Position
+    showLabel: bool
+    type: Optional[str]
+    visible: bool
+
 class RectangularRegion(TypedDict):
     color: List[float]
     id: str
@@ -30,19 +43,6 @@ class LinearRegion(TypedDict):
     name: str
     showLabel: bool
     start: Start
-    type: Optional[str]
-    visible: bool
-
-class Position(TypedDict):
-    dec: float
-    ra: float
-
-class TextRegion(TypedDict):
-    color: List[float]
-    id: str
-    name: str
-    position: Position
-    showLabel: bool
     type: Optional[str]
     visible: bool
 

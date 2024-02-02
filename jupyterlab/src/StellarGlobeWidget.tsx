@@ -14,6 +14,7 @@ import { JsonPatchOp, generateJsonPatch } from './generateJsonPatch'
 import { lockFrame } from './lockWindow'
 import { createIs } from './typeGuard'
 import { CommType, StellarGlobeSessionEnv } from "./types"
+import { SkyCoord, easing } from '@stellar-globe/stellar-globe'
 
 
 type StellarGlobeWidgetEnv = {
@@ -192,6 +193,11 @@ function onMsgFromPython({
       const originalCanvas = globe.gl.canvas as HTMLCanvasElement
       const url = (aspectRatio ? cropCanvasToAspectRatio(originalCanvas, aspectRatio) : originalCanvas).toDataURL()
       await respondToQuery(responseFile, url)
+    },
+    JumpTo({ ra, dec, fov, duration, easingFunction }) {
+      const globe = appHandle.globe()
+      const coord = SkyCoord.fromRad(ra, dec)
+      globe.camera.jumpTo({ fovy: fov }, { coord, duration: 1000 * duration, easingFunction: easingFunction && easing[easingFunction] })
     }
   })
 }
@@ -292,9 +298,13 @@ export type PythonToFrontend = AddType<{
     responseFile: string
     aspectRatio?: number
   }
-  // jumpTo: {
-    
-  // }
+  JumpTo: {
+    ra: number // radian
+    dec: number // radian
+    fov?: number // radian
+    duration: number // second
+    easingFunction?: keyof typeof easing
+  }
 }>
 
 

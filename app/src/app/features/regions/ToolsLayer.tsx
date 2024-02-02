@@ -5,7 +5,7 @@ import { setDisplayName } from '../../../common/utils/setDisplayName'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { CircularRegionLayer } from './CircularRegionLayer'
 import { LinearRegionLayer } from './LinearRegionLayer'
-import { PointeLayer$ } from './PointerLayer'
+import { PointerLayer$ } from '../../../common/stellarglobe/PointerLayer'
 import { RectDef, RectangularRegionLayer } from './RectangularRegionLayer'
 import { normalizeSkyCoord } from './regionUtils'
 import { regionsSlice } from './regionsSlice'
@@ -50,7 +50,7 @@ function NewTwoPointsRegionLayer({ render, onSubmit }: NewTwoPointsRegionLayerPr
   return (
     <Fragment>
       {coords && render(coords)}
-      <PointeLayer$ onDrag={onDrag} onUp={onUp} />
+      <PointerLayer$ onDrag={onDrag} onUp={onUp} hoverIcon='crosshair' dragIcon='crosshair' />
     </Fragment>
   )
 }
@@ -207,7 +207,7 @@ const NewTextRegionLayer = memo(() => {
   }, [addRegion])
 
   return (
-    <PointeLayer$ onClick={onClick} />
+    <PointerLayer$ onClick={onClick} hoverIcon='crosshair' dragIcon='crosshair' />
   )
 })
 setDisplayName({ NewTextRegionLayer })

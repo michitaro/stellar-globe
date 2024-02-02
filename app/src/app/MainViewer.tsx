@@ -10,6 +10,8 @@ import { RegionsLayer } from "./features/regions/RegionsLayer"
 import { ToolsLayer } from "./features/regions/ToolsLayer"
 import { TractTileLayers } from "./features/tractTileLayers/TractTileLayers"
 import { useAppDispatch, useAppSelector } from "./store/hooks"
+import { ContextMenuLayer } from "./MainContextMenu/ContextMenuLayer"
+import { MainContextMenu } from "./MainContextMenu"
 
 
 export function MainViewer() {
@@ -18,7 +20,7 @@ export function MainViewer() {
 
   const layers = useAppSelector(state => state.appearanceLayers)
   const camera = useAppSelector(state => state.camera)
-  
+
   const onCameraMove = debounce(200, (e: GlobeEventMap['camera-move']) => {
     const { fovy, phi, roll, theta, za, zd, zp } = e.camera
     dispatch(cameraSlice.actions.paramsChanged({ fovy, phi, roll, theta, za, zd, zp }))
@@ -27,7 +29,6 @@ export function MainViewer() {
   const hips = useAppSelector(state => state.hipsLayers)
 
   return (
-    // <MainContextMenu>
     <Globe$
       ref={globeHandle}
       projection={camera.projection}
@@ -40,6 +41,9 @@ export function MainViewer() {
       <ZoomLayer$ />
       <RollLayer$ />
       <TouchLayer$ />
+      <ContextMenuLayer render={(openedAt) => (
+        <MainContextMenu openedAt={openedAt} />
+      )} />
 
       <BeautifulObjectLayer$ {...layers.nearbyGalaxiesAndNebulas} />
 
@@ -62,6 +66,5 @@ export function MainViewer() {
       <ToolsLayer />
       <RegionsLayer />
     </Globe$>
-    // </MainContextMenu>
   )
 }
