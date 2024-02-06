@@ -26,12 +26,25 @@ function initialState(): State {
 }
 
 
+export type CatalogAddedParams = {
+  id?: string
+  name: string
+  markers: Marker[]
+  fields: string[]
+  attributes: string[][]
+  hasColorCol: boolean
+  hasMarkerTypeCol: boolean
+  defaultType?: MarkerType
+  defaultColor?: V4
+}
+
+
 export const catalogsSlice = createSlice({
   name: 'catalogs',
   initialState,
   reducers: create => ({
     catalogAdded: create.preparedReducer(
-      (params: { name: string, id?: string, defaultType?: MarkerType, defaultColor?: V4 } & ReturnType<typeof parseCatalogCsvText>) => {
+      (params: CatalogAddedParams) => {
         const id = params.id ?? nanoid()
         return trackAction({
           payload: {
@@ -201,7 +214,7 @@ function findCoordsCols(fields: string[]): [number, number] {
 }
 
 
-type Marker = Parameters<typeof ClickableMarkerLayer$>[0]['markers'][number]
+export type Marker = Parameters<typeof ClickableMarkerLayer$>[0]['markers'][number]
 
 
 export type Catalog = {
