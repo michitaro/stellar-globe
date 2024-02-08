@@ -6,7 +6,7 @@ import { Icon } from "../../../common/components/Icon"
 import { RegularMenu } from "../../../common/components/Menu/RegularMenu"
 import { AngleUnit, formatAngle } from "../../../common/utils/formatAngle"
 import { memoizeOne } from "../../../common/utils/memoizeOne"
-import { PointMarker } from './PointMarker'
+import { PointMarker } from '../../../common/stellarglobe/PointMarker'
 import styles from './styles.module.scss'
 
 

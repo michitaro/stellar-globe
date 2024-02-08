@@ -14,18 +14,21 @@ type MarkerRendererOptions = {
   markers: Marker[]
   defaultColor: V4
   defaultType: MarkerType
+  markerSize?: number
+  markerWidth?: number
 }
 
 type MarkerLayerOptions = MarkerRendererOptions & {
   baseColor?: V4
 }
 
-
 type Marker = {
   position: V3
   color?: V4
   type?: MarkerType
 }
+
+const defaultMarkerSize = 32
 
 
 export class MarkerLayer extends Layer {
@@ -49,6 +52,7 @@ export class MarkerLayer extends Layer {
   update(options: Partial<MarkerRendererOptions>) {
     this.options = { ...this.options, ...options }
     refreshRenderer(this.renderer, this.options)
+    this.globe.requestRefresh()
   }
 
   set baseColor(baseColor: V4 | undefined) {
@@ -176,8 +180,8 @@ class MarkerPointingObject extends PointingObject {
   }
 
   hit(e: GlobePointerEvent): { hit: boolean; passThrough: boolean } {
-    const { layer } = this.backdoor()
-    const markerSize = 32 * layer.globe.camera.pixelRatio
+    const { layer, options } = this.backdoor()
+    const markerSize = (options.markerSize ?? defaultMarkerSize) * layer.globe.camera.pixelRatio
     const fovy = layer.globe.camera.fovy
     const h = layer.globe.canvas.domElement.height
     // 画面上の markerSize は天球上のどれだけの距離か
@@ -212,7 +216,10 @@ function refreshRenderer(
     }
   })
   const images: BillboardImage[] = markerTypes.map(type => ({
-    imageData: makeMarkerImageData(type),
+    imageData: makeMarkerImageData(type, {
+      size: options.markerSize ?? defaultMarkerSize,
+      width: options.markerWidth ?? 0.2,
+    }),
     origin: [0, 0],
   }))
   renderer.buildArray(images, imageRefs)

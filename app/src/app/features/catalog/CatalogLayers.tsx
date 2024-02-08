@@ -1,13 +1,17 @@
 import styles from './styles.module.scss'
 import { ClickableMarkerLayer$ } from "@stellar-globe/react-stellar-globe"
-import { Fragment, memo, useCallback, useRef, useState } from "react"
+import { Fragment, memo, useCallback, useMemo, useRef, useState } from "react"
 import { useAppSelector } from "../../store/hooks"
 import { Catalog } from "./catalogSlice"
 import { CSSTransition } from 'react-transition-group'
+import { PointMarker } from '../../../common/stellarglobe/PointMarker'
+import { V4 } from '@stellar-globe/stellar-globe'
 
 
 export const CatalogLayers = memo(() => {
   const catalogs = useAppSelector(state => state.catalogs.catalogs)
+  const focus = useAppSelector(state => state.catalogs.focusedPosition)
+  const focusColor = useMemo<V4>(() => [1, 1, 1, 1], [])
 
   return (
     <Fragment>
@@ -17,6 +21,15 @@ export const CatalogLayers = memo(() => {
           catalog={c}
         />
       ))}
+      {focus &&
+        <PointMarker
+          color={focusColor}
+          markerType='circledHollowPlus'
+          position={focus}
+          markerSize={48}
+          markerWidth={0.1}
+        />
+      }
     </Fragment>
   )
 })

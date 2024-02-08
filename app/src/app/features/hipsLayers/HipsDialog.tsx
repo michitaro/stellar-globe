@@ -30,7 +30,7 @@ export const HipsDialog = memo(() => {
       menu={<HipsMenu />}
     >
       {currentBaseUrl && (
-        <ErrorBoundary fallback={<div>Something went wrong</div>}>
+        <ErrorBoundary fallback={<Icon type='error' />}>
           <Suspense fallback={<Loader />}>
             <HipsInspector baseUrl={currentBaseUrl} />
           </Suspense>

@@ -3,7 +3,6 @@ import { MenuDivider, MenuItem, SubMenu } from '@szhsin/react-menu'
 import { Fragment, memo, useId } from "react"
 import { ColorPickerRgba } from "../../../common/components/ColorPicker"
 import { Icon } from "../../../common/components/Icon"
-import { RegularMenu } from '../../../common/components/Menu/RegularMenu'
 import { askLocalFileList } from '../../../common/utils/askLocalFileList'
 import { setDisplayName } from "../../../common/utils/setDisplayName"
 import { AppDialog } from '../../AppDialog'
@@ -32,6 +31,7 @@ export const CatalogsDialog = memo(() => {
             {catalogs.length > 0 && (
               <Fragment>
                 <th><Icon type='visibility' /></th>
+                <th>#</th>
                 <th>Name</th>
                 <th>Marker</th>
                 <th></th>
@@ -61,6 +61,7 @@ const CatalogTr = memo(({ catalog: c }: { catalog: Catalog }) => {
           dispatch(catalogsSlice.actions.catalogUpdated({ id: c.id, visible: e.currentTarget.checked }))
         } />
       </th>
+      <td style={{ textAlign: 'right', fontFamily: 'monospace' }}>{c.attributes.length}</td>
       <td><label htmlFor={visibleId}>{c.name}</label></td>
       <td>
         <select style={{ maxWidth: '8em', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} value={c.defaultType} onChange={e =>
@@ -78,6 +79,7 @@ const CatalogTr = memo(({ catalog: c }: { catalog: Catalog }) => {
       </td>
       <td>
         <button onClick={() => goToCatalog(c)}><Icon type='location_on' /></button>
+        <button onClick={() => dispatch(catalogsSlice.actions.dialogToggled({ id: c.id }))}><Icon type='table_view' /></button>
         <button onClick={() => dispatch(catalogsSlice.actions.catalogDeleted({ id: c.id }))}><Icon type="delete" /></button>
       </td>
     </tr>

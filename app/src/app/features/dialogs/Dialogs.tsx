@@ -7,6 +7,7 @@ import { CatalogsDialog } from "../catalog/catalogsDialog"
 import { HipsDialog } from "../hipsLayers/HipsDialog"
 import { RegionsDialog } from "../regions/RegionsDialog"
 import { ToneDialog } from "../tractTileLayers/ToneDialog"
+import { CatalogDialogs } from "../catalog/CatalogDialogs"
 
 
 export const Dialogs = memo(({ portal }: { portal: HTMLElement | undefined }) => {
@@ -23,6 +24,7 @@ export const Dialogs = memo(({ portal }: { portal: HTMLElement | undefined }) =>
       <RegionsDialog />
       <HipsDialog />
       <CatalogsDialog />
+      <CatalogDialogs />
     </DialogContext>
   )
 })

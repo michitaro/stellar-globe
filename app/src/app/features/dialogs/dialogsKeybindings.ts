@@ -49,6 +49,7 @@ export function useDialogsKeybindings() {
         dispatch(regionsSlice.actions.regionsDialogToggled({ open: false }))
         dispatch(hipsLayersSlice.actions.hipsDialogToggled({ open: false }))
         dispatch(catalogsSlice.actions.catalogsDialogToggled({ open: false }))
+        dispatch(catalogsSlice.actions.dialogsClosed({}))
       },
       shortcut: 'X',
     }

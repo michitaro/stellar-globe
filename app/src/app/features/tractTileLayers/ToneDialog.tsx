@@ -6,6 +6,7 @@ import { ColorParamsControl } from "./ColorParamsControl"
 import { compareFilterShortName, deferredFilterMap } from "./filtermap"
 import { tractTileLayersSlice } from "./tractTileLayersSlice"
 import { Loader } from "../../../common/components/Loader"
+import { ErrorBoundary } from "react-error-boundary"
 
 
 export function ToneDialog() {
@@ -24,9 +25,11 @@ export function ToneDialog() {
         onCloseButtonClick={toggle}
         visible={visible}
       >
-        <Suspense fallback={<Loader />}>
-          <SafeColorParamsControl />
-        </Suspense>
+        <ErrorBoundary fallback={<Icon type="error" />}>
+          <Suspense fallback={<Loader />}>
+            <SafeColorParamsControl />
+          </Suspense>
+        </ErrorBoundary>
       </AppDialog>
     </Fragment>
   )

@@ -136,7 +136,7 @@ export type MarkerType = keyof typeof markerMakers
 export const markerTypes = Object.keys(markerMakers) as MarkerType[]
 
 
-export const makeMarkerImageData = memoize((type: MarkerType, options: MarkerOptions = { size: 32, width: 0.2 }) => {
+export const makeMarkerImageData = memoize((type: MarkerType, options: MarkerOptions) => {
   const { size } = options
   const { canvas, ctx } = getCanvas()
   reset(options, { canvas, ctx })

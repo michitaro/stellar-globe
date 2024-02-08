@@ -7,10 +7,20 @@ type PointMarkerProps = {
   position: V3
   color: V4
   markerType: Parameters<typeof MarkerLayer$>[0]['defaultType']
+  markerSize?: number
+  markerWidth?: number
+  visible?: boolean
 }
 
 
-export const PointMarker = memo(({ position, color, markerType }: PointMarkerProps) => {
+export const PointMarker = memo(({
+  position,
+  color,
+  markerType,
+  markerSize,
+  markerWidth,
+  visible,
+}: PointMarkerProps) => {
   type Marker = Parameters<typeof MarkerLayer$>[0]['markers'][number]
 
   const markers = useMemo<Marker[]>(() => [{
@@ -23,7 +33,11 @@ export const PointMarker = memo(({ position, color, markerType }: PointMarkerPro
     <MarkerLayer$
       baseColor={color}
       markers={markers}
+      markerSize={markerSize}
+      markerWidth={markerWidth}
       defaultColor={defaultColor}
-      defaultType={markerType} />
+      defaultType={markerType}
+      visible={visible}
+    />
   )
 })

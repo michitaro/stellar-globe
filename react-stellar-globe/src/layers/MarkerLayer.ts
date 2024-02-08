@@ -13,13 +13,13 @@ const MarkerLayer$: React.FC<MarkerLayerProps> = memo(props => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const factory = useCallback((globe: Globe) => new MarkerLayer(globe, options), [])
   const { node, ifLayerReady } = useLayerBind<MarkerLayer>(factory, visible)
-  const { defaultColor, defaultType, markers, baseColor } = options
+  const { defaultColor, defaultType, markers, baseColor, markerSize, markerWidth } = options
 
   useEffect(() => {
     ifLayerReady(layer => {
-      layer.update({ defaultColor, defaultType, markers })
+      layer.update({ defaultColor, defaultType, markers, markerSize, markerWidth })
     })
-  }, [defaultColor, defaultType, ifLayerReady, markers])
+  }, [defaultColor, defaultType, ifLayerReady, markerSize, markerWidth, markers])
 
   useEffect(() => {
     ifLayerReady(layer => {
@@ -45,13 +45,13 @@ const ClickableMarkerLayer$: React.FC<ClickableMarkerLayerProps> = memo(props =>
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const factory = useCallback((globe: Globe) => new ClickableMarkerLayer(globe, options), [])
   const { node, ifLayerReady } = useLayerBind<ClickableMarkerLayer>(factory, visible)
-  const { defaultColor, defaultType, markers, dimmAlpha, onClick, onHoverChange, baseColor } = options
+  const { defaultColor, defaultType, markers, dimmAlpha, onClick, onHoverChange, baseColor, markerSize, markerWidth } = options
 
   useEffect(() => {
     ifLayerReady(layer => {
-      layer.update({ defaultColor, defaultType, markers })
+      layer.update({ defaultColor, defaultType, markers, markerSize, markerWidth })
     })
-  }, [defaultColor, defaultType, ifLayerReady, markers, dimmAlpha])
+  }, [defaultColor, defaultType, ifLayerReady, markers, dimmAlpha, markerSize, markerWidth])
 
   useEffect(() => {
     ifLayerReady(layer => {

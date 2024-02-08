@@ -15,7 +15,8 @@ Jupyterの機能で実現できる機能はhscMap本体には含めないこと�
 ## TODO
 
 * [x] 右クリック
-  * [ ] SIMBAD
+  * [x] SIMBAD
 * [ ] カタログdialog
 * [ ] カタログクリックイベント
-* [ ] 位置、同期Dock
+* [ ] Jupyter Region
+* [ ] 位置、階調同期Dock

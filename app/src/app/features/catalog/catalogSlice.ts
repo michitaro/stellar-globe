@@ -1,6 +1,6 @@
 import { createSlice, nanoid } from "@reduxjs/toolkit"
 import { ClickableMarkerLayer$ } from '@stellar-globe/react-stellar-globe'
-import { MarkerType, SkyCoord, V4, markerTypes } from "@stellar-globe/stellar-globe"
+import { MarkerType, SkyCoord, V3, V4, markerTypes } from "@stellar-globe/stellar-globe"
 import Papa from 'papaparse'
 import { colorSeries } from '../../../common/utils/colorsys'
 import { hexToRgba } from '../../../common/utils/hexToRgba'
@@ -13,6 +13,7 @@ type State = {
   autoColor: boolean
   currentCatalogId: string | undefined
   catalogsDialogVisible: boolean
+  focusedPosition: V3 | undefined
 }
 
 
@@ -22,11 +23,12 @@ function initialState(): State {
     autoColor: true,
     currentCatalogId: undefined,
     catalogsDialogVisible: false,
+    focusedPosition: undefined,
   }
 }
 
 
-export type CatalogAddedParams = {
+export type NewCatalogParams = {
   id?: string
   name: string
   markers: Marker[]
@@ -44,16 +46,17 @@ export const catalogsSlice = createSlice({
   initialState,
   reducers: create => ({
     catalogAdded: create.preparedReducer(
-      (params: CatalogAddedParams) => {
+      (params: NewCatalogParams, options: { openDialog?: boolean } = {}) => {
         const id = params.id ?? nanoid()
         return trackAction({
           payload: {
             id,
             params,
+            openDialog: !!options.openDialog,
           }
         }, `Catalog ${params.name} Added`)
       },
-      (state, { payload: { id, params } }) => {
+      (state, { payload: { id, params, openDialog } }) => {
         if (!state.catalogs.find(c => c.id === id)) {
           const { name, markers, fields, attributes, hasColorCol, hasMarkerTypeCol } = params
           const catalog: Catalog = {
@@ -68,6 +71,7 @@ export const catalogsSlice = createSlice({
             defaultType: params.defaultType ?? 'circle',
             defaultColor: params.defaultColor ?? [1, 1, 1, 1] as V4,
             visible: true,
+            dialog: defaultDialogState({ opened: openDialog }),
           }
           state.catalogs.push(catalog)
         }
@@ -101,6 +105,20 @@ export const catalogsSlice = createSlice({
     ),
     catalogsDialogToggled: create.reducer<{ open?: boolean }>((state, { payload: { open } }) => {
       state.catalogsDialogVisible = open ?? !state.catalogsDialogVisible
+    }),
+    dialogToggled: create.reducer<{ id: string, opened?: boolean }>((state, { payload: { id, opened } }) => {
+      const catalog = state.catalogs.find(c => c.id === id)
+      if (catalog) {
+        catalog.dialog.opened = opened ?? !catalog.dialog.opened
+      }
+    }),
+    dialogsClosed: create.reducer<{}>((state,) => {
+      for (const c of state.catalogs) {
+        c.dialog.opened = false
+      }
+    }),
+    focusedPositionChanged: create.reducer<{ position?: V3 }>((state, { payload: { position } }) => {
+      state.focusedPosition = position
     }),
   }),
   selectors: {
@@ -165,7 +183,7 @@ export function parseCatalogCsvText(csvText: string) {
   const markerTypeCol = fields.indexOf('marker_type')
 
   const attributes = rows.slice(dataRowBegin)
-  // .filter(o => validNumberString(o[raCol]) && validNumberString(o[decCol]))
+    .filter(cells => !(cells.length === 1 && cells[0] === ''))
 
   const markers: Marker[] = attributes.map(o => {
     return {
@@ -229,6 +247,20 @@ export type Catalog = {
   visible: boolean
   hasColorCol: boolean
   hasMarkerTypeCol: boolean
+  dialog: DialogState
+}
+
+
+type DialogState = {
+  opened: boolean
+}
+
+
+function defaultDialogState(state: Partial<DialogState> = {}): DialogState {
+  return {
+    opened: true,
+    ...state,
+  }
 }
 
 

@@ -5,7 +5,7 @@ import { Fragment, ReactNode, useCallback, useEffect, useMemo, useRef, useState 
 import { Icon } from "../../../common/components/Icon"
 import { RegularMenu } from "../../../common/components/Menu/RegularMenu"
 import { AngleUnit, formatAngle } from '../../../common/utils/formatAngle'
-import { PointMarker } from "./PointMarker"
+import { PointMarker } from "../../../common/stellarglobe/PointMarker"
 import styles from './styles.module.scss'
 const { vec3 } = glMatrix
 

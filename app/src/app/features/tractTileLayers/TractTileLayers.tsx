@@ -2,6 +2,7 @@ import { TractTileLayer$ } from "@stellar-globe/react-stellar-globe"
 import { Fragment, Suspense, memo, useMemo } from "react"
 import { useAppSelector } from "../../store/hooks"
 import { useFilterMap } from "./filtermap"
+import { ErrorBoundary } from "react-error-boundary"
 
 
 export const TractTileLayers = memo(() => {
@@ -12,14 +13,16 @@ export const TractTileLayers = memo(() => {
     <Fragment>
       {
         tractTilelayers.map(({ baseUrl, visible }) => (
-          <Suspense key={baseUrl}>
-            <TractTileLayerWithFilterNameDictionary
-              baseUrl={baseUrl}
-              outline
-              visible={visible}
-              colorParams={params}
-            />
-          </Suspense>
+          <ErrorBoundary key={baseUrl} fallback={<Fragment />}>
+            <Suspense>
+              <TractTileLayerWithFilterNameDictionary
+                baseUrl={baseUrl}
+                outline
+                visible={visible}
+                colorParams={params}
+              />
+            </Suspense>
+          </ErrorBoundary>
         ))
       }
     </Fragment>

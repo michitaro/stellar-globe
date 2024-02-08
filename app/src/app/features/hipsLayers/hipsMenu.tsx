@@ -8,6 +8,7 @@ import styles from './style.module.scss'
 import { TomoegozenSubmenu } from "./tomoegozen"
 import { useDebounceInTransition } from "../../../common/hooks/useDebounceInTransition"
 import { Loader, SmallLoader } from "../../../common/components/Loader"
+import { Icon } from "../../../common/components/Icon"
 
 
 export const HipsMenu = memo(() => {
@@ -63,7 +64,7 @@ function HipsSearch() {
           }
         </Fragment>
       )}</FocusableItem>
-      <ErrorBoundary fallback={<MenuItem disabled>Something went wrong</MenuItem>}>
+      <ErrorBoundary fallback={<MenuItem disabled><Icon type='error' /></MenuItem>}>
         <Suspense>
           <SearchResults query={debouncedQuery} />
         </Suspense>
