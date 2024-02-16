@@ -1,8 +1,0 @@
-from __future__ import annotations
-from typing import Optional, Literal
-from typing import List
-from typing_extensions import NotRequired, TypedDict
-
-class Model(TypedDict):
-    type: Literal['LockFrame']
-    window_ids: List[str]

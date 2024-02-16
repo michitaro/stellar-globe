@@ -16,7 +16,7 @@ def main():
     logging.basicConfig(level=logging.INFO)
 
     tmp_dir = Path('./tmp/models')
-    dest_dir = Path('./stellarglobe_jupyterlab/models')
+    dest_dir = Path('./hscmap/models')
     app_schema = load_json_file(Path('../app/devel/jsonschema/root.json'))
     jupyter_schema = load_json_file(Path('./devel/jsonschema/root.json'))
 
@@ -73,13 +73,20 @@ def make_models_parallel():
 
 def generate_datamodel(schema, outfile: Path, replace_map: dict[str, str] = {}):
     logging.info(f'Generating {outfile}...')
-    codes = datamodel_codegen(schema)
-    codes = replace_type_annotation(codes, 'NotRequired', 'Optional')
-    for k, v in replace_map.items():
-        codes = replace_definition(codes, k, v)
-    codes = re.sub(r'(from\s+__future__\s+import\s+annotations)', r'\1\nfrom typing import Optional, Literal', codes)
-    outfile.parent.mkdir(parents=True, exist_ok=True)
-    outfile.write_text(codes)
+    try:
+        codes = datamodel_codegen(schema)
+        codes = replace_type_annotation(codes, 'NotRequired', 'Optional')
+        for k, v in replace_map.items():
+            codes = replace_definition(codes, k, v)
+        codes = re.sub(r'^(from\s+__future__\s+import\s+annotations)', r'\1\nfrom typing import Optional, Literal, TypedDict', codes)
+        codes = re.sub(r'^(from typing_extensions.*)', r'# \1', codes, flags=re.MULTILINE)
+
+        outfile.parent.mkdir(parents=True, exist_ok=True)
+        outfile.write_text(codes)
+    except:
+        import traceback
+
+        traceback.print_exc()
 
 
 def datamodel_codegen(schema):

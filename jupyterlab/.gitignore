@@ -7,9 +7,9 @@ node_modules/
 *.egg-info/
 .ipynb_checkpoints
 *.tsbuildinfo
-stellarglobe_jupyterlab/labextension
+hscmap/labextension
 # Version file is handled by hatchling
-stellarglobe_jupyterlab/_version.py
+hscmap/_version.py
 
 # Created by https://www.gitignore.io/api/python
 # Edit at https://www.gitignore.io/?templates=python
@@ -120,10 +120,4 @@ dmypy.json
 # Yarn cache
 .yarn/
 
-
-/.venv-*
-
-*.ipynb
-
-/static/*
-
+/.venv*

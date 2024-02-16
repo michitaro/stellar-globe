@@ -1,14 +1,14 @@
 # Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
-_commit: v4.2.4
+_commit: v4.2.5
 _src_path: https://github.com/jupyterlab/extension-template
-author_email: michitaro.koike@nao.ac.jp
+author_email: ''
 author_name: Koike Michitaro
 has_binder: false
 has_settings: false
 kind: frontend
 labextension_name: '@stellarglobe/jupyterlab'
-project_short_description: A JupyterLab extension for StellarGlobe.
-python_name: stellarglobe_jupyterlab
+project_short_description: Integration for hscMap & JupyterLab
+python_name: hscmap
 repository: ''
 test: false
 

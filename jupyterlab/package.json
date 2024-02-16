@@ -101,7 +101,7 @@
     },
     "jupyterlab": {
         "extension": true,
-        "outputDir": "stellarglobe_jupyterlab/labextension"
+        "outputDir": "hscmap/labextension"
     },
     "eslintIgnore": [
         "node_modules",

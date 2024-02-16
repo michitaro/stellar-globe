@@ -1,5 +1,5 @@
 {
   "packageManager": "python",
-  "packageName": "stellarglobe_jupyterlab",
-  "uninstallInstructions": "Use your Python package manager (pip, conda, etc.) to uninstall the package stellarglobe_jupyterlab"
+  "packageName": "hscmap",
+  "uninstallInstructions": "Use your Python package manager (pip, conda, etc.) to uninstall the package hscmap"
 }
