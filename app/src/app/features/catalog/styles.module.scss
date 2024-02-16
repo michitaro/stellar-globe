@@ -53,6 +53,12 @@
     outline: 2px solid #07f;
   }
 
+  input[type="checkbox"] {
+    &:focus {
+      outline: 1px solid rgba(cyan, 0.25);
+    }
+  }
+
   table {
     flex-grow: 1;
     font-size: small;
@@ -63,11 +69,26 @@
     padding: 0;
     border-collapse: collapse;
 
+    &:focus {
+      outline: none;
+    }
+
     thead {
-      th {
+      td {
         position: sticky;
         top: 0;
         background-color: #333;
+
+        &>div {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        button {
+          margin: 0;
+          box-shadow: none;
+        }
       }
     }
 

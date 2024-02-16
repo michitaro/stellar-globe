@@ -195,7 +195,7 @@ class MarkerPointingObject extends PointingObject {
       onHoverChange?.({ index: this.focusedIndex >= 0 ? this.focusedIndex : null })
     }
     return {
-      hit: !!this.focusedIndex,
+      hit: this.focusedIndex >= 0,
       passThrough: true,
     }
   }

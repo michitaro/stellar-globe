@@ -45,26 +45,25 @@ export function MainViewer() {
         <MainContextMenu openedAt={openedAt} />
       )} />
 
-      <BeautifulObjectLayer$ {...layers.nearbyGalaxiesAndNebulas} />
+      <ToolsLayer>
+        <BeautifulObjectLayer$ {...layers.nearbyGalaxiesAndNebulas} />
 
-      {hips.baseUrl && <HipsSimpleLayer$ baseUrl={hips.baseUrl} />}
-      <TractTileLayers />
+        {hips.baseUrl && <HipsSimpleLayer$ baseUrl={hips.baseUrl} />}
+        <TractTileLayers />
 
-      <EsoMilkyWayLayer$ {...layers.esoMilkyWay} />
+        <EsoMilkyWayLayer$ {...layers.esoMilkyWay} />
 
-      <HipparcosCatalogLayer$ {...layers.hipparcosCatalog} />
-      <ConstellationLayer$ {...layers.constellation} />
-      <GridLayer$ {...layers.grid} />
+        <HipparcosCatalogLayer$ {...layers.hipparcosCatalog} />
+        <ConstellationLayer$ {...layers.constellation} />
+        <GridLayer$ {...layers.grid} />
 
-      <TractFrameLayer$ showPatch={layers.tracts.patch} visible={layers.tracts.visible} />
-      {layers.tracts.visible &&
-        <TractNumbersLayer />
-      }
-
-      <CatalogLayers />
-
-      <ToolsLayer />
-      <RegionsLayer />
+        <TractFrameLayer$ showPatch={layers.tracts.patch} visible={layers.tracts.visible} />
+        {layers.tracts.visible &&
+          <TractNumbersLayer />
+        }
+        <CatalogLayers />
+        <RegionsLayer />
+      </ToolsLayer>
     </Globe$>
   )
 }

@@ -61,7 +61,7 @@ const CatalogTr = memo(({ catalog: c }: { catalog: Catalog }) => {
           dispatch(catalogsSlice.actions.catalogUpdated({ id: c.id, visible: e.currentTarget.checked }))
         } />
       </th>
-      <td style={{ textAlign: 'right', fontFamily: 'monospace' }}>{c.attributes.length}</td>
+      <td style={{ textAlign: 'right' }}>{c.attributes.length}</td>
       <td><label htmlFor={visibleId}>{c.name}</label></td>
       <td>
         <select style={{ maxWidth: '8em', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} value={c.defaultType} onChange={e =>
@@ -79,7 +79,7 @@ const CatalogTr = memo(({ catalog: c }: { catalog: Catalog }) => {
       </td>
       <td>
         <button onClick={() => goToCatalog(c)}><Icon type='location_on' /></button>
-        <button onClick={() => dispatch(catalogsSlice.actions.dialogToggled({ id: c.id }))}><Icon type='table_view' /></button>
+        <button onClick={() => dispatch(catalogsSlice.actions.dialogToggled({ id: c.id }))}><Icon type='table' /></button>
         <button onClick={() => dispatch(catalogsSlice.actions.catalogDeleted({ id: c.id }))}><Icon type="delete" /></button>
       </td>
     </tr>

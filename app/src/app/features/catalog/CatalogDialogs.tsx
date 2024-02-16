@@ -1,5 +1,6 @@
+import Papa from 'papaparse'
 import { SkyCoord } from "@stellar-globe/stellar-globe"
-import { MenuItem, SubMenu } from "@szhsin/react-menu"
+import { MenuDivider, MenuItem, SubMenu } from "@szhsin/react-menu"
 import classNames from "classnames"
 import { Fragment, KeyboardEvent, memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useImmer } from 'use-immer'
@@ -11,10 +12,10 @@ import { useAppContext } from '../../context'
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
 import { Catalog, catalogsSlice } from "./catalogSlice"
 import styles from './styles.module.scss'
+import { downloadFile } from '../../../common/utils/downloadFile'
 
 export const CatalogDialogs = memo(() => {
   const catalogs = useAppSelector(state => state.catalogs.catalogs)
-
   return (
     <Fragment>
       {catalogs.map(c => (
@@ -27,11 +28,15 @@ setDisplayName({ CatalogDialogs })
 
 
 const CatalogDialog = memo(({ catalog, dialog }: { catalog: Catalog, dialog: NonNullable<Catalog['dialog']> }) => {
+  const [focusFollowsUpDownArrowsKeys, setFocusFollowsUpDownArrowsKeys] = useState(true)
+
   const dispatch = useAppDispatch()
+
   const closeDialog = useCallback(() => {
     dispatch(catalogsSlice.actions.dialogToggled({ id: catalog.id, opened: false }))
   }, [catalog, dispatch])
-  const [rowsPerPage, setRowsPerPage] = useState(250)
+
+  const [rowsPerPage, setRowsPerPage] = useState(100)
   const [page, setPage] = useState(0)
   const range: [number, number] = useMemo(() => {
     return [page * rowsPerPage, (page + 1) * rowsPerPage]
@@ -88,17 +93,36 @@ const CatalogDialog = memo(({ catalog, dialog }: { catalog: Catalog, dialog: Non
   const onKeyDown = useCallback((e: KeyboardEvent) => {
     switch (e.key) {
       case 'ArrowUp':
-        focus(focusedIndex === undefined ? catalog.attributes.length - 1 : Math.max(0, focusedIndex - 1), { jump: true })
+        focus(focusedIndex === undefined ? catalog.attributes.length - 1 : Math.max(0, focusedIndex - 1), { jump: focusFollowsUpDownArrowsKeys })
         break
       case 'ArrowDown':
-        focus(focusedIndex === undefined ? 0 : Math.min(catalog.attributes.length - 1, focusedIndex + 1), { jump: true })
+        focus(focusedIndex === undefined ? 0 : Math.min(catalog.attributes.length - 1, focusedIndex + 1), { jump: focusFollowsUpDownArrowsKeys })
+        break
+      case ' ':
+        if (focusedIndex) {
+          dispatch(catalogsSlice.actions.recordSelected({ id: catalog.id, index: focusedIndex }))
+        }
         break
       default:
         return
     }
     e.stopPropagation()
     e.preventDefault()
-  }, [catalog, focus, focusedIndex])
+  }, [catalog.attributes.length, catalog.id, dispatch, focus, focusFollowsUpDownArrowsKeys, focusedIndex])
+
+  const download = useCallback((options: { onlySelected: boolean }) => {
+    const attributes = (options.onlySelected ?
+      (Object.keys(catalog.selectedRecords) as any as number[]).map(i => catalog.attributes[i]) :
+      catalog.attributes
+    )
+
+    const csv = Papa.unparse({
+      fields: catalog.fields,
+      data: attributes,
+    })
+
+    downloadFile({ content: csv, filename: `${catalog.name.replace(/\.csv$/i, '')}${options.onlySelected ? ' (only selected)' : ''}.csv`, type: 'text/csv' })
+  }, [catalog.attributes, catalog.fields, catalog.name, catalog.selectedRecords])
 
   return (
     <AppDialog
@@ -109,30 +133,43 @@ const CatalogDialog = memo(({ catalog, dialog }: { catalog: Catalog, dialog: Non
       minmaxSize={{ maxHeight: '90vh' }}
       sizeHint={{ width: '600px', height: '400px' }}
       menu={
-        <SubMenu label="Columns">
-          {
-            catalog.fields.map((f, i) => (
-              <MenuItem key={i} type='checkbox' checked={activeColumn[i]} onClick={() => updateActiveColumn(_ => {
-                _[i] = !_[i]
-              })}>
-                {f}
-              </MenuItem>
-            ))
-          }
-        </SubMenu>
+        <Fragment>
+          <MenuItem type="checkbox" checked={focusFollowsUpDownArrowsKeys} onClick={() => setFocusFollowsUpDownArrowsKeys(!focusFollowsUpDownArrowsKeys)}>Focus Follows ↑↓ Keys</MenuItem>
+          <MenuDivider />
+          <SubMenu label="Columns">
+            {
+              catalog.fields.map((f, i) => (
+                <MenuItem key={i} type='checkbox' checked={activeColumn[i]} onClick={() => updateActiveColumn(_ => {
+                  _[i] = !_[i]
+                })}>
+                  {f}
+                </MenuItem>
+              ))
+            }
+          </SubMenu>
+          <MenuDivider />
+          <MenuItem onClick={() => download({ onlySelected: false })} >Download as CSV</MenuItem>
+          <MenuItem onClick={() => download({ onlySelected: true })} >Download as CSV (Only Checked Rows)</MenuItem>
+        </Fragment>
       }
     >
       <div className={styles.catalogDialog}>
         <table>
           <thead>
             <tr>
+              <td style={{ width: '2em' }}>
+                <input type='checkbox' disabled />
+              </td>
               {
                 activeColumn.map((a, i) => {
                   const f = catalog.fields[i]
                   return a && (
-                    <th key={i} title={f} >
-                      {f}
-                    </th>
+                    <td key={i} title={f} >
+                      <div>
+                        <button onClick={() => updateActiveColumn(_ => { _[i] = false })}>x</button>
+                        <div style={{ width: '100%', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis' }}>{f}</div>
+                      </div>
+                    </td>
                   )
                 })
               }
@@ -162,6 +199,14 @@ const CatalogDialog = memo(({ catalog, dialog }: { catalog: Catalog, dialog: Non
                     }}
                     className={classNames(pageStart + i === focusedIndex && styles.focused)}
                   >
+                    <td
+                    // onClick={e => e.stopPropagation()}
+                    >
+                      <input
+                        type="checkbox" checked={catalog.selectedRecords[pageStart + i]}
+                        onChange={e => dispatch(catalogsSlice.actions.recordSelected({ id: catalog.id, index: pageStart + i, selected: e.currentTarget.checked }))}
+                      />
+                    </td>
                     {activeColumn.map((a, j) => {
                       const c = row[j]
                       return a && (
@@ -196,6 +241,7 @@ const CatalogDialog = memo(({ catalog, dialog }: { catalog: Catalog, dialog: Non
     </AppDialog>
   )
 })
+setDisplayName({ CatalogDialog })
 
 
 function ifValidNumberString<T>(s: string, cb: (n: number) => T): T | undefined {

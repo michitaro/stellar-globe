@@ -7,15 +7,17 @@ import { MenuItemWithKeybind } from "../../keybindings/MenuItemWithKeybind"
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
 import { commonSlice } from "../common/commonSlice"
 import { useAppContext } from "../../context"
+import { catalogsSlice } from "../catalog/catalogSlice"
 
 export const DialogsMenu = memo(() => {
   const tone = useAppSelector(state => state.tractTileLayers.toneDialogVisible)
   const regions = useAppSelector(state => state.regions.regionsDialogVisible)
   const hips = useAppSelector(state => state.hipsLayers.hipsDialogVisible)
-  const catalogs = useAppSelector(state => state.catalogs.catalogsDialogVisible)
+  const catalogsDialog = useAppSelector(state => state.catalogs.catalogsDialogVisible)
   const currentPositionHint = useAppSelector(state => state.common.dialogPositionHint)
   const dispatch = useAppDispatch()
   const { dialogContext } = useAppContext()
+  const catalogs = useAppSelector(state => state.catalogs.catalogs)
 
   const positionMenu = (label: string, positionHint: PositionHint) => {
     return (
@@ -37,7 +39,18 @@ export const DialogsMenu = memo(() => {
       <MenuItemWithKeybind type='checkbox' checked={tone} keybind="toggleToneDialog"><Icon type='tune' marginRight />Tone</MenuItemWithKeybind>
       <MenuItemWithKeybind type='checkbox' checked={regions} keybind="toggleRegionsDialog"><Icon type='architecture' marginRight />Regions</MenuItemWithKeybind>
       <MenuItemWithKeybind type='checkbox' checked={hips} keybind="toggleHipsDialog"><Icon type='layers' marginRight />HiPS</MenuItemWithKeybind>
-      <MenuItemWithKeybind type='checkbox' checked={catalogs} keybind="toggleCatalogsDialog"><Icon type='table' marginRight />Catalogs</MenuItemWithKeybind>
+      <MenuItemWithKeybind type='checkbox' checked={catalogsDialog} keybind="toggleCatalogsDialog"><Icon type='table' marginRight />Catalogs</MenuItemWithKeybind>
+      <MenuDivider />
+      <SubMenu label="Catalogs">
+        {
+          catalogs.map(c => (
+            <MenuItem
+              key={c.id} type='checkbox' checked={c.dialog.opened}
+              onClick={() => dispatch(catalogsSlice.actions.dialogToggled({ id: c.id }))}
+            >{c.name}</MenuItem>
+          ))
+        }
+      </SubMenu>
       <MenuDivider />
       <MenuItemWithKeybind keybind="rearrangeDialogs" ><Icon marginRight type='grid_view' />Rearrange</MenuItemWithKeybind>
       <MenuItemWithKeybind keybind="closeAllDialogs" ><Icon marginRight type='close' />Close All</MenuItemWithKeybind>

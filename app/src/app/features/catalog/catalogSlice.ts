@@ -72,6 +72,7 @@ export const catalogsSlice = createSlice({
             defaultColor: params.defaultColor ?? [1, 1, 1, 1] as V4,
             visible: true,
             dialog: defaultDialogState({ opened: openDialog }),
+            selectedRecords: {},
           }
           state.catalogs.push(catalog)
         }
@@ -120,6 +121,23 @@ export const catalogsSlice = createSlice({
     focusedPositionChanged: create.reducer<{ position?: V3 }>((state, { payload: { position } }) => {
       state.focusedPosition = position
     }),
+    recordSelected: create.preparedReducer(
+      (payload: { id: string, index: number, selected?: boolean }) => {
+        return trackAction({ payload }, `Catalog Record (De)Selected`)
+      },
+      (state, { payload }) => {
+        const { id, index } = payload
+        const catalog = state.catalogs.find(c => c.id === id)
+        if (catalog) {
+          const selected = payload.selected ?? !catalog.selectedRecords[index]
+          if (selected) {
+            catalog.selectedRecords[index] = true
+          }
+          else {
+            delete catalog.selectedRecords[index]
+          }
+        }
+      }),
   }),
   selectors: {
     currentCatalog: state => state.catalogs.find(c => c.id === state.currentCatalogId),
@@ -248,17 +266,20 @@ export type Catalog = {
   hasColorCol: boolean
   hasMarkerTypeCol: boolean
   dialog: DialogState
+  selectedRecords: { [index: number]: true }
 }
 
 
 type DialogState = {
   opened: boolean
+  checked: { [index: number]: boolean }
 }
 
 
 function defaultDialogState(state: Partial<DialogState> = {}): DialogState {
   return {
     opened: true,
+    checked: {},
     ...state,
   }
 }

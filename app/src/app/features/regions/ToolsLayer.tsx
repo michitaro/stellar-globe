@@ -11,20 +11,20 @@ import { normalizeSkyCoord } from './regionUtils'
 import { regionsSlice } from './regionsSlice'
 
 
-export const ToolsLayer = memo(() => {
+export function ToolsLayer({ children }: { children: ReactNode }) {
   const tool = useAppSelector(state => state.regions.tool)
 
   return (
     <Fragment>
       <PanLayer$ enabled={tool === 'pan'} />
+      {children}
       {tool === 'line' && <NewLinearRegionLayer />}
       {tool === 'circle' && <NewCircularRegionLayer />}
       {tool === 'rect' && <NewRectangularRegionLayer />}
       {tool === 'text' && <NewTextRegionLayer />}
     </Fragment>
   )
-})
-setDisplayName({ ToolsLayer })
+}
 
 
 type NewTwoPointsRegionLayerProps = {

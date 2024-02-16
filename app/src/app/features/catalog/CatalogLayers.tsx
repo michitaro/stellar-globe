@@ -1,8 +1,8 @@
 import styles from './styles.module.scss'
-import { ClickableMarkerLayer$ } from "@stellar-globe/react-stellar-globe"
+import { ClickableMarkerLayer$, MarkerLayer$ } from "@stellar-globe/react-stellar-globe"
 import { Fragment, memo, useCallback, useMemo, useRef, useState } from "react"
-import { useAppSelector } from "../../store/hooks"
-import { Catalog } from "./catalogSlice"
+import { useAppDispatch, useAppSelector } from "../../store/hooks"
+import { Catalog, Marker, catalogsSlice } from "./catalogSlice"
 import { CSSTransition } from 'react-transition-group'
 import { PointMarker } from '../../../common/stellarglobe/PointMarker'
 import { V4 } from '@stellar-globe/stellar-globe'
@@ -11,7 +11,7 @@ import { V4 } from '@stellar-globe/stellar-globe'
 export const CatalogLayers = memo(() => {
   const catalogs = useAppSelector(state => state.catalogs.catalogs)
   const focus = useAppSelector(state => state.catalogs.focusedPosition)
-  const focusColor = useMemo<V4>(() => [1, 1, 1, 1], [])
+  const focusColor = useMemo<V4>(() => [1, 1, 1, 0.75], [])
 
   return (
     <Fragment>
@@ -26,8 +26,8 @@ export const CatalogLayers = memo(() => {
           color={focusColor}
           markerType='circledHollowPlus'
           position={focus}
-          markerSize={48}
-          markerWidth={0.1}
+          markerSize={64}
+          markerWidth={0.05}
         />
       }
     </Fragment>
@@ -41,6 +41,8 @@ type CatalogProps = {
 
 
 const CatalogLayer$ = memo(({ catalog }: CatalogProps) => {
+  const dispatch = useAppDispatch()
+
   type OnHoverChange = Parameters<typeof ClickableMarkerLayer$>[0]['onHoverChange']
 
   const [showObjectInspector, setShowObjectInspector] = useState(false)
@@ -55,6 +57,24 @@ const CatalogLayer$ = memo(({ catalog }: CatalogProps) => {
 
   const nodeRef = useRef(null)
 
+  const selectionColor: V4 = useMemo(() => [1, 1, 1, catalog.defaultColor[3]], [catalog.defaultColor])
+  const white: V4 = useMemo(() => [1, 1, 1, 1], [])
+
+  const selectionMarkers: Marker[] = useMemo(() => {
+    const indices = Object.keys(catalog.selectedRecords)
+    const markers: Marker[] = indices.map(i => ({
+      position: catalog.markers[i as any].position,
+    }))
+    return markers
+  }, [catalog.markers, catalog.selectedRecords])
+
+  type OnClick = NonNullable<Parameters<typeof ClickableMarkerLayer$>[0]['onClick']>
+  const onClick: OnClick = useCallback(e => {
+    dispatch(catalogsSlice.actions.recordSelected({ id: catalog.id, index: e.index }))
+  }, [catalog.id, dispatch])
+
+  const selectedColor = useMemo<V4>(() => [1, 1, 1, 0.75], [])
+
   return (
     <Fragment>
       <ClickableMarkerLayer$
@@ -65,6 +85,16 @@ const CatalogLayer$ = memo(({ catalog }: CatalogProps) => {
         baseColor={catalog.baseColor}
         visible={catalog.visible}
         onHoverChange={onHoverChange}
+        onClick={onClick}
+      />
+      <MarkerLayer$
+        markerSize={64}
+        markerWidth={0.05}
+        defaultColor={selectedColor}
+        defaultType="square"
+        markers={selectionMarkers}
+        baseColor={selectionColor}
+        visible={catalog.visible}
       />
       {catalog.visible && (
         <CSSTransition
