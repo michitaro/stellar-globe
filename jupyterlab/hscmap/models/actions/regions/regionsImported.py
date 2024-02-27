@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import Optional, Literal, TypedDict
 from typing import List, Union
-# from typing_extensions import NotRequired, TypedDict
+
 
 class Position(TypedDict):
     dec: float
@@ -16,16 +16,14 @@ class TextRegion(TypedDict):
     type: Optional[str]
     visible: bool
 
-class Center(TypedDict):
-    dec: float
-    ra: float
-
-class CircularRegion(TypedDict):
-    center: Center
+class RectangularRegion(TypedDict):
     color: List[float]
     id: str
+    maxDec: float
+    maxRa: float
+    minDec: float
+    minRa: float
     name: str
-    radius: float
     showLabel: bool
     type: Optional[str]
     visible: bool
@@ -48,14 +46,16 @@ class LinearRegion(TypedDict):
     type: Optional[str]
     visible: bool
 
-class RectangularRegion(TypedDict):
+class Center(TypedDict):
+    dec: float
+    ra: float
+
+class CircularRegion(TypedDict):
+    center: Center
     color: List[float]
     id: str
-    maxDec: float
-    maxRa: float
-    minDec: float
-    minRa: float
     name: str
+    radius: float
     showLabel: bool
     type: Optional[str]
     visible: bool

@@ -79,7 +79,8 @@ def generate_datamodel(schema, outfile: Path, replace_map: dict[str, str] = {}):
         for k, v in replace_map.items():
             codes = replace_definition(codes, k, v)
         codes = re.sub(r'^(from\s+__future__\s+import\s+annotations)', r'\1\nfrom typing import Optional, Literal, TypedDict', codes)
-        codes = re.sub(r'^(from typing_extensions.*)', r'# \1', codes, flags=re.MULTILINE)
+        codes = re.sub(r'^(from typing_extensions.*)', r'', codes, flags=re.MULTILINE)
+        codes = re.sub(r'NotRequired', r'Optional', codes, flags=re.MULTILINE)
 
         outfile.parent.mkdir(parents=True, exist_ok=True)
         outfile.write_text(codes)

@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import Optional, Literal, TypedDict
-# from typing_extensions import Literal, NotRequired, TypedDict
+
 ToolType = Literal['circle', 'line', 'pan', 'rect', 'text']
 
 class Payload(TypedDict):
