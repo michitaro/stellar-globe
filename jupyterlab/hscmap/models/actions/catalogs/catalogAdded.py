@@ -21,6 +21,7 @@ class Params(TypedDict):
 
 class Payload(TypedDict):
     id: str
+    openDialog: bool
     params: Params
 
 class Model(TypedDict):

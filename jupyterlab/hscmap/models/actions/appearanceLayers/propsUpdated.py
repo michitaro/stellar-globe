@@ -2,6 +2,15 @@ from __future__ import annotations
 from typing import Optional, Literal, TypedDict
 from typing import Union
 
+Which = Literal['constellation', 'esoMilkyWay', 'grid', 'hipparcosCatalog', 'nearbyGalaxiesAndNebulas', 'tracts']
+
+class PartialFadeInDurationNumberUndefinedImageSize5121024UndefinedVisibleBooleanUndefined(TypedDict):
+    fadeInDuration: Optional[float]
+    imageSize: Optional[Literal[1024, 512]]
+    visible: Optional[bool]
+
+class PartialVisibleBoolean1(TypedDict):
+    visible: Optional[bool]
 
 class PartialConstellationLayerProps(TypedDict):
     fadeInDuration: Optional[float]
@@ -13,15 +22,6 @@ class PartialConstellationLayerProps(TypedDict):
     visible: Optional[bool]
 
 class PartialVisibleBoolean(TypedDict):
-    visible: Optional[bool]
-Which = Literal['constellation', 'esoMilkyWay', 'grid', 'hipparcosCatalog', 'nearbyGalaxiesAndNebulas', 'tracts']
-
-class PartialVisibleBoolean1(TypedDict):
-    visible: Optional[bool]
-
-class PartialFadeInDurationNumberUndefinedImageSize5121024UndefinedVisibleBooleanUndefined(TypedDict):
-    fadeInDuration: Optional[float]
-    imageSize: Optional[Literal[1024, 512]]
     visible: Optional[bool]
 
 class PartialVisibleTrue(TypedDict):

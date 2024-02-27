@@ -3,6 +3,44 @@ from typing import Optional, Literal, TypedDict
 from typing import List, Union
 
 
+class End(TypedDict):
+    dec: float
+    ra: float
+
+class Start(TypedDict):
+    dec: float
+    ra: float
+
+class LinearRegion(TypedDict):
+    color: List[float]
+    end: End
+    id: str
+    name: str
+    showLabel: bool
+    start: Start
+    type: Optional[str]
+    visible: bool
+
+class Point(TypedDict):
+    color: List[float]
+    position: List[float]
+    size: float
+JOINT = Literal['MITER', 'NONE']
+
+class Center(TypedDict):
+    dec: float
+    ra: float
+
+class CircularRegion(TypedDict):
+    center: Center
+    color: List[float]
+    id: str
+    name: str
+    radius: float
+    showLabel: bool
+    type: Optional[str]
+    visible: bool
+
 class Position(TypedDict):
     dec: float
     ra: float
@@ -28,38 +66,20 @@ class RectangularRegion(TypedDict):
     type: Optional[str]
     visible: bool
 
-class End(TypedDict):
-    dec: float
-    ra: float
+class Path(TypedDict):
+    close: bool
+    joint: JOINT
+    points: List[Point]
 
-class Start(TypedDict):
-    dec: float
-    ra: float
-
-class LinearRegion(TypedDict):
-    color: List[float]
-    end: End
-    id: str
-    name: str
-    showLabel: bool
-    start: Start
-    type: Optional[str]
-    visible: bool
-
-class Center(TypedDict):
-    dec: float
-    ra: float
-
-class CircularRegion(TypedDict):
-    center: Center
+class PathRegion(TypedDict):
     color: List[float]
     id: str
     name: str
-    radius: float
+    paths: List[Path]
     showLabel: bool
     type: Optional[str]
     visible: bool
-Region = Union[LinearRegion, CircularRegion, RectangularRegion, TextRegion]
+Region = Union[LinearRegion, CircularRegion, RectangularRegion, TextRegion, PathRegion]
 
 class Payload(TypedDict):
     regions: List[Region]

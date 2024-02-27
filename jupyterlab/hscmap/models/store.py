@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import Optional, Literal, TypedDict
-from typing import List, Union
+from typing import Dict, List, Union
 
 
 class EsoMilkyWay(TypedDict):
@@ -21,6 +21,10 @@ class Tracts(TypedDict):
     frame: bool
     patch: bool
     visible: bool
+
+class Dialog(TypedDict):
+    checked: Dict[str, bool]
+    opened: bool
 
 class Marker(TypedDict):
     color: Optional[List[float]]
@@ -45,49 +49,6 @@ class InitializerParams(TypedDict):
 class Layer(TypedDict):
     baseUrl: str
     name: str
-    visible: bool
-
-class CameraParams(TypedDict):
-    fovy: float
-    phi: float
-    roll: float
-    theta: float
-    za: float
-    zd: float
-    zp: float
-
-class Position(TypedDict):
-    dec: float
-    ra: float
-
-class TextRegion(TypedDict):
-    color: List[float]
-    id: str
-    name: str
-    position: Position
-    showLabel: bool
-    type: Optional[str]
-    visible: bool
-AngleUnit = Literal['degree', 'radian', 'sexadecimal']
-
-class PartialRecordTopBottomLeftRightNumber(TypedDict):
-    bottom: Optional[float]
-    left: Optional[float]
-    right: Optional[float]
-    top: Optional[float]
-ToolType = Literal['circle', 'line', 'pan', 'rect', 'text']
-CameraMode = Literal['FLOATING_EYE', 'GNOMONIC', 'STEREOGRAPHIC']
-
-class RectangularRegion(TypedDict):
-    color: List[float]
-    id: str
-    maxDec: float
-    maxRa: float
-    minDec: float
-    minRa: float
-    name: str
-    showLabel: bool
-    type: Optional[str]
     visible: bool
 
 class SimpleRgb(TypedDict):
@@ -164,6 +125,29 @@ class ConstellationLayerProps(TypedDict):
     showNames: Optional[bool]
     visible: Optional[bool]
 
+class Point(TypedDict):
+    color: List[float]
+    position: List[float]
+    size: float
+
+class CameraParams(TypedDict):
+    fovy: float
+    phi: float
+    roll: float
+    theta: float
+    za: float
+    zd: float
+    zp: float
+JOINT = Literal['MITER', 'NONE']
+CameraMode = Literal['FLOATING_EYE', 'GNOMONIC', 'STEREOGRAPHIC']
+MarkerType = Literal['asterisk', 'circle', 'circledHollowAsterisk', 'circledHollowPlus', 'circledHollowX', 'diamond', 'dot', 'hollowAsterisk', 'hollowPlus', 'hollowX', 'pentagon', 'plus', 'square', 'triangle', 'x']
+
+class PartialRecordTopBottomLeftRightNumber(TypedDict):
+    bottom: Optional[float]
+    left: Optional[float]
+    right: Optional[float]
+    top: Optional[float]
+
 class Center(TypedDict):
     dec: float
     ra: float
@@ -177,7 +161,33 @@ class CircularRegion(TypedDict):
     showLabel: bool
     type: Optional[str]
     visible: bool
-MarkerType = Literal['asterisk', 'circle', 'circledHollowAsterisk', 'circledHollowPlus', 'circledHollowX', 'diamond', 'dot', 'hollowAsterisk', 'hollowPlus', 'hollowX', 'pentagon', 'plus', 'square', 'triangle', 'x']
+ToolType = Literal['circle', 'line', 'pan', 'path', 'rect', 'text']
+
+class Position(TypedDict):
+    dec: float
+    ra: float
+
+class TextRegion(TypedDict):
+    color: List[float]
+    id: str
+    name: str
+    position: Position
+    showLabel: bool
+    type: Optional[str]
+    visible: bool
+
+class RectangularRegion(TypedDict):
+    color: List[float]
+    id: str
+    maxDec: float
+    maxRa: float
+    minDec: float
+    minRa: float
+    name: str
+    showLabel: bool
+    type: Optional[str]
+    visible: bool
+AngleUnit = Literal['degree', 'radian', 'sexadecimal']
 
 class AppearanceLayers(TypedDict):
     constellation: ConstellationLayerProps
@@ -197,12 +207,14 @@ class Catalog(TypedDict):
     baseColor: List[float]
     defaultColor: List[float]
     defaultType: MarkerType
+    dialog: Dialog
     fields: List[str]
     hasColorCol: bool
     hasMarkerTypeCol: bool
     id: str
     markers: List[Marker]
     name: str
+    selectedRecords: Dict[str, bool]
     visible: bool
 
 class Catalogs(TypedDict):
@@ -210,6 +222,7 @@ class Catalogs(TypedDict):
     catalogs: List[Catalog]
     catalogsDialogVisible: bool
     currentCatalogId: str
+    focusedPosition: List[float]
 
 class Common(TypedDict):
     angleUnit: AngleUnit
@@ -219,7 +232,21 @@ class TractTileLayers(TypedDict):
     colorParams: SspTileParams
     layers: List[Layer]
     toneDialogVisible: bool
-Region = Union[LinearRegion, CircularRegion, RectangularRegion, TextRegion]
+
+class Path(TypedDict):
+    close: bool
+    joint: JOINT
+    points: List[Point]
+
+class PathRegion(TypedDict):
+    color: List[float]
+    id: str
+    name: str
+    paths: List[Path]
+    showLabel: bool
+    type: Optional[str]
+    visible: bool
+Region = Union[LinearRegion, CircularRegion, RectangularRegion, TextRegion, PathRegion]
 
 class Regions(TypedDict):
     autoColor: bool
