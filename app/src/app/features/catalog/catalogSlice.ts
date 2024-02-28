@@ -50,13 +50,13 @@ export const catalogsSlice = createSlice({
         const id = params.id ?? nanoid()
         return trackAction({
           payload: {
-            id,
-            params,
+            params: { ...params, id },
             openDialog: !!options.openDialog,
           }
         }, `Catalog ${params.name} Added`)
       },
-      (state, { payload: { id, params, openDialog } }) => {
+      (state, { payload: { params, openDialog } }) => {
+        const id = params.id
         if (!state.catalogs.find(c => c.id === id)) {
           const { name, markers, fields, attributes, hasColorCol, hasMarkerTypeCol } = params
           const catalog: Catalog = {
