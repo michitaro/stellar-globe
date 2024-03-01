@@ -34,10 +34,8 @@ export type NewCatalogParams = {
   markers: Marker[]
   fields: string[]
   attributes: string[][]
-  hasColorCol: boolean
-  hasMarkerTypeCol: boolean
   defaultType?: MarkerType
-  defaultColor?: V4
+  baseColor?: V4
 }
 
 
@@ -58,18 +56,16 @@ export const catalogsSlice = createSlice({
       (state, { payload: { params, openDialog } }) => {
         const id = params.id
         if (!state.catalogs.find(c => c.id === id)) {
-          const { name, markers, fields, attributes, hasColorCol, hasMarkerTypeCol } = params
+          const { name, markers, fields, attributes, defaultType, baseColor } = params
           const catalog: Catalog = {
             id,
             name,
-            hasColorCol,
-            hasMarkerTypeCol,
             markers,
             fields,
             attributes,
-            baseColor: hasColorCol ? [1, 1, 1, 1] : nextColor(state),
-            defaultType: params.defaultType ?? 'circle',
-            defaultColor: params.defaultColor ?? [1, 1, 1, 1] as V4,
+            baseColor: baseColor ?? nextColor(state),
+            defaultType: defaultType ?? 'circle',
+            defaultColor: [1, 1, 1, 1] as V4,
             visible: true,
             dialog: defaultDialogState({ opened: openDialog }),
             selectedRecords: {},
@@ -211,9 +207,8 @@ export function parseCatalogCsvText(csvText: string) {
     }
   })
 
-  const parsed: Pick<Catalog, 'attributes' | 'fields' | 'markers' | 'hasColorCol' | 'hasMarkerTypeCol'> = {
-    hasColorCol: colorCol >= 0,
-    hasMarkerTypeCol: markerTypeCol >= 0,
+  const parsed: Pick<Catalog, 'attributes' | 'fields' | 'markers'> = {
+    // hasColorCol: colorCol >= 0,
     fields,
     attributes,
     markers,
@@ -263,8 +258,6 @@ export type Catalog = {
   defaultColor: V4
   baseColor: V4
   visible: boolean
-  hasColorCol: boolean
-  hasMarkerTypeCol: boolean
   dialog: DialogState
   selectedRecords: { [index: number]: true }
 }

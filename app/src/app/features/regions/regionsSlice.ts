@@ -1,5 +1,5 @@
 import { createSlice, nanoid } from "@reduxjs/toolkit"
-import { SkyCoord, V4, angle } from "@stellar-globe/stellar-globe"
+import { SkyCoord, V3, V4, angle, path } from "@stellar-globe/stellar-globe"
 import { colorSeries } from "../../../common/utils/colorsys"
 import { slerp } from "../../../common/utils/math"
 import { appStateHistoryActions } from "../../store/hooks"
@@ -8,10 +8,10 @@ import { readHashState } from "../../store/stateSync/hashSync"
 import { skyCoordFromCoordDef } from "./regionUtils"
 
 
-type ToolType = 'pan' | 'line' | 'rect' | 'circle' | 'text'
+type ToolType = 'pan' | 'line' | 'rect' | 'circle' | 'text' | 'path'
 
 
-export type Region = LinearRegion | CircularRegion | RectangularRegion | TextRegion
+export type Region = LinearRegion | CircularRegion | RectangularRegion | TextRegion | PathRegion
 
 
 type PartiallyPartial<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
@@ -112,6 +112,22 @@ export const regionsSlice = createSlice({
         }
       },
     ),
+    newPathRegionAdded: create.preparedReducer(
+      ({ id: _id, ...props }: PartiallyPartial<PathRegion, 'id' | 'color'>) => {
+        const id = _id ?? nanoid()
+        return trackAction({
+          payload: {
+            id,
+            ...props,
+          }
+        }, 'Polygon Region Added')
+      },
+      (state, { payload: { id, color, ...rests } }) => {
+        if (!state.regions.find(r => r.id === id)) {
+          state.regions.push({ ...rests, id, color: color ?? nextColor(state) })
+        }
+      },
+    ),
     regionUpdated: create.preparedReducer(
       (payload: { id: string, regionDef: Region }) => trackAction({ payload }, 'Region Updated'),
       (state, { payload: { id, regionDef } }) => {
@@ -195,6 +211,7 @@ type RegionBase = {
   visible: boolean
   showLabel: boolean
   name: string
+  color: V4
 }
 
 
@@ -202,14 +219,12 @@ export type LinearRegion = RegionBase & {
   type: 'Linear'
   start: SkyCoordType
   end: SkyCoordType
-  color: V4
 }
 
 export type CircularRegion = RegionBase & {
   type: 'Circular'
   center: SkyCoordType
   radius: number // radian
-  color: V4
 }
 
 export type RectangularRegion = RegionBase & {
@@ -218,13 +233,17 @@ export type RectangularRegion = RegionBase & {
   maxRa: number
   minDec: number
   maxDec: number
-  color: V4
 }
 
 export type TextRegion = RegionBase & {
   type: 'Text'
   position: SkyCoordType
-  color: V4
+}
+
+
+export type PathRegion = RegionBase & {
+  type: 'Path'
+  paths: path.Path[]
 }
 
 
@@ -261,5 +280,28 @@ export function regionView(region: Region): { center: SkyCoord, fov: number } {
         fov: angle.amin2rad(10),
       }
     }
+    case 'Path': {
+      return regionCenterAndFov(region)
+    }
+  }
+}
+
+
+export function regionCenterAndFov(region: PathRegion) {
+  const { paths } = region
+  // pathsの中心と範囲を計算する
+  // これはxyz座標で行う
+  if (paths.length === 0) {
+    return {
+      center: SkyCoord.fromRad(0, 0),
+      fov: 1,
+    }
+  }
+  const xyzs = paths.map(p => p.points.map(p => p.position)).flat()
+  const center = xyzs.reduce((a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]], [0, 0, 0]).map(v => v / xyzs.length) as V3
+  const maxDist = xyzs.reduce((max, xyz) => Math.max(max, Math.sqrt(xyz[0] ** 2 + xyz[1] ** 2 + xyz[2] ** 2)), 0)
+  return {
+    center: SkyCoord.fromXyz(center),
+    fov: Math.asin(maxDist),
   }
 }

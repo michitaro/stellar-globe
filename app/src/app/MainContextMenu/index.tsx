@@ -26,8 +26,6 @@ export function MainContextMenu({
             fields,
             attributes,
             markers,
-            hasColorCol: false,
-            hasMarkerTypeCol: false,
           }))
         } catch (e) {
           alert(e)

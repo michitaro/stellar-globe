@@ -109,4 +109,5 @@ const typeIcon: { [K in RegionType]: MaterialSymbol } = {
   Circular: 'circle',
   Rectangular: 'rectangle',
   Text: 'title',
+  Path: 'pentagon',
 } as const

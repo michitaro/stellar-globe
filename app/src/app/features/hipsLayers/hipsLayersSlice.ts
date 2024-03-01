@@ -6,12 +6,14 @@ import { readHashState } from "../../store/stateSync/hashSync"
 type State = {
   baseUrl: string | undefined
   hipsDialogVisible: boolean
+  showHipsDialogWhenBaseUrlChanged: boolean
 }
 
 function initialState(): State {
   return {
     baseUrl: readHashState().hipsBaseUrl,
     hipsDialogVisible: false,
+    showHipsDialogWhenBaseUrlChanged: false,
   }
 }
 
@@ -36,7 +38,7 @@ export const hipsLayersSlice = createSlice({
     builder.addMatcher(
       action => [hipsLayersSlice.actions.baseUrlChanged.type].includes(action.type),
       state => {
-        if (state.baseUrl) {
+        if (state.baseUrl && state.showHipsDialogWhenBaseUrlChanged) {
           state.hipsDialogVisible = true
         }
       }

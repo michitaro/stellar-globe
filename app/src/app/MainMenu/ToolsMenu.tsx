@@ -36,7 +36,11 @@ const toolDefs: { [K in ToolType]: {
   text: {
     icon: 'title',
     displayName: 'Text',
-  }
+  },
+  path: {
+    icon: 'pentagon',
+    displayName: 'Polygon',
+  },
 } as const
 
 

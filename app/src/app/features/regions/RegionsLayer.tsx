@@ -10,6 +10,7 @@ import { LineDef, LinearRegionLayer } from "./LinearRegionLayer"
 import { RectDef, RectangularRegionLayer } from "./RectangularRegionLayer"
 import { normalizeSkyCoord, skyCoordFromCoordDef } from "./regionUtils"
 import { regionsSlice } from "./regionsSlice"
+import { PathLayer$ } from "@stellar-globe/react-stellar-globe"
 
 
 export function RegionsLayer() {
@@ -27,6 +28,8 @@ export function RegionsLayer() {
             return <RectangularRegionFromDefLayer key={def.id} {...def} />
           case 'Text':
             return <TextRegionFromDefLayer key={def.id} {...def} />
+          case 'Path':
+            return <PathRegionFromDefLayer key={def.id} {...def} />
         }
       })}
     </Fragment>
@@ -391,3 +394,27 @@ function v4ToColorString(color: V4) {
   const [r, g, b, a] = color
   return `rgba(${Math.round(255 * r)}, ${Math.round(255 * g)}, ${Math.round(255 * b)}, ${a})`
 }
+
+
+const PathRegionFromDefLayer = memo(({
+  // color,
+  // id,
+  // name,
+  paths,
+  // showLabel,
+  // type,
+  visible,
+}: SpecificRegionType<'Path'>) => {
+  console.log(paths)
+  
+  return (
+    <PathLayer$
+      paths={paths}
+      darkenNarrowLine={false}
+      dimOnZoom={false}
+      visible={visible}
+      blendMode="NORMAL"
+    />
+  )
+})
+setDisplayName({ PathRegionFromDefLayer })

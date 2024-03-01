@@ -5,6 +5,20 @@ import { EventEmitter } from './eventemitter'
 export const lockFrame = Object.assign((windowIds: string[]) => {
   const key = idsKey(windowIds)
   unlocks.set(key, lock(windowIds))
+
+  // 2番目以降のwindowのカメラを1番目のカメラに合わせる
+  const baseEnv = widgetEnvs.get(windowIds[0])
+  if (baseEnv) {
+    const bg = baseEnv.appHandle.globe()
+    for (const wid of windowIds.slice(1)) {
+      const otherEnv = widgetEnvs.get(wid)
+      if (otherEnv) {
+        const og = otherEnv.appHandle.globe()
+        Object.assign(og.camera, extractCameraParams(bg.camera))
+        og.requestRefresh()
+      }
+    }
+  }
 }, {
   unlock: (windowIds: string[]) => {
     const key = idsKey(windowIds)

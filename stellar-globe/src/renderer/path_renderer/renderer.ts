@@ -156,29 +156,31 @@ export class Renderer {
 }
 
 function path2attrsMiter(attrs: number[], path: Path) {
+  // path.pointsはreduxなどから来ることがあり変更してはいけない
+  const points = path.points.slice()
   if (path.points.length < 2) {
     throw new Error('Path must include more than 2 points')
   }
   if (path.close) {
-    path.points.unshift(path.points[path.points.length - 1])
-    path.points.push(path.points[1], path.points[2])
+    points.unshift(points[points.length - 1])
+    points.push(points[1], points[2])
   } else {
     // cap ends
-    path.points.unshift({
-      ...path.points[0],
-      position: path.points[0].position.map((p, i) => 2 * p - path.points[1].position[i]) as V3,
+    points.unshift({
+      ...points[0],
+      position: points[0].position.map((p, i) => 2 * p - points[1].position[i]) as V3,
     })
-    const last = path.points.length - 1
-    path.points.push({
-      ...path.points[last],
-      position: path.points[last].position.map((p, i) => 2 * p - path.points[last - 1].position[i]) as V3,
+    const last = points.length - 1
+    points.push({
+      ...points[last],
+      position: points[last].position.map((p, i) => 2 * p - points[last - 1].position[i]) as V3,
     })
   }
-  for (let i = 1; i < path.points.length - 1; ++i) {
+  for (let i = 1; i < points.length - 1; ++i) {
     // (a) - (p) - (b)
-    const p = path.points[i]
-    const a = path.points[i - 1]
-    const b = path.points[i + 1]
+    const p = points[i]
+    const a = points[i - 1]
+    const b = points[i + 1]
     attrs.push(...p.position, ...a.position, ...b.position, -1, 0.5 * p.size, ...p.color)
     if (i === 1) {
       attrs.push(...attrs.slice(attrs.length - 15))
@@ -189,17 +191,18 @@ function path2attrsMiter(attrs: number[], path: Path) {
 }
 
 function path2attrsNone(attrs: number[], path: Path) {
-  if (path.points.length < 2) {
+  const points = path.points.slice()
+  if (points.length < 2) {
     throw new Error('Path must include more than 2 points')
   }
 
   if (path.close) {
-    path.points.push(path.points[0])
+    points.push(points[0])
   }
 
-  for (let i = 0; i < path.points.length - 1; ++i) {
-    const a = path.points[i]
-    const b = path.points[i + 1]
+  for (let i = 0; i < points.length - 1; ++i) {
+    const a = points[i]
+    const b = points[i + 1]
     const a2 = [0, 1, 2].map((j) => 2 * a.position[j] - b.position[j]) // a + (a - b)
     const b2 = [0, 1, 2].map((j) => 2 * b.position[j] - a.position[j]) // b + (b - a)
     attrs.push(...a.position, ...a2, ...b.position, +1, 0.5 * a.size, ...a.color)

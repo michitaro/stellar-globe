@@ -26,6 +26,7 @@ type StellarGlobeWidgetEnv = {
 }
 
 
+// keyはwindow.id
 export const widgetEnvs = new Map<string, StellarGlobeWidgetEnv>()
 
 
@@ -222,7 +223,6 @@ function wrapTypeCheck(cbmap: { [K in keyof PythonToFrontend]: (msg: PythonToFro
   return (e) => {
     const msg = e.content.data
     const type = msg.type as string
-    console.log(msg)
     // @ts-ignore
     const cb = cbmap[type]
     if (cb) {
@@ -253,7 +253,6 @@ function wrapTypeCheck(cbmap: { [K in keyof PythonToFrontend]: (msg: PythonToFro
 
 function sendMsgToJupyter<Type extends keyof FrontendToPython>(comm: CommType, type: Type, obj: Omit<FrontendToPython[Type], 'type'>) {
   const msg = { ...obj, type }
-  console.log(msg)
   comm.send(msg)
 }
 

@@ -3,6 +3,24 @@ from typing import Optional, Literal, TypedDict
 from typing import List, Union
 
 
+class RectangularRegion(TypedDict):
+    color: List[float]
+    id: str
+    maxDec: float
+    maxRa: float
+    minDec: float
+    minRa: float
+    name: str
+    showLabel: bool
+    type: Optional[str]
+    visible: bool
+
+class Point(TypedDict):
+    color: List[float]
+    position: List[float]
+    size: float
+JOINT = Literal['MITER', 'NONE']
+
 class End(TypedDict):
     dec: float
     ra: float
@@ -20,12 +38,6 @@ class LinearRegion(TypedDict):
     start: Start
     type: Optional[str]
     visible: bool
-
-class Point(TypedDict):
-    color: List[float]
-    position: List[float]
-    size: float
-JOINT = Literal['MITER', 'NONE']
 
 class Center(TypedDict):
     dec: float
@@ -50,18 +62,6 @@ class TextRegion(TypedDict):
     id: str
     name: str
     position: Position
-    showLabel: bool
-    type: Optional[str]
-    visible: bool
-
-class RectangularRegion(TypedDict):
-    color: List[float]
-    id: str
-    maxDec: float
-    maxRa: float
-    minDec: float
-    minRa: float
-    name: str
     showLabel: bool
     type: Optional[str]
     visible: bool

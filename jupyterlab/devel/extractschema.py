@@ -1,4 +1,7 @@
-def extractSchema(schema, routes: list[str]):
+from typing import List
+
+
+def extractSchema(schema, routes: List[str]):
     # machine translation of devel/generate-js-type-validators.js
 
     def dig(schema, routes, definitions=None):

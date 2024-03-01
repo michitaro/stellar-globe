@@ -19,8 +19,6 @@ class Payload(TypedDict):
     defaultType: Optional[Literal['asterisk', 'circle', 'circledHollowAsterisk', 'circledHollowPlus', 'circledHollowX', 'diamond', 'dot', 'hollowAsterisk', 'hollowPlus', 'hollowX', 'pentagon', 'plus', 'square', 'triangle', 'x']]
     dialog: Optional[Dialog]
     fields: Optional[List[str]]
-    hasColorCol: Optional[bool]
-    hasMarkerTypeCol: Optional[bool]
     id: str
     markers: Optional[List[Marker]]
     name: Optional[str]

@@ -1,17 +1,21 @@
+import base64
 import json
-from .angle import Angle
 import time
+from functools import cached_property
 from pathlib import Path
 from typing import Any, List, Literal, Optional, cast
 
-from .comm import create_comm
+from IPython.display import Image
+
+from .angle import Angle
+from .comm import CommWrapper
 from .jsonpatchapply import apply_patch
 from .models.Close import Model as CloseMessage
 from .models.Dispatch import Model as DispatchMessage
 from .models.frontend.QueryStateResponse import Model as QueryStateResponseMessage
 from .models.frontend.Ready import Model as FrontendReadyMessage
 from .models.frontend.StoreChanged import Model as StoreChangedMessage
-from .models.JumpTo import Model as JumpToMessage
+from .models.FrontendConsole import Model as FrontendConsoleMessage
 from .models.LockFrame import Model as LockFrameMessage
 from .models.QuerySnapshot import Model as QuerySnapshotMessage
 from .models.QueryState import Model as QueryStateMessage
@@ -21,8 +25,6 @@ from .models.store import Model as StoreState
 from .models.UnlockFrame import Model as UnlockFrameMessage
 from .models.UpdateWidgetState import Model as UpdateWidgetStateMessage
 from .tinyid import tinyid
-
-comm_target = 'stellarglobe/new'
 
 Layout = Literal[
     'merge-bottom',
@@ -45,6 +47,7 @@ class Window:
     _store_revision = -1
     _store_state: StoreState = None  # type: ignore
     _msg_log: List[Any]
+    _synced: bool = False
 
     def __init__(
         self,
@@ -64,16 +67,13 @@ class Window:
 
     def _open_new_window(self, *, layout: Optional[Layout]):
         response_file = f'~query-{tinyid()}'
-        self._comm = create_comm(
-            comm_target,
-            _remove_none(
-                StellarGlobeWidgetParams(
-                    id=self._id,
-                    title=self._title,
-                    layout=cast(Any, layout),
-                    initialState=self._store_state,
-                    responseFile=response_file,
-                )
+        self._comm = CommWrapper(
+            StellarGlobeWidgetParams(
+                id=self._id,
+                title=self._title,
+                layout=cast(Any, layout),
+                initialState=self._store_state,
+                responseFile=response_file,
             ),
         )
         self._comm.on_msg(self._on_msg)
@@ -85,7 +85,7 @@ class Window:
     def _post_message(self, msg):
         if self._connection_status == 'disconnected':
             self.reopen()
-        self._comm.send(_remove_none(msg))
+        self._comm.send(msg)
 
     def _show_error(self, title: str, body: str):
         self._post_message(
@@ -133,6 +133,7 @@ class Window:
         #     on_callback(msg, on_error=show_error)
 
     def _dispatch(self, action):
+        self._synced = False
         self._post_message(DispatchMessage(type='Dispatch', action=action))
 
     def _on_closed(self):
@@ -145,6 +146,9 @@ class Window:
     def reopen(self, *, layout: Optional[Layout] = None):
         if self._connection_status == 'disconnected':
             self._open_new_window(layout=layout)
+
+    def js_console(self, level: Literal['debug', 'info', 'log', 'warn'], *args):
+        self._post_message(FrontendConsoleMessage(type='FrontendConsole', level=level, args=list(args)))
 
     @property
     def title(self):
@@ -164,18 +168,17 @@ class Window:
 
         return unlock
 
-    def sync(self):
+    def sync(self, *, only_if_needed=False):
+        if only_if_needed and self._synced:
+            return
         response_file = f'~query-{tinyid()}'
         self._post_message(QueryStateMessage(type='QueryState', responseFile=str(response_file)))
         msg: QueryStateResponseMessage = json.loads(_wait_for_query_response(response_file))
         self._store_state = msg['state']
         self._store_revision = msg['revision']
+        self._synced = True
 
     def snapshot(self, *, aspect_ratio: Optional[float] = None):
-        import base64
-
-        from IPython.display import Image
-
         response_file = f'~query-{tinyid()}'
         self._post_message(QuerySnapshotMessage(type='QuerySnapshot', responseFile=str(response_file), aspectRatio=aspect_ratio))
         data_url = _wait_for_query_response(response_file)
@@ -194,18 +197,31 @@ class Window:
         non_block=False,
         easing: Optional[Literal['fastStart2', 'fastStart4', 'linear', 'slowStart2', 'slowStart4', 'slowStartStop2', 'slowStartStop4']] = None,
     ):
-        self._post_message(
-            JumpToMessage(
-                type='JumpTo',
-                ra=self._angle_input(ra).radian,
-                dec=self._angle_input(dec).radian,
-                fov=self._angle_input(fov).radian if fov is not None else None,
-                duration=duration,
-                easingFunction=easing,  # type: ignore
-            )
-        )
-        if not non_block:
-            time.sleep(duration)
+        return self.camera.jump_to(ra, dec, fov=fov, duration=duration, non_block=non_block, easing=easing)
+
+    @cached_property
+    def camera(self):
+        from .camera import Camera
+
+        return Camera(self)
+
+    @cached_property
+    def regions(self):
+        from .regions import RegionManager
+
+        return RegionManager(self)
+
+    @cached_property
+    def catalogs(self):
+        from .catalogs import CatalogManager
+
+        return CatalogManager(self)
+
+    @cached_property
+    def dataset(self):
+        from .dataset import DatasetManager
+
+        return DatasetManager(self)
 
 
 def _wait_for_query_response(response_file: str, *, timeout=10, poll_interval=0.1) -> str:
@@ -217,25 +233,17 @@ def _wait_for_query_response(response_file: str, *, timeout=10, poll_interval=0.
                 p = parent / response_file
                 with open(p) as f:
                     size_str = f.readline()
-                    assert size_str[-1] == '\n'
+                    if size_str[-1] != '\n':
+                        raise ValueError("Invalid response file format")
                     response = f.read()
                     if len(response) == int(size_str):
-                        p.unlink()
                         return response
-            except AssertionError:
+            except (ValueError, FileNotFoundError):
                 pass
-            except FileNotFoundError:
-                pass
+            finally:
+                p.unlink(missing_ok=True)
             if parent == parent.parent:
                 break
             parent = parent.parent
         time.sleep(poll_interval)
     raise TimeoutError()
-
-
-def _remove_none(o) -> Any:
-    if isinstance(o, dict):
-        return {k: _remove_none(v) for k, v in o.items() if not v is None}
-    if isinstance(o, list):
-        return [_remove_none(e) for e in o]
-    return o

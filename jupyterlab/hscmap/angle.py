@@ -1,4 +1,5 @@
-from typing import Literal
+from dataclasses import dataclass
+from typing import Literal, TypedDict, Tuple, Callable
 import math
 
 
@@ -29,7 +30,7 @@ class Angle:
         return cls(radian)
 
     @classmethod
-    def converter(cls, unit: Unit):
+    def converter(cls, unit: Unit) -> Tuple[Callable[[float], 'Angle'], Callable[['Angle'], float]]:
         if unit == 'degree':
             angle_input = cls.from_degree
             angle_output = _as_degree
