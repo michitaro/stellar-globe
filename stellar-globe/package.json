@@ -29,13 +29,13 @@
     "@types/hammerjs": "^2.0.45",
     "@types/sprintf-js": "^1.1.4",
     "rollup-plugin-visualizer": "^5.12.0",
-    "sass": "^1.70.0",
+    "sass": "^1.70.1",
     "speedscope": "^1.20.0",
-    "typedoc": "^0.25.7",
+    "typedoc": "^0.25.9",
     "typescript": "^5.3.3",
-    "vite": "^5.0.12",
-    "vite-plugin-dts": "^3.7.2",
-    "vitest": "^1.2.2"
+    "vite": "^5.1.4",
+    "vite-plugin-dts": "^3.7.3",
+    "vitest": "^1.3.1"
   },
   "dependencies": {
     "@hscmap/healpix": "^1.4.12",
