@@ -24,3 +24,25 @@ jupyter lab
 ```bash
 pip install '.[for-example]'
 ```
+
+## Deploy
+
+```
+jlpm run build
+pip install .
+```
+
+実行環境で`jlpm run build`は行う必要はない。
+例えば`Dockerfile`内ではビルド用ステージで`jlpm run build`を行えばよく、その結果を実行用ステージにコピーし`pip install .`すればよい。
+
+## メモ
+
+現状はJupyterからhscMapを使うための構成だが、
+`hscmap`モジュールは`comm`のバックエンドを変えることでJupyterを通さずにhscMapと通信することも考えられる。
+通信は次のようになされる。
+
+```
+hscmap(python) -> comm -> jupyter -> hscMap(frontend)
+                       -> mockcomm
+                       -> fastapi -> hscMap(frontend)
+```
