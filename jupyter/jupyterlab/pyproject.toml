@@ -29,6 +29,17 @@ classifiers = [
 dependencies = []
 dynamic = ["version", "description", "authors", "urls", "keywords"]
 
+[project.optional-dependencies]
+dev = [
+    "jupyterlab==4",
+    "datamodel-code-generator==0.25.4",
+    "pytest==8",
+    "pytest-cov==4",
+    "pytest-watch==4",
+]
+for-example = ["numpy==1", "pandas==2"]
+
+
 [tool.hatch.version]
 source = "nodejs"
 

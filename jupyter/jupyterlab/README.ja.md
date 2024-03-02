@@ -3,13 +3,13 @@
 ```bash
 ~/miniconda3/envs/py3_11/bin/python -m venv ./.venv
 source ./.venv/bin/activate
+
 pip install -U pip
-pip install jupyterlab
+pip install ".[dev]"
 pip install -e "."
 jupyter labextension develop --overwrite .
-jlpm run make-type-validators
 
-pip install datamodel-codegenerator
+jlpm run make-type-validators
 python -m devel.dendatamodel
 
 jlpm run build
@@ -22,5 +22,5 @@ jupyter lab
 ### サンプル用パッケージインストール
 
 ```bash
-pip install pandas
+pip install '.[for-example]'
 ```
