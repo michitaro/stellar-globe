@@ -1,27 +1,27 @@
-import Hammer from 'hammerjs'
 import { Globe } from '~/globe'
 import { ClientCoord } from '~/globe/canvas'
 import { SkyCoord } from '~/lib/angle'
-import { clip, dot } from '~/utils/math'
+import Hammer from '~/utils/TinyHammer'
 import { Layer } from './layer'
 
+
 export class TouchLayer extends Layer {
-  private mc!: HammerManager
+  private mc!: Hammer
 
   constructor(
     globe: Globe,
   ) {
     super(globe)
     this.mc = new Hammer(this.globe.canvas.domElement)
-    this.handlePinch()
-    this.handleDoubleTap()
-    this.handleTap2()
+    this.setupPinch()
+    this.setupDoubleTap()
+    this.setupTap2()
     this.onRelease(() => {
       this.mc.destroy()
     })
   }
 
-  private handleDoubleTap() {
+  private setupDoubleTap() {
     this.mc.get('doubletap').set({ posThreshold: 30 })
     this.mc.on('doubletap', (e) => {
       if (e.pointerType === 'touch') {
@@ -33,17 +33,20 @@ export class TouchLayer extends Layer {
     })
   }
 
-  private handleTap2() {
-    this.mc.add(new Hammer.Tap({ event: 'tap2', pointers: 2 }))
+  private setupTap2() {
+    // this.mc.add(new Hammer.Tap({ event: 'tap2', pointers: 2 }))
+    // TinyHammer では tap2 はaddせずに使える
     this.mc.on('tap2', () => {
       const camera = this.globe.camera
       camera.jumpTo({ fovy: camera.fovy * 2 })
     })
   }
 
-  private handlePinch() {
-    this.mc.get('pinch').set({ enable: true })
-    let scale: number
+  private setupPinch() {
+    // this.mc.get('pinch').set({ enable: true })
+    // TinyHammer では pinch は enable せずに使える
+    let scale = 1
+    
     this.mc.on('pinchstart', () => {
       scale = 1
     })
@@ -65,7 +68,6 @@ export class TouchLayer extends Layer {
 function zoomOnClientCoord(globe: Globe, dScale: number, clinentCoord: ClientCoord) {
   const canvas = globe.canvas
   const camera = globe.camera
-  const pole = camera.thetaphi2xyz(Math.PI / 2, 0)
   const centerXyz = camera.thetaphi2xyz(camera.theta, camera.phi)
   const targetXyz = canvas.xyzFromClientCoord(clinentCoord)
   let [x1, y1, z1] = centerXyz
@@ -73,14 +75,6 @@ function zoomOnClientCoord(globe: Globe, dScale: number, clinentCoord: ClientCoo
   let dx = (1 - dScale) * (x2 - x1)
   let dy = (1 - dScale) * (y2 - y1)
   let dz = (1 - dScale) * (z2 - z1)
-  const dp = dot(pole, centerXyz) // cos(<(center, pole))
-  const cp = Math.sqrt(1 - dp * dp)  // sin(<(center, pole))
-  if (cp < camera.fovy) {
-    const r = clip(cp / camera.fovy - 0.1, 0, 1)
-    dx = r * dx + (1 - r) * x1
-    dy = r * dy + (1 - r) * y1
-    dz = r * dz + (1 - r) * z1
-  }
   x1 += dx
   y1 += dy
   z1 += dz

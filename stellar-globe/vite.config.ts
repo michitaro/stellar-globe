@@ -22,6 +22,7 @@ export default defineConfig({
     },
     rollupOptions: {
       plugins: [
+        // @ts-ignore
         visualizer(),
       ],
     },

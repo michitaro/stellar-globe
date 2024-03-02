@@ -1,4 +1,4 @@
-import { sprintf } from 'sprintf-js'
+import { sprintf } from '~/utils/sprintf'
 
 
 export function enable(gl: WebGL2RenderingContext, fs: number[], callback: () => void) {

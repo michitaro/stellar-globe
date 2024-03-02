@@ -1,4 +1,4 @@
-import { sprintf } from 'sprintf-js'
+import { sprintf } from '~/utils/sprintf'
 import { V3 } from '~/types'
 import { clip } from '~/utils/math'
 
@@ -193,8 +193,8 @@ function parseSexadecimal(numbers: string[], hour2deg: number) {
   const m = numbers[1] != undefined ? Number(numbers[1]) : 0
   const s = numbers[2] != undefined ? Number(numbers[2]) : 0
 
-  if (hs.substr(0, 1) == '-') {
-    return Angle.fromDeg(- hour2deg * (s / 3600 + m / 60 + Number(hs.substr(1))))
+  if (hs.substring(0, 1) == '-') {
+    return Angle.fromDeg(- hour2deg * (s / 3600 + m / 60 + Number(hs.substring(1))))
   }
   else {
     return Angle.fromDeg(hour2deg * (s / 3600 + m / 60 + Number(hs)))
