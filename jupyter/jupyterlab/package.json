@@ -57,9 +57,9 @@
     "dependencies": {
         "@jupyterlab/application": "^4.1.2",
         "@jupyterlab/notebook": "^4.1.2",
-        "@stellar-globe/app": "link:../app",
-        "@stellar-globe/react-stellar-globe": "link:../react-stellar-globe",
-        "@stellar-globe/stellar-globe": "link:../stellar-globe",
+        "@stellar-globe/app": "link:../../app",
+        "@stellar-globe/react-stellar-globe": "link:../../react-stellar-globe",
+        "@stellar-globe/stellar-globe": "link:../../stellar-globe",
         "process": "^0.11.10"
     },
     "devDependencies": {

@@ -50,34 +50,7 @@ class Layer(TypedDict):
     baseUrl: str
     name: str
     visible: bool
-
-class ConstellationLayerProps(TypedDict):
-    fadeInDuration: Optional[float]
-    lang: Optional[Literal['English', 'Hiragana', 'Kanji']]
-    nameColor: Optional[str]
-    nameFont: Optional[str]
-    showLines: Optional[bool]
-    showNames: Optional[bool]
-    visible: Optional[bool]
-AngleUnit = Literal['degree', 'radian', 'sexadecimal']
 ToolType = Literal['circle', 'line', 'pan', 'path', 'rect', 'text']
-
-class RectangularRegion(TypedDict):
-    color: List[float]
-    id: str
-    maxDec: float
-    maxRa: float
-    minDec: float
-    minRa: float
-    name: str
-    showLabel: bool
-    type: Optional[str]
-    visible: bool
-
-class Point(TypedDict):
-    color: List[float]
-    position: List[float]
-    size: float
 JOINT = Literal['MITER', 'NONE']
 
 class SimpleRgb(TypedDict):
@@ -126,14 +99,6 @@ class SspTileParams4(TypedDict):
     sdssTrueColorMatrix: SdssTrueColorMatrix
     type: Optional[str]
 SspTileParams = Union[SspTileParams1, SspTileParams2, SspTileParams3, SspTileParams4]
-MarkerType = Literal['asterisk', 'circle', 'circledHollowAsterisk', 'circledHollowPlus', 'circledHollowX', 'diamond', 'dot', 'hollowAsterisk', 'hollowPlus', 'hollowX', 'pentagon', 'plus', 'square', 'triangle', 'x']
-
-class PartialRecordTopBottomLeftRightNumber(TypedDict):
-    bottom: Optional[float]
-    left: Optional[float]
-    right: Optional[float]
-    top: Optional[float]
-CameraMode = Literal['FLOATING_EYE', 'GNOMONIC', 'STEREOGRAPHIC']
 
 class End(TypedDict):
     dec: float
@@ -152,6 +117,44 @@ class LinearRegion(TypedDict):
     start: Start
     type: Optional[str]
     visible: bool
+
+class CameraParams(TypedDict):
+    fovy: float
+    phi: float
+    roll: float
+    theta: float
+    za: float
+    zd: float
+    zp: float
+AngleUnit = Literal['degree', 'radian', 'sexadecimal']
+
+class PartialRecordTopBottomLeftRightNumber(TypedDict):
+    bottom: Optional[float]
+    left: Optional[float]
+    right: Optional[float]
+    top: Optional[float]
+
+class RectangularRegion(TypedDict):
+    color: List[float]
+    id: str
+    maxDec: float
+    maxRa: float
+    minDec: float
+    minRa: float
+    name: str
+    showLabel: bool
+    type: Optional[str]
+    visible: bool
+
+class ConstellationLayerProps(TypedDict):
+    fadeInDuration: Optional[float]
+    lang: Optional[Literal['English', 'Hiragana', 'Kanji']]
+    nameColor: Optional[str]
+    nameFont: Optional[str]
+    showLines: Optional[bool]
+    showNames: Optional[bool]
+    visible: Optional[bool]
+CameraMode = Literal['FLOATING_EYE', 'GNOMONIC', 'STEREOGRAPHIC']
 
 class Center(TypedDict):
     dec: float
@@ -180,14 +183,25 @@ class TextRegion(TypedDict):
     type: Optional[str]
     visible: bool
 
-class CameraParams(TypedDict):
-    fovy: float
-    phi: float
-    roll: float
-    theta: float
-    za: float
-    zd: float
-    zp: float
+class Point(TypedDict):
+    color: List[float]
+    position: List[float]
+    size: float
+
+class Path(TypedDict):
+    close: bool
+    joint: JOINT
+    points: List[Point]
+
+class PathRegion(TypedDict):
+    color: List[float]
+    id: str
+    name: str
+    paths: List[Path]
+    showLabel: bool
+    type: Optional[str]
+    visible: bool
+MarkerType = Literal['asterisk', 'circle', 'circledHollowAsterisk', 'circledHollowPlus', 'circledHollowX', 'diamond', 'dot', 'hollowAsterisk', 'hollowPlus', 'hollowX', 'pentagon', 'plus', 'square', 'triangle', 'x']
 
 class AppearanceLayers(TypedDict):
     constellation: ConstellationLayerProps
@@ -230,20 +244,6 @@ class TractTileLayers(TypedDict):
     colorParams: SspTileParams
     layers: List[Layer]
     toneDialogVisible: bool
-
-class Path(TypedDict):
-    close: bool
-    joint: JOINT
-    points: List[Point]
-
-class PathRegion(TypedDict):
-    color: List[float]
-    id: str
-    name: str
-    paths: List[Path]
-    showLabel: bool
-    type: Optional[str]
-    visible: bool
 Region = Union[LinearRegion, CircularRegion, RectangularRegion, TextRegion, PathRegion]
 
 class Regions(TypedDict):

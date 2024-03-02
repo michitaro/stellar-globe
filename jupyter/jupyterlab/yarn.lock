@@ -1849,21 +1849,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stellar-globe/app@link:../app::locator=%40stellarglobe%2Fjupyterlab%40workspace%3A.":
+"@stellar-globe/app@link:../../app::locator=%40stellarglobe%2Fjupyterlab%40workspace%3A.":
   version: 0.0.0-use.local
-  resolution: "@stellar-globe/app@link:../app::locator=%40stellarglobe%2Fjupyterlab%40workspace%3A."
+  resolution: "@stellar-globe/app@link:../../app::locator=%40stellarglobe%2Fjupyterlab%40workspace%3A."
   languageName: node
   linkType: soft
 
-"@stellar-globe/react-stellar-globe@link:../react-stellar-globe::locator=%40stellarglobe%2Fjupyterlab%40workspace%3A.":
+"@stellar-globe/react-stellar-globe@link:../../react-stellar-globe::locator=%40stellarglobe%2Fjupyterlab%40workspace%3A.":
   version: 0.0.0-use.local
-  resolution: "@stellar-globe/react-stellar-globe@link:../react-stellar-globe::locator=%40stellarglobe%2Fjupyterlab%40workspace%3A."
+  resolution: "@stellar-globe/react-stellar-globe@link:../../react-stellar-globe::locator=%40stellarglobe%2Fjupyterlab%40workspace%3A."
   languageName: node
   linkType: soft
 
-"@stellar-globe/stellar-globe@link:../stellar-globe::locator=%40stellarglobe%2Fjupyterlab%40workspace%3A.":
+"@stellar-globe/stellar-globe@link:../../stellar-globe::locator=%40stellarglobe%2Fjupyterlab%40workspace%3A.":
   version: 0.0.0-use.local
-  resolution: "@stellar-globe/stellar-globe@link:../stellar-globe::locator=%40stellarglobe%2Fjupyterlab%40workspace%3A."
+  resolution: "@stellar-globe/stellar-globe@link:../../stellar-globe::locator=%40stellarglobe%2Fjupyterlab%40workspace%3A."
   languageName: node
   linkType: soft
 
@@ -1874,9 +1874,9 @@ __metadata:
     "@jupyterlab/application": ^4.1.2
     "@jupyterlab/builder": ^4.1.2
     "@jupyterlab/notebook": ^4.1.2
-    "@stellar-globe/app": "link:../app"
-    "@stellar-globe/react-stellar-globe": "link:../react-stellar-globe"
-    "@stellar-globe/stellar-globe": "link:../stellar-globe"
+    "@stellar-globe/app": "link:../../app"
+    "@stellar-globe/react-stellar-globe": "link:../../react-stellar-globe"
+    "@stellar-globe/stellar-globe": "link:../../stellar-globe"
     "@types/json-schema": ^7.0.11
     "@types/react": ^18.2.61
     "@types/react-addons-linked-state-mixin": ^0.14.22

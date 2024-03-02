@@ -17,7 +17,7 @@ def main():
 
     tmp_dir = Path('./tmp/models')
     dest_dir = Path('./hscmap/models')
-    app_schema = load_json_file(Path('../app/devel/jsonschema/root.json'))
+    app_schema = load_json_file(Path('../../app/devel/jsonschema/root.json'))
     jupyter_schema = load_json_file(Path('./devel/jsonschema/root.json'))
 
     shutil.rmtree(tmp_dir, ignore_errors=True)
