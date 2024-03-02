@@ -11,8 +11,8 @@ export const CommonMenu = memo(() => {
   const dispatch = useAppDispatch()
 
   const reload = useCallback(() => {
-    location.hash = ''
-    location.reload()
+    window.location.hash = ''
+    window.location.reload()
   }, [])
 
   return (

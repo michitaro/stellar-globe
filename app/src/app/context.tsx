@@ -3,10 +3,10 @@ import { DialogContextHandle } from "@stellar-globe/react-draggable-dialog"
 import { GlobeHandle } from "@stellar-globe/react-stellar-globe"
 import { ForwardedRef, ReactNode, createContext, useContext, useImperativeHandle, useMemo, useRef, useState } from "react"
 import { useInstanceVariable } from "../common/hooks/useInstanceVaribale"
-import { AppStore, makeStore } from "./store"
-import { createIs, createTypeCheckers } from "./typeGuard"
-import { AppHandle, StoreChangeEvent } from "./types"
+import { AppStore, StoreChangeEvent, makeStore } from "./store"
 import { stateWithComputed } from "./store/computedState"
+import { createIs, createTypeCheckers } from "./typeGuard"
+import { AppHandle } from "."
 
 
 type Params = {

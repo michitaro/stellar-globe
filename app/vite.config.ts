@@ -2,7 +2,6 @@ import react from "@vitejs/plugin-react"
 import { visualizer } from 'rollup-plugin-visualizer'
 import { defineConfig } from "vitest/config"
 import secrets from './secrets.json'
-// import dts from 'vite-plugin-dts'
 
 
 
@@ -11,14 +10,10 @@ export default defineConfig({
   plugins: [
     react(),
     visualizer({ gzipSize: true }),
-    // dts({
-    //   outDir: './newtypes',
-    //   entryRoot: './src',
-    // }),
   ],
   build: {
     lib: {
-      entry: `${__dirname}/src/app/index.tsx`,
+      entry: `${__dirname}/src/export.ts`,
       formats: ['es'],
       fileName: (format) => `stellar-globe-app.${format}.js`,
     },

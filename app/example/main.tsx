@@ -1,6 +1,6 @@
 import React from "react"
 import ReactDOM from "react-dom/client"
-import App from '../src/app'
+import { App } from '../src/app'
 import './styles.scss'
 
 document.querySelector('.spinner')?.remove()

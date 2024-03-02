@@ -3,6 +3,7 @@ import { AppState, AppStore, storeInitializerParams } from ".."
 import { debounce } from "../../../common/utils/debounce"
 import { createIs } from "../../typeGuard"
 import { appOnChange } from "./appOnChange"
+import { detectEnvironment } from "../../../common/utils/environment"
 
 
 export type StorageState = Partial<ReturnType<typeof localStorageState>>
@@ -53,7 +54,12 @@ export function useLocalStorageSync({
 
 
 export const readStorageState = (() => {
-  const getRaw = () => window.localStorage.getItem(storageKey())
+  const getRaw = () => {
+    if (detectEnvironment() === 'browser' && window.localStorage) {
+      return window.localStorage.getItem(storageKey())
+    }
+    return null
+  }
   const isValidStorageState = createIs<StorageState>('StorageState')
 
   const decode = (raw: string | null) => {

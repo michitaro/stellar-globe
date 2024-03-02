@@ -8,8 +8,7 @@ import { develSlice } from "../features/devel/develSlice"
 import { hipsLayersSlice } from "../features/hipsLayers/hipsLayersSlice"
 import { regionsSlice } from "../features/regions/regionsSlice"
 import { tractTileLayersSlice } from '../features/tractTileLayers/tractTileLayersSlice'
-import { StoreChangeEvent } from "../types"
-import { stateWithComputed } from "./computedState"
+import { AppStateWithComputed, stateWithComputed } from "./computedState"
 import { makeStateHistory } from "./stateHistory"
 
 
@@ -58,6 +57,11 @@ export function makeStore({
   }
 }
 
+
+
+export type StoreChangeEvent = {
+  state: AppStateWithComputed
+}
 
 export type AppStore = ReturnType<typeof makeStore>['store']
 export type AppDispatch = AppStore['dispatch']

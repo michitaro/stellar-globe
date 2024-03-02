@@ -4,6 +4,7 @@ import { debounce } from "../../../common/utils/debounce"
 import { deserialize, serialize } from "../../../common/utils/serialize"
 import { createIs } from "../../typeGuard"
 import { appOnChange } from "./appOnChange"
+import { detectEnvironment } from "../../../common/utils/environment"
 
 
 export type HashState = Partial<ReturnType<typeof hashState>>
@@ -59,7 +60,13 @@ export function useHashSync({
 
 
 export const readHashState = (() => {
-  const getRaw = () => location.hash.slice(1)
+  const getRaw = () => {
+    if (detectEnvironment() === 'browser') {
+      return window.location.hash.slice(1)
+    }
+    return ''
+  }
+
   const isValidHashState = createIs<HashState>('HashState')
 
   const decode = (hash: string) => {
@@ -76,8 +83,8 @@ export const readHashState = (() => {
       console.warn('readHashState', e)
     }
     alert(`Invalid hash string`)
-    location.hash = '#'
-    location.reload()
+    window.location.hash = '#'
+    window.location.reload()
     return {} as never
   }
 
