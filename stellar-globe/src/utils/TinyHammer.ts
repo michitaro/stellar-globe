@@ -158,7 +158,6 @@ function getTouchCenter(touches: TouchList) {
     y: y / touches.length,
   }
 }
-
 class TapWith2FingersDetector extends GestureDetector {
   constructor(hammer: Hammer) {
     super(hammer)
@@ -167,27 +166,38 @@ class TapWith2FingersDetector extends GestureDetector {
 
   private setupListeners() {
     let touchStartTime: number = 0
+    let startPositions: { x: number, y: number }[] = [] // タッチ開始時の位置を記録する配列
     const touchStartHandler = (e: TouchEvent) => {
       if (e.touches.length === 2) {
         touchStartTime = e.timeStamp
+        startPositions = Array.from(e.touches).map(touch => ({ x: touch.clientX, y: touch.clientY }))
       }
     }
 
     const touchEndHandler = (e: TouchEvent) => {
-      // 2本の指が画面から離れた瞬間に`tap2`イベントを検出します。
-      if (e.touches.length === 0 && /* e.changedTouches.length === 2 && */ (e.timeStamp - touchStartTime) < 500) {
-        // タッチの中心点を計算します。
-        const center = getTouchCenter(e.changedTouches)
-        // イベントリスナーを実行します。
-        this.hammer.runListeners({
-          type: 'tap2',
-          center: center,
-          pointerType: 'touch',
-          timeStamp: e.timeStamp,
-          scale: 1, // 'tap2'イベントの場合、scaleは常に1です。
-          srcEvent: e,
+      if (e.touches.length === 0 && (e.timeStamp - touchStartTime) < 500) {
+        const endPositions = Array.from(e.changedTouches).map(touch => ({ x: touch.clientX, y: touch.clientY }))
+        const moves = startPositions.map((start, i) => {
+          const end = endPositions[i] ?? start // 終了位置がない場合は開始位置を使う
+          return Math.sqrt(Math.pow(end.x - start.x, 2) + Math.pow(end.y - start.y, 2))
         })
-        e.preventDefault() // ブラウザのデフォルトの挙動を防ぎます。
+        const maxMove = Math.max(...moves) // 最大の移動距離を求める
+        const moveThreshold = 10 // 移動量がこれ以下ならタップとみなす
+
+        if (maxMove <= moveThreshold) {
+          // タッチの中心点を計算します。
+          const center = getTouchCenter(e.changedTouches)
+          // イベントリスナーを実行します。
+          this.hammer.runListeners({
+            type: 'tap2',
+            center: center,
+            pointerType: 'touch',
+            timeStamp: e.timeStamp,
+            scale: 1, // 'tap2'イベントの場合、scaleは常に1です。
+            srcEvent: e,
+          })
+          e.preventDefault() // ブラウザのデフォルトの挙動を防ぎます。
+        }
       }
     }
 
