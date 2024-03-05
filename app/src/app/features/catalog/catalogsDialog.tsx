@@ -1,6 +1,6 @@
 import { MarkerType, markerTypes } from '@stellar-globe/stellar-globe'
 import { MenuDivider, MenuItem, SubMenu } from '@szhsin/react-menu'
-import { Fragment, memo, useId } from "react"
+import { Fragment, memo, useCallback, useId } from "react"
 import { ColorPickerRgba } from "../../../common/components/ColorPicker"
 import { Icon } from "../../../common/components/Icon"
 import { askLocalFileList } from '../../../common/utils/askLocalFileList'
@@ -8,9 +8,9 @@ import { setDisplayName } from "../../../common/utils/setDisplayName"
 import { AppDialog } from '../../AppDialog'
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
 import { Catalog, catalogsSlice } from "./catalogSlice"
-import exampleCsvWithColor from './examples/with_color_column.csv?url'
-import exampleCsvWithColorAndMarker from './examples/with_color_marker_type_column.csv?url'
 import { useAddCatalogFileList, useGoToCatalog } from './useAddCatalogFileList'
+import { downloadFile } from '../../../common/utils/downloadFile'
+import { generateCSV } from './generateSampleCsv'
 
 
 export const CatalogsDialog = memo(() => {
@@ -101,6 +101,35 @@ export const CatalogsMenu = memo(() => {
     }
   }
 
+  const downloadExampleWithColorColumn = useCallback(() => {
+    const csv = generateCSV({
+      rows: 1000,
+      includeColor: true,
+      decRange: { min: -0.5, max: 0.5 },
+      raRange: { min: 0, max: 1 },
+    })
+    downloadFile({
+      filename: 'example_with_color_column.csv',
+      content: csv,
+      type: 'text/csv',
+    })
+  }, [])
+
+  const downloadExampleWithColorAndMarkerTypeColumn = useCallback(() => {
+    const csv = generateCSV({
+      rows: 1000,
+      includeColor: true,
+      includeMarkerType: true,
+      decRange: { min: -0.5, max: 0.5 },
+      raRange: { min: 1, max: 2 },
+    })
+    downloadFile({
+      filename: 'example_with_color_and_marker_type_column.csv',
+      content: csv,
+      type: 'text/csv',
+    })
+  }, [])
+
   return (
     <Fragment>
       <MenuItem onClick={upload}>
@@ -109,18 +138,10 @@ export const CatalogsMenu = memo(() => {
       </MenuItem>
       <MenuDivider />
       <SubMenu label="Example Files">
-        <MenuItem
-          href={exampleCsvWithColor}
-          target="_blank"
-          rel="noreferrer"
-        >
+        <MenuItem onClick={downloadExampleWithColorColumn}>
           With Color Column
         </MenuItem>
-        <MenuItem
-          href={exampleCsvWithColorAndMarker}
-          target="_blank"
-          rel="noreferrer"
-        >
+        <MenuItem onClick={downloadExampleWithColorAndMarkerTypeColumn}>
           With Color Column and Marker Type Column
         </MenuItem>
       </SubMenu>

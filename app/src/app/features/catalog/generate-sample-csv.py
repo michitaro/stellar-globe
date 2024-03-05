@@ -1,3 +1,5 @@
+# equivalent to: ./generateSampleCsv.ts
+
 '''
 prompt for ChatGPT4:
 

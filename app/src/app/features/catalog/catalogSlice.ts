@@ -207,11 +207,11 @@ export function parseCatalogCsvText(csvText: string) {
     }
   })
 
-  const parsed: Pick<Catalog, 'attributes' | 'fields' | 'markers'> = {
-    // hasColorCol: colorCol >= 0,
+  const parsed: Pick<Catalog, 'attributes' | 'fields' | 'markers'> & { baseColor?: V4 } = {
     fields,
     attributes,
     markers,
+    baseColor: colorCol >= 0 ? [1, 1, 1, 1] as V4 : undefined,
   }
   return parsed
 }
