@@ -1,12 +1,10 @@
-import { Action } from "@reduxjs/toolkit"
 import { DialogContextHandle } from "@stellar-globe/react-draggable-dialog"
 import { GlobeHandle } from "@stellar-globe/react-stellar-globe"
 import { ForwardedRef, ReactNode, createContext, useContext, useImperativeHandle, useMemo, useRef, useState } from "react"
-import { useInstanceVariable } from "../common/hooks/useInstanceVaribale"
-import { AppStore, StoreChangeEvent, makeStore } from "./store"
-import { stateWithComputed } from "./store/computedState"
-import { createIs, createTypeCheckers } from "./typeGuard"
 import { AppHandle } from "."
+import { useInstanceVariable } from "../common/hooks/useInstanceVaribale"
+import { StoreChangeEvent, makeStore } from "./store"
+import { stateWithComputed } from "./store/computedState"
 
 
 type Params = {
@@ -70,7 +68,7 @@ export function useAppContext() {
 export function useSetupAppHandle(ref: ForwardedRef<AppHandle>, context: AppContextType) {
   useImperativeHandle(ref, () => ({
     globe: () => context.globeHandle.current!(),
-    dispatchAction: makeTypeSafeDispatch(context.store),
+    dispatchAction: action => context.store.dispatch(action), //  makeTypeSafeDispatch(context.store),
     activate: () => context.setActive(true),
     deactivate: () => context.setActive(false),
     getState: () => stateWithComputed(context.store.getState()),
@@ -81,28 +79,6 @@ export function useSetupAppHandle(ref: ForwardedRef<AppHandle>, context: AppCont
 export type BaseAction = {
   type: string
   payload: any
-}
-
-
-// @ts-ignore
-const isBaseAction = createIs<BaseAction>('BaseAction')
-const isValidAction = createTypeCheckers('Actions')
-
-
-function makeTypeSafeDispatch(store: AppStore) {
-  return (action: Action) => {
-    if (isBaseAction(action)) {
-      if (isValidAction(action.type, action)) {
-        store.dispatch(action)
-      }
-      else {
-        alert(`Invalid Action: ${JSON.stringify(isValidAction.errors, null, 2)}`)
-      }
-    }
-    else {
-      alert(`Invalid Action: ${JSON.stringify(isBaseAction.errors, null, 2)}`)
-    }
-  }
 }
 
 

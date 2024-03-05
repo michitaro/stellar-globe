@@ -2,9 +2,9 @@ import { useEffect } from "react"
 import { AppState, AppStore } from ".."
 import { debounce } from "../../../common/utils/debounce"
 import { deserialize, serialize } from "../../../common/utils/serialize"
-import { createIs } from "../../typeGuard"
 import { appOnChange } from "./appOnChange"
 import { detectEnvironment } from "../../../common/utils/environment"
+import { createIs } from "../persistentTypeValidation"
 
 
 export type HashState = Partial<ReturnType<typeof hashState>>
@@ -67,7 +67,7 @@ export const readHashState = (() => {
     return ''
   }
 
-  const isValidHashState = createIs<HashState>('HashState')
+  const isValidHashState = createIs<HashState>("HashState")
 
   const decode = (hash: string) => {
     if (hash.length == 0) {

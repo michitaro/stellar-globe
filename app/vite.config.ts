@@ -4,7 +4,6 @@ import { defineConfig } from "vitest/config"
 import secrets from './secrets.json'
 
 
-
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -13,9 +12,14 @@ export default defineConfig({
   ],
   build: {
     lib: {
-      entry: `${__dirname}/src/export.ts`,
+      entry: {
+        app: `${__dirname}/src/export.ts`,
+        actionValidator: `${__dirname}/src/app/store/actionTypeValidation/index.ts`,
+      },
       formats: ['es'],
-      fileName: (format) => `stellar-globe-app.${format}.js`,
+      fileName: (format, name) => {
+        return `${name}.${format}.js`
+      },
     },
     rollupOptions: {
       external: ['react', 'react-dom', '@stellar-globe/stellar-globe', '@stellar-globe/react-stellar-globe'],

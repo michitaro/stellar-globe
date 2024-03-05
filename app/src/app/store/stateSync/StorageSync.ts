@@ -1,9 +1,9 @@
 import { useEffect } from "react"
 import { AppState, AppStore, storeInitializerParams } from ".."
 import { debounce } from "../../../common/utils/debounce"
-import { createIs } from "../../typeGuard"
 import { appOnChange } from "./appOnChange"
 import { detectEnvironment } from "../../../common/utils/environment"
+import { createIs } from "../persistentTypeValidation"
 
 
 export type StorageState = Partial<ReturnType<typeof localStorageState>>

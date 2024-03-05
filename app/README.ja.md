@@ -15,14 +15,16 @@ Jupyterの機能で実現できる機能はhscMap本体には含めないこと�
 ## 型情報のエクスポート
 
 * RTKによって作られる方は`vite-dts-plugin`を使用して、型情報をエクスポートすることはできなかった。
-* 外部へexportする型だけ`export.ts`に手動で作り、それを↓でエクスポートする。
-
-    ```bash
-    tsc --declaration --declarationDir types --emitDeclarationOnly --noEmit false ./export.ts
-    ```
-
-* 関連する型の実装は`export.ts`をimportし、代入可能かどうかをコンパイル時にチェックする。
+* `types/index.d.ts`は手動で作っている。
+* ↑の型は`export.ts`で矛盾がないかコンパイル時にチェックする。
       
+## 型チェッカーの更新
+
+```bash
+node ./node_modules/@stellar-globe/typescript-typevalidator/dist/cli.js -o ./src/app/store/typevalidation -t PersistentStateJsonSchema
+node ./node_modules/@stellar-globe/typescript-typevalidator/dist/cli.js -o ./src/app/store/actionTypeValidation -t ActionJsonSchema -j
+```
+
 ## TODO
 
 * [x] 右クリック
