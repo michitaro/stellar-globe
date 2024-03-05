@@ -14,6 +14,11 @@
       "import": "./dist/app.es.js",
       "types": "./types/index.d.ts",
       "default": "./dist/app.es.js"
+    },
+    "./actionValidator": {
+      "import": "./dist/actionValidator.es.js",
+      "types": "./types/actionValidator.d.ts",
+      "default": "./dist/actionValidator.es.js"
     }
   },
   "browser": {
@@ -28,7 +33,10 @@
     "lint": "eslint .",
     "type-check": "tsc",
     "typed-scss-module": "typed-scss-modules src -n camel",
-    "store-state": "typescript-json-schema -o ./jsonschema/StoreState.json --noExtraProps --required ./tsconfig.json StoreStateJsonSchema"
+    "refresh-types": "npm run make-public-json-schema && npm run make-persistent-typevalidator && npm run make-action-typevalidator",
+    "make-persistent-typevalidator": "node ./node_modules/@stellar-globe/typescript-typevalidator/dist/cli.js -o ./src/app/store/persistentTypeValidation -t PersistentStateJsonSchema",
+    "make-action-typevalidator": "node ./node_modules/@stellar-globe/typescript-typevalidator/dist/cli.js -o ./src/app/store/actionTypeValidation -t ActionValidatorJsonSchema",
+    "make-public-json-schema": "typescript-json-schema -o ./jsonschema/public.json --noExtraProps --required ./tsconfig.json PublicJsonSchema"
   },
   "dependencies": {
     "@floating-ui/react": "^0.26.9",
@@ -73,5 +81,12 @@
     "typescript-json-schema": "^0.63.0",
     "vite": "^5.1.4",
     "vitest": "^1.3.1"
+  },
+  "typesVersions": {
+    "*": {
+      "actionValidator": [
+        "./types/actionValidator.d.ts"
+      ]
+    }
   }
 }

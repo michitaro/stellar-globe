@@ -21,8 +21,7 @@ Jupyterの機能で実現できる機能はhscMap本体には含めないこと�
 ## 型チェッカーの更新
 
 ```bash
-node ./node_modules/@stellar-globe/typescript-typevalidator/dist/cli.js -o ./src/app/store/typevalidation -t PersistentStateJsonSchema
-node ./node_modules/@stellar-globe/typescript-typevalidator/dist/cli.js -o ./src/app/store/actionTypeValidation -t ActionJsonSchema -j
+npm run refresh-types
 ```
 
 ## TODO
@@ -33,3 +32,10 @@ node ./node_modules/@stellar-globe/typescript-typevalidator/dist/cli.js -o ./src
 * [ ] ~~カタログクリックイベント~~
 * [x] Jupyter Region
 * [ ] 位置、階調同期Dock
+
+
+## Trouble Shooting
+
+#### typesVersions in package.json
+
+https://www.npmjs.com/package/typescript-subpath-exports-workaround

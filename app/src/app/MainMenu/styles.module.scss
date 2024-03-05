@@ -5,6 +5,10 @@
   top: 0;
   left: 0;
 
+  user-select: none;
+  // ここで設定するべきかは微妙
+  // main viewerをダブルクリックすると左端のメニューが選択されてしまうので。
+  
   border-radius: 0 0 8px 0;
 }
 

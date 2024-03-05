@@ -24,19 +24,36 @@ export type PersistentStateJsonSchema = {
 }
 
 
-export type StoreStateJsonSchema = AddValidatorName<AppStateWithComputed, 'StoreState'>
-
-
-type SliceName<S extends Slice> = S['name']
-type PickAction<A> = A extends { type: string, payload: any } ? A : never
-type ActionOfSlice<S extends Slice, ActionName extends keyof S['actions']> = PickAction<ReturnType<S['actions'][ActionName]>>
-type ActionsNames<S extends Slice> = keyof S['actions'] & string
+type AsAction<A> = A extends { type: string, payload: any } ? A : never
+type PickAction<S extends Slice, K extends keyof S['actions']> = AsAction<ReturnType<S['actions'][K]>>
+type ActionsNames<S extends Slice> = keyof S['actions']
 type ActionsOfSlice<S extends Slice> = {
-  [K in ActionsNames<S>]: AddValidatorName<ActionOfSlice<S, K>, `${SliceName<S>}$${K}`>
+  [K in ActionsNames<S> as PickAction<S, K>['type']]: PickAction<S, K>
+}
+type ActionsWithValidatorOfSlice<S extends Slice> = {
+  [K in ActionsNames<S> as PickAction<S, K>['type']]: AddValidatorName<PickAction<S, K>, `${S['name']}$${K & string}`>
 }
 
-export type ActionJsonSchema = {
+
+export type ActionValidatorJsonSchema = {
   BaseAction: AddValidatorName<BaseAction, 'BaseAction'>
+  Actions: (
+    ActionsWithValidatorOfSlice<typeof commonSlice> &
+    ActionsWithValidatorOfSlice<typeof appearanceLayersSlice> &
+    ActionsWithValidatorOfSlice<typeof cameraSlice> &
+    ActionsWithValidatorOfSlice<typeof tractTileLayersSlice> &
+    ActionsWithValidatorOfSlice<typeof hipsLayersSlice> &
+    ActionsWithValidatorOfSlice<typeof regionsSlice> &
+    ActionsWithValidatorOfSlice<typeof catalogsSlice> &
+    ActionsWithValidatorOfSlice<typeof develSlice> &
+    {}
+  )
+}
+
+
+export type PublicJsonSchema = {
+  BaseAction: BaseAction
+  StoreState: AppStateWithComputed
   Actions: (
     ActionsOfSlice<typeof commonSlice> &
     ActionsOfSlice<typeof appearanceLayersSlice> &
