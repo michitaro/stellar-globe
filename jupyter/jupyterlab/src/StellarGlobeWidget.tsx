@@ -12,7 +12,7 @@ import { cropCanvasToAspectRatio } from './cropCanvasToAspectRatio'
 import { EventEmitter } from './eventemitter'
 import { JsonPatchOp, generateJsonPatch } from './generateJsonPatch'
 import { lockFrame } from './lockWindow'
-import { createIs } from './typeGuard'
+import { createIs } from './typevalidator'
 import { CommType, StellarGlobeSessionEnv } from "./types"
 import { SkyCoord, easing } from '@stellar-globe/stellar-globe'
 
@@ -219,7 +219,7 @@ async function respondToQuery(relpath: string, content: string) {
 
 
 function wrapTypeCheck(cbmap: { [K in keyof PythonToFrontend]: (msg: PythonToFrontend[K]) => void }): CommType['onMsg'] {
-  const typeCheckers = Object.fromEntries(Object.keys(cbmap).map(k => [k, createIs(k)]))
+  const typeCheckers = Object.fromEntries(Object.keys(cbmap).map(k => [k, createIs(k as any)]))
   return (e) => {
     const msg = e.content.data
     const type = msg.type as string

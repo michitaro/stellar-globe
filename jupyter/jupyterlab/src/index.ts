@@ -5,7 +5,7 @@ import {
 import { INotebookTracker } from '@jupyterlab/notebook'
 import { StellarGlobeWidgetParams, makeStellarGlobeWidget } from './StellarGlobeWidget'
 import { EventEmitter } from './eventemitter'
-import { createIs } from './typeGuard'
+import { createIs } from './typevalidator'
 import { KernelType, StellarGlobeSessionEnv } from './types'
 
 

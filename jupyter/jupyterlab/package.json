@@ -64,6 +64,7 @@
     },
     "devDependencies": {
         "@jupyterlab/builder": "^4.1.2",
+        "@stellar-globe/typescript-typevalidator": "link:../../typescript-typevalidator",
         "@types/json-schema": "^7.0.11",
         "@types/react": "^18.2.61",
         "@types/react-addons-linked-state-mixin": "^0.14.22",
