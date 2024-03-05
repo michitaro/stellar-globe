@@ -9,7 +9,10 @@ pip install ".[dev]"
 pip install -e "."
 jupyter labextension develop --overwrite .
 
+node ./node_modules/@stellar-globe/typescript-typevalidator/dist/cli.js -o ./src/typevalidator -t PythonToFrontendTypeValidatorJsonSchema
+
 jlpm run make-type-validators
+
 python -m devel.dendatamodel
 
 jlpm run build

@@ -7,12 +7,12 @@ type ValidatorMap<T extends Record<string, any>> = {
 }
 
 
-export type PythonToFrontendJsonSchema = ValidatorMap<
+export type PythonToFrontendTypeValidatorJsonSchema = ValidatorMap<
   PythonToFrontend & { StellarGlobeWidgetParams: StellarGlobeWidgetParams }
 >
 
 
-export type JsonSchema = {
+export type ForPythonJsonSchema = {
   PythonToFrontend: PythonToFrontend & { StellarGlobeWidgetParams: StellarGlobeWidgetParams }
   FrontendToPython: FrontendToPython
 }

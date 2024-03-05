@@ -5,23 +5,23 @@ import { ReactWidget } from '@jupyterlab/ui-components'
 import { Message } from '@lumino/messaging'
 import { Widget } from '@lumino/widgets'
 import StellarGlobeApp, { AppHandle, AppState } from '@stellar-globe/app'
-import { AppStateWithComputed } from '@stellar-globe/app/src/app/store/computedState'
+import { validateAction } from '@stellar-globe/app/actionValidator'
+import { SkyCoord, easing } from '@stellar-globe/stellar-globe'
 import React, { useLayoutEffect, useRef } from 'react'
 import { assert } from './assert'
 import { cropCanvasToAspectRatio } from './cropCanvasToAspectRatio'
 import { EventEmitter } from './eventemitter'
 import { JsonPatchOp, generateJsonPatch } from './generateJsonPatch'
 import { lockFrame } from './lockWindow'
-import { createIs } from './typevalidator'
 import { CommType, StellarGlobeSessionEnv } from "./types"
-import { SkyCoord, easing } from '@stellar-globe/stellar-globe'
+import { createIs } from './typevalidator'
 
 
 type StellarGlobeWidgetEnv = {
   appHandle: AppHandle
   widget: Widget
   onWidgetClose: (cb: () => void) => void
-  storeChange: ReturnType<typeof EventEmitter<AppStateWithComputed>>
+  storeChange: ReturnType<typeof EventEmitter<unknown>>
   revision: () => number
 }
 
@@ -69,7 +69,7 @@ export function makeStellarGlobeWidget(
   const Component = () => {
     const appRef = useRef<AppHandle>(null!)
 
-    const storeChange = EventEmitter<AppStateWithComputed>({ once: false })
+    const storeChange = EventEmitter<unknown>({ once: false })
 
     useLayoutEffect(() => {
       appHandle = appRef.current
@@ -165,7 +165,13 @@ function onMsgFromPython({
       widget.close()
     },
     Dispatch(msg) {
-      appHandle.dispatchAction(msg.action)
+      const { errors } = validateAction(msg.action)
+      if (errors.length === 0) {
+        appHandle.dispatchAction(msg.action)
+      }
+      else {
+        alert(`Type Error: ${JSON.stringify(errors, null, 2)}`)
+      }
     },
     ShowError(msg) {
       showErrorMessage(msg.params.title, msg.params.body)
@@ -226,8 +232,8 @@ function wrapTypeCheck(cbmap: { [K in keyof PythonToFrontend]: (msg: PythonToFro
     // @ts-ignore
     const cb = cbmap[type]
     if (cb) {
-      const is = typeCheckers[type]
-      if (is(msg)) {
+      const isValidMsg = typeCheckers[type]
+      if (isValidMsg(msg)) {
         try {
           const result = cb(msg)
           if (result instanceof Promise) {
@@ -241,7 +247,7 @@ function wrapTypeCheck(cbmap: { [K in keyof PythonToFrontend]: (msg: PythonToFro
         }
       }
       else {
-        alert(`Type Error: ${JSON.stringify(is.errors, null, 2)}`)
+        alert(`Type Error: ${JSON.stringify(isValidMsg.errors, null, 2)}`)
       }
     }
     else {

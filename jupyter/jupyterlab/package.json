@@ -52,7 +52,9 @@
         "watch": "run-p watch:src watch:labextension",
         "watch:src": "tsc -w --sourceMap",
         "watch:labextension": "jupyter labextension watch .",
-        "make-type-validators": "typescript-json-schema -o ./devel/jsonschema/root.json --noExtraProps --required ./tsconfig.json JsonSchema && node ./devel/generate-js-type-validators.mjs"
+        "refresh-types": "jlpm run make-json-schema-for-python && jlpm run make-type-validator",
+        "make-type-validator": "node ./node_modules/@stellar-globe/typescript-typevalidator/dist/cli.js -o ./src/typevalidator -t PythonToFrontendTypeValidatorJsonSchema",
+        "make-json-schema-for-python": "typescript-json-schema -o ./devel/jsonschema/root.json --noExtraProps --required ./tsconfig.json ForPythonJsonSchema"
     },
     "dependencies": {
         "@jupyterlab/application": "^4.1.2",

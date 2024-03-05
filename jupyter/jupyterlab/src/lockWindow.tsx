@@ -37,12 +37,12 @@ const lock = (windowIds: string[]) => {
   for (const id of windowIds) {
     if (widgetEnvs.has(id)) {
       const unlock1 = EventEmitter({ once: true })
-      const { appHandle, onWidgetClose, storeChange } = widgetEnvs.get(id)!
+      const { appHandle, onWidgetClose } = widgetEnvs.get(id)!
       const globe = appHandle.globe()
 
-      storeChange.on(state => {
-        state.tractTileLayers.colorParams
-      })
+      // storeChange.on(state => {
+      //   state.tractTileLayers.colorParams
+      // })
 
       unlock1.on(globe.on('camera-move', e => {
         cameraMove.emit(e.camera)

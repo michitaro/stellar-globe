@@ -3,7 +3,6 @@
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "composite": true,
-    "declaration": true,
     "esModuleInterop": true,
     "incremental": true,
     "jsx": "react",

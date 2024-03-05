@@ -1,3 +1,4 @@
+import type { validateAction as validateActionType } from '../../../../types/actionValidator.d.ts'
 import { BaseAction } from '../../context'
 import { createIs, hasValidator } from './index'
 
@@ -5,40 +6,33 @@ import { createIs, hasValidator } from './index'
 const isBaseAction = createIs<BaseAction>('BaseAction')
 
 
-let errors: undefined | string[] = undefined
-
-
-function isValidActionWithTypeAssertion(action: any): action is BaseAction {
-  errors = []
-  if (isBaseAction(action)) {
-    const type = action.type.replace(/\//g, `$`)
-    if (hasValidator(type)) {
-      const isValidAction = createIs(type as any)
-      if (isValidAction(action)) {
-        return true
+export function validateAction(action: any) {
+  const errors: string[] = []
+  do {
+    if (isBaseAction(action)) {
+      const type = action.type.replace(/\//g, `$`)
+      if (hasValidator(type)) {
+        const isValidAction = createIs(type as any)
+        if (isValidAction(action)) {
+          break
+        }
+        else {
+          errors.push(...isValidAction.errors)
+        }
       }
       else {
-        errors = isValidAction.errors
+        errors.push(`No validator for action type ${type}`)
       }
     }
     else {
-      errors = [`No validator for action type ${type}`]
+      errors.push(...isBaseAction.errors)
     }
-  }
-  else {
-    errors = isValidAction.errors
-  }
-  return false
+  } while
+    // eslint-disable-next-line no-constant-condition
+    (false)
+  return { errors }
 }
 
 
-export const isValidAction = Object.assign(isValidActionWithTypeAssertion, {
-  get errors() {
-    return errors
-  }
-})
-
-
 type AssertTypeImplements<T, U extends T> = T
-import type { isValidAction as isValidActionType } from '../../../../types/actionValidator.d.ts'
-type _TypeCheck1 = AssertTypeImplements<typeof isValidActionType, typeof isValidAction>
+type _TypeCheck1 = AssertTypeImplements<typeof validateActionType, typeof validateAction>

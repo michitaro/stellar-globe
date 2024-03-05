@@ -1,0 +1,2799 @@
+{
+  "type": "object",
+  "properties": {
+    "BaseAction": {
+      "$ref": "#/definitions/AddValidatorName<BaseAction,\"BaseAction\">"
+    },
+    "Actions": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "common/unitChanged": {
+          "$ref": "#/definitions/AddValidatorName<{payload:{angleUnit:AngleUnit;};type:\"common/unitChanged\";},\"common$unitChanged\">"
+        },
+        "common/dialogPositionHintChanged": {
+          "$ref": "#/definitions/AddValidatorName<{payload:Partial<Record<\"top\"|\"bottom\"|\"left\"|\"right\",number>>;type:\"common/dialogPositionHintChanged\";},\"common$dialogPositionHintChanged\">"
+        },
+        "appearanceLayers/propsUpdated": {
+          "$ref": "#/definitions/AddValidatorName<{payload:{which:keyofState;props:Partial<{visible:boolean;}|({fadeInDuration?:number|undefined;imageSize?:512|1024|undefined;}&{visible?:boolean|undefined;})|ConstellationLayerProps|{visible:true;}|{visible:boolean;}|{visible:boolean;frame:boolean;patch:boolean;}>;};type:\"appearanceLayers/propsUpdated\";},\"appearanceLayers$propsUpdated\">"
+        },
+        "appearanceLayers/visibleToggled": {
+          "$ref": "#/definitions/AddValidatorName<{payload:keyofState;type:\"appearanceLayers/visibleToggled\";},\"appearanceLayers$visibleToggled\">"
+        },
+        "camera/projectionUpdated": {
+          "$ref": "#/definitions/AddValidatorName<{payload:CameraMode;type:\"camera/projectionUpdated\";},\"camera$projectionUpdated\">"
+        },
+        "camera/retinaToggled": {
+          "$ref": "#/definitions/AddValidatorName<{payload:undefined;type:\"camera/retinaToggled\";},\"camera$retinaToggled\">"
+        },
+        "camera/paramsChanged": {
+          "$ref": "#/definitions/AddValidatorName<{payload:CameraParams;type:\"camera/paramsChanged\";},\"camera$paramsChanged\">"
+        },
+        "tractTileLayers/colorParamsUpdated": {
+          "$ref": "#/definitions/AddValidatorName<{payload:{params:SspTileParams;};type:\"tractTileLayers/colorParamsUpdated\";},\"tractTileLayers$colorParamsUpdated\">"
+        },
+        "tractTileLayers/layerToggled": {
+          "$ref": "#/definitions/AddValidatorName<{payload:{name:string;visible:boolean;};type:\"tractTileLayers/layerToggled\";},\"tractTileLayers$layerToggled\">"
+        },
+        "tractTileLayers/toneDialogToggled": {
+          "$ref": "#/definitions/AddValidatorName<{payload:{open?:boolean|undefined;};type:\"tractTileLayers/toneDialogToggled\";},\"tractTileLayers$toneDialogToggled\">"
+        },
+        "hipsLayers/baseUrlChanged": {
+          "$ref": "#/definitions/AddValidatorName<{payload:{baseUrl?:string|undefined;};type:\"hipsLayers/baseUrlChanged\";},\"hipsLayers$baseUrlChanged\">"
+        },
+        "hipsLayers/hipsDialogToggled": {
+          "$ref": "#/definitions/AddValidatorName<{payload:{open?:boolean|undefined;};type:\"hipsLayers/hipsDialogToggled\";},\"hipsLayers$hipsDialogToggled\">"
+        },
+        "regions/toolChanged": {
+          "$ref": "#/definitions/AddValidatorName<{payload:{tool:ToolType;};type:\"regions/toolChanged\";},\"regions$toolChanged\">"
+        },
+        "regions/toolPinnedToggled": {
+          "$ref": "#/definitions/AddValidatorName<{payload:undefined;type:\"regions/toolPinnedToggled\";},\"regions$toolPinnedToggled\">"
+        },
+        "regions/autoColorToggled": {
+          "$ref": "#/definitions/AddValidatorName<{payload:undefined;type:\"regions/autoColorToggled\";},\"regions$autoColorToggled\">"
+        },
+        "regions/newLinearRegionAdded": {
+          "$ref": "#/definitions/AddValidatorName<{payload:{type:\"Linear\";visible:boolean;name:string;showLabel:boolean;start:SkyCoordType;end:SkyCoordType;color?:V4|undefined;id:string;};type:\"regions/newLinearRegionAdded\";},\"regions$newLinearRegionAdded\">"
+        },
+        "regions/newCircularRegionAdded": {
+          "$ref": "#/definitions/AddValidatorName<{payload:{type:\"Circular\";visible:boolean;center:SkyCoordType;name:string;showLabel:boolean;radius:number;color?:V4|undefined;id:string;};type:\"regions/newCircularRegionAdded\";},\"regions$newCircularRegionAdded\">"
+        },
+        "regions/newRectangularRegionAdded": {
+          "$ref": "#/definitions/AddValidatorName<{payload:{type:\"Rectangular\";visible:boolean;name:string;showLabel:boolean;minRa:number;maxRa:number;minDec:number;maxDec:number;color?:V4|undefined;id:string;};type:\"regions/newRectangularRegionAdded\";},\"regions$newRectangularRegionAdded\">"
+        },
+        "regions/newTextRegionAdded": {
+          "$ref": "#/definitions/AddValidatorName<{payload:{type:\"Text\";visible:boolean;name:string;showLabel:boolean;position:SkyCoordType;color?:V4|undefined;id:string;};type:\"regions/newTextRegionAdded\";},\"regions$newTextRegionAdded\">"
+        },
+        "regions/newPathRegionAdded": {
+          "$ref": "#/definitions/AddValidatorName<{payload:{type:\"Path\";visible:boolean;name:string;showLabel:boolean;paths:Path[];color?:V4|undefined;id:string;};type:\"regions/newPathRegionAdded\";},\"regions$newPathRegionAdded\">"
+        },
+        "regions/regionUpdated": {
+          "$ref": "#/definitions/AddValidatorName<{payload:{id:string;regionDef:Region;};type:\"regions/regionUpdated\";},\"regions$regionUpdated\">"
+        },
+        "regions/regionsCleared": {
+          "$ref": "#/definitions/AddValidatorName<{payload:{};type:\"regions/regionsCleared\";},\"regions$regionsCleared\">"
+        },
+        "regions/regionDeleted": {
+          "$ref": "#/definitions/AddValidatorName<{payload:{id:string;};type:\"regions/regionDeleted\";},\"regions$regionDeleted\">"
+        },
+        "regions/regionsDialogToggled": {
+          "$ref": "#/definitions/AddValidatorName<{payload:{open?:boolean|undefined;};type:\"regions/regionsDialogToggled\";},\"regions$regionsDialogToggled\">"
+        },
+        "regions/regionsImported": {
+          "$ref": "#/definitions/AddValidatorName<{payload:{regions:Region[];};type:\"regions/regionsImported\";},\"regions$regionsImported\">"
+        },
+        "catalogs/catalogAdded": {
+          "$ref": "#/definitions/AddValidatorName<{payload:{params:{id:string;name:string;markers:Marker[];fields:string[];attributes:string[][];defaultType?:\"circle\"|\"plus\"|\"x\"|\"hollowPlus\"|\"hollowX\"|\"dot\"|\"circledHollowPlus\"|\"circledHollowX\"|\"diamond\"|\"square\"|\"asterisk\"|\"hollowAsterisk\"|\"circledHollowAsterisk\"|\"triangle\"|\"pentagon\"|undefined;baseColor?:V4|undefined;};openDialog:boolean;};type:\"catalogs/catalogAdded\";},\"catalogs$catalogAdded\">"
+        },
+        "catalogs/catalogDeleted": {
+          "$ref": "#/definitions/AddValidatorName<{payload:{id:string;};type:\"catalogs/catalogDeleted\";},\"catalogs$catalogDeleted\">"
+        },
+        "catalogs/catalogUpdated": {
+          "$ref": "#/definitions/AddValidatorName<{payload:Partial<Catalog>&{id:string;};type:\"catalogs/catalogUpdated\";},\"catalogs$catalogUpdated\">"
+        },
+        "catalogs/catalogSelected": {
+          "$ref": "#/definitions/AddValidatorName<{payload:{id:string;};type:\"catalogs/catalogSelected\";},\"catalogs$catalogSelected\">"
+        },
+        "catalogs/catalogsDialogToggled": {
+          "$ref": "#/definitions/AddValidatorName<{payload:{open?:boolean|undefined;};type:\"catalogs/catalogsDialogToggled\";},\"catalogs$catalogsDialogToggled\">"
+        },
+        "catalogs/dialogToggled": {
+          "$ref": "#/definitions/AddValidatorName<{payload:{id:string;opened?:boolean|undefined;};type:\"catalogs/dialogToggled\";},\"catalogs$dialogToggled\">"
+        },
+        "catalogs/dialogsClosed": {
+          "$ref": "#/definitions/AddValidatorName<{payload:{};type:\"catalogs/dialogsClosed\";},\"catalogs$dialogsClosed\">"
+        },
+        "catalogs/focusedPositionChanged": {
+          "$ref": "#/definitions/AddValidatorName<{payload:{position?:V3|undefined;};type:\"catalogs/focusedPositionChanged\";},\"catalogs$focusedPositionChanged\">"
+        },
+        "catalogs/recordSelected": {
+          "$ref": "#/definitions/AddValidatorName<{payload:{id:string;index:number;selected?:boolean|undefined;};type:\"catalogs/recordSelected\";},\"catalogs$recordSelected\">"
+        },
+        "devel/profilerToggled": {
+          "$ref": "#/definitions/AddValidatorName<{payload:{active:boolean;};type:\"devel/profilerToggled\";},\"devel$profilerToggled\">"
+        }
+      },
+      "required": [
+        "appearanceLayers/propsUpdated",
+        "appearanceLayers/visibleToggled",
+        "camera/paramsChanged",
+        "camera/projectionUpdated",
+        "camera/retinaToggled",
+        "catalogs/catalogAdded",
+        "catalogs/catalogDeleted",
+        "catalogs/catalogSelected",
+        "catalogs/catalogUpdated",
+        "catalogs/catalogsDialogToggled",
+        "catalogs/dialogToggled",
+        "catalogs/dialogsClosed",
+        "catalogs/focusedPositionChanged",
+        "catalogs/recordSelected",
+        "common/dialogPositionHintChanged",
+        "common/unitChanged",
+        "devel/profilerToggled",
+        "hipsLayers/baseUrlChanged",
+        "hipsLayers/hipsDialogToggled",
+        "regions/autoColorToggled",
+        "regions/newCircularRegionAdded",
+        "regions/newLinearRegionAdded",
+        "regions/newPathRegionAdded",
+        "regions/newRectangularRegionAdded",
+        "regions/newTextRegionAdded",
+        "regions/regionDeleted",
+        "regions/regionUpdated",
+        "regions/regionsCleared",
+        "regions/regionsDialogToggled",
+        "regions/regionsImported",
+        "regions/toolChanged",
+        "regions/toolPinnedToggled",
+        "tractTileLayers/colorParamsUpdated",
+        "tractTileLayers/layerToggled",
+        "tractTileLayers/toneDialogToggled"
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "Actions",
+    "BaseAction"
+  ],
+  "definitions": {
+    "AddValidatorName<BaseAction,\"BaseAction\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "payload": {},
+        "__validatorName__": {
+          "type": "string",
+          "const": "BaseAction"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    },
+    "AddValidatorName<{payload:{angleUnit:AngleUnit;};type:\"common/unitChanged\";},\"common$unitChanged\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "payload": {
+          "description": "The type of the action's payload.",
+          "type": "object",
+          "properties": {
+            "angleUnit": {
+              "$ref": "#/definitions/AngleUnit"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "angleUnit"
+          ]
+        },
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "common/unitChanged"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "common$unitChanged"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    },
+    "AngleUnit": {
+      "enum": [
+        "degree",
+        "radian",
+        "sexadecimal"
+      ],
+      "type": "string"
+    },
+    "AddValidatorName<{payload:Partial<Record<\"top\"|\"bottom\"|\"left\"|\"right\",number>>;type:\"common/dialogPositionHintChanged\";},\"common$dialogPositionHintChanged\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "payload": {
+          "$ref": "#/definitions/Partial<Record<\"top\"|\"bottom\"|\"left\"|\"right\",number>>"
+        },
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "common/dialogPositionHintChanged"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "common$dialogPositionHintChanged"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    },
+    "Partial<Record<\"top\"|\"bottom\"|\"left\"|\"right\",number>>": {
+      "description": "The type of the action's payload.",
+      "type": "object",
+      "properties": {
+        "top": {
+          "type": "number"
+        },
+        "bottom": {
+          "type": "number"
+        },
+        "left": {
+          "type": "number"
+        },
+        "right": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AddValidatorName<{payload:{which:keyofState;props:Partial<{visible:boolean;}|({fadeInDuration?:number|undefined;imageSize?:512|1024|undefined;}&{visible?:boolean|undefined;})|ConstellationLayerProps|{visible:true;}|{visible:boolean;}|{visible:boolean;frame:boolean;patch:boolean;}>;};type:\"appearanceLayers/propsUpdated\";},\"appearanceLayers$propsUpdated\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "payload": {
+          "description": "The type of the action's payload.",
+          "type": "object",
+          "properties": {
+            "which": {
+              "$ref": "#/definitions/Which"
+            },
+            "props": {
+              "$ref": "#/definitions/Partial<{visible:boolean;}|({fadeInDuration?:number|undefined;imageSize?:512|1024|undefined;}&{visible?:boolean|undefined;})|ConstellationLayerProps|{visible:true;}|{visible:boolean;}|{visible:boolean;frame:boolean;patch:boolean;}>"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "props",
+            "which"
+          ]
+        },
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "appearanceLayers/propsUpdated"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "appearanceLayers$propsUpdated"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    },
+    "Which": {
+      "enum": [
+        "constellation",
+        "esoMilkyWay",
+        "grid",
+        "hipparcosCatalog",
+        "nearbyGalaxiesAndNebulas",
+        "tracts"
+      ],
+      "type": "string"
+    },
+    "Partial<{visible:boolean;}|({fadeInDuration?:number|undefined;imageSize?:512|1024|undefined;}&{visible?:boolean|undefined;})|ConstellationLayerProps|{visible:true;}|{visible:boolean;}|{visible:boolean;frame:boolean;patch:boolean;}>": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/Partial<{visible:boolean;}>"
+        },
+        {
+          "$ref": "#/definitions/Partial<{fadeInDuration?:number|undefined;imageSize?:512|1024|undefined;}&{visible?:boolean|undefined;}>"
+        },
+        {
+          "$ref": "#/definitions/Partial<ConstellationLayerProps>"
+        },
+        {
+          "$ref": "#/definitions/Partial<{visible:true;}>"
+        },
+        {
+          "$ref": "#/definitions/Partial<{visible:boolean;}>_1"
+        },
+        {
+          "$ref": "#/definitions/Partial<{visible:boolean;frame:boolean;patch:boolean;}>"
+        }
+      ]
+    },
+    "Partial<{visible:boolean;}>": {
+      "type": "object",
+      "properties": {
+        "visible": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Partial<{fadeInDuration?:number|undefined;imageSize?:512|1024|undefined;}&{visible?:boolean|undefined;}>": {
+      "type": "object",
+      "properties": {
+        "fadeInDuration": {
+          "type": "number"
+        },
+        "imageSize": {
+          "enum": [
+            1024,
+            512
+          ],
+          "type": "number"
+        },
+        "visible": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Partial<ConstellationLayerProps>": {
+      "type": "object",
+      "properties": {
+        "showLines": {
+          "type": "boolean"
+        },
+        "showNames": {
+          "type": "boolean"
+        },
+        "lang": {
+          "enum": [
+            "English",
+            "Hiragana",
+            "Kanji"
+          ],
+          "type": "string"
+        },
+        "fadeInDuration": {
+          "type": "number"
+        },
+        "nameFont": {
+          "type": "string"
+        },
+        "nameColor": {
+          "type": "string"
+        },
+        "visible": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Partial<{visible:true;}>": {
+      "type": "object",
+      "properties": {
+        "visible": {
+          "const": true,
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Partial<{visible:boolean;}>_1": {
+      "type": "object",
+      "properties": {
+        "visible": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Partial<{visible:boolean;frame:boolean;patch:boolean;}>": {
+      "type": "object",
+      "properties": {
+        "visible": {
+          "type": "boolean"
+        },
+        "frame": {
+          "type": "boolean"
+        },
+        "patch": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AddValidatorName<{payload:keyofState;type:\"appearanceLayers/visibleToggled\";},\"appearanceLayers$visibleToggled\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "payload": {
+          "$ref": "#/definitions/P"
+        },
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "appearanceLayers/visibleToggled"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "appearanceLayers$visibleToggled"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    },
+    "P": {
+      "description": "The type of the action's payload.",
+      "enum": [
+        "constellation",
+        "esoMilkyWay",
+        "grid",
+        "hipparcosCatalog",
+        "nearbyGalaxiesAndNebulas",
+        "tracts"
+      ],
+      "type": "string"
+    },
+    "AddValidatorName<{payload:CameraMode;type:\"camera/projectionUpdated\";},\"camera$projectionUpdated\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "payload": {
+          "$ref": "#/definitions/P_1"
+        },
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "camera/projectionUpdated"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "camera$projectionUpdated"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    },
+    "P_1": {
+      "description": "The type of the action's payload.",
+      "enum": [
+        "FLOATING_EYE",
+        "GNOMONIC",
+        "STEREOGRAPHIC"
+      ],
+      "type": "string"
+    },
+    "AddValidatorName<{payload:undefined;type:\"camera/retinaToggled\";},\"camera$retinaToggled\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "camera/retinaToggled"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "camera$retinaToggled"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "type"
+      ]
+    },
+    "AddValidatorName<{payload:CameraParams;type:\"camera/paramsChanged\";},\"camera$paramsChanged\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "payload": {
+          "$ref": "#/definitions/CameraParams"
+        },
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "camera/paramsChanged"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "camera$paramsChanged"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    },
+    "CameraParams": {
+      "description": "The type of the action's payload.",
+      "type": "object",
+      "properties": {
+        "theta": {
+          "type": "number"
+        },
+        "phi": {
+          "type": "number"
+        },
+        "roll": {
+          "type": "number"
+        },
+        "za": {
+          "type": "number"
+        },
+        "zd": {
+          "type": "number"
+        },
+        "zp": {
+          "type": "number"
+        },
+        "fovy": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "fovy",
+        "phi",
+        "roll",
+        "theta",
+        "za",
+        "zd",
+        "zp"
+      ]
+    },
+    "AddValidatorName<{payload:{params:SspTileParams;};type:\"tractTileLayers/colorParamsUpdated\";},\"tractTileLayers$colorParamsUpdated\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "payload": {
+          "description": "The type of the action's payload.",
+          "type": "object",
+          "properties": {
+            "params": {
+              "$ref": "#/definitions/SspTileParams"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "params"
+          ]
+        },
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "tractTileLayers/colorParamsUpdated"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "tractTileLayers$colorParamsUpdated"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    },
+    "SspTileParams": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "simpleRgb"
+            },
+            "filters": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "simpleRgb": {
+              "type": "object",
+              "properties": {
+                "beta": {
+                  "type": "number"
+                },
+                "a": {
+                  "type": "number"
+                },
+                "bias": {
+                  "type": "number"
+                },
+                "b0": {
+                  "type": "number"
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "a",
+                "b0",
+                "beta",
+                "bias"
+              ]
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "filters",
+            "simpleRgb",
+            "type"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "simpleColorMatrix"
+            },
+            "filters": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "simpleColorMatrix": {
+              "type": "object",
+              "properties": {
+                "colors": {
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ],
+                    "minItems": 3,
+                    "maxItems": 3
+                  }
+                },
+                "beta": {
+                  "type": "number"
+                },
+                "a": {
+                  "type": "number"
+                },
+                "bias": {
+                  "type": "number"
+                },
+                "b0": {
+                  "type": "number"
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "a",
+                "b0",
+                "beta",
+                "bias",
+                "colors"
+              ]
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "filters",
+            "simpleColorMatrix",
+            "type"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "sdssTrueColor"
+            },
+            "filters": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "sdssTrueColor": {
+              "type": "object",
+              "properties": {
+                "beta": {
+                  "type": "number"
+                },
+                "a": {
+                  "type": "number"
+                },
+                "bias": {
+                  "type": "number"
+                },
+                "b0": {
+                  "type": "number"
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "a",
+                "b0",
+                "beta",
+                "bias"
+              ]
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "filters",
+            "sdssTrueColor",
+            "type"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "sdssTrueColorMatrix"
+            },
+            "filters": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "sdssTrueColorMatrix": {
+              "type": "object",
+              "properties": {
+                "colors": {
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ],
+                    "minItems": 3,
+                    "maxItems": 3
+                  }
+                },
+                "beta": {
+                  "type": "number"
+                },
+                "a": {
+                  "type": "number"
+                },
+                "bias": {
+                  "type": "number"
+                },
+                "b0": {
+                  "type": "number"
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "a",
+                "b0",
+                "beta",
+                "bias",
+                "colors"
+              ]
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "filters",
+            "sdssTrueColorMatrix",
+            "type"
+          ]
+        }
+      ]
+    },
+    "AddValidatorName<{payload:{name:string;visible:boolean;};type:\"tractTileLayers/layerToggled\";},\"tractTileLayers$layerToggled\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "payload": {
+          "description": "The type of the action's payload.",
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "visible": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "name",
+            "visible"
+          ]
+        },
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "tractTileLayers/layerToggled"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "tractTileLayers$layerToggled"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    },
+    "AddValidatorName<{payload:{open?:boolean|undefined;};type:\"tractTileLayers/toneDialogToggled\";},\"tractTileLayers$toneDialogToggled\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "payload": {
+          "description": "The type of the action's payload.",
+          "type": "object",
+          "properties": {
+            "open": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "tractTileLayers/toneDialogToggled"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "tractTileLayers$toneDialogToggled"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    },
+    "AddValidatorName<{payload:{baseUrl?:string|undefined;};type:\"hipsLayers/baseUrlChanged\";},\"hipsLayers$baseUrlChanged\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "payload": {
+          "description": "The type of the action's payload.",
+          "type": "object",
+          "properties": {
+            "baseUrl": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "hipsLayers/baseUrlChanged"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "hipsLayers$baseUrlChanged"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    },
+    "AddValidatorName<{payload:{open?:boolean|undefined;};type:\"hipsLayers/hipsDialogToggled\";},\"hipsLayers$hipsDialogToggled\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "payload": {
+          "description": "The type of the action's payload.",
+          "type": "object",
+          "properties": {
+            "open": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "hipsLayers/hipsDialogToggled"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "hipsLayers$hipsDialogToggled"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    },
+    "AddValidatorName<{payload:{tool:ToolType;};type:\"regions/toolChanged\";},\"regions$toolChanged\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "payload": {
+          "description": "The type of the action's payload.",
+          "type": "object",
+          "properties": {
+            "tool": {
+              "$ref": "#/definitions/ToolType"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "tool"
+          ]
+        },
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "regions/toolChanged"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "regions$toolChanged"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    },
+    "ToolType": {
+      "enum": [
+        "circle",
+        "line",
+        "pan",
+        "path",
+        "rect",
+        "text"
+      ],
+      "type": "string"
+    },
+    "AddValidatorName<{payload:undefined;type:\"regions/toolPinnedToggled\";},\"regions$toolPinnedToggled\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "regions/toolPinnedToggled"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "regions$toolPinnedToggled"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "type"
+      ]
+    },
+    "AddValidatorName<{payload:undefined;type:\"regions/autoColorToggled\";},\"regions$autoColorToggled\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "regions/autoColorToggled"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "regions$autoColorToggled"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "type"
+      ]
+    },
+    "AddValidatorName<{payload:{type:\"Linear\";visible:boolean;name:string;showLabel:boolean;start:SkyCoordType;end:SkyCoordType;color?:V4|undefined;id:string;};type:\"regions/newLinearRegionAdded\";},\"regions$newLinearRegionAdded\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "payload": {
+          "description": "The type of the action's payload.",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "Linear"
+            },
+            "visible": {
+              "type": "boolean"
+            },
+            "name": {
+              "type": "string"
+            },
+            "showLabel": {
+              "type": "boolean"
+            },
+            "start": {
+              "type": "object",
+              "properties": {
+                "ra": {
+                  "type": "number"
+                },
+                "dec": {
+                  "type": "number"
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "dec",
+                "ra"
+              ]
+            },
+            "end": {
+              "type": "object",
+              "properties": {
+                "ra": {
+                  "type": "number"
+                },
+                "dec": {
+                  "type": "number"
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "dec",
+                "ra"
+              ]
+            },
+            "color": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "id": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "end",
+            "id",
+            "name",
+            "showLabel",
+            "start",
+            "type",
+            "visible"
+          ]
+        },
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "regions/newLinearRegionAdded"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "regions$newLinearRegionAdded"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    },
+    "AddValidatorName<{payload:{type:\"Circular\";visible:boolean;center:SkyCoordType;name:string;showLabel:boolean;radius:number;color?:V4|undefined;id:string;};type:\"regions/newCircularRegionAdded\";},\"regions$newCircularRegionAdded\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "payload": {
+          "description": "The type of the action's payload.",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "Circular"
+            },
+            "visible": {
+              "type": "boolean"
+            },
+            "center": {
+              "type": "object",
+              "properties": {
+                "ra": {
+                  "type": "number"
+                },
+                "dec": {
+                  "type": "number"
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "dec",
+                "ra"
+              ]
+            },
+            "name": {
+              "type": "string"
+            },
+            "showLabel": {
+              "type": "boolean"
+            },
+            "radius": {
+              "type": "number"
+            },
+            "color": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "id": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "center",
+            "id",
+            "name",
+            "radius",
+            "showLabel",
+            "type",
+            "visible"
+          ]
+        },
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "regions/newCircularRegionAdded"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "regions$newCircularRegionAdded"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    },
+    "AddValidatorName<{payload:{type:\"Rectangular\";visible:boolean;name:string;showLabel:boolean;minRa:number;maxRa:number;minDec:number;maxDec:number;color?:V4|undefined;id:string;};type:\"regions/newRectangularRegionAdded\";},\"regions$newRectangularRegionAdded\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "payload": {
+          "description": "The type of the action's payload.",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "Rectangular"
+            },
+            "visible": {
+              "type": "boolean"
+            },
+            "name": {
+              "type": "string"
+            },
+            "showLabel": {
+              "type": "boolean"
+            },
+            "minRa": {
+              "type": "number"
+            },
+            "maxRa": {
+              "type": "number"
+            },
+            "minDec": {
+              "type": "number"
+            },
+            "maxDec": {
+              "type": "number"
+            },
+            "color": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "id": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "maxDec",
+            "maxRa",
+            "minDec",
+            "minRa",
+            "name",
+            "showLabel",
+            "type",
+            "visible"
+          ]
+        },
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "regions/newRectangularRegionAdded"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "regions$newRectangularRegionAdded"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    },
+    "AddValidatorName<{payload:{type:\"Text\";visible:boolean;name:string;showLabel:boolean;position:SkyCoordType;color?:V4|undefined;id:string;};type:\"regions/newTextRegionAdded\";},\"regions$newTextRegionAdded\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "payload": {
+          "description": "The type of the action's payload.",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "Text"
+            },
+            "visible": {
+              "type": "boolean"
+            },
+            "name": {
+              "type": "string"
+            },
+            "showLabel": {
+              "type": "boolean"
+            },
+            "position": {
+              "type": "object",
+              "properties": {
+                "ra": {
+                  "type": "number"
+                },
+                "dec": {
+                  "type": "number"
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "dec",
+                "ra"
+              ]
+            },
+            "color": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "id": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "name",
+            "position",
+            "showLabel",
+            "type",
+            "visible"
+          ]
+        },
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "regions/newTextRegionAdded"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "regions$newTextRegionAdded"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    },
+    "AddValidatorName<{payload:{type:\"Path\";visible:boolean;name:string;showLabel:boolean;paths:Path[];color?:V4|undefined;id:string;};type:\"regions/newPathRegionAdded\";},\"regions$newPathRegionAdded\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "payload": {
+          "description": "The type of the action's payload.",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "Path"
+            },
+            "visible": {
+              "type": "boolean"
+            },
+            "name": {
+              "type": "string"
+            },
+            "showLabel": {
+              "type": "boolean"
+            },
+            "paths": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "points": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "position": {
+                          "type": "array",
+                          "items": [
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "number"
+                            }
+                          ],
+                          "minItems": 3,
+                          "maxItems": 3
+                        },
+                        "color": {
+                          "type": "array",
+                          "items": [
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "number"
+                            }
+                          ],
+                          "minItems": 4,
+                          "maxItems": 4
+                        },
+                        "size": {
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "required": [
+                        "color",
+                        "position",
+                        "size"
+                      ]
+                    }
+                  },
+                  "close": {
+                    "type": "boolean"
+                  },
+                  "joint": {
+                    "$ref": "#/definitions/JOINT"
+                  }
+                },
+                "additionalProperties": false,
+                "required": [
+                  "close",
+                  "joint",
+                  "points"
+                ]
+              }
+            },
+            "color": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "id": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "name",
+            "paths",
+            "showLabel",
+            "type",
+            "visible"
+          ]
+        },
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "regions/newPathRegionAdded"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "regions$newPathRegionAdded"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    },
+    "JOINT": {
+      "enum": [
+        "MITER",
+        "NONE"
+      ],
+      "type": "string"
+    },
+    "AddValidatorName<{payload:{id:string;regionDef:Region;};type:\"regions/regionUpdated\";},\"regions$regionUpdated\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "payload": {
+          "description": "The type of the action's payload.",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "regionDef": {
+              "$ref": "#/definitions/Region"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "regionDef"
+          ]
+        },
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "regions/regionUpdated"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "regions$regionUpdated"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    },
+    "Region": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/LinearRegion"
+        },
+        {
+          "$ref": "#/definitions/CircularRegion"
+        },
+        {
+          "$ref": "#/definitions/RectangularRegion"
+        },
+        {
+          "$ref": "#/definitions/TextRegion"
+        },
+        {
+          "$ref": "#/definitions/PathRegion"
+        }
+      ]
+    },
+    "LinearRegion": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "showLabel": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "color": {
+          "type": "array",
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "minItems": 4,
+          "maxItems": 4
+        },
+        "type": {
+          "type": "string",
+          "const": "Linear"
+        },
+        "start": {
+          "type": "object",
+          "properties": {
+            "ra": {
+              "type": "number"
+            },
+            "dec": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "dec",
+            "ra"
+          ]
+        },
+        "end": {
+          "type": "object",
+          "properties": {
+            "ra": {
+              "type": "number"
+            },
+            "dec": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "dec",
+            "ra"
+          ]
+        }
+      },
+      "required": [
+        "color",
+        "end",
+        "id",
+        "name",
+        "showLabel",
+        "start",
+        "type",
+        "visible"
+      ]
+    },
+    "CircularRegion": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "showLabel": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "color": {
+          "type": "array",
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "minItems": 4,
+          "maxItems": 4
+        },
+        "type": {
+          "type": "string",
+          "const": "Circular"
+        },
+        "center": {
+          "type": "object",
+          "properties": {
+            "ra": {
+              "type": "number"
+            },
+            "dec": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "dec",
+            "ra"
+          ]
+        },
+        "radius": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "center",
+        "color",
+        "id",
+        "name",
+        "radius",
+        "showLabel",
+        "type",
+        "visible"
+      ]
+    },
+    "RectangularRegion": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "showLabel": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "color": {
+          "type": "array",
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "minItems": 4,
+          "maxItems": 4
+        },
+        "type": {
+          "type": "string",
+          "const": "Rectangular"
+        },
+        "minRa": {
+          "type": "number"
+        },
+        "maxRa": {
+          "type": "number"
+        },
+        "minDec": {
+          "type": "number"
+        },
+        "maxDec": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "color",
+        "id",
+        "maxDec",
+        "maxRa",
+        "minDec",
+        "minRa",
+        "name",
+        "showLabel",
+        "type",
+        "visible"
+      ]
+    },
+    "TextRegion": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "showLabel": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "color": {
+          "type": "array",
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "minItems": 4,
+          "maxItems": 4
+        },
+        "type": {
+          "type": "string",
+          "const": "Text"
+        },
+        "position": {
+          "type": "object",
+          "properties": {
+            "ra": {
+              "type": "number"
+            },
+            "dec": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "dec",
+            "ra"
+          ]
+        }
+      },
+      "required": [
+        "color",
+        "id",
+        "name",
+        "position",
+        "showLabel",
+        "type",
+        "visible"
+      ]
+    },
+    "PathRegion": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "showLabel": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "color": {
+          "type": "array",
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "minItems": 4,
+          "maxItems": 4
+        },
+        "type": {
+          "type": "string",
+          "const": "Path"
+        },
+        "paths": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "points": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "position": {
+                      "type": "array",
+                      "items": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "number"
+                        }
+                      ],
+                      "minItems": 3,
+                      "maxItems": 3
+                    },
+                    "color": {
+                      "type": "array",
+                      "items": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "number"
+                        }
+                      ],
+                      "minItems": 4,
+                      "maxItems": 4
+                    },
+                    "size": {
+                      "type": "number"
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "color",
+                    "position",
+                    "size"
+                  ]
+                }
+              },
+              "close": {
+                "type": "boolean"
+              },
+              "joint": {
+                "$ref": "#/definitions/JOINT"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "close",
+              "joint",
+              "points"
+            ]
+          }
+        }
+      },
+      "required": [
+        "color",
+        "id",
+        "name",
+        "paths",
+        "showLabel",
+        "type",
+        "visible"
+      ]
+    },
+    "AddValidatorName<{payload:{};type:\"regions/regionsCleared\";},\"regions$regionsCleared\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "payload": {
+          "description": "The type of the action's payload.",
+          "type": "object",
+          "properties": {}
+        },
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "regions/regionsCleared"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "regions$regionsCleared"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    },
+    "AddValidatorName<{payload:{id:string;};type:\"regions/regionDeleted\";},\"regions$regionDeleted\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "payload": {
+          "description": "The type of the action's payload.",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "id"
+          ]
+        },
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "regions/regionDeleted"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "regions$regionDeleted"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    },
+    "AddValidatorName<{payload:{open?:boolean|undefined;};type:\"regions/regionsDialogToggled\";},\"regions$regionsDialogToggled\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "payload": {
+          "description": "The type of the action's payload.",
+          "type": "object",
+          "properties": {
+            "open": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "regions/regionsDialogToggled"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "regions$regionsDialogToggled"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    },
+    "AddValidatorName<{payload:{regions:Region[];};type:\"regions/regionsImported\";},\"regions$regionsImported\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "payload": {
+          "description": "The type of the action's payload.",
+          "type": "object",
+          "properties": {
+            "regions": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Region"
+              }
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "regions"
+          ]
+        },
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "regions/regionsImported"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "regions$regionsImported"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    },
+    "AddValidatorName<{payload:{params:{id:string;name:string;markers:Marker[];fields:string[];attributes:string[][];defaultType?:\"circle\"|\"plus\"|\"x\"|\"hollowPlus\"|\"hollowX\"|\"dot\"|\"circledHollowPlus\"|\"circledHollowX\"|\"diamond\"|\"square\"|\"asterisk\"|\"hollowAsterisk\"|\"circledHollowAsterisk\"|\"triangle\"|\"pentagon\"|undefined;baseColor?:V4|undefined;};openDialog:boolean;};type:\"catalogs/catalogAdded\";},\"catalogs$catalogAdded\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "payload": {
+          "description": "The type of the action's payload.",
+          "type": "object",
+          "properties": {
+            "params": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "markers": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "position": {
+                        "type": "array",
+                        "items": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "number"
+                          }
+                        ],
+                        "minItems": 3,
+                        "maxItems": 3
+                      },
+                      "color": {
+                        "type": "array",
+                        "items": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "number"
+                          }
+                        ],
+                        "minItems": 4,
+                        "maxItems": 4
+                      },
+                      "type": {
+                        "enum": [
+                          "asterisk",
+                          "circle",
+                          "circledHollowAsterisk",
+                          "circledHollowPlus",
+                          "circledHollowX",
+                          "diamond",
+                          "dot",
+                          "hollowAsterisk",
+                          "hollowPlus",
+                          "hollowX",
+                          "pentagon",
+                          "plus",
+                          "square",
+                          "triangle",
+                          "x"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "additionalProperties": false,
+                    "required": [
+                      "position"
+                    ]
+                  }
+                },
+                "fields": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "attributes": {
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "defaultType": {
+                  "enum": [
+                    "asterisk",
+                    "circle",
+                    "circledHollowAsterisk",
+                    "circledHollowPlus",
+                    "circledHollowX",
+                    "diamond",
+                    "dot",
+                    "hollowAsterisk",
+                    "hollowPlus",
+                    "hollowX",
+                    "pentagon",
+                    "plus",
+                    "square",
+                    "triangle",
+                    "x"
+                  ],
+                  "type": "string"
+                },
+                "baseColor": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "number"
+                    }
+                  ],
+                  "minItems": 4,
+                  "maxItems": 4
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "attributes",
+                "fields",
+                "id",
+                "markers",
+                "name"
+              ]
+            },
+            "openDialog": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "openDialog",
+            "params"
+          ]
+        },
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "catalogs/catalogAdded"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "catalogs$catalogAdded"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    },
+    "AddValidatorName<{payload:{id:string;};type:\"catalogs/catalogDeleted\";},\"catalogs$catalogDeleted\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "payload": {
+          "description": "The type of the action's payload.",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "id"
+          ]
+        },
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "catalogs/catalogDeleted"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "catalogs$catalogDeleted"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    },
+    "AddValidatorName<{payload:Partial<Catalog>&{id:string;};type:\"catalogs/catalogUpdated\";},\"catalogs$catalogUpdated\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "payload": {
+          "description": "The type of the action's payload.",
+          "additionalProperties": false,
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "markers": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "position": {
+                    "type": "array",
+                    "items": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ],
+                    "minItems": 3,
+                    "maxItems": 3
+                  },
+                  "color": {
+                    "type": "array",
+                    "items": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ],
+                    "minItems": 4,
+                    "maxItems": 4
+                  },
+                  "type": {
+                    "enum": [
+                      "asterisk",
+                      "circle",
+                      "circledHollowAsterisk",
+                      "circledHollowPlus",
+                      "circledHollowX",
+                      "diamond",
+                      "dot",
+                      "hollowAsterisk",
+                      "hollowPlus",
+                      "hollowX",
+                      "pentagon",
+                      "plus",
+                      "square",
+                      "triangle",
+                      "x"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false,
+                "required": [
+                  "position"
+                ]
+              }
+            },
+            "fields": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "attributes": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "defaultType": {
+              "enum": [
+                "asterisk",
+                "circle",
+                "circledHollowAsterisk",
+                "circledHollowPlus",
+                "circledHollowX",
+                "diamond",
+                "dot",
+                "hollowAsterisk",
+                "hollowPlus",
+                "hollowX",
+                "pentagon",
+                "plus",
+                "square",
+                "triangle",
+                "x"
+              ],
+              "type": "string"
+            },
+            "defaultColor": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "baseColor": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "visible": {
+              "type": "boolean"
+            },
+            "dialog": {
+              "type": "object",
+              "properties": {
+                "opened": {
+                  "type": "boolean"
+                },
+                "checked": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "patternProperties": {
+                    "^[0-9]+$": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "checked",
+                "opened"
+              ]
+            },
+            "selectedRecords": {
+              "type": "object",
+              "additionalProperties": false,
+              "patternProperties": {
+                "^[0-9]+$": {
+                  "type": "boolean",
+                  "const": true
+                }
+              }
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "catalogs/catalogUpdated"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "catalogs$catalogUpdated"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    },
+    "AddValidatorName<{payload:{id:string;};type:\"catalogs/catalogSelected\";},\"catalogs$catalogSelected\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "payload": {
+          "description": "The type of the action's payload.",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "id"
+          ]
+        },
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "catalogs/catalogSelected"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "catalogs$catalogSelected"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    },
+    "AddValidatorName<{payload:{open?:boolean|undefined;};type:\"catalogs/catalogsDialogToggled\";},\"catalogs$catalogsDialogToggled\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "payload": {
+          "description": "The type of the action's payload.",
+          "type": "object",
+          "properties": {
+            "open": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "catalogs/catalogsDialogToggled"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "catalogs$catalogsDialogToggled"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    },
+    "AddValidatorName<{payload:{id:string;opened?:boolean|undefined;};type:\"catalogs/dialogToggled\";},\"catalogs$dialogToggled\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "payload": {
+          "description": "The type of the action's payload.",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "opened": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "id"
+          ]
+        },
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "catalogs/dialogToggled"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "catalogs$dialogToggled"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    },
+    "AddValidatorName<{payload:{};type:\"catalogs/dialogsClosed\";},\"catalogs$dialogsClosed\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "payload": {
+          "description": "The type of the action's payload.",
+          "type": "object",
+          "properties": {}
+        },
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "catalogs/dialogsClosed"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "catalogs$dialogsClosed"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    },
+    "AddValidatorName<{payload:{position?:V3|undefined;};type:\"catalogs/focusedPositionChanged\";},\"catalogs$focusedPositionChanged\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "payload": {
+          "description": "The type of the action's payload.",
+          "type": "object",
+          "properties": {
+            "position": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "minItems": 3,
+              "maxItems": 3
+            }
+          },
+          "additionalProperties": false
+        },
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "catalogs/focusedPositionChanged"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "catalogs$focusedPositionChanged"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    },
+    "AddValidatorName<{payload:{id:string;index:number;selected?:boolean|undefined;};type:\"catalogs/recordSelected\";},\"catalogs$recordSelected\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "payload": {
+          "description": "The type of the action's payload.",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "index": {
+              "type": "number"
+            },
+            "selected": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "index"
+          ]
+        },
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "catalogs/recordSelected"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "catalogs$recordSelected"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    },
+    "AddValidatorName<{payload:{active:boolean;};type:\"devel/profilerToggled\";},\"devel$profilerToggled\">": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "payload": {
+          "description": "The type of the action's payload.",
+          "type": "object",
+          "properties": {
+            "active": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "active"
+          ]
+        },
+        "type": {
+          "description": "the type used for the action type.",
+          "type": "string",
+          "const": "devel/profilerToggled"
+        },
+        "__validatorName__": {
+          "type": "string",
+          "const": "devel$profilerToggled"
+        }
+      },
+      "required": [
+        "__validatorName__",
+        "payload",
+        "type"
+      ]
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}
