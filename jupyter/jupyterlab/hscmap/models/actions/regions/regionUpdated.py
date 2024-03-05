@@ -2,7 +2,11 @@ from __future__ import annotations
 from typing import Optional, Literal, TypedDict
 from typing import List, Union
 
-JOINT = Literal['MITER', 'NONE']
+
+class Point(TypedDict):
+    color: List[float]
+    position: List[float]
+    size: float
 
 class End(TypedDict):
     dec: float
@@ -22,18 +26,6 @@ class LinearRegion(TypedDict):
     type: Optional[str]
     visible: bool
 
-class RectangularRegion(TypedDict):
-    color: List[float]
-    id: str
-    maxDec: float
-    maxRa: float
-    minDec: float
-    minRa: float
-    name: str
-    showLabel: bool
-    type: Optional[str]
-    visible: bool
-
 class Center(TypedDict):
     dec: float
     ra: float
@@ -47,6 +39,7 @@ class CircularRegion(TypedDict):
     showLabel: bool
     type: Optional[str]
     visible: bool
+JOINT = Literal['MITER', 'NONE']
 
 class Position(TypedDict):
     dec: float
@@ -61,10 +54,17 @@ class TextRegion(TypedDict):
     type: Optional[str]
     visible: bool
 
-class Point(TypedDict):
+class RectangularRegion(TypedDict):
     color: List[float]
-    position: List[float]
-    size: float
+    id: str
+    maxDec: float
+    maxRa: float
+    minDec: float
+    minRa: float
+    name: str
+    showLabel: bool
+    type: Optional[str]
+    visible: bool
 
 class Path(TypedDict):
     close: bool

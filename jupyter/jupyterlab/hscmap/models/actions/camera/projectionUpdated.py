@@ -1,8 +1,8 @@
 from __future__ import annotations
 from typing import Optional, Literal, TypedDict
 
-CameraMode = Literal['FLOATING_EYE', 'GNOMONIC', 'STEREOGRAPHIC']
+P1 = Literal['FLOATING_EYE', 'GNOMONIC', 'STEREOGRAPHIC']
 
 class Model(TypedDict):
-    payload: CameraMode
+    payload: P1
     type: Literal['camera/projectionUpdated']
