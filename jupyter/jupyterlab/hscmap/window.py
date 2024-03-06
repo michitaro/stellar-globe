@@ -5,7 +5,7 @@ from typing import Any, List, Literal, Optional, cast
 from IPython.display import Image
 
 from .angle import Angle
-from .comm import new_comm
+from .comm import new_comm, CommType
 from .jsonpatchapply import apply_patch
 from .models.Close import Model as CloseMessage
 from .models.Dispatch import Model as DispatchMessage
@@ -52,12 +52,14 @@ class Window:
         title: Optional[str] = None,
         layout: Optional[Layout] = None,
         angle_unit: Angle.Unit = 'degree',
+        comm_type: CommType = 'JupyterLab',
     ):
         self._id = tinyid()
         self._msg_log = []
         self._title = title or 'hscMap'
         self._open_new_window(layout=layout)
         self._angle_input, self._angle_output = Angle.converter(angle_unit)
+        self._comm_type: CommType = comm_type
 
     def __repr__(self):
         return f'<window title={self._title} id={self._id}>'
@@ -72,6 +74,7 @@ class Window:
                 initialState=self._store_state,
                 queryId=query_id,
             ),
+            type=self._comm_type,
         )
         self._comm.on_msg(self._on_msg)
         msg: FrontendReadyMessage = self._comm.wait_for_response(query_id)
