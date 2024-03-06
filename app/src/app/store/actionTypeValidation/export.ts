@@ -21,7 +21,7 @@ export function validateAction(action: any) {
         }
       }
       else {
-        errors.push(`No validator for action type ${type}`)
+        errors.push(`No validator for action type ${action.type}`)
       }
     }
     else {
