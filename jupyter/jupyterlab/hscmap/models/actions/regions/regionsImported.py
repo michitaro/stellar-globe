@@ -8,6 +8,33 @@ class Point(TypedDict):
     position: List[float]
     size: float
 
+class Position(TypedDict):
+    dec: float
+    ra: float
+
+class TextRegion(TypedDict):
+    color: List[float]
+    id: str
+    name: str
+    position: Position
+    showLabel: bool
+    type: Optional[str]
+    visible: bool
+
+class Center(TypedDict):
+    dec: float
+    ra: float
+
+class CircularRegion(TypedDict):
+    center: Center
+    color: List[float]
+    id: str
+    name: str
+    radius: float
+    showLabel: bool
+    type: Optional[str]
+    visible: bool
+
 class End(TypedDict):
     dec: float
     ra: float
@@ -26,34 +53,6 @@ class LinearRegion(TypedDict):
     type: Optional[str]
     visible: bool
 
-class Center(TypedDict):
-    dec: float
-    ra: float
-
-class CircularRegion(TypedDict):
-    center: Center
-    color: List[float]
-    id: str
-    name: str
-    radius: float
-    showLabel: bool
-    type: Optional[str]
-    visible: bool
-JOINT = Literal['MITER', 'NONE']
-
-class Position(TypedDict):
-    dec: float
-    ra: float
-
-class TextRegion(TypedDict):
-    color: List[float]
-    id: str
-    name: str
-    position: Position
-    showLabel: bool
-    type: Optional[str]
-    visible: bool
-
 class RectangularRegion(TypedDict):
     color: List[float]
     id: str
@@ -65,6 +64,7 @@ class RectangularRegion(TypedDict):
     showLabel: bool
     type: Optional[str]
     visible: bool
+JOINT = Literal['MITER', 'NONE']
 
 class Path(TypedDict):
     close: bool

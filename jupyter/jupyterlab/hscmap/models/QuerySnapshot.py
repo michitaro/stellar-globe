@@ -4,5 +4,5 @@ from typing import Optional, Literal, TypedDict
 
 class Model(TypedDict):
     aspectRatio: Optional[float]
-    responseFile: str
+    queryId: str
     type: Literal['QuerySnapshot']

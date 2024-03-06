@@ -51,57 +51,33 @@ class Layer(TypedDict):
     baseUrl: str
     name: str
     visible: bool
+CameraMode = Literal['FLOATING_EYE', 'GNOMONIC', 'STEREOGRAPHIC']
 
-class RectangularRegion(TypedDict):
-    color: List[float]
-    id: str
-    maxDec: float
-    maxRa: float
-    minDec: float
-    minRa: float
-    name: str
-    showLabel: bool
-    type: Optional[str]
-    visible: bool
+class PartialRecordTopBottomLeftRightNumber(TypedDict):
+    bottom: Optional[float]
+    left: Optional[float]
+    right: Optional[float]
+    top: Optional[float]
+ToolType = Literal['circle', 'line', 'pan', 'path', 'rect', 'text']
+MarkerType = Literal['asterisk', 'circle', 'circledHollowAsterisk', 'circledHollowPlus', 'circledHollowX', 'diamond', 'dot', 'hollowAsterisk', 'hollowPlus', 'hollowX', 'pentagon', 'plus', 'square', 'triangle', 'x']
 
 class Point(TypedDict):
     color: List[float]
     position: List[float]
     size: float
 
-class End(TypedDict):
+class Position(TypedDict):
     dec: float
     ra: float
 
-class Start(TypedDict):
-    dec: float
-    ra: float
-
-class LinearRegion(TypedDict):
-    color: List[float]
-    end: End
-    id: str
-    name: str
-    showLabel: bool
-    start: Start
-    type: Optional[str]
-    visible: bool
-
-class Center(TypedDict):
-    dec: float
-    ra: float
-
-class CircularRegion(TypedDict):
-    center: Center
+class TextRegion(TypedDict):
     color: List[float]
     id: str
     name: str
-    radius: float
+    position: Position
     showLabel: bool
     type: Optional[str]
     visible: bool
-JOINT = Literal['MITER', 'NONE']
-MarkerType = Literal['asterisk', 'circle', 'circledHollowAsterisk', 'circledHollowPlus', 'circledHollowX', 'diamond', 'dot', 'hollowAsterisk', 'hollowPlus', 'hollowX', 'pentagon', 'plus', 'square', 'triangle', 'x']
 
 class SimpleRgb(TypedDict):
     a: float
@@ -150,6 +126,52 @@ class SspTileParams4(TypedDict):
     type: Optional[str]
 SspTileParams = Union[SspTileParams1, SspTileParams2, SspTileParams3, SspTileParams4]
 
+class Center(TypedDict):
+    dec: float
+    ra: float
+
+class CircularRegion(TypedDict):
+    center: Center
+    color: List[float]
+    id: str
+    name: str
+    radius: float
+    showLabel: bool
+    type: Optional[str]
+    visible: bool
+
+class End(TypedDict):
+    dec: float
+    ra: float
+
+class Start(TypedDict):
+    dec: float
+    ra: float
+
+class LinearRegion(TypedDict):
+    color: List[float]
+    end: End
+    id: str
+    name: str
+    showLabel: bool
+    start: Start
+    type: Optional[str]
+    visible: bool
+
+class RectangularRegion(TypedDict):
+    color: List[float]
+    id: str
+    maxDec: float
+    maxRa: float
+    minDec: float
+    minRa: float
+    name: str
+    showLabel: bool
+    type: Optional[str]
+    visible: bool
+JOINT = Literal['MITER', 'NONE']
+AngleUnit = Literal['degree', 'radian', 'sexadecimal']
+
 class CameraParams(TypedDict):
     fovy: float
     phi: float
@@ -159,26 +181,6 @@ class CameraParams(TypedDict):
     zd: float
     zp: float
 
-class Position(TypedDict):
-    dec: float
-    ra: float
-
-class TextRegion(TypedDict):
-    color: List[float]
-    id: str
-    name: str
-    position: Position
-    showLabel: bool
-    type: Optional[str]
-    visible: bool
-CameraMode = Literal['FLOATING_EYE', 'GNOMONIC', 'STEREOGRAPHIC']
-
-class PartialRecordTopBottomLeftRightNumber(TypedDict):
-    bottom: Optional[float]
-    left: Optional[float]
-    right: Optional[float]
-    top: Optional[float]
-
 class ConstellationLayerProps(TypedDict):
     fadeInDuration: Optional[float]
     lang: Optional[Literal['English', 'Hiragana', 'Kanji']]
@@ -187,8 +189,6 @@ class ConstellationLayerProps(TypedDict):
     showLines: Optional[bool]
     showNames: Optional[bool]
     visible: Optional[bool]
-AngleUnit = Literal['degree', 'radian', 'sexadecimal']
-ToolType = Literal['circle', 'line', 'pan', 'path', 'rect', 'text']
 
 class AppearanceLayers(TypedDict):
     constellation: ConstellationLayerProps

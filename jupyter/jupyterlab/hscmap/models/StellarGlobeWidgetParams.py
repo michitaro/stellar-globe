@@ -7,5 +7,5 @@ class Model(TypedDict):
     id: str
     initialState: Optional[Any]
     layout: Optional[Literal['merge-bottom', 'merge-left', 'merge-right', 'merge-top', 'split-bottom', 'split-left', 'split-right', 'tab-after', 'tab-before']]
-    responseFile: str
+    queryId: str
     title: Optional[str]

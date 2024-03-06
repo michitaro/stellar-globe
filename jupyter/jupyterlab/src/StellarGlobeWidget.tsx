@@ -35,7 +35,7 @@ export type StellarGlobeWidgetParams = {
   title?: string
   layout?: 'split-left' | 'split-right' | 'split-bottom' | 'merge-top' | 'merge-left' | 'merge-right' | 'merge-bottom' | 'tab-before' | 'tab-after'
   initialState?: unknown // AppStateとしたいが、typescript-json-schemaがエラーを起こすのでunknown
-  responseFile: string
+  queryId: string
 }
 
 export function makeStellarGlobeWidget(
@@ -46,7 +46,7 @@ export function makeStellarGlobeWidget(
     layout = 'split-right',
     title = 'StellarGlobe',
     initialState,
-    responseFile,
+    queryId,
   }: StellarGlobeWidgetParams,
 ) {
   const shell = env.app.shell as LabShell
@@ -88,7 +88,7 @@ export function makeStellarGlobeWidget(
       })
 
       lastState = appRef.current.getState()
-      typedRespondToQuery('Ready', responseFile, {
+      typedRespondToQuery('Ready', queryId, {
         state: lastState,
         revision,
       })
@@ -188,18 +188,18 @@ function onMsgFromPython({
     UnlockFrame(msg) {
       lockFrame.unlock(msg.window_ids)
     },
-    QueryState: async ({ responseFile }) => {
+    QueryState: async ({ queryId }) => {
       const state = appHandle.getState()
-      await typedRespondToQuery('QueryStateResponse', responseFile, {
+      await typedRespondToQuery('QueryStateResponse', queryId, {
         revision: revision(),
         state,
       })
     },
-    QuerySnapshot: async ({ responseFile, aspectRatio }) => {
+    QuerySnapshot: async ({ queryId, aspectRatio }) => {
       const globe = appHandle.globe()
       const originalCanvas = globe.gl.canvas as HTMLCanvasElement
       const url = (aspectRatio ? cropCanvasToAspectRatio(originalCanvas, aspectRatio) : originalCanvas).toDataURL()
-      await respondToQuery(responseFile, url)
+      await respondToQuery(queryId, url)
     },
     JumpTo({ ra, dec, fov, duration, easingFunction }) {
       const globe = appHandle.globe()
@@ -216,7 +216,7 @@ async function typedRespondToQuery<T extends keyof FrontendToPython>(type: T, re
 
 async function respondToQuery(relpath: string, content: string) {
   const manager = new ContentsManager()
-  await manager.save(relpath, {
+  await manager.save(`~query-${relpath}`, {
     type: 'file',
     format: 'text',
     content: `${content.length}\n${content}`,
@@ -297,10 +297,10 @@ export type PythonToFrontend = AddType<{
     window_ids: string[]
   }
   QueryState: {
-    responseFile: string
+    queryId: string
   }
   QuerySnapshot: {
-    responseFile: string
+    queryId: string
     aspectRatio?: number
   }
   JumpTo: {

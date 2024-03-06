@@ -1,14 +1,11 @@
 import base64
-import json
-import time
 from functools import cached_property
-from pathlib import Path
 from typing import Any, List, Literal, Optional, cast
 
 from IPython.display import Image
 
 from .angle import Angle
-from .comm import CommWrapper
+from .comm import new_comm
 from .jsonpatchapply import apply_patch
 from .models.Close import Model as CloseMessage
 from .models.Dispatch import Model as DispatchMessage
@@ -66,18 +63,18 @@ class Window:
         return f'<window title={self._title} id={self._id}>'
 
     def _open_new_window(self, *, layout: Optional[Layout]):
-        response_file = f'~query-{tinyid()}'
-        self._comm = CommWrapper(
+        query_id = tinyid()
+        self._comm = new_comm(
             StellarGlobeWidgetParams(
                 id=self._id,
                 title=self._title,
                 layout=cast(Any, layout),
                 initialState=self._store_state,
-                responseFile=response_file,
+                queryId=query_id,
             ),
         )
         self._comm.on_msg(self._on_msg)
-        msg: FrontendReadyMessage = json.loads(_wait_for_query_response(response_file))
+        msg: FrontendReadyMessage = self._comm.wait_for_response(query_id)
         self._connection_status = 'connected'
         self._store_state = cast(StoreState, msg['state'])
         self._store_revision = msg['revision']
@@ -116,21 +113,6 @@ class Window:
                 self.sync()
         else:
             self._show_error(title='Error', body=f'Unknown message from Jupyter: type={repr(type)}')
-
-        # elif type == 'callback':
-
-        #     def show_error(error):
-        #         self._post_message(
-        #             ShowErrorMessage(
-        #                 type='showErrorMessage',
-        #                 args={
-        #                     'title': str(error[1]),
-        #                     'body': ''.join(traceback.format_exception(*error)),
-        #                 },
-        #             )
-        #         )
-
-        #     on_callback(msg, on_error=show_error)
 
     def _dispatch(self, action):
         self._synced = False
@@ -171,17 +153,17 @@ class Window:
     def sync(self, *, only_if_needed=False):
         if only_if_needed and self._synced:
             return
-        response_file = f'~query-{tinyid()}'
-        self._post_message(QueryStateMessage(type='QueryState', responseFile=str(response_file)))
-        msg: QueryStateResponseMessage = json.loads(_wait_for_query_response(response_file))
+        query_id = tinyid()
+        self._post_message(QueryStateMessage(type='QueryState', queryId=query_id))
+        msg: QueryStateResponseMessage = self._comm.wait_for_response(query_id)
         self._store_state = msg['state']
         self._store_revision = msg['revision']
         self._synced = True
 
     def snapshot(self, *, aspect_ratio: Optional[float] = None):
-        response_file = f'~query-{tinyid()}'
-        self._post_message(QuerySnapshotMessage(type='QuerySnapshot', responseFile=str(response_file), aspectRatio=aspect_ratio))
-        data_url = _wait_for_query_response(response_file)
+        query_id = tinyid()
+        self._post_message(QuerySnapshotMessage(type='QuerySnapshot', queryId=query_id, aspectRatio=aspect_ratio))
+        data_url = self._comm.wait_for_query_response_text(query_id)
         _, encoded = data_url.split(",", 1)
         image_data = base64.b64decode(encoded)
         image = Image(data=image_data)
@@ -222,28 +204,3 @@ class Window:
         from .dataset import DatasetManager
 
         return DatasetManager(self)
-
-
-def _wait_for_query_response(response_file: str, *, timeout=10, poll_interval=0.1) -> str:
-    deadline = time.time() + timeout
-    while time.time() <= deadline:
-        parent = Path(response_file).absolute().parent
-        while True:
-            try:
-                p = parent / response_file
-                with open(p) as f:
-                    size_str = f.readline()
-                    if size_str[-1] != '\n':
-                        raise ValueError("Invalid response file format")
-                    response = f.read()
-                    if len(response) == int(size_str):
-                        return response
-            except (ValueError, FileNotFoundError):
-                pass
-            finally:
-                p.unlink(missing_ok=True)
-            if parent == parent.parent:
-                break
-            parent = parent.parent
-        time.sleep(poll_interval)
-    raise TimeoutError()
