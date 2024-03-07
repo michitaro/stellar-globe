@@ -3,7 +3,7 @@
 import { App } from "./app"
 export default App
 
-import { makeStore } from "./app/store"
+import { makeStoreForExport as makeStore } from "./app/store"
 export { makeStore }
 
 // 以下は型チェック用のコード

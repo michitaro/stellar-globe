@@ -6,17 +6,17 @@ import { configureStore } from '@reduxjs/toolkit'
 declare const App: FC<AppProps & { ref: unknown }>
 export default App
 
+type AppState = any
+type AppStateWithComputed = any
+
 export function makeStore(args: {
     storageKey: string
     onStoreChange?: (e: StoreChangeEvent) => void
     initialState?: unknown
 }): {
-    store: ReturnType<typeof configureStore>
-    stateHistory: unknown
+    dispatchAction: (action: any) => void,
+    getState: () => AppStateWithComputed,
 }
-
-type AppState = any
-type AppStateWithComputed = any
 
 type AppProps = {
     hashSync?: boolean

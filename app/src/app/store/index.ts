@@ -58,6 +58,14 @@ export function makeStore({
 }
 
 
+export function makeStoreForExport(params: Parameters<typeof makeStore>[0]) {
+  const { store } = makeStore(params)
+  return {
+    getState: () => stateWithComputed(store.getState()),
+    dispatchAction: store.dispatch,
+  }
+}
+
 
 export type StoreChangeEvent = {
   state: AppStateWithComputed
