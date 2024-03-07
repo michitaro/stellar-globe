@@ -1,0 +1,5 @@
+[run]
+omit =
+  hscmap/models/*
+
+branch = True

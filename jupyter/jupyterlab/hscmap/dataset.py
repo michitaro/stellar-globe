@@ -30,10 +30,10 @@ class TileLayer:
     _w: Window
 
     def _state(self):
-        for layer in self._w._store_state['tractTileLayers']['layers']:
+        for layer in self._w._store_state['tractTileLayers']['layers']:  # pragma: no branch
             if layer['name'] == self.name:
                 return layer
-        raise ValueError(f'Layer {self.name} not found')
+        raise ValueError(f'Layer {self.name} not found')  # pragma: no coverķ
 
     def _sync(self):
         self._w.sync(only_if_needed=True)
@@ -138,7 +138,10 @@ def parse_hips_properties(raw_properties: str):
             if line.startswith('#'):
                 result.append(('', line[2:]))
             else:
-                key, value = line.split('=', 1)
-                result.append((key.strip(), value.strip()))
+                if '=' in line:  # pragma: no branch
+                    key, value = line.split('=', 1)
+                    result.append((key.strip(), value.strip()))
+                else:  # pragma: no cover
+                    result.append(('', line))
 
     return result

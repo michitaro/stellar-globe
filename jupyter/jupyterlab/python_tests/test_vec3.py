@@ -1,6 +1,6 @@
 import math
 
-from hscmap.vec3 import Vec3
+from hscmap.vec3 import Vec3, SkyCoord, Angle
 
 
 def test_addition():
@@ -21,6 +21,13 @@ def test_multiplication():
     v1 = Vec3(1, 2, 3)
     scalar = 2
     result = v1 * scalar
+    assert result == Vec3(2, 4, 6)
+
+
+def test_rmul():
+    v1 = Vec3(1, 2, 3)
+    scalar = 2
+    result = scalar * v1
     assert result == Vec3(2, 4, 6)
 
 
@@ -70,3 +77,28 @@ def test_angle():
     v2 = Vec3(0, 1, 0)
     result = v1.angle(v2)
     assert math.isclose(result.radian, math.pi / 2)
+
+
+def test_as_tuple():
+    v1 = Vec3(1, 2, 3)
+    result = v1.as_tuple()
+    assert result == (1, 2, 3)
+
+
+def test_as_list():
+    v1 = Vec3(1, 2, 3)
+    result = v1.as_list()
+    assert result == [1, 2, 3]
+
+
+def test_skycoord():
+    ra = Angle.from_degree(30)
+    dec = Angle.from_degree(0)
+    skycoord = SkyCoord(ra, dec)
+    result = skycoord.as_dict()
+    assert result == {'ra': math.pi / 6, 'dec': 0.0}
+    v3 = skycoord.vec3()
+    assert math.isclose(v3.x, math.sqrt(3) / 2)
+    assert math.isclose(v3.y, 0.5)
+    assert math.isclose(v3.z, 0.0)
+

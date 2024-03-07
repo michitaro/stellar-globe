@@ -1,26 +1,23 @@
 import abc
 import json
-from typing import Any, Callable, TypeVar, cast
+from typing import Any, Callable, TypeVar, cast, Optional
 
 
 class CommBase(abc.ABC):
     @abc.abstractmethod
-    def on_msg(self, callback: Callable): ...
+    def on_msg(self, callback: Callable):  # pragma: no cover
+        ...
 
     @abc.abstractmethod
-    def send(self, msg: Any): ...
+    def send(self, msg: Any):  # pragma: no cover
+        ...
 
     @abc.abstractmethod
-    def wait_for_query_response_text(
-        self,
-        query_id: str,
-        *,
-        timeout: float = 10,
-        poll_interval: float = 0.1,
-    ) -> Any: ...
+    def wait_for_query_response_text(self, query_id: str) -> Any:  # pragma: no cover
+        ...
 
-    def wait_for_response(self, query_id: str, *, timeout: float = 10, poll_interval: float = 0.1) -> Any:
-        text = self.wait_for_query_response_text(query_id, timeout=timeout, poll_interval=poll_interval)
+    def wait_for_response(self, query_id: str) -> Any:
+        text = self.wait_for_query_response_text(query_id)
         return json.loads(text)
 
 

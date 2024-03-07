@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, List, Literal, Optional, Tuple, Dict, Iterable
+from typing import TYPE_CHECKING, Dict, List, Literal, Optional, Tuple
 
 from .models.actions.catalogs.catalogAdded import Marker
 from .models.actions.catalogs.catalogAdded import Model as CatalogAdded
@@ -14,7 +14,7 @@ MarkerType = Literal['asterisk', 'circle', 'circledHollowAsterisk', 'circledHoll
 Color = List[float]
 V3 = List[float]
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from pandas import DataFrame as pdDataFrame
 else:
     pdDataFrame = None
@@ -56,13 +56,13 @@ class CatalogManager:
 
         # attributesの全ての値が同じ長さであることを確認
         for values in table.values():
-            if len(values) != len(xyz):
+            if len(values) != len(xyz):  # pragma: no cover
                 raise ValueError('All attributes must have the same length as coords')
 
         # colors, typesも同じ長さであることを確認
-        if color is not None and len(color) != len(xyz):
+        if color is not None and len(color) != len(xyz):  # pragma: no cover
             raise ValueError('All colors must have the same length as coords')
-        if type is not None and len(type) != len(xyz):
+        if type is not None and len(type) != len(xyz):  # pragma: no cover
             raise ValueError('All types must have the same length as coords')
 
         markers: List[Marker] = [
@@ -107,7 +107,7 @@ class CatalogManager:
     ):
         w = self._w
 
-        if coord_column is None:
+        if coord_column is None:  # pragma: no branch
             coord_column = ('ra', 'dec')
 
         ras = df[coord_column[0]]
@@ -150,7 +150,7 @@ class CatalogManager:
         open_catalog_table=False,
     ):
         # ra, dec の長さが同じことを確認
-        if len(ra) != len(dec):
+        if len(ra) != len(dec):  # pragma: no cover
             raise ValueError('ra and dec must have the same length')
 
         return self._new(
@@ -183,9 +183,9 @@ class Catalog:
     def _state(self):
         self._sync()
         for catalog in self._w._store_state['catalogs']['catalogs']:
-            if catalog['id'] == self.id:
+            if catalog['id'] == self.id:  # pragma: no branch
                 return catalog
-        raise ValueError(f'Catalog {self.id} not found')
+        raise ValueError(f'Catalog {self.id} not found')  # pragma: no cover
 
     def _update(self, **kwargs):
         self._w._dispatch(
@@ -240,6 +240,30 @@ class Catalog:
     def selected_indices(self):
         self._sync()
         return [*map(int, self._state()['selectedRecords'].keys())]
+
+    @selected_indices.setter
+    def selected_indices(self, indicse: List[int]):
+        # TODO: OPIMIZE
+        from hscmap.models.actions.catalogs.recordSelected import Model as RecordSelected
+
+        def toggle(index: int, selected: bool):
+            self._w._dispatch(
+                RecordSelected(
+                    type='catalogs/recordSelected',
+                    payload={
+                        'id': self.id,
+                        'index': index,
+                        'selected': selected,
+                    },
+                )
+            )
+
+        current = set(self.selected_indices)
+        new = set(indicse)
+        for index in current - new:
+            toggle(index, False)
+        for index in new - current:
+            toggle(index, True)
 
 
 def sample_pandas_data(n_rows: int = 500):
