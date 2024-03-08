@@ -16,10 +16,12 @@ export function makeStore({
   storageKey,
   onStoreChange,
   initialState,
+  activated = true,
 }: {
   storageKey: string
   onStoreChange?: (e: StoreChangeEvent) => void
   initialState?: unknown // circular dependency を回避するためにunknown
+  activated?: boolean
 }) {
   const stateHistory = makeStateHistory()
 
@@ -43,6 +45,8 @@ export function makeStore({
       preloadedState: initialState,
     })
   })
+
+  store.dispatch(commonSlice.actions.activeChanged(activated))
 
   if (onStoreChange) {
     store.subscribe(() => {

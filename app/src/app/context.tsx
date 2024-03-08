@@ -20,7 +20,7 @@ export function useMakeContext(params: Params) {
   const { storageKey, onStoreChange } = params
   const globeHandle = useRef<GlobeHandle>(null)
   const rootElementRef = useRef<HTMLDivElement>(null)
-  const { store, stateHistory } = useInstanceVariable(() => makeStore({ storageKey, onStoreChange, initialState: params.initialState }))
+  const { store, stateHistory } = useInstanceVariable(() => makeStore({ storageKey, onStoreChange, initialState: params.initialState, activated: params.active }))
   const dialogContext = useRef<DialogContextHandle>(null)
 
   return useMemo(() => ({
