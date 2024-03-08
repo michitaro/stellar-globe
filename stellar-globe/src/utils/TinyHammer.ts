@@ -252,7 +252,7 @@ class PinchEventDetector extends GestureDetector {
       }
     })
 
-    const offEnd = on(this.el, 'touchend', (e) => {
+    const offEnd = on(this.el, 'touchend', (_e) => {
       this.initialDistance = null
       this.initialCenter = null
     })
