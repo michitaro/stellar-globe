@@ -6,4 +6,3 @@ from typing import Any
 class Model(TypedDict):
     revision: float
     state: Any
-    type: Literal['QueryStateResponse']

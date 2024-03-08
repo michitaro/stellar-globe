@@ -18,21 +18,20 @@ def main():
     tmp_dir = Path('./tmp/models')
     dest_dir = Path('./src/hscmap/models')
     app_schema = load_json_file(Path('../../app/jsonschema/public.json'))
-    jupyter_schema = load_json_file(Path('./devel/jsonschema/root.json'))
 
     shutil.rmtree(tmp_dir, ignore_errors=True)
 
     with make_models_parallel() as make_model:
-        for model_name in extractSchema(jupyter_schema, ['PythonToFrontend'])['properties'].keys():
-            schema = extractSchema(jupyter_schema, ['PythonToFrontend', model_name])
+        for model_name in extractSchema(app_schema, ['ToApp'])['properties'].keys():
+            schema = extractSchema(app_schema, ['ToApp', model_name])
             make_model(
                 schema,
                 tmp_dir / f'{model_name}.py',
                 {'Model.type': f"type: Literal[{repr(model_name)}]"},
             )
 
-        for model_name in extractSchema(jupyter_schema, ['FrontendToPython'])['properties'].keys():
-            schema = extractSchema(jupyter_schema, ['FrontendToPython', model_name])
+        for model_name in extractSchema(app_schema, ['FromApp'])['properties'].keys():
+            schema = extractSchema(app_schema, ['FromApp', model_name])
             make_model(
                 schema,
                 tmp_dir / 'frontend' / f'{model_name}.py',

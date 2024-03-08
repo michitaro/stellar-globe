@@ -5,16 +5,14 @@ import { ReactWidget } from '@jupyterlab/ui-components'
 import { Message } from '@lumino/messaging'
 import { Widget } from '@lumino/widgets'
 import StellarGlobeApp, { AppHandle, AppState } from '@stellar-globe/app'
-import { validateAction } from '@stellar-globe/app/actionValidator'
+import { validateAction, validateToAppMessage, generateJsonPatch, ToApp, FromApp } from '@stellar-globe/app/commTools'
 import { SkyCoord, easing } from '@stellar-globe/stellar-globe'
 import React, { useLayoutEffect, useRef } from 'react'
 import { assert } from './assert'
 import { cropCanvasToAspectRatio } from './cropCanvasToAspectRatio'
 import { EventEmitter } from './eventemitter'
-import { JsonPatchOp, generateJsonPatch } from './generateJsonPatch'
 import { lockFrame } from './lockWindow'
 import { CommType, StellarGlobeSessionEnv } from "./types"
-import { createIs } from './typevalidator/createIs'
 
 
 type StellarGlobeWidgetEnv = {
@@ -161,6 +159,7 @@ function onMsgFromPython({
   revision,
 }: StellarGlobeWidgetEnv): CommType['onMsg'] {
   return wrapTypeCheck({
+    Open() { },
     Close() {
       widget.close()
     },
@@ -210,7 +209,7 @@ function onMsgFromPython({
 }
 
 
-async function typedRespondToQuery<T extends keyof FrontendToPython>(type: T, relpath: string, data: Omit<FrontendToPython[T], 'type'>) {
+async function typedRespondToQuery<T extends keyof FromApp>(type: T, relpath: string, data: Omit<FromApp[T], 'type'>) {
   return await respondToQuery(relpath, JSON.stringify({ ...data, type }))
 }
 
@@ -224,8 +223,17 @@ async function respondToQuery(relpath: string, content: string) {
 }
 
 
-function wrapTypeCheck(cbmap: { [K in keyof PythonToFrontend]: (msg: PythonToFrontend[K]) => void }): CommType['onMsg'] {
-  const typeCheckers = Object.fromEntries(Object.keys(cbmap).map(k => [k, createIs(k as any)]))
+
+function wrapTypeCheck(cbmap: { [K in keyof ToApp]: (msg: ToApp[K]) => void }): CommType['onMsg'] {
+
+  const typeCheckers = Object.fromEntries(Object.keys(cbmap).map(k => [
+    k,
+    (msg: any) => {
+      const { errors } = validateToAppMessage(k as any, msg)
+      return errors.length === 0
+    },
+  ]))
+
   return (e) => {
     const msg = e.content.data
     const type = msg.type as string
@@ -247,7 +255,7 @@ function wrapTypeCheck(cbmap: { [K in keyof PythonToFrontend]: (msg: PythonToFro
         }
       }
       else {
-        alert(`Type Error: ${JSON.stringify(isValidMsg.errors, null, 2)}`)
+        alert(`Type Error: ${JSON.stringify(validateToAppMessage(type as any, msg).errors, null, 2)}`)
       }
     }
     else {
@@ -257,75 +265,7 @@ function wrapTypeCheck(cbmap: { [K in keyof PythonToFrontend]: (msg: PythonToFro
 }
 
 
-function sendMsgToJupyter<Type extends keyof FrontendToPython>(comm: CommType, type: Type, obj: Omit<FrontendToPython[Type], 'type'>) {
+function sendMsgToJupyter<Type extends keyof FromApp>(comm: CommType, type: Type, obj: Omit<FromApp[Type], 'type'>) {
   const msg = { ...obj, type }
   comm.send(msg)
 }
-
-
-type AddType<T> = {
-  [K in keyof T]: T[K] & { type: K }
-}
-
-
-export type PythonToFrontend = AddType<{
-  Close: {
-  }
-  Dispatch: {
-    action: {
-      type: string
-      payload: any
-    }
-  }
-  ShowError: {
-    params: {
-      title: string
-      body: string
-    }
-  }
-  FrontendConsole: {
-    level: 'log' | 'debug' | 'info' | 'warn'
-    args: any[]
-  }
-  UpdateWidgetState: {
-    title: string
-  }
-  LockFrame: {
-    window_ids: string[]
-  }
-  UnlockFrame: {
-    window_ids: string[]
-  }
-  QueryState: {
-    queryId: string
-  }
-  QuerySnapshot: {
-    queryId: string
-    aspectRatio?: number
-  }
-  JumpTo: {
-    ra: number // radian
-    dec: number // radian
-    fov?: number // radian
-    duration: number // second
-    easingFunction?: keyof typeof easing
-  }
-}>
-
-
-export type FrontendToPython = AddType<{
-  Ready: {
-    revision: number
-    state: any
-  }
-  Closed: {
-  }
-  StoreChanged: {
-    revision: number
-    diff: JsonPatchOp[]
-  }
-  QueryStateResponse: {
-    state: any
-    revision: number
-  }
-}>

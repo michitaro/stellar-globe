@@ -1,6 +1,6 @@
 import { applyPatch } from "fast-json-patch"
 import { produce } from "immer"
-import { generateJsonPatch } from './generateJsonPatch'
+import { generateJsonPatch } from '.'
 import { test, expect } from 'vitest'
 
 

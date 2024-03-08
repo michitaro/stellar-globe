@@ -14,7 +14,7 @@ export default defineConfig({
     lib: {
       entry: {
         app: `${__dirname}/src/export.ts`,
-        actionValidator: `${__dirname}/src/app/store/actionTypeValidation/index.ts`,
+        commTools: `${__dirname}/src/commTools/index.ts`,
       },
       formats: ['es'],
       fileName: (format, name) => {

@@ -3,4 +3,5 @@ from typing import Optional, Literal, TypedDict
 
 
 class Model(TypedDict):
-    pass
+    payload: bool
+    type: Literal['common/activeChanged']

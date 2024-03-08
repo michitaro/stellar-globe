@@ -15,10 +15,10 @@
       "types": "./types/index.d.ts",
       "default": "./dist/app.es.js"
     },
-    "./actionValidator": {
-      "import": "./dist/actionValidator.es.js",
-      "types": "./types/actionValidator.d.ts",
-      "default": "./dist/actionValidator.es.js"
+    "./commTools": {
+      "import": "./dist/commTools.es.js",
+      "types": "./types/commTools.d.ts",
+      "default": "./dist/commTools.es.js"
     }
   },
   "browser": {
@@ -33,9 +33,10 @@
     "lint": "eslint .",
     "type-check": "tsc",
     "typed-scss-module": "typed-scss-modules src -n camel",
-    "refresh-types": "npm run make-public-json-schema && npm run make-persistent-typevalidator && npm run make-action-typevalidator",
+    "refresh-types": "npm run make-public-json-schema && npm run make-persistent-typevalidator && npm run make-toapp-typevalidator  && npm run make-action-typevalidator",
     "make-persistent-typevalidator": "node ./node_modules/@stellar-globe/typescript-typevalidator/dist/cli.js -o ./src/app/store/persistentTypeValidation -t PersistentStateJsonSchema",
-    "make-action-typevalidator": "node ./node_modules/@stellar-globe/typescript-typevalidator/dist/cli.js -o ./src/app/store/actionTypeValidation -t ActionValidatorJsonSchema",
+    "make-toapp-typevalidator": "node ./node_modules/@stellar-globe/typescript-typevalidator/dist/cli.js -o ./src/commTools/toAppTypeValidation -t ToAppValidatorJsonSchema",
+    "make-action-typevalidator": "node ./node_modules/@stellar-globe/typescript-typevalidator/dist/cli.js -o ./src/commTools/actionTypeValidation -t ActionValidatorJsonSchema",
     "make-public-json-schema": "typescript-json-schema -o ./jsonschema/public.json --noExtraProps --required ./tsconfig.json PublicJsonSchema"
   },
   "dependencies": {
@@ -73,6 +74,7 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
+    "fast-json-patch": "^3.1.1",
     "jsdom": "^24.0.0",
     "rollup-plugin-visualizer": "^5.12.0",
     "sass": "^1.70.1",
@@ -84,8 +86,8 @@
   },
   "typesVersions": {
     "*": {
-      "actionValidator": [
-        "./types/actionValidator.d.ts"
+      "commTools": [
+        "./types/commTools/index.d.ts"
       ]
     }
   }

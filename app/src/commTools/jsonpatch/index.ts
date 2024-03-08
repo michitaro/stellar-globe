@@ -1,19 +1,4 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-export type JsonPatchOp =
-  | { op: "add", path: string, value: any }
-  | { op: "remove", path: string }
-  | { op: "replace", path: string, value: any }
-  | { op: "move", path: string, from: string }
-
-
-type GetKey = (elem: any) => string | number
-
-
-type Options = {
-  getKey?: GetKey
-}
+import { JsonPatchOp, Options } from "../../../types/commTools/jsonpatch"
 
 
 function compareValues(patches: JsonPatchOp[], oldValue: any, newValue: any, path: string, options: Options) {

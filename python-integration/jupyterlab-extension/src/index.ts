@@ -3,9 +3,9 @@ import {
   JupyterFrontEndPlugin
 } from '@jupyterlab/application'
 import { INotebookTracker } from '@jupyterlab/notebook'
-import { StellarGlobeWidgetParams, makeStellarGlobeWidget } from './StellarGlobeWidget'
+import { ToApp, validateToAppMessage } from '@stellar-globe/app/commTools'
+import { makeStellarGlobeWidget } from './StellarGlobeWidget'
 import { EventEmitter } from './eventemitter'
-import { createIs } from './typevalidator/createIs'
 import { KernelType, StellarGlobeSessionEnv } from './types'
 
 
@@ -77,23 +77,26 @@ function connectToKernelChangedSignalForCommCreation(
 }
 
 
-const isValidStellarGlobeWidgetParams = createIs<StellarGlobeWidgetParams>('StellarGlobeWidgetParams')
-
-
 function setupCommTarget(env: StellarGlobeSessionEnv, onSessionClosed: EventEmitter) {
   const target = 'stellarglobe/new'
   return registerCommTarget(env.kernel, target, function onConnected(comm, rawMsg) {
     const msg = rawMsg.content.data
-    if (isValidStellarGlobeWidgetParams(msg)) {
+    if (isValidToAppMessage('Open', msg)) {
       const widget = makeStellarGlobeWidget(env, comm, msg)
       onSessionClosed.on(() => {
         widget.close()
       })
     }
     else {
-      alert(`Type error:\n${JSON.stringify(isValidStellarGlobeWidgetParams.errors, null, 2)}`)
+      alert(`Type error:\n${JSON.stringify(validateToAppMessage('Open', msg).errors, null, 2)}`)
     }
   })
+}
+
+
+function isValidToAppMessage<T extends keyof ToApp>(type: T, msg: any): msg is ToApp[T] {
+  const { errors } = validateToAppMessage(type, msg)
+  return errors.length === 0
 }
 
 

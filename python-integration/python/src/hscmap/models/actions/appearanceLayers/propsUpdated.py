@@ -3,10 +3,12 @@ from typing import Optional, Literal, TypedDict
 from typing import Union
 
 
-class PartialVisibleBoolean(TypedDict):
+class PartialVisibleBooleanFrameBooleanPatchBoolean(TypedDict):
+    frame: Optional[bool]
+    patch: Optional[bool]
     visible: Optional[bool]
 
-class PartialVisibleTrue(TypedDict):
+class PartialVisibleBoolean1(TypedDict):
     visible: Optional[bool]
 
 class PartialFadeInDurationNumberUndefinedImageSize5121024UndefinedVisibleBooleanUndefined(TypedDict):
@@ -14,12 +16,7 @@ class PartialFadeInDurationNumberUndefinedImageSize5121024UndefinedVisibleBoolea
     imageSize: Optional[Literal[1024, 512]]
     visible: Optional[bool]
 
-class PartialVisibleBoolean1(TypedDict):
-    visible: Optional[bool]
-
-class PartialVisibleBooleanFrameBooleanPatchBoolean(TypedDict):
-    frame: Optional[bool]
-    patch: Optional[bool]
+class PartialVisibleTrue(TypedDict):
     visible: Optional[bool]
 Which = Literal['constellation', 'esoMilkyWay', 'grid', 'hipparcosCatalog', 'nearbyGalaxiesAndNebulas', 'tracts']
 
@@ -30,6 +27,9 @@ class PartialConstellationLayerProps(TypedDict):
     nameFont: Optional[str]
     showLines: Optional[bool]
     showNames: Optional[bool]
+    visible: Optional[bool]
+
+class PartialVisibleBoolean(TypedDict):
     visible: Optional[bool]
 PartialVisibleBooleanFadeInDurationNumberUndefinedImageSize5121024UndefinedVisibleBooleanUndefinedConstellationLayerPropsVisibleTrueVisibleBooleanVisibleBooleanFrameBooleanPatchBoolean = Union[PartialVisibleBoolean, PartialFadeInDurationNumberUndefinedImageSize5121024UndefinedVisibleBooleanUndefined, PartialConstellationLayerProps, PartialVisibleTrue, PartialVisibleBoolean1, PartialVisibleBooleanFrameBooleanPatchBoolean]
 

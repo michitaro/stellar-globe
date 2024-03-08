@@ -1,5 +1,5 @@
-import type { validateAction as validateActionType } from '../../../../types/actionValidator.js'
-import { BaseAction } from '../../context.js'
+import type { validateAction as validateActionType } from '../../../types/commTools/index.js'
+import { BaseAction } from '../../app/context.js'
 import { createIs, hasValidator } from './createIs.js'
 
 

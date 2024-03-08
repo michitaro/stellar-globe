@@ -15,7 +15,7 @@ from .models.LockFrame import Model as LockFrameMessage
 from .models.QuerySnapshot import Model as QuerySnapshotMessage
 from .models.QueryState import Model as QueryStateMessage
 from .models.ShowError import Model as ShowErrorMessage
-from .models.StellarGlobeWidgetParams import Model as StellarGlobeWidgetParams
+from .models.Open import Model as Open
 from .models.store import Model as StoreState
 from .models.UnlockFrame import Model as UnlockFrameMessage
 from .models.UpdateWidgetState import Model as UpdateWidgetStateMessage
@@ -66,7 +66,7 @@ class Window:
     def _open_new_window(self, *, layout: Optional[Layout]):
         query_id = tinyid()
         self._comm = new_comm(
-            StellarGlobeWidgetParams(
+            Open(
                 id=self._id,
                 title=self._title,
                 layout=cast(Any, layout),

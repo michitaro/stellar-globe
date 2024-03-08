@@ -1,5 +1,3 @@
-// see /../typescript-typevalidator/README.md
-
 import { Slice } from "@reduxjs/toolkit"
 import { BaseAction } from "../context"
 import { appearanceLayersSlice } from "../features/appearanceLayers/appearanceLayersSlice"
@@ -13,6 +11,7 @@ import { tractTileLayersSlice } from "../features/tractTileLayers/tractTileLayer
 import { AppStateWithComputed } from "./computedState"
 import { StorageState } from "./stateSync/StorageSync"
 import { HashState } from "./stateSync/hashSync"
+import type { FromApp, ToApp } from "../../../types/commTools"
 
 
 type AddValidatorName<A, B extends string> = A & { __validatorName__: B }
@@ -51,7 +50,11 @@ export type ActionValidatorJsonSchema = {
 }
 
 
+export type ToAppValidatorJsonSchema = ToApp
+
+
 export type PublicJsonSchema = {
+  // This type will be used in Python integration
   BaseAction: BaseAction
   StoreState: AppStateWithComputed
   Actions: (
@@ -65,4 +68,6 @@ export type PublicJsonSchema = {
     ActionsOfSlice<typeof develSlice> &
     {}
   )
+  ToApp: ToApp
+  FromApp: FromApp
 }
