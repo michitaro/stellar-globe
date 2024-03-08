@@ -4,7 +4,7 @@ import { debounce } from "../../../common/utils/debounce"
 import { deserialize, serialize } from "../../../common/utils/serialize"
 import { appOnChange } from "./appOnChange"
 import { detectEnvironment } from "../../../common/utils/environment"
-import { createIs } from "../persistentTypeValidation"
+import { createIs } from "../persistentTypeValidation/createIs"
 
 
 export type HashState = Partial<ReturnType<typeof hashState>>

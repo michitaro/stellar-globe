@@ -14,7 +14,7 @@ import { EventEmitter } from './eventemitter'
 import { JsonPatchOp, generateJsonPatch } from './generateJsonPatch'
 import { lockFrame } from './lockWindow'
 import { CommType, StellarGlobeSessionEnv } from "./types"
-import { createIs } from './typevalidator'
+import { createIs } from './typevalidator/createIs'
 
 
 type StellarGlobeWidgetEnv = {

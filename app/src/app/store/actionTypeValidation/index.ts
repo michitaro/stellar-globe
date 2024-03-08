@@ -1,27 +1,38 @@
-// @ts-ignore
-import * as validators from './ajv'
+import type { validateAction as validateActionType } from '../../../../types/actionValidator.js'
+import { BaseAction } from '../../context.js'
+import { createIs, hasValidator } from './createIs.js'
 
 
-export function createIs<Type>(validatorName: keyof typeof validators) {
-  function is(
-    obj: any,
-  ): obj is Type {
-    const v = validators[validatorName]
-    if (!v) {
-      // @ts-ignore
-      throw new Error(`Validator not found: ${validatorName}`)
+const isBaseAction = createIs<BaseAction>('BaseAction')
+
+
+export function validateAction(action: any) {
+  const errors: string[] = []
+  do {
+    if (isBaseAction(action)) {
+      const type = action.type.replace(/\//g, `$`)
+      if (hasValidator(type)) {
+        const isValidAction = createIs(type as any)
+        if (isValidAction(action)) {
+          break
+        }
+        else {
+          errors.push(...isValidAction.errors)
+        }
+      }
+      else {
+        errors.push(`No validator for action type ${action.type}`)
+      }
     }
-    const ok = v(obj)
-    if (!ok) {
-      Object.assign(is, { errors: (v as any).errors as string[] })
+    else {
+      errors.push(...isBaseAction.errors)
     }
-    return ok
-  }
-  return Object.assign(is, { errors: [] as string[] })
+  } while
+    // eslint-disable-next-line no-constant-condition
+    (false)
+  return { errors }
 }
 
 
-export function hasValidator(validatorName: string) {
-  // @ts-ignore
-  return !!validators[validatorName]
-}
+type AssertTypeImplements<T, U extends T> = T
+type _TypeCheck1 = AssertTypeImplements<typeof validateActionType, typeof validateAction>

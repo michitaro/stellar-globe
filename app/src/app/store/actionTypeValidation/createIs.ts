@@ -19,3 +19,9 @@ export function createIs<Type>(validatorName: keyof typeof validators) {
   }
   return Object.assign(is, { errors: [] as string[] })
 }
+
+
+export function hasValidator(validatorName: string) {
+  // @ts-ignore
+  return !!validators[validatorName]
+}

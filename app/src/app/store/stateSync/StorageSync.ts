@@ -3,7 +3,7 @@ import { AppState, AppStore, storeInitializerParams } from ".."
 import { debounce } from "../../../common/utils/debounce"
 import { appOnChange } from "./appOnChange"
 import { detectEnvironment } from "../../../common/utils/environment"
-import { createIs } from "../persistentTypeValidation"
+import { createIs } from "../persistentTypeValidation/createIs"
 
 
 export type StorageState = Partial<ReturnType<typeof localStorageState>>
