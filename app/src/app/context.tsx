@@ -1,10 +1,11 @@
 import { DialogContextHandle } from "@stellar-globe/react-draggable-dialog"
 import { GlobeHandle } from "@stellar-globe/react-stellar-globe"
-import { ForwardedRef, ReactNode, createContext, useContext, useImperativeHandle, useMemo, useRef, useState } from "react"
+import { ForwardedRef, ReactNode, createContext, useContext, useImperativeHandle, useMemo, useRef } from "react"
 import { AppHandle } from "."
 import { useInstanceVariable } from "../common/hooks/useInstanceVaribale"
 import { StoreChangeEvent, makeStore } from "./store"
 import { stateWithComputed } from "./store/computedState"
+import { commonSlice } from "./features/common/commonSlice"
 
 
 type Params = {
@@ -19,7 +20,6 @@ export function useMakeContext(params: Params) {
   const { storageKey, onStoreChange } = params
   const globeHandle = useRef<GlobeHandle>(null)
   const rootElementRef = useRef<HTMLDivElement>(null)
-  const [active, setActive] = useState(params.active)
   const { store, stateHistory } = useInstanceVariable(() => makeStore({ storageKey, onStoreChange, initialState: params.initialState }))
   const dialogContext = useRef<DialogContextHandle>(null)
 
@@ -28,10 +28,8 @@ export function useMakeContext(params: Params) {
     globeHandle,
     store,
     stateHistory,
-    active,
-    setActive,
     dialogContext,
-  }), [active, stateHistory, store])
+  }), [stateHistory, store])
 }
 
 
@@ -53,12 +51,11 @@ export function useAppContext() {
   if (context === undefined) {
     throw new Error(`use of useMiniAppContext outside the provider`)
   }
-  const { globeHandle, active, rootElementRef, stateHistory, store, dialogContext } = context
+  const { globeHandle, rootElementRef, stateHistory, store, dialogContext } = context
   return {
     globeHandle,
     rootElementRef,
     stateHistory,
-    active,
     store,
     dialogContext,
   }
@@ -68,10 +65,10 @@ export function useAppContext() {
 export function useSetupAppHandle(ref: ForwardedRef<AppHandle>, context: AppContextType) {
   useImperativeHandle(ref, () => ({
     globe: () => context.globeHandle.current!(),
-    dispatchAction: action => context.store.dispatch(action), //  makeTypeSafeDispatch(context.store),
-    activate: () => context.setActive(true),
-    deactivate: () => context.setActive(false),
     getState: () => stateWithComputed(context.store.getState()),
+    dispatchAction: action => context.store.dispatch(action),
+    activate: () => context.store.dispatch(commonSlice.actions.activeChanged(true)),
+    deactivate: () => context.store.dispatch(commonSlice.actions.activeChanged(false)),
   }), [context])
 }
 

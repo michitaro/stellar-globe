@@ -10,10 +10,11 @@ import { ViewMenu } from '../features/view/ViewMenu'
 import { DatasetMenu } from './DatasetMenu'
 import { ToolsMenu } from './ToolsMenu'
 import styles from './styles.module.scss'
+import { useAppSelector } from '../store/hooks'
 
 
 export default function MainMenu() {
-  const { active } = useAppContext()
+  const active = useAppSelector(state => state.common.active)
   const nodeRef = useRef(null)
 
   return (

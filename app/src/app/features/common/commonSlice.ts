@@ -6,6 +6,7 @@ import { readStorageState } from "../../store/stateSync/StorageSync"
 type State = {
   angleUnit: AngleUnit
   dialogPositionHint: PositionHint
+  active: boolean,
 }
 
 
@@ -13,6 +14,7 @@ function initialState(): State {
   return {
     angleUnit: readStorageState().angleUnit ?? 'sexadecimal',
     dialogPositionHint: readStorageState().dialogPositionHint ?? { top: 8, right: 8 },
+    active: true,
   }
 }
 
@@ -26,6 +28,9 @@ export const commonSlice = createSlice({
     },
     dialogPositionHintChanged(state, { payload: positionHint }: PayloadAction<PositionHint>) {
       state.dialogPositionHint = positionHint
+    },
+    activeChanged(state, { payload: active }: PayloadAction<boolean>) {
+      state.active = active
     },
   },
 })

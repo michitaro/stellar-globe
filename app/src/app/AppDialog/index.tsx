@@ -4,6 +4,7 @@ import { Icon } from '../../common/components/Icon'
 import { RegularMenu } from '../../common/components/Menu/RegularMenu'
 import { useAppContext } from '../context'
 import styles from './style.module.scss'
+import { useAppSelector } from '../store/hooks'
 
 
 type DialogProps = Parameters<typeof Dialog>[0]
@@ -54,7 +55,7 @@ export function AppDialog({
   resizable = false,
   ...rests
 }: Props) {
-  const { active } = useAppContext()
+  const active = useAppSelector(state => state.common.active)
   const dialog = useRef<DialogHandle>(null)
   const showResizeButton = useMemo(
     () => typeof resizable === 'boolean' ? resizable : (resizable.x || resizable.y),
