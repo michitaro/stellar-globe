@@ -5,7 +5,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
 import * as TJS from "typescript-json-schema"
 import { walk } from './schemautil'
 // @ts-ignore
-import indexTemplate from './indexTemplate.ts?raw'
+import createIsTemplate from './createIsTemplate.ts?raw'
 
 
 export function main() {
@@ -31,7 +31,7 @@ export function main() {
 
   mkdirP(args.out)
 
-  writeFileSync(`${args.out}/index.ts`, indexTemplate)
+  writeFileSync(`${args.out}/createIs.ts`, createIsTemplate)
   if (args.onlyIndex) {
     return
   }

@@ -8,7 +8,7 @@ node ./node_modules/@stellar-globe/typescript-typevalidator/dist/cli.js -o ./src
 ```
 
 ```TypeScript
-import { createIs } from './typeValidator'
+import { createIs } from './typeValidator/createIs'
 
 const isSomeType = createIs<'SomeType'>()
 
