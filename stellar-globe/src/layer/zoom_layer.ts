@@ -1,4 +1,4 @@
-import { Inertia } from '@stellar-globe/inertia'
+import { Inertia } from '~/lib/inertia'
 import { WheelEventNormalizer } from '@stellar-globe/wheel-event-normalizer'
 import { vec3 } from 'gl-matrix'
 import { Animation } from "~/globe/animation"

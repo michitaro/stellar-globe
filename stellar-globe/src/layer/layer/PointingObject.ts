@@ -1,4 +1,4 @@
-import { Inertia2D } from "@stellar-globe/inertia"
+import { Inertia2D } from "~/lib/inertia"
 import { CursorStyle, Globe } from "~/globe"
 import { Animation, AnimationCallback } from "~/globe/animation"
 import { GlobePointerDragEvent, GlobePointerEvent } from "~/layer/GlobePointerEvent"

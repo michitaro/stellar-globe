@@ -1,4 +1,4 @@
-import { Inertia2D } from "@stellar-globe/inertia"
+import { Inertia2D } from "~/lib/inertia"
 import { Globe } from "~/globe"
 import { AnimationCallback } from "~/globe/animation"
 import { mouse } from '~/utils/mouse'

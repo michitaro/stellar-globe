@@ -37,7 +37,6 @@
   },
   "dependencies": {
     "@hscmap/healpix": "^1.4.12",
-    "@stellar-globe/inertia": "git+https://hsc-gitlab.mtk.nao.ac.jp/michitaro/inertia.git#semver:^1.0.0",
     "@stellar-globe/wheel-event-normalizer": "git+https://hsc-gitlab.mtk.nao.ac.jp/michitaro/wheel-event-normalizer.git#semver:^1.0.0",
     "gl-matrix": "^3.4.3",
     "gzip-js": "^0.3.2"

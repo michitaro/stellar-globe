@@ -1,4 +1,4 @@
-import { Inertia2D } from '@stellar-globe/inertia'
+import { Inertia2D } from '~/lib/inertia'
 import { mat2, vec2 } from 'gl-matrix'
 import { Globe } from "~/globe"
 import { AnimationCallback } from "~/globe/animation"
