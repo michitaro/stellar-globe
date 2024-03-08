@@ -1,5 +1,5 @@
 import { Inertia } from '~/lib/inertia'
-import { WheelEventNormalizer } from '@stellar-globe/wheel-event-normalizer'
+import { WheelEventNormalizer } from '~/lib/wheel-event-normalizer'
 import { vec3 } from 'gl-matrix'
 import { Animation } from "~/globe/animation"
 import { SkyCoord } from "~/lib/angle"
