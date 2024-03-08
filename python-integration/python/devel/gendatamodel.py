@@ -16,7 +16,7 @@ def main():
     logging.basicConfig(level=logging.INFO)
 
     tmp_dir = Path('./tmp/models')
-    dest_dir = Path('./hscmap/models')
+    dest_dir = Path('./src/hscmap/models')
     app_schema = load_json_file(Path('../../app/jsonschema/public.json'))
     jupyter_schema = load_json_file(Path('./devel/jsonschema/root.json'))
 

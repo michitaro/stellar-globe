@@ -8,19 +8,6 @@ class Point(TypedDict):
     position: List[float]
     size: float
 
-class Position(TypedDict):
-    dec: float
-    ra: float
-
-class TextRegion(TypedDict):
-    color: List[float]
-    id: str
-    name: str
-    position: Position
-    showLabel: bool
-    type: Optional[str]
-    visible: bool
-
 class Center(TypedDict):
     dec: float
     ra: float
@@ -31,6 +18,19 @@ class CircularRegion(TypedDict):
     id: str
     name: str
     radius: float
+    showLabel: bool
+    type: Optional[str]
+    visible: bool
+
+class Position(TypedDict):
+    dec: float
+    ra: float
+
+class TextRegion(TypedDict):
+    color: List[float]
+    id: str
+    name: str
+    position: Position
     showLabel: bool
     type: Optional[str]
     visible: bool

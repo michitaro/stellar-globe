@@ -13,6 +13,7 @@ setup(
             'pandas',
             'numpy',
             'requests',
+            'datamodel-code-generator==0.25.*',
         ],
     },
 )
