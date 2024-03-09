@@ -1,5 +1,5 @@
 import { makeStore } from '@stellar-globe/app'
-import { validateAction } from '@stellar-globe/app/actionValidator'
+import { validateAction } from '@stellar-globe/app/commTools'
 import { FrontendToPython, PythonToFrontend } from './interface'
 import { createIs } from './typevalidator'
 

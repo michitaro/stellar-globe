@@ -12,8 +12,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@stellar-globe/app": "file:../../app",
-    "@stellar-globe/stellar-globe": "file:../../stellar-globe",
+    "@stellar-globe/app": "file:../../../app",
+    "@stellar-globe/stellar-globe": "file:../../../stellar-globe",
     "@types/koa-bodyparser": "^4.3.12",
     "koa": "^2.15.0",
     "koa-bodyparser": "^4.4.1",

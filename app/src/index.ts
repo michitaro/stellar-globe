@@ -16,7 +16,7 @@ import type {
   AppHandle as AppHandleType,
   AppState as AppStateType,
   makeStore as makeStoreType,
-} from '../types/index.d.ts'
+} from '../types'
 
 type AssertTypeImplements<T, U extends T> = T
 type _TypeCheck1 = AssertTypeImplements<AppHandleType, AppHandle>
