@@ -3,8 +3,21 @@ import { Globe } from "@stellar-globe/stellar-globe"
 import { CSSProperties, FC } from "react"
 import { configureStore } from '@reduxjs/toolkit'
 
+type AppProps = {
+    hashSync?: boolean
+    storageSync?: boolean
+    catchAllKeyboardEvents?: boolean
+    floatingLayerElement?: HTMLElement
+    floatingLayerZIndex?: CSSProperties['zIndex']
+    activeOnInit?: boolean
+    storageKey?: string
+    onStoreChange?: (e: StoreChangeEvent) => void
+    initialState?: unknown
+}
+
 declare const App: FC<AppProps & { ref: unknown }>
 export default App
+
 
 type AppState = any
 type AppStateWithComputed = any
@@ -16,18 +29,6 @@ export function makeStore(args: {
 }): {
     dispatchAction: (action: any) => void,
     getState: () => AppStateWithComputed,
-}
-
-type AppProps = {
-    hashSync?: boolean
-    storageSync?: boolean
-    catchAllKeyboardEvents?: boolean
-    floatingLayerElement?: HTMLElement
-    floatingLayerZIndex?: CSSProperties['zIndex']
-    activeOnInit?: boolean
-    storageKey?: string
-    onStoreChange?: (e: StoreChangeEvent) => void
-    initialState?: AppState
 }
 
 type StoreChangeEvent = {

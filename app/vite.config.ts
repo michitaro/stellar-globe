@@ -13,7 +13,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: {
-        app: `${__dirname}/src/export.ts`,
+        app: `${__dirname}/src/index.ts`,
         commTools: `${__dirname}/src/commTools/index.ts`,
       },
       formats: ['es'],
