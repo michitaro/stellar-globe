@@ -21,7 +21,6 @@
     "nanoid": "^5.0.6"
   },
   "devDependencies": {
-    "@stellar-globe/typescript-typevalidator": "file:../../typescript-typevalidator",
     "@types/koa": "^2.15.0",
     "@types/koa-router": "^7.4.8",
     "typescript": "^5.3.3",

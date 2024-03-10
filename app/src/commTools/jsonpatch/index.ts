@@ -1,3 +1,4 @@
+// see https://jsonpatch.com
 import { JsonPatchOp, Options } from "../../../types/commTools/jsonpatch"
 
 

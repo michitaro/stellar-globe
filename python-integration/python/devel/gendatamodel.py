@@ -53,7 +53,7 @@ def main():
                 {'Model.type': f"type: Literal[{repr(action_name)}]"},
             )
 
-    subprocess.check_call(['rsync', '-av', '--delete', f'{tmp_dir}/', dest_dir])
+    subprocess.check_call(['rsync', '-av', '--exclude=.gitignore', '--delete', f'{tmp_dir}/', dest_dir])
     shutil.rmtree(tmp_dir, ignore_errors=True)
 
 

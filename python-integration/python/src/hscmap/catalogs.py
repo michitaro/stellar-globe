@@ -26,7 +26,7 @@ class CatalogManager:
 
     @property
     def members(self):
-        self._w.sync(only_if_needed=True)
+        self._w.sync()
         return self._w._store_state['catalogs']['catalogs']
 
     def clear(self):
@@ -170,6 +170,7 @@ class Catalog:
     _w: Window
 
     def delete(self):
+        self._w.sync()
         self._w._dispatch(
             CatalogDeleted(
                 type='catalogs/catalogDeleted',
@@ -178,7 +179,7 @@ class Catalog:
         )
 
     def _sync(self):
-        self._w.sync(only_if_needed=True)
+        self._w.sync()
 
     def _state(self):
         self._sync()

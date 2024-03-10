@@ -102,3 +102,14 @@ def test_skycoord():
     assert math.isclose(v3.y, 0.5)
     assert math.isclose(v3.z, 0.0)
 
+
+def test_skycoord_from_degree():
+    skycoord = SkyCoord.from_degree(30, 0)
+    result = skycoord.as_dict()
+    assert result == {'ra': math.pi / 6, 'dec': 0.0}
+
+
+def test_skycoord_from_radian():
+    skycoord = SkyCoord.from_radian(math.pi / 6, 0)
+    result = skycoord.as_dict()
+    assert result == {'ra': math.pi / 6, 'dec': 0.0}

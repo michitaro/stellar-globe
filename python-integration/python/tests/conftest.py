@@ -1,10 +1,10 @@
 import pytest
 
 from hscmap import Window
-from hscmap.comm.reference import ReferenceCommOptions
+from hscmap.comm.mock import MockCommOptions
 
 
 @pytest.fixture
 def w():
-    options = ReferenceCommOptions(base_url="http://localhost:3000")
+    options = MockCommOptions(base_url="http://localhost:3000")
     return Window(comm_options=options)

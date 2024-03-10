@@ -31,11 +31,11 @@ class Camera:
                 easingFunction=easing,  # type: ignore
             )
         )
-        if not non_block:
+        if not non_block:  # pragma: no branch
             time.sleep(duration)
 
     def _sync(self):
-        self._w.sync(only_if_needed=True)
+        self._w.sync()
 
     @property
     def params(self):

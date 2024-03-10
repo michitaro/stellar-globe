@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "es2016",
     "module": "ESNext",
+    "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "strict": true,
     "skipLibCheck": true

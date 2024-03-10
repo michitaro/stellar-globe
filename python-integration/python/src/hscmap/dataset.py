@@ -12,7 +12,7 @@ class DatasetManager:
     _w: Window
 
     def _sync(self):
-        self._w.sync(only_if_needed=True)
+        self._w.sync()
 
     @property
     def tile_layers(self):
@@ -36,7 +36,7 @@ class TileLayer:
         raise ValueError(f'Layer {self.name} not found')  # pragma: no coverķ
 
     def _sync(self):
-        self._w.sync(only_if_needed=True)
+        self._w.sync()
 
     @property
     def visible(self):
@@ -60,7 +60,7 @@ class HipsDatasetManager:
     _w: Window
 
     def _sync(self):
-        self._w.sync(only_if_needed=True)
+        self._w.sync()
 
     @property
     def base_url(self) -> Optional[str]:

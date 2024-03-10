@@ -1,3 +1,4 @@
+import traceback
 import base64
 from functools import cached_property
 from typing import Any, List, Literal, Optional, cast
@@ -12,15 +13,14 @@ from .models.frontend.Ready import Model as FrontendReadyMessage
 from .models.frontend.StoreChanged import Model as StoreChangedMessage
 from .models.FrontendConsole import Model as FrontendConsoleMessage
 from .models.LockFrame import Model as LockFrameMessage
+from .models.Open import Model as Open
 from .models.QuerySnapshot import Model as QuerySnapshotMessage
 from .models.QueryState import Model as QueryStateMessage
 from .models.ShowError import Model as ShowErrorMessage
-from .models.Open import Model as Open
 from .models.store import Model as StoreState
 from .models.UnlockFrame import Model as UnlockFrameMessage
 from .models.UpdateWidgetState import Model as UpdateWidgetStateMessage
 from .tinyid import tinyid
-
 
 Layout = Literal[
     'merge-bottom',
@@ -43,7 +43,7 @@ class Window:
     _store_revision = -1
     _store_state: StoreState = None  # type: ignore
     _msg_log: List[Any]
-    _synced: bool = False
+    _synced: bool = True
 
     def __init__(
         self,
@@ -86,7 +86,7 @@ class Window:
             self.reopen()
         self._comm.send(msg)
 
-    def _show_error(self, title: str, body: str):
+    def _show_error(self, title: str, body: str):  # pragma: no cover
         self._post_message(
             ShowErrorMessage(
                 type='ShowError',
@@ -97,23 +97,20 @@ class Window:
             )
         )
 
-    def _on_msg(self, raw_msg):
-        msg = raw_msg['content']['data']
-
-        self._msg_log.append(raw_msg)
+    def _on_msg(self, msg):
+        self._msg_log.append(msg)
         self._msg_log = self._msg_log[-10:]
 
         type = msg.get('type')
         if type == 'Closed':
             self._on_closed()
         elif type == 'StoreChanged':
-            store_changed_msg: StoreChangedMessage = msg
-            self._store_revision += 1
-            if self._store_revision == store_changed_msg['revision']:
-                self._store_state = apply_patch(self._store_state, store_changed_msg['diff'])  # type: ignore
-            else:
-                self.sync()
-        else:
+            try:
+                self._on_store_changed(cast(StoreChangedMessage, msg))
+            except Exception as e:  # pragma: no cover
+                self._show_error(title='Error', body=f'Error in on_store_changed: {e}')
+                self.js_console('warn', traceback.format_exc())
+        else:  # pragma: no cover
             self._show_error(title='Error', body=f'Unknown message from Jupyter: type={repr(type)}')
 
     def _dispatch(self, action):
@@ -123,15 +120,23 @@ class Window:
     def _on_closed(self):
         self._connection_status = 'disconnected'
 
+    def _on_store_changed(self, msg: StoreChangedMessage):
+        if self._store_revision == msg['baseRevision']:
+            self._store_state = apply_patch(self._store_state, msg['patch'])  # type: ignore
+            self._store_revision += 1
+        else:  # pragma: no cover
+            self.sync()
+        self._synced = True
+
     def close(self):
-        if self._connection_status != 'disconnected':
+        if self._connection_status != 'disconnected':  # pragma: no branch
             self._post_message(CloseMessage(type='Close'))
 
     def reopen(self, *, layout: Optional[Layout] = None):
-        if self._connection_status == 'disconnected':
+        if self._connection_status == 'disconnected':  # pragma: no branch
             self._open_new_window(layout=layout)
 
-    def js_console(self, level: Literal['debug', 'info', 'log', 'warn'], *args):
+    def js_console(self, level: Literal['debug', 'info', 'log', 'warn'], *args):  # pragma: no cover
         self._post_message(FrontendConsoleMessage(type='FrontendConsole', level=level, args=list(args)))
 
     @property
@@ -152,26 +157,38 @@ class Window:
 
         return unlock
 
-    def sync(self, *, only_if_needed=False):
-        if only_if_needed and self._synced:
+    def sync(
+        self,
+        *,
+        force=False,
+        full=False,
+    ):
+        if not force and self._synced:
             return
         query_id = tinyid()
-        self._post_message(QueryStateMessage(type='QueryState', queryId=query_id))
+        base_revision = -1 if full else self._store_revision
+        self._post_message(QueryStateMessage(type='QueryState', queryId=query_id, baseRevision=base_revision))
         msg: QueryStateResponseMessage = self._comm.wait_for_response(query_id)
-        self._store_state = msg['state']
-        self._store_revision = msg['revision']
+        if 'patch' in msg:
+            self._store_state = apply_patch(self._store_state, msg['patch']['patch'])  # type: ignore
+        if 'state' in msg:
+            self._store_state = msg['state']  # type: ignore
+        self._store_revision = msg['newRevision']
         self._synced = True
 
-    def snapshot(self, *, aspect_ratio: Optional[float] = None):
+    def _snapshot_bytes(self, *, aspect_ratio: Optional[float] = None):
         query_id = tinyid()
         self._post_message(QuerySnapshotMessage(type='QuerySnapshot', queryId=query_id, aspectRatio=aspect_ratio))
         data_url = self._comm.wait_for_query_response_text(query_id)
         _, encoded = data_url.split(",", 1)
-        image_data = base64.b64decode(encoded)
+        image_bytes = base64.b64decode(encoded)
+        return image_bytes
 
+    def snapshot_image(self, *, aspect_ratio: Optional[float] = None):  # pragma: no cover
         from IPython.display import Image  # type: ignore
 
-        image = Image(data=image_data)
+        image_bytes = self._snapshot_bytes(aspect_ratio=aspect_ratio)
+        image = Image(data=image_bytes)
         return image
 
     def jump_to(

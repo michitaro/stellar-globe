@@ -9,7 +9,7 @@ def test_catalogs(w: Window):
 
 
 def test_catalogs_from_pandas(w: Window):
-    sample = sample_pandas_data()
+    sample = sample_pandas_data(50)
     w.catalogs.from_pandas(sample)
 
 

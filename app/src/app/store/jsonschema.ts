@@ -50,7 +50,9 @@ export type ActionValidatorJsonSchema = {
 }
 
 
-export type ToAppValidatorJsonSchema = ToApp
+export type ToAppValidatorJsonSchema = {
+  [K in keyof ToApp]: AddValidatorName<ToApp[K], K>
+}
 
 
 export type PublicJsonSchema = {

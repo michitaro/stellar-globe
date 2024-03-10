@@ -1,30 +1,27 @@
 import { easing } from "@stellar-globe/stellar-globe"
+import { BatchPatch, Patch } from "./StateManager"
 
 export { generateJsonPatch, JsonPatchOp } from './jsonpatch'
 export function validateAction(action: any): { errors: string[] }
 export function validateToAppMessage(type: keyof ToApp, message: any): { errors: string[] }
+export { StateManager } from './StateManager'
 
 
 type AddType<T> = {
   [K in keyof T]: T[K] & { type: K }
 }
 
-export type FromApp = {
+export type FromApp = AddType<{
   Ready: {
+    /** @TJS-type integer */
     revision: number
     state: any
   }
   Closed: {
   }
-  StoreChanged: {
-    revision: number
-    diff: JsonPatchOp[]
-  }
-  QueryStateResponse: {
-    state: any
-    revision: number
-  }
-}
+  StoreChanged: Patch
+  QueryStateResponse: BatchPatch<unknown>
+}>
 
 export type ToApp = {
   Open: {
@@ -64,6 +61,8 @@ export type ToApp = {
   }
   QueryState: {
     queryId: string
+    /** @TJS-type integer */
+    baseRevision: number
   }
   QuerySnapshot: {
     queryId: string

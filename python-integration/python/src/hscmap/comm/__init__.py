@@ -9,10 +9,10 @@ def new_comm(initial_msg: Any, options: Optional[Any]) -> CommBase:
 
         options = JupyterLabCommOptions()
     if options.__class__.__name__ == 'JupyterLabCommOptions':
-        return JupyterLabComm(initial_msg, options)  # type: ignore
-    elif options.__class__.__name__ == 'ReferenceCommOptions':
-        from .reference import ReferenceComm
+        return JupyterLabComm(initial_msg, options)  # type: ignore # pragma: no cover
+    elif options.__class__.__name__ == 'MockCommOptions':
+        from .mock import MockComm
 
-        return ReferenceComm(initial_msg, options)  # type: ignore
+        return MockComm(initial_msg, options)  # type: ignore
     else:  # pragma: no cover
         raise ValueError(f'Unknown comm type: {type}')

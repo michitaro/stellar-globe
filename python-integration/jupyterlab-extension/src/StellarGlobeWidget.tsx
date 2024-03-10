@@ -5,10 +5,9 @@ import { ReactWidget } from '@jupyterlab/ui-components'
 import { Message } from '@lumino/messaging'
 import { Widget } from '@lumino/widgets'
 import StellarGlobeApp, { AppHandle, AppState } from '@stellar-globe/app'
-import { validateAction, validateToAppMessage, generateJsonPatch, ToApp, FromApp } from '@stellar-globe/app/commTools'
+import { FromApp, StateManager, ToApp, validateAction, validateToAppMessage } from '@stellar-globe/app/commTools'
 import { SkyCoord, easing } from '@stellar-globe/stellar-globe'
 import React, { useLayoutEffect, useRef } from 'react'
-import { assert } from './assert'
 import { cropCanvasToAspectRatio } from './cropCanvasToAspectRatio'
 import { EventEmitter } from './eventemitter'
 import { lockFrame } from './lockWindow'
@@ -19,8 +18,7 @@ type StellarGlobeWidgetEnv = {
   appHandle: AppHandle
   widget: Widget
   onWidgetClose: (cb: () => void) => void
-  storeChange: ReturnType<typeof EventEmitter<unknown>>
-  revision: () => number
+  stateManager: () => StateManager<unknown>
 }
 
 
@@ -61,22 +59,20 @@ export function makeStellarGlobeWidget(
     }
   })
 
-  let lastState: AppState | undefined = undefined
-  let revision = 1
+  let stateManager: StateManager<unknown>
 
   const Component = () => {
     const appRef = useRef<AppHandle>(null!)
 
-    const storeChange = EventEmitter<unknown>({ once: false })
-
     useLayoutEffect(() => {
       appHandle = appRef.current
+      stateManager = new StateManager(appHandle.getState())
+
       const env: StellarGlobeWidgetEnv = {
         appHandle: appRef.current,
         widget,
         onWidgetClose: cb => { cleanup.on(cb) },
-        storeChange,
-        revision: () => revision,
+        stateManager: () => stateManager,
       }
       comm.onMsg = onMsgFromPython(env)
 
@@ -85,22 +81,17 @@ export function makeStellarGlobeWidget(
         widgetEnvs.delete(id)
       })
 
-      lastState = appRef.current.getState()
       typedRespondToQuery('Ready', queryId, {
-        state: lastState,
-        revision,
+        revision: stateManager.revision,
+        state: appRef.current.getState(),
       })
     }, [])
 
     type OnStoreChange = NonNullable<Parameters<typeof StellarGlobeApp>[0]['onStoreChange']>
 
     const onStoreChange: OnStoreChange = ({ state }) => {
-      assert(lastState)
-      storeChange.emit(state)
-      const diff = generateJsonPatch(lastState, state)
-      ++revision
-      sendMsgToJupyter(comm, 'StoreChanged', { diff, revision })
-      lastState = state
+      const patch = stateManager.pushState(state)
+      sendMsgToJupyter(comm, 'StoreChanged', patch)
     }
 
     return (
@@ -156,7 +147,7 @@ export function makeStellarGlobeWidget(
 function onMsgFromPython({
   appHandle,
   widget,
-  revision,
+  stateManager,
 }: StellarGlobeWidgetEnv): CommType['onMsg'] {
   return wrapTypeCheck({
     Open() { },
@@ -187,12 +178,9 @@ function onMsgFromPython({
     UnlockFrame(msg) {
       lockFrame.unlock(msg.window_ids)
     },
-    QueryState: async ({ queryId }) => {
-      const state = appHandle.getState()
-      await typedRespondToQuery('QueryStateResponse', queryId, {
-        revision: revision(),
-        state,
-      })
+    QueryState: async ({ queryId, baseRevision }) => {
+      const batchPatch = stateManager().patchFrom(baseRevision)
+      await typedRespondToQuery('QueryStateResponse', queryId, batchPatch)
     },
     QuerySnapshot: async ({ queryId, aspectRatio }) => {
       const globe = appHandle.globe()

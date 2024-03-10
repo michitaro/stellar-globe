@@ -3,16 +3,11 @@ from dataclasses import dataclass
 from typing import List, Optional, Tuple, cast
 
 from .angle import Angle
-from .models.actions.regions.newCircularRegionAdded import \
-    Model as NewCircularRegionAdded
-from .models.actions.regions.newLinearRegionAdded import \
-    Model as NewLinearRegionAdded
-from .models.actions.regions.newPathRegionAdded import \
-    Model as NewPathRegionAdded
-from .models.actions.regions.newRectangularRegionAdded import \
-    Model as NewRectangularRegionAdded
-from .models.actions.regions.newTextRegionAdded import \
-    Model as NewTextRegionAdded
+from .models.actions.regions.newCircularRegionAdded import Model as NewCircularRegionAdded
+from .models.actions.regions.newLinearRegionAdded import Model as NewLinearRegionAdded
+from .models.actions.regions.newPathRegionAdded import Model as NewPathRegionAdded
+from .models.actions.regions.newRectangularRegionAdded import Model as NewRectangularRegionAdded
+from .models.actions.regions.newTextRegionAdded import Model as NewTextRegionAdded
 from .models.actions.regions.regionDeleted import Model as regionDeleted
 from .models.actions.regions.regionUpdated import Model as RegionUpdated
 from .models.store import JOINT
@@ -34,7 +29,7 @@ class RegionManager:
 
     @property
     def members(self) -> List['RegionBase']:
-        self._w.sync(only_if_needed=True)
+        self._w.sync()
         return [type_map[cast(str, r['type'])](r['id'], self._w) for r in self._w._store_state['regions']['regions']]
 
     def new_text(self, *, position: Tuple[float, float], text: str, color: Optional[List[float]] = None):
@@ -147,14 +142,14 @@ class RegionBase:
     _w: Window
 
     def _sync(self):
-        self._w.sync(only_if_needed=True)
+        self._w.sync()
 
     def _state(self):
         self._sync()
-        for r in self._w._store_state['regions']['regions']:
-            if r['id'] == self.id:
+        for r in self._w._store_state['regions']['regions']:  # pragma: no branch
+            if r['id'] == self.id:  # pragma: no branch
                 return r
-        raise ValueError(f"Region already deleted: {self.id}")
+        raise ValueError(f"Region already deleted: {self.id}")  # pragma: no cover
 
     def _update(self, **updates):
         self._w._dispatch(

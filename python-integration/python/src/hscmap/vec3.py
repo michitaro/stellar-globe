@@ -25,6 +25,14 @@ class SkyCoord:
             math.sin(self.dec.radian),
         )
 
+    @classmethod
+    def from_degree(cls, ra: float, dec: float) -> 'SkyCoord':
+        return cls(Angle.from_degree(ra), Angle.from_degree(dec))
+
+    @classmethod
+    def from_radian(cls, ra: float, dec: float) -> 'SkyCoord':
+        return cls(Angle.from_radian(ra), Angle.from_radian(dec))
+
 
 @dataclass
 class Vec3:

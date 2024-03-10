@@ -26,11 +26,11 @@ import styles from './style.module.scss'
 export type AppProps = {
   hashSync?: boolean
   storageSync?: boolean
+  storageKey?: string
   catchAllKeyboardEvents?: boolean
   floatingLayerElement?: HTMLElement
   floatingLayerZIndex?: CSSProperties['zIndex']
   activeOnInit?: boolean
-  storageKey?: string
   onStoreChange?: (e: StoreChangeEvent) => void
   initialState?: AppState
 }
