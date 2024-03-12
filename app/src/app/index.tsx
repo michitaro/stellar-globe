@@ -55,7 +55,7 @@ export const App = forwardRef<AppHandle, AppProps>(({
   onStoreChange,
   initialState,
 }, ref) => {
-  const context = useMakeContext({ active: activeOnInit, storageKey, onStoreChange, initialState })
+  const context = useMakeContext({ active: activeOnInit, storageKey, onStoreChange, initialState, hashSync })
   useSetupAppHandle(ref, context)
   const { rootElementRef, store, stateHistory } = context
   const { isFullscreen } = useIsFullscreen()

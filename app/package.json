@@ -17,7 +17,7 @@
     },
     "./commTools": {
       "import": "./dist/commTools.es.js",
-      "types": "./types/commTools.d.ts",
+      "types": "./types/commTools/index.d.ts",
       "default": "./dist/commTools.es.js"
     }
   },

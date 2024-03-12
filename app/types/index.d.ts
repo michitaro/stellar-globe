@@ -15,7 +15,7 @@ type AppProps = {
     initialState?: unknown
 }
 
-declare const App: FC<AppProps & { ref: unknown }>
+declare const App: FC<AppProps & { ref?: unknown }>
 export default App
 
 

@@ -1,10 +1,10 @@
 import { useEffect } from "react"
-import { AppState, AppStore } from ".."
+import { AppState, AppStore, storeInitializerParams } from ".."
 import { debounce } from "../../../common/utils/debounce"
-import { deserialize, serialize } from "../../../common/utils/serialize"
-import { appOnChange } from "./appOnChange"
 import { detectEnvironment } from "../../../common/utils/environment"
+import { deserialize, serialize } from "../../../common/utils/serialize"
 import { createIs } from "../persistentTypeValidation/createIs"
+import { appOnChange } from "./appOnChange"
 
 
 export type HashState = Partial<ReturnType<typeof hashState>>
@@ -70,7 +70,7 @@ export const readHashState = (() => {
   const isValidHashState = createIs<HashState>("HashState")
 
   const decode = (hash: string) => {
-    if (hash.length == 0) {
+    if (hash.length == 0 || !storeInitializerParams.current().hashSync) {
       return {}
     }
     try {
@@ -88,14 +88,15 @@ export const readHashState = (() => {
     return {} as never
   }
 
-  const rawInput = getRaw()
-  const value = decode(rawInput)
+  let cachedValue: HashState | undefined
 
   return (): HashState => {
-    if (rawInput !== getRaw()) {
-      throw new Error(`Read on hash after load.`)
+    if (cachedValue === undefined) {
+      const rawInput = getRaw()
+      const value = decode(rawInput)
+      cachedValue = value
     }
-    return value
+    return cachedValue
   }
 })()
 

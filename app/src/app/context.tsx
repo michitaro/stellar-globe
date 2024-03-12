@@ -13,6 +13,7 @@ type Params = {
   storageKey: string
   onStoreChange?: (e: StoreChangeEvent) => void
   initialState?: unknown
+  hashSync?: boolean
 }
 
 
@@ -20,7 +21,13 @@ export function useMakeContext(params: Params) {
   const { storageKey, onStoreChange } = params
   const globeHandle = useRef<GlobeHandle>(null)
   const rootElementRef = useRef<HTMLDivElement>(null)
-  const { store, stateHistory } = useInstanceVariable(() => makeStore({ storageKey, onStoreChange, initialState: params.initialState, activated: params.active }))
+  const { store, stateHistory } = useInstanceVariable(() => makeStore({
+    storageKey,
+    onStoreChange,
+    initialState: params.initialState,
+    activated: params.active,
+    hashSync: params.hashSync,
+  }))
   const dialogContext = useRef<DialogContextHandle>(null)
 
   return useMemo(() => ({

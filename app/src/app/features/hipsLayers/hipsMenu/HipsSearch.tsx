@@ -1,47 +1,16 @@
-import { FocusableItem, MenuItem, SubMenu } from "@szhsin/react-menu"
+import { FocusableItem, MenuItem } from "@szhsin/react-menu"
 import { Fragment, Suspense, memo, useState } from "react"
 import { ErrorBoundary } from "react-error-boundary"
-import { setDisplayName } from "../../../common/utils/setDisplayName"
-import { useAppDispatch, useAppSelector } from "../../store/hooks"
-import { hipsLayersSlice } from "./hipsLayersSlice"
-import styles from './style.module.scss'
-import { TomoegozenSubmenu } from "./tomoegozen"
-import { useDebounceInTransition } from "../../../common/hooks/useDebounceInTransition"
-import { Loader, SmallLoader } from "../../../common/components/Loader"
-import { Icon } from "../../../common/components/Icon"
+import { Icon } from "../../../../common/components/Icon"
+import { SmallLoader } from "../../../../common/components/Loader"
+import { useDebounceInTransition } from "../../../../common/hooks/useDebounceInTransition"
+import { setDisplayName } from "../../../../common/utils/setDisplayName"
+import { useAppDispatch, useAppSelector } from "../../../store/hooks"
+import { hipsLayersSlice } from "../hipsLayersSlice"
+import styles from '../style.module.scss'
 
 
-export const HipsMenu = memo(() => {
-  const dispatch = useAppDispatch()
-  const currentBaseUrl = useAppSelector(state => state.hipsLayers.baseUrl)
-
-  return (
-    <Fragment>
-      <HipsSearch />
-      <SubMenu label="Recommended">
-        <MenuItem
-          type='checkbox'
-          checked={currentBaseUrl === '//hscmap.mtk.nao.ac.jp/hscMap4/misc/hips/gaia'}
-          onClick={() => dispatch(hipsLayersSlice.actions.baseUrlChanged({ baseUrl: '//hscmap.mtk.nao.ac.jp/hscMap4/misc/hips/gaia' }))}>
-          GAIA DR2
-        </MenuItem>
-        <TomoegozenSubmenu />
-      </SubMenu>
-      <MenuItem onClick={() => dispatch(hipsLayersSlice.actions.baseUrlChanged({ baseUrl: undefined }))}>Clear</MenuItem>
-      <MenuItem
-        href="http://aladin.cds.unistra.fr/hips/list"
-        target="_blank"
-        rel="noreferrer"
-      >
-        HiPS list aggregator @ CDS
-      </MenuItem>
-    </Fragment>
-  )
-})
-setDisplayName({ HipsMenu })
-
-
-function HipsSearch() {
+export function HipsSearch() {
   const [searchText, setSearchText] = useState('')
   const [debouncedQuery, isPending] = useDebounceInTransition(400, searchText)
 
@@ -57,11 +26,8 @@ function HipsSearch() {
             placeholder="Search on CDS"
             onChange={e => {
               setSearchText(e.currentTarget.value)
-            }}
-          />
-          {
-            isPending && <SmallLoader />
-          }
+            }} />
+          {isPending && <SmallLoader />}
         </Fragment>
       )}</FocusableItem>
       <ErrorBoundary fallback={<MenuItem disabled><Icon type='error' /></MenuItem>}>
@@ -73,6 +39,7 @@ function HipsSearch() {
   )
 }
 
+
 // useSearchResults に useRef で持たせることはできない
 // render中にエラーが起きるとuseRefが消えるので。
 const searchCache = new Map<
@@ -83,6 +50,7 @@ const searchCache = new Map<
     error?: string
   }
 >
+
 
 function useSearchResults(query: string): HipsSurvey[] {
   if (!searchCache.has(query)) {
@@ -122,7 +90,6 @@ const SearchResults = memo(({ query }: { query: string }) => {
     </Fragment>
   )
 })
-
 setDisplayName({ SearchResults })
 
 
@@ -142,6 +109,6 @@ async function queryHiPS(q: string) {
 type HipsSurvey = {
   ID: string
   obs_title: string
-  hips_service_url: string
+  hips_service_url: string;
   [name: string]: string
 }

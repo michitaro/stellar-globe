@@ -12,6 +12,7 @@ import { hipsLayersSlice } from './hipsLayersSlice'
 import { HipsMenu } from './hipsMenu'
 import styles from './style.module.scss'
 import { resizableY } from '@stellar-globe/react-draggable-dialog'
+import { HipsProperties, parseHipsProperties } from './HipsProperties'
 
 
 export const HipsDialog = memo(() => {
@@ -95,15 +96,6 @@ const HipsInspector = memo(({ baseUrl }: HipsInspectorProps) => {
 
 setDisplayName({ HipsInspector })
 
-type Card = {
-  key: string
-  value: string
-}
-
-type HipsProperties = {
-  cards: Card[]
-}
-
 
 const cache = new Map<string, { promise: Promise<void>, result?: HipsProperties, error?: any }>()
 
@@ -126,24 +118,4 @@ function useHipsProperties(baseUrl: string) {
     return result
   }
   throw error ?? promise
-}
-
-
-function parseHipsProperties(input: string): HipsProperties {
-  const lines = input.split('\n')
-  const cards: Card[] = []
-
-  lines.forEach(line => {
-    // コメント行を無視
-    if (!line.startsWith('#') && line.trim() !== '') {
-      const [key, value] = line.split('=', 2).map(part => part.trim())
-      if (key && value) {
-        cards.push({ key, value })
-      }
-    }
-  })
-
-  return {
-    cards,
-  }
 }

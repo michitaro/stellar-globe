@@ -17,15 +17,17 @@ export function makeStore({
   onStoreChange,
   initialState,
   activated = true,
+  hashSync = true,
 }: {
   storageKey: string
+  hashSync?: boolean
   onStoreChange?: (e: StoreChangeEvent) => void
   initialState?: unknown // circular dependency を回避するためにunknown
   activated?: boolean
 }) {
   const stateHistory = makeStateHistory()
 
-  const store = storeInitializerParams.pushContext({ storageKey }, () => {
+  const store = storeInitializerParams.pushContext({ storageKey, hashSync }, () => {
     return configureStore({
       reducer: {
         [paramsSlice.name]: paramsSlice.reducer,
@@ -88,6 +90,7 @@ export type AppThunk<ReturnType = void> = ThunkAction<
 
 export const storeInitializerParams = makeGlobalStack<{
   storageKey: string
+  hashSync: boolean
 }>()
 
 
