@@ -30,6 +30,7 @@ export type ToApp = {
     initialState?: unknown
     queryId: string
     layout?: 'split-left' | 'split-right' | 'split-bottom' | 'merge-top' | 'merge-left' | 'merge-right' | 'merge-bottom' | 'tab-before' | 'tab-after'
+    extraOptions?: {}
   }
 } & AddType<{
   Close: {

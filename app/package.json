@@ -34,7 +34,6 @@
     "type-check": "tsc",
     "typed-scss-module": "typed-scss-modules src -n camel",
     "refresh-types": "npm run make-public-json-schema && npm run make-persistent-typevalidator && npm run make-toapp-typevalidator  && npm run make-action-typevalidator",
-    "make-persistent-typevalidator": "node ./node_modules/@stellar-globe/typescript-typevalidator/dist/cli.js -o ./src/app/store/persistentTypeValidation -t PersistentStateJsonSchema",
     "make-toapp-typevalidator": "node ./node_modules/@stellar-globe/typescript-typevalidator/dist/cli.js -o ./src/commTools/toAppTypeValidation -t ToAppValidatorJsonSchema",
     "make-action-typevalidator": "node ./node_modules/@stellar-globe/typescript-typevalidator/dist/cli.js -o ./src/commTools/actionTypeValidation -t ActionValidatorJsonSchema",
     "make-public-json-schema": "typescript-json-schema -o ./jsonschema/public.json --noExtraProps --required ./tsconfig.json PublicJsonSchema"

@@ -33,7 +33,7 @@ function RootDirecotry() {
 }
 
 
-const HipsEntryOrDirectory = memo(({ entry }: { entry: HipsEntryOrDirectory }) => {
+const HipsEntryOrDirectory = memo(({ entry }: { entry: Node }) => {
   if (entry.type === 'directory') {
     return <HipsDirectorySubMenu directory={entry} />
   }
@@ -41,7 +41,7 @@ const HipsEntryOrDirectory = memo(({ entry }: { entry: HipsEntryOrDirectory }) =
 })
 
 
-function HipsDirectorySubMenu({ directory }: { directory: HipsDirectory }) {
+function HipsDirectorySubMenu({ directory }: { directory: Directory }) {
   return (
     <SubMenu label={directory.name} overflow="auto">
       {directory.children.map(child => (
@@ -52,7 +52,7 @@ function HipsDirectorySubMenu({ directory }: { directory: HipsDirectory }) {
 }
 
 
-function HipsEntryMenuItem({ entry }: { entry: HipsEntry }) {
+function HipsEntryMenuItem({ entry }: { entry: Entry }) {
   const dispatch = useAppDispatch()
   const onClick = () => {
     dispatch(hipsLayersSlice.actions.baseUrlChanged({ baseUrl: entry.baseUrl }))
@@ -70,13 +70,13 @@ function HipsEntryMenuItem({ entry }: { entry: HipsEntry }) {
 
 
 const rootCache: {
-  promise?: Promise<HipsDirectory>
+  promise?: Promise<Directory>
   error?: any
-  result?: HipsDirectory
+  result?: Directory
 } = {}
 
 
-function useHipsDirectoryRoot(): HipsDirectory {
+function useHipsDirectoryRoot(): Directory {
   if (!rootCache.promise) {
     const promise = fetchHipsDirectory()
     rootCache.promise = promise
@@ -94,15 +94,15 @@ function useHipsDirectoryRoot(): HipsDirectory {
 }
 
 
-type HipsDirectory = {
+type Directory = {
   type: 'directory'
   id: string
   name: string
-  children: (HipsDirectory | HipsEntry)[]
+  children: Node[]
 }
 
 
-type HipsEntry = {
+type Entry = {
   type: 'entry'
   id: string
   baseUrl: string
@@ -110,15 +110,15 @@ type HipsEntry = {
 }
 
 
-type HipsEntryOrDirectory = HipsEntry | HipsDirectory
+type Node = Entry | Directory
 
 
-async function fetchHipsDirectory(): Promise<HipsDirectory> {
+async function fetchHipsDirectory(): Promise<Directory> {
   const url = `//alasky.cds.unistra.fr/MocServer/query?expr=(hips_frame%3Dequatorial%2Cgalactic%2Cecliptic+||+hips_frame%3D!*)+%26%26+dataproduct_type!%3Dcatalog%2Ccube+%26%26+hips_service_url%3D*&get=record`
   const response = await (await fetch(url)).text()
   const hipsTextList = response.split('\n\n')
 
-  const root: HipsDirectory = {
+  const root: Directory = {
     type: 'directory',
     id: '$id',
     name: '$name',
@@ -130,14 +130,13 @@ async function fetchHipsDirectory(): Promise<HipsDirectory> {
     return Object.fromEntries(h.cards.map(c => [c.key, c.value]))
   })
 
-  const mkdirForEntry = (e: HipsEntry) => {
+  const mkdirForEntry = (e: Entry) => {
     const routes = e.id.split('/')
     let current = root
     for (let i = 0; i < routes.length - 1; i++) {
       const route = routes[i]
       const id = routes.slice(0, i + 1).join('/')
-      let next = current.children.find(c => c.id === id && c.type === 'directory') as HipsDirectory | undefined
-      console.log(next)
+      let next = current.children.find(c => c.id === id && c.type === 'directory') as Directory | undefined
       if (!next) {
         next = {
           type: 'directory',
@@ -156,7 +155,7 @@ async function fetchHipsDirectory(): Promise<HipsDirectory> {
     try {
       const id = assertNotNull(h['ID'])
       const name = h['obs_title'] ?? id
-      const entry: HipsEntry = {
+      const entry: Entry = {
         type: 'entry',
         id,
         baseUrl: assertNotNull(h['hips_service_url']),
@@ -170,7 +169,8 @@ async function fetchHipsDirectory(): Promise<HipsDirectory> {
     }
   }
 
-  return simplifyDirectory(root)
+  const rootNode = simplifyNode(root)
+  return rootNode.type === 'directory' ? rootNode : { ...root, children: [rootNode] }
 }
 
 
@@ -182,31 +182,23 @@ function assertNotNull<T = any>(value: T): T {
 }
 
 
-function simplifyDirectory(parent: HipsDirectory): HipsDirectory {
+function simplifyNode(parent: Node): Node {
+  if (parent.type === 'entry') {
+    return parent
+  }
   if (parent.children.length === 1) {
-    const onlyChild = parent.children[0]
-    if (onlyChild.type === 'directory') {
-      const d = simplifyDirectory(onlyChild as HipsDirectory)
-      return {
-        ...d,
-        id: parent.id,
-        name: `${parent.name}/${d.name}`,
-      }
+    const onlyChild = simplifyNode(parent.children[0])
+    if (onlyChild.type === 'entry') {
+      return onlyChild
+    }
+    return {
+      ...onlyChild,
+      name: `${parent.name}/${onlyChild.name}`,
     }
   }
-
-  const children = parent.children.map(child => {
-    if (child.type === 'directory') {
-      if (child.children.length === 1 && child.children[0].type === 'directory') {
-        const newChild = simplifyDirectory(child.children[0] as HipsDirectory)
-        return {
-          ...newChild,
-          id: child.id,
-          name: `${child.name}/${newChild.name}`,
-        }
-      }
-    }
-    return child
-  })
-  return { ...parent, children }
+  const children = parent.children.map(simplifyNode)
+  return {
+    ...parent,
+    children,
+  }
 }
