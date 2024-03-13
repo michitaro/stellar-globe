@@ -144,6 +144,24 @@ export const catalogsSlice = createSlice({
         }
       },
     ),
+    catalogDuplicated: create.preparedReducer(
+      (payload: { id: string }) => trackAction({ payload }, `Catalog Duplicated`),
+      (state, { payload: { id } }) => {
+        const src = state.catalogs.find(c => c.id === id)
+        if (src) {
+          const newId = nanoid()
+          const newCatalog: Catalog = {
+            ...src,
+            id: newId,
+            name: `${src.name} (copy)`,
+            baseColor: nextColor(state),
+            dialog: defaultDialogState(),
+            selectedRecords: {},
+          }
+          state.catalogs.push(newCatalog)
+        }
+      },
+    ),
     catalogSelected: create.reducer(
       (state, { payload: { id } }: { payload: { id: string } }) => {
         state.currentCatalogId = id
@@ -320,7 +338,7 @@ type DialogState = {
 
 function defaultDialogState(state: Partial<DialogState> = {}): DialogState {
   return {
-    opened: true,
+    opened: false,
     checked: {},
     ...state,
   }

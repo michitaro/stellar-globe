@@ -148,6 +148,10 @@ const CatalogMenu = memo(({ catalog }: { catalog: Catalog }) => {
           </Fragment>
         ))}
       </SubMenu>
+      <MenuItem onClick={() => dispatch(catalogsSlice.actions.catalogDuplicated({ id: catalog.id }))}>
+        <Icon type='copy_all' marginRight />
+        Duplicate
+      </MenuItem>
       <MenuDivider />
       <MenuItem onClick={() => goToCatalog(catalog)}><Icon type='location_on' marginRight />Go to first row</MenuItem>
       <MenuDivider />
