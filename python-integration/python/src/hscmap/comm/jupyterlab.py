@@ -1,7 +1,10 @@
+import sys
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Optional
+from typing import Callable, Optional, TypedDict, Literal, Union
+
+from hscmap.models.Open import Model as Open
 
 from .base import CommBase, remove_none
 
@@ -14,8 +17,9 @@ class JupyterLabCommOptions:
 
 
 class JupyterLabComm(CommBase):  # pragma: no cover
-    def __init__(self, initial_msg, options: JupyterLabCommOptions) -> None:
-        self._comm = create_comm(comm_target, remove_none(initial_msg))
+    def __init__(self, open_msg: Open, options: JupyterLabCommOptions) -> None:
+        open_msg['extraOptions'] = extra_options()  # type: ignore
+        self._comm = create_comm(comm_target, remove_none(open_msg))
 
     def send(self, msg):
         self._comm.send(remove_none(msg))
@@ -44,6 +48,7 @@ class JupyterLabComm(CommBase):  # pragma: no cover
         while time.time() <= deadline:
             parent = Path(response_file).absolute().parent
             while True:
+                list(parent.glob('*'))  # This is a bit tricky, but in the JupyterLite environment, if you don't do this, newly created files won't be visible.
                 p = parent / response_file
                 try:
                     with open(p) as f:
@@ -57,6 +62,7 @@ class JupyterLabComm(CommBase):  # pragma: no cover
                     pass
                 finally:
                     p.unlink(missing_ok=True)
+                    pass
                 if parent == parent.parent:
                     break
                 parent = parent.parent
@@ -64,13 +70,45 @@ class JupyterLabComm(CommBase):  # pragma: no cover
         raise TimeoutError()
 
 
-def create_comm(target: str, initial_msg):  # pragma: no cover
-    try:
-        from comm import create_comm  # type: ignore
+# These parts need to be consistent with the jupyterlab extension
 
-    except ImportError:
-        from ipykernel.comm import Comm  # type: ignore
 
-        return Comm(target, initial_msg)
+class FileStorageOptions(TypedDict):
+    type: Literal['file']
+
+
+class IndexedDBStorageOptions(TypedDict):
+    type: Literal['indexeddb']
+    dbname: str
+
+
+class ExtraOptions(TypedDict):
+    storage: Union[FileStorageOptions, IndexedDBStorageOptions]
+
+
+def extra_options() -> ExtraOptions:
+    if sys.platform == 'emscripten':
+        return {'storage': {'type': 'indexeddb', 'dbname': 'JupyterLite Storage'}}
     else:
-        return create_comm(target, initial_msg)
+        return {'storage': {'type': 'file'}}
+
+
+def create_comm(target: str, initial_msg):  # pragma: no cover
+    f: Optional[Callable] = None
+    if f is None:
+        try:
+            from comm import create_comm  # type: ignore
+
+            f = create_comm
+        except ImportError:
+            pass
+    if f is None:
+        try:
+            from ipykernel.comm import Comm  # type: ignore
+
+            f = Comm
+        except ImportError:
+            pass
+    if f is None:
+        raise ImportError('No available comm module')
+    return f(target, initial_msg)

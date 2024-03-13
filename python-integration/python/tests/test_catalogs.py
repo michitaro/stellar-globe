@@ -26,7 +26,7 @@ def test_catalogs_new(w: Window):
     w.catalogs.clear()
     w.catalogs.new([0, 1, 2], [0, 1, 2])
     assert len(w.catalogs.members) == 1
-    assert w.catalogs.members[0]['name'] == 'Catalog 1'
+    assert w.catalogs.members[0].name == 'Catalog 1'
 
 
 @pytest.fixture

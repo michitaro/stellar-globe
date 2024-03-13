@@ -5,9 +5,6 @@ from hscmap.regions import TextRegion, CircleRegion, LinearRegion, PathRegion, R
 import pytest
 
 
-pytestmark = [pytest.mark.hot]
-
-
 def test_regions(w: Window):
     w.regions
 

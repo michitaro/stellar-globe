@@ -14,6 +14,10 @@ setup(
             'numpy',
             'requests',
             'datamodel-code-generator==0.25.*',
+            'build',
+        ],
+        'hscmapserver': [
+            'websockets',
         ],
     },
 )

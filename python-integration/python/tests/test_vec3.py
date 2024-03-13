@@ -1,6 +1,6 @@
 import math
 
-from hscmap.vec3 import Vec3, SkyCoord, Angle
+from hscmap.vec3 import Angle, SkyCoord, Vec3
 
 
 def test_addition():
@@ -97,7 +97,7 @@ def test_skycoord():
     skycoord = SkyCoord(ra, dec)
     result = skycoord.as_dict()
     assert result == {'ra': math.pi / 6, 'dec': 0.0}
-    v3 = skycoord.vec3()
+    v3 = skycoord.as_vec3()
     assert math.isclose(v3.x, math.sqrt(3) / 2)
     assert math.isclose(v3.y, 0.5)
     assert math.isclose(v3.z, 0.0)
@@ -113,3 +113,10 @@ def test_skycoord_from_radian():
     skycoord = SkyCoord.from_radian(math.pi / 6, 0)
     result = skycoord.as_dict()
     assert result == {'ra': math.pi / 6, 'dec': 0.0}
+
+
+def test_from_vec3():
+    v1 = Vec3(1, 1, math.sqrt(2))
+    result = SkyCoord.from_vec3(v1)
+    assert math.isclose(result.ra.radian, math.pi / 4)
+    assert math.isclose(result.dec.radian, math.pi / 4)

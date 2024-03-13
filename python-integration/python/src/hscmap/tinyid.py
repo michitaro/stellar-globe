@@ -1,5 +1,5 @@
 import secrets
 
 
-def tinyid():
-    return secrets.token_urlsafe(16)
+def tinyid(length: int = 16):
+    return secrets.token_urlsafe(length)

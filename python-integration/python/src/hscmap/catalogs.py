@@ -27,16 +27,11 @@ class CatalogManager:
     @property
     def members(self):
         self._w.sync()
-        return self._w._store_state['catalogs']['catalogs']
+        return [Catalog(c['id'], self._w) for c in self._w._store_state['catalogs']['catalogs']]
 
     def clear(self):
         for catalog in self.members:
-            self._w._dispatch(
-                CatalogDeleted(
-                    type='catalogs/catalogDeleted',
-                    payload={'id': catalog['id']},
-                )
-            )
+            catalog.delete()
 
     def _new(
         self,
@@ -118,7 +113,7 @@ class CatalogManager:
                 w._angle_input(ra),
                 w._angle_input(dec),
             )
-            .vec3()
+            .as_vec3()
             .as_list()
             for ra, dec in zip(ras, decs)
         ]
@@ -155,7 +150,7 @@ class CatalogManager:
 
         return self._new(
             table={},
-            xyz=[SkyCoord(self._w._angle_input(r), self._w._angle_input(d)).vec3().as_list() for r, d in zip(ra, dec)],
+            xyz=[SkyCoord(self._w._angle_input(r), self._w._angle_input(d)).as_vec3().as_list() for r, d in zip(ra, dec)],
             color=color,
             type=type,
             base_color=base_color,
@@ -245,7 +240,8 @@ class Catalog:
     @selected_indices.setter
     def selected_indices(self, indicse: List[int]):
         # TODO: OPIMIZE
-        from hscmap.models.actions.catalogs.recordSelected import Model as RecordSelected
+        from hscmap.models.actions.catalogs.recordSelected import \
+            Model as RecordSelected
 
         def toggle(index: int, selected: bool):
             self._w._dispatch(

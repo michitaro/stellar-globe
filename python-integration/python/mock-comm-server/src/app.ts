@@ -116,7 +116,6 @@ if (import.meta.env.PROD) {
 
 async function undefinedToNullMiddleware(ctx: Koa.ParameterizedContext, next: Koa.Next) {
   await next()
-
   if (ctx.body && (typeof ctx.body === 'object' || Array.isArray(ctx.body))) {
     ctx.body = JSON.parse(JSON.stringify(ctx.body, (key, value) => {
       if (value === undefined) {

@@ -375,7 +375,7 @@ type_map = {
 
 
 def polygon_path(center: SkyCoord, radius: float, n: int, *, color: List[float] = [1, 1, 1, 1]) -> List[Path]:
-    o = center.vec3()
+    o = center.as_vec3()
     e2 = o.cross(Vec3(0, 0, 1)).normalize()
     e1 = e2.cross(o).normalize()
     paths: List[Path] = [

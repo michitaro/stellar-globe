@@ -1,10 +1,13 @@
 python_home := ./.venv
-python = ~/miniconda3/envs/py3_12/bin/python
+miniconda3_python = ~/miniconda3/envs/py3_12/bin/python
 
 .PHONE: setup test test-watch datamodel typecheck typecheck-watch
 
+build:
+	$(python_home)/bin/python -m build
+
 setup:
-	$(python) -m venv $(python_home)
+	$(miniconda3_python) -m venv $(python_home)
 	$(python_home)/bin/pip install -U pip
 	$(python_home)/bin/pip install -e .
 	$(python_home)/bin/pip install -e '.[dev]'

@@ -73,7 +73,7 @@ def test_window_action_on_closed_window(w: Window):
     while comm.pull_message():
         pass
     assert w._connection_status == 'disconnected'
-    w.sync(sync=True)
+    w.sync(force=True)
     while comm.pull_message():
         pass
     assert w._connection_status == 'connected'

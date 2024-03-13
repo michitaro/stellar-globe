@@ -20,6 +20,9 @@ class CommBase(abc.ABC):
         text = self.wait_for_query_response_text(query_id)
         return json.loads(text)
 
+    def close(self):
+        pass
+
 
 T = TypeVar('T')
 

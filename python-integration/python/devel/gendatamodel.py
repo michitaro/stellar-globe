@@ -54,6 +54,7 @@ def main():
             )
 
     subprocess.check_call(['rsync', '-av', '--exclude=.gitignore', '--delete', f'{tmp_dir}/', dest_dir])
+    run_bash('''find ./src/hscmap/models  -type d | grep -v __pycache__ | while read d; do touch $d/__init__.py; done''')
     shutil.rmtree(tmp_dir, ignore_errors=True)
 
 
@@ -113,6 +114,11 @@ def datamodel_codegen(schema):
 
 def load_json_file(path: Path):
     return json.loads(path.read_text())
+
+
+def run_bash(cmd: str):
+    logging.info(f'Running {cmd}...')
+    subprocess.check_call(['bash', '-c', cmd])
 
 
 if __name__ == '__main__':

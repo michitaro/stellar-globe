@@ -72,6 +72,7 @@ class Window:
                 layout=cast(Any, layout),
                 initialState=self._store_state,
                 queryId=query_id,
+                extraOptions=None,  # This field might by overwritten by the comm implementation
             ),
             self._comm_options,
         )
@@ -119,6 +120,7 @@ class Window:
 
     def _on_closed(self):
         self._connection_status = 'disconnected'
+        self._comm.close()
 
     def _on_store_changed(self, msg: StoreChangedMessage):
         if self._store_revision == msg['baseRevision']:

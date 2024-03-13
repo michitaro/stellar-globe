@@ -18,7 +18,7 @@ class SkyCoord:
     def as_dict(self) -> SkyCooerdDict:
         return {'ra': self.ra.radian, 'dec': self.dec.radian}
 
-    def vec3(self) -> 'Vec3':
+    def as_vec3(self) -> 'Vec3':
         return Vec3(
             math.cos(self.ra.radian) * math.cos(self.dec.radian),
             math.sin(self.ra.radian) * math.cos(self.dec.radian),
@@ -31,6 +31,13 @@ class SkyCoord:
 
     @classmethod
     def from_radian(cls, ra: float, dec: float) -> 'SkyCoord':
+        return cls(Angle.from_radian(ra), Angle.from_radian(dec))
+
+    @classmethod
+    def from_vec3(cls, vec: 'Vec3') -> 'SkyCoord':
+        vec = vec.normalize()
+        ra = math.atan2(vec.y, vec.x)
+        dec = math.asin(vec.z)
         return cls(Angle.from_radian(ra), Angle.from_radian(dec))
 
 
