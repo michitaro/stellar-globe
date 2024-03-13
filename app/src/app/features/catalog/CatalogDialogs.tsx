@@ -1,4 +1,3 @@
-import Papa from 'papaparse'
 import { SkyCoord } from "@stellar-globe/stellar-globe"
 import { MenuDivider, MenuItem, SubMenu } from "@szhsin/react-menu"
 import classNames from "classnames"
@@ -12,7 +11,7 @@ import { useAppContext } from '../../context'
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
 import { Catalog, catalogsSlice } from "./catalogSlice"
 import styles from './styles.module.scss'
-import { downloadFile } from '../../../common/utils/downloadFile'
+
 
 export const CatalogDialogs = memo(() => {
   const catalogs = useAppSelector(state => state.catalogs.catalogs)
@@ -110,20 +109,6 @@ const CatalogDialog = memo(({ catalog, dialog }: { catalog: Catalog, dialog: Non
     e.preventDefault()
   }, [catalog.attributes.length, catalog.id, dispatch, focus, focusFollowsUpDownArrowsKeys, focusedIndex])
 
-  const download = useCallback((options: { onlySelected: boolean }) => {
-    const attributes = (options.onlySelected ?
-      (Object.keys(catalog.selectedRecords) as any as number[]).map(i => catalog.attributes[i]) :
-      catalog.attributes
-    )
-
-    const csv = Papa.unparse({
-      fields: catalog.fields,
-      data: attributes,
-    })
-
-    downloadFile({ content: csv, filename: `${catalog.name.replace(/\.csv$/i, '')}${options.onlySelected ? ' (only selected)' : ''}.csv`, type: 'text/csv' })
-  }, [catalog.attributes, catalog.fields, catalog.name, catalog.selectedRecords])
-
   return (
     <AppDialog
       title={catalog.name}
@@ -147,9 +132,6 @@ const CatalogDialog = memo(({ catalog, dialog }: { catalog: Catalog, dialog: Non
               ))
             }
           </SubMenu>
-          <MenuDivider />
-          <MenuItem onClick={() => download({ onlySelected: false })} >Download as CSV</MenuItem>
-          <MenuItem onClick={() => download({ onlySelected: true })} >Download as CSV (Only Checked Rows)</MenuItem>
         </Fragment>
       }
     >

@@ -69,7 +69,7 @@ export const App = forwardRef<AppHandle, AppProps>(({
     <AppContextProvider context={context} >
       <Provider store={store}>
         <div
-          className={classNames(styles.main, styles.thema)}
+          className={classNames(styles.main, styles.theme)}
           ref={rootElementRef}
           tabIndex={catchAllKeyboardEvents ? undefined : -1}
         >
@@ -88,7 +88,7 @@ export const App = forwardRef<AppHandle, AppProps>(({
           </MenuProvider>
         </div>
         {createPortal((
-          <div className={classNames(styles.thema, styles.floatingLayer)} style={{ zIndex: floatingLayerZIndex }} >
+          <div className={classNames(styles.theme, styles.floatingLayer)} style={{ zIndex: floatingLayerZIndex }} >
             <div ref={dialogLayer} />
             <div data-no-dnd ref={menuLayer} />
           </div>

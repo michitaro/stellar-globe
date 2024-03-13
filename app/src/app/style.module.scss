@@ -14,14 +14,14 @@
   position: fixed;
 }
 
-.thema {
+.theme {
   font-family: sans-serif;
 
   button,
   select {
     @include hoverable;
-    padding: 4px 8px;
-    margin: 4px;
+    padding: 0 4px;
+    margin: 0 4px;
     border: 0 none black;
     border-radius: 8px;
     box-shadow: 0 0 4px rgba(white, 0.5);

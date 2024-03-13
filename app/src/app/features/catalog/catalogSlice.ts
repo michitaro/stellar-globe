@@ -95,6 +95,55 @@ export const catalogsSlice = createSlice({
         }
       },
     ),
+    deselectedRowsDeleted: create.preparedReducer(
+      (payload: { id: string }) => trackAction({ payload }, `Deselected rows deleted`),
+      (state, { payload: { id } }) => {
+        const catalog = state.catalogs.find(c => c.id === id)
+        if (catalog) {
+          catalog.markers = catalog.markers.filter((_, i) => catalog.selectedRecords[i])
+          catalog.attributes = catalog.attributes.filter((_, i) => catalog.selectedRecords[i])
+          catalog.selectedRecords = {}
+        }
+      },
+    ),
+    selectionInverted: create.preparedReducer(
+      (payload: { id: string }) => trackAction({ payload }, `Selection Inverted`),
+      (state, { payload: { id } }) => {
+        const catalog = state.catalogs.find(c => c.id === id)
+        if (catalog) {
+          const indices = Array.from(catalog.markers, (v, i) => i)
+          const selected = indices.filter(i => !catalog.selectedRecords[i])
+          catalog.selectedRecords = Object.fromEntries(selected.map(i => [i, true]))
+        }
+      },
+    ),
+    allRowsSelected: create.preparedReducer(
+      (payload: { id: string, selected?: boolean }) => trackAction({ payload }, `All Rows (De)Selected`),
+      (state, { payload: { id, selected } }) => {
+        const catalog = state.catalogs.find(c => c.id === id)
+        if (catalog) {
+          if (selected) {
+            catalog.selectedRecords = Object.fromEntries(catalog.markers.map((_, i) => [i, true]))
+          }
+          else {
+            catalog.selectedRecords = {}
+          }
+        }
+      },
+    ),
+    catalogMerged: create.preparedReducer(
+      (payload: { srcId: string, dstId: string, onlySelected: boolean, deleteSrc: boolean }) => trackAction({ payload }, `Catalog Merged`),
+      (state, { payload: { srcId, dstId, deleteSrc, onlySelected } }) => {
+        const src = state.catalogs.find(c => c.id === srcId)
+        const dst = state.catalogs.find(c => c.id === dstId)
+        if (src && dst) {
+          mergeCatalog(dst, src, onlySelected)
+          if (deleteSrc) {
+            state.catalogs = state.catalogs.filter(c => c.id !== srcId)
+          }
+        }
+      },
+    ),
     catalogSelected: create.reducer(
       (state, { payload: { id } }: { payload: { id: string } }) => {
         state.currentCatalogId = id
@@ -283,4 +332,30 @@ function nextColor(state: State): V4 {
     return colorSeries(state.catalogs.length, { alpha: 0.75 })
   }
   return state.catalogs[state.catalogs.length - 1].baseColor
+}
+
+
+
+function mergeCatalog(dst: Catalog, src: Catalog, onlySelected: boolean) {
+  const srcFields = src.fields
+  const dstFields = dst.fields
+  const newFields = Array.from(new Set([...dstFields, ...srcFields]))
+  const newMarkers = [
+    ...dst.markers,
+    ...(onlySelected ?
+      src.markers.filter((_, i) => src.selectedRecords[i]) :
+      src.markers)
+  ]
+  const srcFieldMap = Object.fromEntries(srcFields.map((f, i) => [f, i]))
+  const dstFieldMap = Object.fromEntries(dstFields.map((f, i) => [f, i]))
+
+  const srcAttributes = onlySelected ? src.attributes.filter((_, i) => src.selectedRecords[i]) : src.attributes
+
+  const newAttributes = [
+    ...dst.attributes.map(row => newFields.map(f => row[dstFieldMap[f]] ?? '')),
+    ...srcAttributes.map(row => newFields.map(f => row[srcFieldMap[f]] ?? '')),
+  ]
+
+  dst.markers = newMarkers
+  dst.attributes = newAttributes
 }

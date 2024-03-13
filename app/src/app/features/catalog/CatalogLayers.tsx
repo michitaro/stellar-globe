@@ -108,7 +108,7 @@ const CatalogLayer$ = memo(({ catalog }: CatalogProps) => {
             exitActive: styles.fadeExitActive,
           }}
         >
-          {hoverIndex === null ? <Fragment /> : (
+          {hoverIndex !== null && hoverIndex < catalog.attributes.length ? (
             <div ref={nodeRef} className={styles.objectInspector}>
               <table>
                 <tbody>
@@ -121,7 +121,7 @@ const CatalogLayer$ = memo(({ catalog }: CatalogProps) => {
                 </tbody>
               </table>
             </div>
-          )}
+          ) : <Fragment />}
         </CSSTransition>
       )}
     </Fragment>
