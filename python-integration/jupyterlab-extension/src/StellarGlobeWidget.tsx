@@ -19,20 +19,26 @@ type StellarGlobeWidgetEnv = {
   widget: Widget
   onWidgetClose: (cb: () => void) => void
   stateManager: () => StateManager<unknown>
+  storageOptions: StorageOptions
+}
+
+
+type StorageOptions = IndexedDBStorageOptions | FileStorageOptions
+
+
+type IndexedDBStorageOptions = {
+  type: 'indexeddb'
+  dbname: string
+}
+
+type FileStorageOptions = {
+  type: 'file'
 }
 
 
 // keyはwindow.id
 export const widgetEnvs = new Map<string, StellarGlobeWidgetEnv>()
 
-
-export type StellarGlobeWidgetParams = {
-  id: string
-  title?: string
-  layout?: 'split-left' | 'split-right' | 'split-bottom' | 'merge-top' | 'merge-left' | 'merge-right' | 'merge-bottom' | 'tab-before' | 'tab-after'
-  initialState?: unknown // AppStateとしたいが、typescript-json-schemaがエラーを起こすのでunknown
-  queryId: string
-}
 
 export function makeStellarGlobeWidget(
   env: StellarGlobeSessionEnv,
@@ -43,7 +49,8 @@ export function makeStellarGlobeWidget(
     title = 'StellarGlobe',
     initialState,
     queryId,
-  }: StellarGlobeWidgetParams,
+    extraOptions,
+  }: ToApp['Open'],
 ) {
   const shell = env.app.shell as LabShell
 
@@ -63,6 +70,8 @@ export function makeStellarGlobeWidget(
 
   const Component = () => {
     const appRef = useRef<AppHandle>(null!)
+    const storageOptions: StorageOptions = (extraOptions as any)?.storage || { type: 'file' }
+
 
     useLayoutEffect(() => {
       appHandle = appRef.current
@@ -73,6 +82,7 @@ export function makeStellarGlobeWidget(
         widget,
         onWidgetClose: cb => { cleanup.on(cb) },
         stateManager: () => stateManager,
+        storageOptions,
       }
       comm.onMsg = onMsgFromPython(env)
 
@@ -84,7 +94,7 @@ export function makeStellarGlobeWidget(
       typedRespondToQuery('Ready', queryId, {
         revision: stateManager.revision,
         state: appRef.current.getState(),
-      })
+      }, storageOptions)
     }, [])
 
     type OnStoreChange = NonNullable<Parameters<typeof StellarGlobeApp>[0]['onStoreChange']>
@@ -148,6 +158,7 @@ function onMsgFromPython({
   appHandle,
   widget,
   stateManager,
+  storageOptions,
 }: StellarGlobeWidgetEnv): CommType['onMsg'] {
   return wrapTypeCheck({
     Open() { },
@@ -180,13 +191,13 @@ function onMsgFromPython({
     },
     QueryState: async ({ queryId, baseRevision }) => {
       const batchPatch = stateManager().patchFrom(baseRevision)
-      await typedRespondToQuery('QueryStateResponse', queryId, batchPatch)
+      await typedRespondToQuery('QueryStateResponse', queryId, batchPatch, storageOptions)
     },
     QuerySnapshot: async ({ queryId, aspectRatio }) => {
       const globe = appHandle.globe()
       const originalCanvas = globe.gl.canvas as HTMLCanvasElement
       const url = (aspectRatio ? cropCanvasToAspectRatio(originalCanvas, aspectRatio) : originalCanvas).toDataURL()
-      await respondToQuery(queryId, url)
+      await respondToQuery(queryId, url, storageOptions)
     },
     JumpTo({ ra, dec, fov, duration, easingFunction }) {
       const globe = appHandle.globe()
@@ -197,23 +208,68 @@ function onMsgFromPython({
 }
 
 
-async function typedRespondToQuery<T extends keyof FromApp>(type: T, relpath: string, data: Omit<FromApp[T], 'type'>) {
-  return await respondToQuery(relpath, JSON.stringify({ ...data, type }))
+async function typedRespondToQuery<T extends keyof FromApp>(type: T, queryId: string, data: Omit<FromApp[T], 'type'>, options: StorageOptions) {
+  return await respondToQuery(queryId, JSON.stringify({ ...data, type }), options)
 }
 
-async function respondToQuery(relpath: string, content: string) {
-  const manager = new ContentsManager()
-  await manager.save(`~query-${relpath}`, {
-    type: 'file',
-    format: 'text',
-    content: `${content.length}\n${content}`,
+async function respondToQuery(queryId: string, content: string, options: StorageOptions) {
+  const fileContent = `${content.length}\n${content}`
+  const filename = `~query-${queryId}`
+  switch (options.type) {
+    case 'indexeddb': {
+      await saveFileOnJupyterLiteIndexedDB(filename, fileContent, options)
+      break
+    }
+    case 'file': {
+      const manager = new ContentsManager()
+      await manager.save(filename, {
+        type: 'file',
+        format: 'text',
+        content: fileContent,
+      })
+      break
+    }
+    default:
+      throw new Error(`Unknown storage type: ${options}`)
+  }
+}
+
+
+function saveFileOnJupyterLiteIndexedDB(filename: string, content: string, options: IndexedDBStorageOptions) {
+  return new Promise<void>((resolve, reject) => {
+    const request = indexedDB.open(options.dbname)
+    request.onsuccess = () => {
+      const db = request.result
+      const tx = db.transaction('files', 'readwrite')
+      const store = tx.objectStore('files')
+      const record = {
+        "size": 0,
+        "name": filename,
+        "path": filename,
+        "last_modified": new Date().toISOString(), // "2024-03-12T19:37:22.480Z"
+        "created": new Date().toISOString(),
+        "format": "text",
+        "mimetype": "text/plain",
+        "content": content,
+        "writable": true,
+        "type": "file",
+      }
+      const putRequest = store.put(record, filename)
+      putRequest.onsuccess = () => {
+        resolve()
+      }
+      putRequest.onerror = () => {
+        reject(putRequest.error)
+      }
+    }
+    request.onerror = () => {
+      reject(request.error)
+    }
   })
 }
 
 
-
 function wrapTypeCheck(cbmap: { [K in keyof ToApp]: (msg: ToApp[K]) => void }): CommType['onMsg'] {
-
   const typeCheckers = Object.fromEntries(Object.keys(cbmap).map(k => [
     k,
     (msg: any) => {
@@ -255,5 +311,19 @@ function wrapTypeCheck(cbmap: { [K in keyof ToApp]: (msg: ToApp[K]) => void }): 
 
 function sendMsgToJupyter<Type extends keyof FromApp>(comm: CommType, type: Type, obj: Omit<FromApp[Type], 'type'>) {
   const msg = { ...obj, type }
-  comm.send(msg)
+  comm.send(replaceUndefinedWithNull(msg))
+}
+
+
+function replaceUndefinedWithNull(obj: any): any {
+  if (obj === null || obj === undefined) {
+    return null
+  }
+  if (Array.isArray(obj)) {
+    return obj.map(item => replaceUndefinedWithNull(item))
+  }
+  if (typeof obj === 'object') {
+    return Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, replaceUndefinedWithNull(v)]))
+  }
+  return obj
 }
