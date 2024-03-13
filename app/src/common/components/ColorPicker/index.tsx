@@ -66,12 +66,14 @@ export const ColorPickerRgb = memo(({ color, onChange }: Props<V3>) => {
   return (
     <Pallete
       renderTrigger={
-        <button
-          className={styles.toggleButton}
-          style={{
-            backgroundColor: `rgb(${r}, ${g}, ${b})`
-          }}
-        />
+        <CheckeredPatternBackground>
+          <button
+            className={styles.toggleButton}
+            style={{
+              backgroundColor: `rgb(${r}, ${g}, ${b})`
+            }}
+          />
+        </CheckeredPatternBackground>
       }
       renderPalette={
         <RgbColorPicker color={v3ToRgb(color)} onChange={newRgb => {
@@ -89,12 +91,14 @@ export const ColorPickerRgba = memo(({ color, onChange }: Props<V4>) => {
   return (
     <Pallete
       renderTrigger={
-        <button
-          className={styles.toggleButton}
-          style={{
-            backgroundColor: `rgba(${r}, ${g}, ${b}, ${a})`
-          }}
-        />
+        <CheckeredPatternBackground>
+          <button
+            className={styles.toggleButton}
+            style={{
+              backgroundColor: `rgba(${r}, ${g}, ${b}, ${a})`
+            }}
+          />
+        </CheckeredPatternBackground>
       }
       renderPalette={
         <RgbaColorPicker color={v4ToRgba(color)} onChange={newRgba => {
@@ -104,6 +108,15 @@ export const ColorPickerRgba = memo(({ color, onChange }: Props<V4>) => {
     />
   )
 })
+
+
+function CheckeredPatternBackground({ children }: { children: ReactNode }) {
+  return (
+    <div className={styles.checkeredPattern}>
+      {children}
+    </div>
+  )
+}
 
 
 function v3ToRgb(v3: V3): RgbColor {

@@ -1,3 +1,4 @@
+export declare const checkeredPattern: string;
 export declare const fadeEnter: string;
 export declare const fadeEnterActive: string;
 export declare const fadeExit: string;
