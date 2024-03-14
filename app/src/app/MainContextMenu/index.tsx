@@ -1,9 +1,10 @@
-import { SkyCoord, angle } from "@stellar-globe/stellar-globe"
+import { SkyCoord } from "@stellar-globe/stellar-globe"
 import { MenuItem, SubMenu } from "@szhsin/react-menu"
-import { useBlockUI } from "../../common/components/Modal"
-import { catalogsSlice } from "../features/catalog/catalogSlice"
-import { useAppDispatch } from "../store/hooks"
-import { simbadCatalog } from "./simbad"
+import { Fragment } from "react/jsx-runtime"
+import { copyToClipboard } from "../../common/utils/copyToClipboard"
+import { AngleUnit } from "../../common/utils/formatAngle"
+import { AddCoordinatesToCatalogMenu } from "./AddCoordinatesToCatalogMenu"
+import { SimbadMenu } from "./SimbadMenu"
 
 
 type Props = {
@@ -14,32 +15,32 @@ type Props = {
 export function MainContextMenu({
   openedAt,
 }: Props) {
-  const dispatch = useAppDispatch()
-  const blockUI = useBlockUI()
-  const addSymbadCatalog = (radiusAmin: number) => {
-    return async () => {
-      await blockUI(async () => {
-        try {
-          const { attributes, markers, fields, } = await simbadCatalog(openedAt, angle.amin2rad(radiusAmin))
-          dispatch(catalogsSlice.actions.catalogAdded({
-            name: `SIMBAD`,
-            fields,
-            attributes,
-            markers,
-          }))
-        } catch (e) {
-          alert(e)
-        }
-      })
-    }
+  const copyCoords = async (angleUnit: AngleUnit) => {
+    await copyToClipboard(skyCoordToString(openedAt, angleUnit))
   }
 
   return (
-    <SubMenu label="SIMBAD">
-      <MenuItem onClick={addSymbadCatalog(1)}>1&prime;</MenuItem>
-      <MenuItem onClick={addSymbadCatalog(5)}>5&prime;</MenuItem>
-      <MenuItem onClick={addSymbadCatalog(10)}>10&prime;</MenuItem>
-      <MenuItem onClick={addSymbadCatalog(60)}>1&deg;</MenuItem>
-    </SubMenu>
+    <Fragment>
+      <SimbadMenu openedAt={openedAt} />
+      <SubMenu label='Copy Coordinates'>
+        <MenuItem onClick={() => copyCoords('degree')}>in Degree</MenuItem>
+        <MenuItem onClick={() => copyCoords('sexadecimal')}>in Sexadecimal</MenuItem>
+      </SubMenu>
+      <AddCoordinatesToCatalogMenu openedAt={openedAt} />
+    </Fragment>
   )
+}
+
+
+function skyCoordToString(coord: SkyCoord, angleUnit: AngleUnit) {
+  switch (angleUnit) {
+    case 'degree':
+      return `${coord.a.deg} ${coord.d.deg}`
+    case 'radian':
+      return `${coord.a.rad} ${coord.d.rad}`
+    case 'sexadecimal': {
+      const { a, d } = coord.toString()
+      return `${a} ${d}`
+    }
+  }
 }

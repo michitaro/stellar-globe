@@ -46,6 +46,8 @@ export const catalogsSlice = createSlice({
   initialState,
   reducers: create => ({
     catalogAdded: create.preparedReducer(
+      // npm run make-public-json-schema した時に出る↓のエラーはこの辺りが原因
+      // exception evaluating initializer for property params
       (params: NewCatalogParams, options: { openDialog?: boolean } = {}) => {
         const id = params.id ?? nanoid()
         return trackAction({
@@ -97,13 +99,13 @@ export const catalogsSlice = createSlice({
         }
       },
     ),
-    deselectedRowsDeleted: create.preparedReducer(
-      (payload: { id: string }) => trackAction({ payload }, `Deselected rows deleted`),
-      (state, { payload: { id } }) => {
+    rowsFiltered: create.preparedReducer(
+      (payload: { id: string, selected: boolean }) => trackAction({ payload }, `Rows Filtered`),
+      (state, { payload: { id, selected } }) => {
         const catalog = state.catalogs.find(c => c.id === id)
         if (catalog) {
-          catalog.markers = catalog.markers.filter((_, i) => catalog.selectedRecords[i])
-          catalog.attributes = catalog.attributes.filter((_, i) => catalog.selectedRecords[i])
+          catalog.markers = catalog.markers.filter((_, i) => !!catalog.selectedRecords[i] == selected)
+          catalog.attributes = catalog.attributes.filter((_, i) => !!catalog.selectedRecords[i] == selected)
           catalog.selectedRecords = {}
         }
       },
@@ -120,7 +122,7 @@ export const catalogsSlice = createSlice({
       },
     ),
     allRowsSelected: create.preparedReducer(
-      (payload: { id: string, selected?: boolean }) => trackAction({ payload }, `All Rows (De)Selected`),
+      (payload: { id: string, selected: boolean }) => trackAction({ payload }, `All Rows (De)Selected`),
       (state, { payload: { id, selected } }) => {
         const catalog = state.catalogs.find(c => c.id === id)
         if (catalog) {
@@ -206,6 +208,54 @@ export const catalogsSlice = createSlice({
     showAttributesToggled: create.reducer<{ show: boolean }>((state, { payload: { show } }) => {
       state.showAttributes = show
     }),
+    rowAdded: create.preparedReducer(
+      (payload: { id: string, marker: Marker, attributes: string[], insertAt: number }) => {
+        return trackAction({ payload }, `Catalog Record Added`)
+      },
+      (state, { payload: { id, marker, attributes, insertAt: number } }) => {
+        const catalog = state.catalogs.find(c => c.id === id)
+        if (catalog) {
+          catalog.markers.splice(number, 0, marker)
+          catalog.attributes.splice(number, 0, attributes)
+        }
+      }),
+    rowDeleted: create.preparedReducer(
+      (payload: { id: string, index: number }) => {
+        return trackAction({ payload }, `Catalog Record Deleted`)
+      },
+      (state, { payload: { id, index } }) => {
+        const catalog = state.catalogs.find(c => c.id === id)
+        if (catalog) {
+          catalog.markers.splice(index, 1)
+          catalog.attributes.splice(index, 1)
+        }
+      }),
+    fieldAdded: create.preparedReducer(
+      (payload: { id: string, field: string, insertAt: number }) => {
+        return trackAction({ payload }, `Catalog Field Added`)
+      },
+      (state, { payload: { id, field, insertAt } }) => {
+        const catalog = state.catalogs.find(c => c.id === id)
+        if (catalog) {
+          catalog.fields.splice(insertAt, 0, field)
+          for (const a of catalog.attributes) {
+            a.splice(insertAt, 0, '')
+          }
+        }
+      }),
+    cellUpdated: create.preparedReducer(
+      (payload: { id: string, index: number, field: string, value: string }) => {
+        return trackAction({ payload }, `Catalog Cell Updated`)
+      },
+      (state, { payload: { id, index, field, value } }) => {
+        const catalog = state.catalogs.find(c => c.id === id)
+        if (catalog) {
+          const i = catalog.fields.indexOf(field)
+          if (i >= 0) {
+            catalog.attributes[index][i] = value
+          }
+        }
+      }),
   }),
   selectors: {
     currentCatalog: state => state.catalogs.find(c => c.id === state.currentCatalogId),

@@ -90,6 +90,9 @@ const CatalogTr = memo(({ catalog: c }: { catalog: Catalog }) => {
       </td>
       <td>
         <CatalogMenu catalog={c} />
+        <button onClick={() => dispatch(catalogsSlice.actions.catalogDeleted({ id: c.id }))} >
+          <Icon type='delete' />
+        </button>
       </td>
     </tr>
   )
@@ -122,8 +125,11 @@ const CatalogMenu = memo(({ catalog }: { catalog: Catalog }) => {
         {catalog.dialog.opened ? 'Close' : 'Open'} Table
       </MenuItem>
       <MenuDivider />
-      <MenuItem onClick={() => dispatch(catalogsSlice.actions.deselectedRowsDeleted({ id: catalog.id }))}>
-        {/* 選択されていない行を削除する */}
+      <MenuItem onClick={() => dispatch(catalogsSlice.actions.rowsFiltered({ id: catalog.id, selected: false }))}>
+        <Icon type='filter_alt' marginRight />
+        Delete Selected Rows
+      </MenuItem>
+      <MenuItem onClick={() => dispatch(catalogsSlice.actions.rowsFiltered({ id: catalog.id, selected: true }))}>
         <Icon type='filter_alt' marginRight />
         Delete Unselected Rows
       </MenuItem>
@@ -166,11 +172,6 @@ const CatalogMenu = memo(({ catalog }: { catalog: Catalog }) => {
       <MenuDivider />
       <MenuItem onClick={() => download({ onlySelected: false })} ><Icon type='download' marginRight />Download as CSV</MenuItem>
       <MenuItem onClick={() => download({ onlySelected: true })}  ><Icon type='download' marginRight />Download as CSV (Only Selected Rows)</MenuItem>
-      <MenuDivider />
-      <MenuItem onClick={() => dispatch(catalogsSlice.actions.catalogDeleted({ id: catalog.id }))}>
-        <Icon type='delete' marginRight />
-        Delete Catalog
-      </MenuItem>
     </RegularMenu>
   )
 })

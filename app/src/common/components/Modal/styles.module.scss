@@ -28,6 +28,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1;
 }
 
 .prompt {
@@ -39,6 +40,7 @@
   display: flex;
   flex-direction: column;
   box-shadow: 0 0 16px rgba(white, 0.25);
+  z-index: 2;
 
   &>* {
     margin: 0.5em 0;
@@ -47,6 +49,11 @@
   &-buttons {
     display: flex;
     justify-content: flex-end;
+
+    button {
+      font-size: normal;
+      padding: 4px 8px !important;
+    }
   }
 
   input[type="text"] {

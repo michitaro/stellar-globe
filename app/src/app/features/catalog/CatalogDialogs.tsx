@@ -11,6 +11,8 @@ import { useAppContext } from '../../context'
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
 import { Catalog, catalogsSlice } from "./catalogSlice"
 import styles from './styles.module.scss'
+import EditableDiv from "../../../common/components/EditableDiv"
+import { TriStateCheckBox } from "../../../common/components/TriStateCheckBox"
 
 
 export const CatalogDialogs = memo(() => {
@@ -28,6 +30,7 @@ setDisplayName({ CatalogDialogs })
 
 const CatalogDialog = memo(({ catalog, dialog }: { catalog: Catalog, dialog: NonNullable<Catalog['dialog']> }) => {
   const [focusFollowsUpDownArrowsKeys, setFocusFollowsUpDownArrowsKeys] = useState(true)
+  const [editMode, setEditMode] = useState(false)
 
   const dispatch = useAppDispatch()
 
@@ -109,6 +112,16 @@ const CatalogDialog = memo(({ catalog, dialog }: { catalog: Catalog, dialog: Non
     e.preventDefault()
   }, [catalog.attributes.length, catalog.id, dispatch, focus, focusFollowsUpDownArrowsKeys, focusedIndex])
 
+  const batchSelectState: null | boolean = useMemo(() => {
+    const n = Object.keys(catalog.selectedRecords).length
+    return catalog.markers.length === 0 ? null : n === 0 ? false : n === catalog.markers.length ? true : null
+  }, [catalog])
+
+  const batchSelect = useCallback(() => {
+    const current = batchSelectState
+    dispatch(catalogsSlice.actions.allRowsSelected({ id: catalog.id, selected: !batchSelectState }))
+  }, [batchSelectState, catalog.id, dispatch])
+
   return (
     <AppDialog
       title={catalog.name}
@@ -119,6 +132,13 @@ const CatalogDialog = memo(({ catalog, dialog }: { catalog: Catalog, dialog: Non
       sizeHint={{ width: '600px', height: '400px' }}
       menu={
         <Fragment>
+          <MenuItem onClick={() => dispatch(catalogsSlice.actions.rowsFiltered({ id: catalog.id, selected: false }))} >
+            Delete Selected Rows
+          </MenuItem>
+          <MenuItem onClick={() => dispatch(catalogsSlice.actions.rowsFiltered({ id: catalog.id, selected: true }))} >
+            Delete Unselected Rows
+          </MenuItem>
+          <MenuDivider />
           <MenuItem type="checkbox" checked={focusFollowsUpDownArrowsKeys} onClick={() => setFocusFollowsUpDownArrowsKeys(!focusFollowsUpDownArrowsKeys)}>Focus Follows ↑↓ Keys</MenuItem>
           <MenuDivider />
           <SubMenu label="Columns">
@@ -140,7 +160,10 @@ const CatalogDialog = memo(({ catalog, dialog }: { catalog: Catalog, dialog: Non
           <thead>
             <tr>
               <td style={{ width: '2em' }}>
-                <input type='checkbox' disabled />
+                <TriStateCheckBox
+                  value={batchSelectState}
+                  onChange={batchSelect}
+                />
               </td>
               {
                 activeColumn.map((a, i) => {
@@ -181,9 +204,7 @@ const CatalogDialog = memo(({ catalog, dialog }: { catalog: Catalog, dialog: Non
                     }}
                     className={classNames(pageStart + i === focusedIndex && styles.focused)}
                   >
-                    <td
-                    // onClick={e => e.stopPropagation()}
-                    >
+                    <td style={{ width: '2em' }} >
                       <input
                         type="checkbox" checked={catalog.selectedRecords[pageStart + i]}
                         onChange={e => dispatch(catalogsSlice.actions.recordSelected({ id: catalog.id, index: pageStart + i, selected: e.currentTarget.checked }))}
@@ -193,7 +214,12 @@ const CatalogDialog = memo(({ catalog, dialog }: { catalog: Catalog, dialog: Non
                       const c = row[j]
                       return a && (
                         <td key={j} title={c} >
-                          {c}
+                          {editMode ? (
+                            <EditableDiv
+                              value={c}
+                              onChange={v => dispatch(catalogsSlice.actions.cellUpdated({ id: catalog.id, index: pageStart + i, field: catalog.fields[j], value: v }))}
+                            />
+                          ) : c}
                         </td>
                       )
                     })}
@@ -213,6 +239,10 @@ const CatalogDialog = memo(({ catalog, dialog }: { catalog: Catalog, dialog: Non
             <button onClick={() => setPage(maxPage - 1)} disabled={page + 1 >= maxPage} ><Icon type='last_page' /></button>
             ({pageStart + 1}-{Math.min(pageEnd, catalog.attributes.length)})
           </div>
+          <label>
+            <input type="checkbox" checked={editMode} onChange={e => setEditMode(e.currentTarget.checked)} />
+            Edit Mode
+          </label>
           <div>
             <input type="text" value={rowsPerPage} size={4} style={{ textAlign: 'center' }}
               onChange={e => ifValidNumberString(e.currentTarget.value, n => setRowsPerPage(Math.max(1, n)))}

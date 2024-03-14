@@ -56,7 +56,7 @@ export const makeStateHistory = ({ maxHistory = 20 }: Options = {}) => {
     }
 
     if (records.length === 0) {
-      records.unshift({ state: getState(), summary: 'Initial State', type: action.type, id: ++seq })
+      records.unshift({ state: getState(), summary: 'Page Loaded', type: action.type, id: ++seq })
     }
 
     const nextAction = next(action)

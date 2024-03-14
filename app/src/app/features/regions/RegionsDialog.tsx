@@ -1,7 +1,7 @@
 import { resizableY } from "@stellar-globe/react-draggable-dialog"
 import { V4 } from "@stellar-globe/stellar-globe"
 import { MaterialSymbol } from "material-symbols"
-import { Fragment, memo, useCallback, useEffect, useRef, useState } from "react"
+import { Fragment, memo, useCallback, useState } from "react"
 import { ColorPickerRgba } from "../../../common/components/ColorPicker"
 import EditableDiv from "../../../common/components/EditableDiv"
 import { Icon } from "../../../common/components/Icon"
@@ -11,6 +11,7 @@ import { useAppContext } from '../../context'
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
 import { RegionsMenu } from "./RegionsMenu"
 import { Region, regionView, regionsSlice } from "./regionsSlice"
+import { TriStateCheckBox } from "../../../common/components/TriStateCheckBox"
 
 
 export const RegionsDialog = memo(() => {
@@ -143,18 +144,6 @@ function booleanArrayToTriState(a: boolean[]) {
   const n = a.filter(x => x).length
   return n === 0 ? false : n === a.length ? true : null
 }
-
-
-const TriStateCheckBox = memo(({ value, onChange }: { value: boolean | null, onChange: (value: boolean) => void }) => {
-  const nextValue = value === null ? true : !value
-  const ref = useRef<HTMLInputElement>(null)
-  useEffect(() => {
-    if (ref.current) {
-      ref.current.indeterminate = value === null
-    }
-  }, [value])
-  return <input ref={ref} type='checkbox' checked={value === true} onChange={() => onChange(nextValue)} />
-})
 
 
 const RegionTr = memo(({ region, depth }: { region: Region, depth: number }) => {

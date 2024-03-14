@@ -46,7 +46,7 @@
   .tableWrapper {
     flex-grow: 1;
     overflow-y: auto;
-    margin: 2px;
+    // margin: 2px;
   }
 
   .hasFocus {
@@ -60,7 +60,6 @@
   }
 
   table {
-    flex-grow: 1;
     font-size: small;
     font-family: monospace;
     table-layout: fixed;
@@ -110,6 +109,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 1px 2px;
   }
 
   .pages {

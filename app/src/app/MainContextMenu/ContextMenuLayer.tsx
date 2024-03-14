@@ -1,6 +1,6 @@
 import { GlobePointerEvent, SkyCoord } from "@stellar-globe/stellar-globe"
 import { ControlledMenu } from "@szhsin/react-menu"
-import { Fragment, ReactNode, useCallback, useMemo, useRef, useState } from "react"
+import { Fragment, ReactNode, useCallback, useMemo, useState } from "react"
 import { useMenuContainer } from "../../common/components/Menu/MenuContext"
 import { PointerLayer$ } from "../../common/stellarglobe/PointerLayer"
 
@@ -25,7 +25,6 @@ export const ContextMenuLayer = ({
   }, [])
   const [isOpen, setOpen] = useState(false)
   const [anchorPoint, setAnchorPoint] = useState({ x: 0, y: 0 })
-  const transition = useMemo(() => ({ close: true }), [])
   const container = useMenuContainer()
   const portal = useMemo(() => container && { target: container }, [container])
 
@@ -39,8 +38,8 @@ export const ContextMenuLayer = ({
           onClose={() => setOpen(false)}
           submenuOpenDelay={0}
           submenuCloseDelay={0}
-          transition={transition}
           portal={portal}
+          overflow='auto'
         >
           {render(openedAt)}
         </ControlledMenu>
