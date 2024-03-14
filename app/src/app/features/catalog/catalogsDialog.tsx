@@ -4,7 +4,7 @@ import { MarkerType, markerTypes } from '@stellar-globe/stellar-globe'
 import { MenuDivider, MenuItem, SubMenu } from '@szhsin/react-menu'
 import { Fragment, memo, useCallback, useId } from "react"
 import { ColorPickerRgba } from "../../../common/components/ColorPicker"
-import EditableSpan from '../../../common/components/EditableSpan'
+import EditableDiv from '../../../common/components/EditableDiv'
 import { Icon } from "../../../common/components/Icon"
 import { RegularMenu } from '../../../common/components/Menu/RegularMenu'
 import { askLocalFileList } from '../../../common/utils/askLocalFileList'
@@ -70,7 +70,7 @@ const CatalogTr = memo(({ catalog: c }: { catalog: Catalog }) => {
         </label>
       </td>
       <td>
-        <EditableSpan
+        <EditableDiv
           value={c.name}
           onChange={newName => dispatch(catalogsSlice.actions.catalogUpdated({ id: c.id, name: newName }))} />
       </td>
@@ -135,18 +135,27 @@ const CatalogMenu = memo(({ catalog }: { catalog: Catalog }) => {
         <Icon type='select_all' marginRight />
         Deselect All Rows
       </MenuItem>
-      <SubMenu label={<Fragment><Icon type='merge' marginRight />Merge to</Fragment>}>
-        {catalogs.map(c => c.id !== catalog.id && (
-          <Fragment key={c.id}>
-            <MenuItem onClick={() => dispatch(catalogsSlice.actions.catalogMerged({ srcId: catalog.id, dstId: c.id, onlySelected: true, deleteSrc: true }))}>
-              {c.name} (only selected rows)
-            </MenuItem>
-            <MenuItem onClick={() => dispatch(catalogsSlice.actions.catalogMerged({ srcId: catalog.id, dstId: c.id, onlySelected: false, deleteSrc: true }))}>
+      <SubMenu label={<Fragment><Icon type='merge' marginRight />Merge</Fragment>}>
+        <SubMenu label="Only Selected Rows to">
+          {catalogs.map(c => c.id !== catalog.id && (
+            <MenuItem
+              key={c.id}
+              onClick={() => dispatch(catalogsSlice.actions.catalogMerged({ srcId: catalog.id, dstId: c.id, onlySelected: true, deleteSrc: true }))}
+            >
               {c.name}
             </MenuItem>
-            <MenuDivider />
-          </Fragment>
-        ))}
+          ))}
+        </SubMenu>
+        <SubMenu label="All Rows to">
+          {catalogs.map(c => c.id !== catalog.id && (
+            <MenuItem
+              key={c.id}
+              onClick={() => dispatch(catalogsSlice.actions.catalogMerged({ srcId: catalog.id, dstId: c.id, onlySelected: false, deleteSrc: true }))}
+            >
+              {c.name}
+            </MenuItem>
+          ))}
+        </SubMenu>
       </SubMenu>
       <MenuItem onClick={() => dispatch(catalogsSlice.actions.catalogDuplicated({ id: catalog.id }))}>
         <Icon type='copy_all' marginRight />
@@ -169,6 +178,7 @@ const CatalogMenu = memo(({ catalog }: { catalog: Catalog }) => {
 
 export const CatalogsMenu = memo(() => {
   const addCatalogFiles = useAddCatalogFileList()
+  const dispatch = useAppDispatch()
 
   const upload = async () => {
     try {
@@ -209,10 +219,16 @@ export const CatalogsMenu = memo(() => {
     })
   }, [])
 
+  const showAttributes = useAppSelector(state => state.catalogs.showAttributes)
+  const toggleShowAttributes = () => dispatch(catalogsSlice.actions.showAttributesToggled({ show: !showAttributes }))
+
   return (
     <Fragment>
+      <MenuItem onClick={toggleShowAttributes} type='checkbox' checked={showAttributes} >
+        Object Inspector
+      </MenuItem>
+      <MenuDivider />
       <MenuItem onClick={upload}>
-        <Icon type='upload' marginRight />
         Upload
       </MenuItem>
       <MenuDivider />

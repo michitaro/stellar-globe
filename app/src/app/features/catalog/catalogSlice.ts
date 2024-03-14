@@ -14,6 +14,7 @@ type State = {
   currentCatalogId: string | undefined
   catalogsDialogVisible: boolean
   focusedPosition: V3 | undefined
+  showAttributes: boolean
 }
 
 
@@ -24,6 +25,7 @@ function initialState(): State {
     currentCatalogId: undefined,
     catalogsDialogVisible: false,
     focusedPosition: undefined,
+    showAttributes: true,
   }
 }
 
@@ -201,6 +203,9 @@ export const catalogsSlice = createSlice({
           }
         }
       }),
+    showAttributesToggled: create.reducer<{ show: boolean }>((state, { payload: { show } }) => {
+      state.showAttributes = show
+    }),
   }),
   selectors: {
     currentCatalog: state => state.catalogs.find(c => c.id === state.currentCatalogId),

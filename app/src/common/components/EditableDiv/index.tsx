@@ -4,10 +4,11 @@ import { Icon } from '../Icon'
 type Props = {
   value: string
   onChange: (newValue: string) => void
+  display?: (value: string) => React.ReactNode
   style?: CSSProperties
 }
 
-const EditableSpan: React.FC<Props> = ({ value, onChange, style }) => {
+const EditableDiv: React.FC<Props> = ({ value, onChange, style, display }) => {
   const [isEditing, setEditing] = useState(false)
   const [inputValue, setInputValue] = useState(value)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -46,13 +47,15 @@ const EditableSpan: React.FC<Props> = ({ value, onChange, style }) => {
     )
   }
 
+  const displayText = display ? display(value) : value
+
   return (
-    <span onClick={handleSpanClick} style={style}>
-      {value.trim().length > 0 && value || <Icon type='edit' />}
-    </span>
+    <div onClick={handleSpanClick} style={style}>
+      {displayText || <Icon type='edit' />}
+    </div>
   )
 }
 
-export default EditableSpan
+export default EditableDiv
 
-export { EditableSpan }
+export { EditableDiv }

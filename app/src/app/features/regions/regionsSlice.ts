@@ -158,6 +158,22 @@ export const regionsSlice = createSlice({
     regionsImported: create.reducer<{ regions: Region[] }>((state, { payload: { regions } }) => {
       state.regions.push(...regions)
     }),
+    regionsBatchUpdated: create.preparedReducer(
+      (payload: { nameStartsWith: string, regionDef: Partial<Pick<RegionBase, 'color' | 'visible' | 'showLabel'>> }) => trackAction({ payload }, 'Regions Batch Updated'),
+      (state, { payload: { nameStartsWith, regionDef } }) => {
+        state.regions.filter(r => r.name.startsWith(nameStartsWith)).forEach(r => {
+          r.color = regionDef.color ?? r.color
+          r.visible = regionDef.visible ?? r.visible
+          r.showLabel = regionDef.showLabel ?? r.showLabel
+        })
+      },
+    ),
+    regionsBatchDeleted: create.preparedReducer(
+      (payload: { nameStartsWith: string }) => trackAction({ payload }, 'Regions Batch Deleted'),
+      (state, { payload: { nameStartsWith } }) => {
+        state.regions = state.regions.filter(r => !r.name.startsWith(nameStartsWith))
+      },
+    ),
   }),
   selectors: {
     nextColor,

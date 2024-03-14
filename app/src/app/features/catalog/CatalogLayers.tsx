@@ -75,6 +75,8 @@ const CatalogLayer$ = memo(({ catalog }: CatalogProps) => {
 
   const selectedColor = useMemo<V4>(() => [1, 1, 1, 0.75], [])
 
+  const showAttributes = useAppSelector(state => state.catalogs.showAttributes)
+
   return (
     <Fragment>
       <ClickableMarkerLayer$
@@ -96,7 +98,7 @@ const CatalogLayer$ = memo(({ catalog }: CatalogProps) => {
         baseColor={selectionColor}
         visible={catalog.visible}
       />
-      {catalog.visible && (
+      {catalog.visible && showAttributes && (
         <CSSTransition
           in={showObjectInspector}
           timeout={{ enter: 0, exit: 200 }}

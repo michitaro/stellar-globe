@@ -370,7 +370,7 @@ const TextRegionFromDefLayer = memo(({
       angleUnit={useAppSelector(state => state.common.angleUnit)}
       onChange={onCircleDefChange}
       showLabel={showLabel}
-      menuButton={<span style={{ color: v4ToColorString(color) }}>{name}</span>}
+      menuButton={<span style={{ color: v4ToColorString(color) }}>{baseName(name)}</span>}
     >
       <FocusableItem>
         {({ ref }) => (
@@ -390,6 +390,11 @@ const TextRegionFromDefLayer = memo(({
 setDisplayName({ TextRegionFromDefLayer })
 
 
+function baseName(path: string) {
+  return path.split('/').splice(-1)[0]
+}
+
+
 function v4ToColorString(color: V4) {
   const [r, g, b, a] = color
   return `rgba(${Math.round(255 * r)}, ${Math.round(255 * g)}, ${Math.round(255 * b)}, ${a})`
@@ -406,7 +411,7 @@ const PathRegionFromDefLayer = memo(({
   visible,
 }: SpecificRegionType<'Path'>) => {
   console.log(paths)
-  
+
   return (
     <PathLayer$
       paths={paths}
