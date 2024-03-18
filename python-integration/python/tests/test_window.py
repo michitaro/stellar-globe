@@ -62,20 +62,17 @@ def test_window_patch(w: Window):
 def test_window_close(w: Window):
     comm = cast(MockComm, w._comm)
     w.close()
-    while comm.pull_message():
-        pass
+    comm.pull_all_messages()
 
 
 def test_window_action_on_closed_window(w: Window):
     comm = cast(MockComm, w._comm)
     w.close()
     assert w._connection_status == 'connected'
-    while comm.pull_message():
-        pass
+    comm.pull_all_messages()
     assert w._connection_status == 'disconnected'
     w.sync(force=True)
-    while comm.pull_message():
-        pass
+    comm.pull_all_messages()
     assert w._connection_status == 'connected'
 
 

@@ -1,7 +1,7 @@
 import math
 from hscmap.window import Window
 from hscmap.comm.mock import MockCommOptions
-from hscmap.regions import TextRegion, CircleRegion, LinearRegion, PathRegion, RectangularRegion, polygon_path, SkyCoord, Angle
+from hscmap.regions import TextRegion, CircleRegion, LinearRegion, ShapeRegion, RectangularRegion, SkyCoord, Angle
 import pytest
 
 
@@ -91,8 +91,10 @@ def test_regions_rect(w: Window):
 
 
 def test_regions_polygon(w: Window):
-    p = w.regions.new_polygon(name="polygon", paths=polygon_path(center=SkyCoord.from_degree(0, 0), n=5, radius=1))
-    assert isinstance(w.regions.members[0], PathRegion)
+    from hscmap.shape import Polygon
+
+    p = w.regions.new_shape(shape=Polygon(center=SkyCoord.from_degree(0, 0), radius=Angle.from_degree(1), n=3))
+    assert isinstance(w.regions.members[0], ShapeRegion)
 
     assert isinstance(p.paths, list)
     assert len(p.paths) == 1
@@ -104,3 +106,14 @@ def test_regions_clear(w: Window):
     w.regions.new_text(position=(0, 0), text="test", color=[1, 0, 0, 1])
     w.regions.clear()
     assert len(w.regions.members) == 0
+
+
+def test_region_sufrace(w: Window):
+    for i in range(3):
+        w.regions.new_text(position=(0, i), text="test", color=[1, 0, 0, 1])
+    w.sync()
+    r = w.regions.members[0]
+    assert w.regions.members[0].id != w.regions.members[-1].id
+    r.surface()
+    assert r.id == w.regions.members[-1].id
+

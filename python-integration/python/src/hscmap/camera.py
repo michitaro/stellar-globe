@@ -1,10 +1,10 @@
-from .angle import Angle
-
 import time
 from dataclasses import dataclass
-from typing import Optional, Literal, Tuple
-from .window import Window
+from typing import Literal, Optional, Tuple
+
+from .angle import Angle
 from .models.JumpTo import Model as JumpToMessage
+from .window import Window
 
 
 @dataclass

@@ -1,6 +1,6 @@
 import math
 
-from hscmap.vec3 import Angle, SkyCoord, Vec3
+from hscmap.vec3 import Angle, SkyCoord, Vec3, as_sky_coord, as_vec3
 
 
 def test_addition():
@@ -120,3 +120,38 @@ def test_from_vec3():
     result = SkyCoord.from_vec3(v1)
     assert math.isclose(result.ra.radian, math.pi / 4)
     assert math.isclose(result.dec.radian, math.pi / 4)
+
+
+def test_as_sky_coord():
+    v1 = Vec3(1, 1, 1)
+    result = as_sky_coord(v1)
+    assert isinstance(result, SkyCoord)
+    assert math.isclose(result.ra.radian, math.pi / 4)
+    assert math.isclose(result.dec.radian, math.atan2(1, math.sqrt(2)))
+
+
+def test_as_sky_coord_with_skycoord():
+    ra = Angle.from_degree(30)
+    dec = Angle.from_degree(0)
+    skycoord = SkyCoord(ra, dec)
+    result = as_sky_coord(skycoord)
+    assert isinstance(result, SkyCoord)
+    assert result == skycoord
+
+
+def test_as_vec3():
+    ra = Angle.from_degree(30)
+    dec = Angle.from_degree(0)
+    skycoord = SkyCoord(ra, dec)
+    result = as_vec3(skycoord)
+    assert isinstance(result, Vec3)
+    assert math.isclose(result.x, math.sqrt(3) / 2)
+    assert math.isclose(result.y, 0.5)
+    assert math.isclose(result.z, 0.0)
+
+
+def test_as_vec3_with_vec3():
+    v1 = Vec3(1, 1, 1)
+    result = as_vec3(v1)
+    assert isinstance(result, Vec3)
+    assert result == v1

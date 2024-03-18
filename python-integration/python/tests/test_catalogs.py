@@ -80,3 +80,15 @@ def test_catalog_selected_indices(sample_catalog: Catalog):
     assert sample_catalog.selected_indices == [1, 2, 3]
     sample_catalog.selected_indices = [2, 3, 4]
     assert sample_catalog.selected_indices == [2, 3, 4]
+
+
+def test_catalog_as_pandas_dataframe(sample_catalog: Catalog):
+    import pandas
+
+    df = sample_catalog.as_pandas_dataframe()
+    assert isinstance(df, pandas.DataFrame)
+    assert df.columns.tolist() == ['ID', 'ra', 'dec', 'mag']
+    assert len(df) == 500
+    assert df.columns.tolist() == ['ID', 'ra', 'dec', 'mag']
+    assert len(df['ID']) == 500
+    assert df['ID'][10] == '10'

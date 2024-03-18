@@ -1,6 +1,6 @@
 import math
 from dataclasses import dataclass
-from typing import Tuple, TypedDict, List
+from typing import List, Tuple, TypedDict, Union
 
 from .angle import Angle
 
@@ -89,3 +89,18 @@ class Vec3:
 
     def as_list(self) -> List[float]:
         return [self.x, self.y, self.z]
+
+
+SkyCoordOrVec3 = Union[SkyCoord, Vec3]
+
+
+def as_vec3(p: SkyCoordOrVec3):
+    if isinstance(p, SkyCoord):
+        return p.as_vec3()
+    return p
+
+
+def as_sky_coord(p: SkyCoordOrVec3):
+    if isinstance(p, Vec3):
+        return SkyCoord.from_vec3(p)
+    return p

@@ -1,6 +1,5 @@
-import math
 from dataclasses import dataclass
-from typing import List, Optional, Tuple, cast
+from typing import Iterable, List, Optional, Tuple, cast
 
 from .angle import Angle
 from .models.actions.regions.newCircularRegionAdded import Model as NewCircularRegionAdded
@@ -9,17 +8,17 @@ from .models.actions.regions.newPathRegionAdded import Model as NewPathRegionAdd
 from .models.actions.regions.newRectangularRegionAdded import Model as NewRectangularRegionAdded
 from .models.actions.regions.newTextRegionAdded import Model as NewTextRegionAdded
 from .models.actions.regions.regionDeleted import Model as regionDeleted
+from .models.actions.regions.regionsReordered import Model as RegionsReordered
 from .models.actions.regions.regionUpdated import Model as RegionUpdated
-from .models.store import JOINT
 from .models.store import CircularRegion as CircularRegionState
 from .models.store import LinearRegion as LinearRegionState
 from .models.store import Path
 from .models.store import PathRegion as PathRegionState
-from .models.store import Point
 from .models.store import RectangularRegion as RectangularRegionState
 from .models.store import TextRegion as TextRegionState
+from .shape import ShapeBase
 from .tinyid import tinyid
-from .vec3 import SkyCoord, Vec3
+from .vec3 import SkyCoord
 from .window import Window
 
 
@@ -113,23 +112,23 @@ class RegionManager:
         w._dispatch(action)
         return RectangularRegion(id, w)
 
-    def new_polygon(self, *, paths: List[Path], name='', color: Optional[List[float]] = None):
+    def new_shape(self, *, shape: ShapeBase, name=''):
         w = self._w
         id = tinyid()
         action = NewPathRegionAdded(
             type='regions/newPathRegionAdded',
             payload={
-                'color': color,
+                'color': None,
                 'id': id,
                 'name': name,
-                'paths': paths,
+                'paths': [path for path in shape.paths()],
                 'showLabel': True,
                 'type': 'Path',
                 'visible': True,
             },
         )
         w._dispatch(action)
-        return PathRegion(id, w)
+        return ShapeRegion(id, w)
 
     def clear(self):
         for r in self.members:
@@ -162,13 +161,26 @@ class RegionBase:
             )
         )
 
+    def surface(self):
+        w = self._w
+        ids = [r.id for r in w.regions.members]
+        ids.remove(self.id)
+        ids.append(self.id)
+        w._dispatch(
+            RegionsReordered(
+                type='regions/regionsReordered',
+                payload={'ids': ids},
+            )
+        )
+        # TODO: Review react-stellar-globe
+        # ↓Forced redraw. Without this, the display does not change even if the order of the regions changes.
+        w.jump_to(*w.camera.center, duration=0.01)
+
     def delete(self):
         self._w._dispatch(
             regionDeleted(
                 type='regions/regionDeleted',
-                payload={
-                    'id': self.id,
-                },
+                payload={'id': self.id},
             )
         )
 
@@ -351,7 +363,7 @@ class RectangularRegion(RegionBase):
         self._update(maxDec=self._w._angle_input(value).radian)
 
 
-class PathRegion(RegionBase):
+class ShapeRegion(RegionBase):
     def _state(self) -> PathRegionState:
         return cast(PathRegionState, super()._state())
 
@@ -370,29 +382,8 @@ type_map = {
     'Circular': CircleRegion,
     'Linear': LinearRegion,
     'Rectangular': RectangularRegion,
-    'Path': PathRegion,
+    'Path': ShapeRegion,
 }
-
-
-def polygon_path(center: SkyCoord, radius: float, n: int, *, color: List[float] = [1, 1, 1, 1]) -> List[Path]:
-    o = center.as_vec3()
-    e2 = o.cross(Vec3(0, 0, 1)).normalize()
-    e1 = e2.cross(o).normalize()
-    paths: List[Path] = [
-        Path(
-            close=True,
-            joint='MITER',
-            points=[
-                Point(
-                    color=color,
-                    size=0,
-                    position=(o + radius * math.cos(2 * math.pi * i / n) * e1 + radius * math.sin(2 * math.pi * i / n) * e2).as_list(),
-                )
-                for i in range(n)
-            ],
-        )
-    ]
-    return paths
 
 
 '''

@@ -55,5 +55,9 @@ class MockComm(CommBase):
             return True
         return False
 
+    def pull_all_messages(self):  # This method is for testing purposes only
+        while self.pull_message():
+            pass
+
     def last_outgoing_message(self) -> Any:
         return self._sent_history[-1]

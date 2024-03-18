@@ -1,14 +1,16 @@
-import traceback
 import base64
+import traceback
+from dataclasses import dataclass
 from functools import cached_property
-from typing import Any, List, Literal, Optional, cast
+from typing import Any, Callable, List, Literal, Optional, cast
 
 from .angle import Angle
 from .comm import new_comm
 from .jsonpatchapply import apply_patch
 from .models.Close import Model as CloseMessage
 from .models.Dispatch import Model as DispatchMessage
-from .models.frontend.QueryStateResponse import Model as QueryStateResponseMessage
+from .models.frontend.QueryStateResponse import \
+    Model as QueryStateResponseMessage
 from .models.frontend.Ready import Model as FrontendReadyMessage
 from .models.frontend.StoreChanged import Model as StoreChangedMessage
 from .models.FrontendConsole import Model as FrontendConsoleMessage
@@ -109,8 +111,7 @@ class Window:
             try:
                 self._on_store_changed(cast(StoreChangedMessage, msg))
             except Exception as e:  # pragma: no cover
-                self._show_error(title='Error', body=f'Error in on_store_changed: {e}')
-                self.js_console('warn', traceback.format_exc())
+                self.logger.warn(f'e:\n{traceback.format_exc()}')
         else:  # pragma: no cover
             self._show_error(title='Error', body=f'Unknown message from Jupyter: type={repr(type)}')
 
@@ -129,6 +130,7 @@ class Window:
         else:  # pragma: no cover
             self.sync()
         self._synced = True
+        self.watchers._run_callbacks()
 
     def close(self):
         if self._connection_status != 'disconnected':  # pragma: no branch
@@ -140,6 +142,15 @@ class Window:
 
     def js_console(self, level: Literal['debug', 'info', 'log', 'warn'], *args):  # pragma: no cover
         self._post_message(FrontendConsoleMessage(type='FrontendConsole', level=level, args=list(args)))
+
+    def watch(self, *, watch_on: Callable, on_change: Callable):
+        return self.watchers.new(watch_on=watch_on, on_change=on_change)
+
+    @cached_property
+    def watchers(self):
+        from .watcher import WatcherManager
+
+        return WatcherManager(self)
 
     @property
     def title(self):
@@ -228,3 +239,9 @@ class Window:
         from .dataset import DatasetManager
 
         return DatasetManager(self)
+
+    @cached_property
+    def logger(self):
+        from .logger import Logger
+
+        return Logger(self)

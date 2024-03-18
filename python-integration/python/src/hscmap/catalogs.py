@@ -240,8 +240,7 @@ class Catalog:
     @selected_indices.setter
     def selected_indices(self, indicse: List[int]):
         # TODO: OPIMIZE
-        from hscmap.models.actions.catalogs.recordSelected import \
-            Model as RecordSelected
+        from hscmap.models.actions.catalogs.recordSelected import Model as RecordSelected
 
         def toggle(index: int, selected: bool):
             self._w._dispatch(
@@ -261,6 +260,13 @@ class Catalog:
             toggle(index, False)
         for index in new - current:
             toggle(index, True)
+
+    def as_pandas_dataframe(self):
+        import pandas
+
+        fields = self._state()['fields']
+        rows = self._state()['attributes']
+        return pandas.DataFrame(rows, columns=fields)
 
 
 def sample_pandas_data(n_rows: int = 500):
