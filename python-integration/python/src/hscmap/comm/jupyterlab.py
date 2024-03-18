@@ -2,7 +2,7 @@ import sys
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable, Optional, TypedDict, Literal, Union
+from typing import Any, AsyncIterable, Callable, Literal, Optional, Tuple, TypedDict, Union, cast
 
 from hscmap.models.Open import Model as Open
 
@@ -58,7 +58,7 @@ class JupyterLabComm(CommBase):  # pragma: no cover
                         response = f.read()
                         if len(response) == int(size_str):
                             return response
-                except (ValueError, FileNotFoundError):
+                except:
                     pass
                 finally:
                     p.unlink(missing_ok=True)
@@ -88,6 +88,10 @@ class ExtraOptions(TypedDict):
 
 def extra_options() -> ExtraOptions:
     if sys.platform == 'emscripten':
+        # import js  # type: ignore
+
+        # if 'serviceWorker' not in dir(js.navigator):
+        #     raise ValueError('Service Worker is not supported on this browser')
         return {'storage': {'type': 'indexeddb', 'dbname': 'JupyterLite Storage'}}
     else:
         return {'storage': {'type': 'file'}}

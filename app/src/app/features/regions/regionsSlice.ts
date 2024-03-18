@@ -174,6 +174,12 @@ export const regionsSlice = createSlice({
         state.regions = state.regions.filter(r => !r.name.startsWith(nameStartsWith))
       },
     ),
+    regionsReordered: create.preparedReducer(
+      (payload: { ids: string[] }) => trackAction({ payload }, 'Regions Reordered'),
+      (state, { payload: { ids } }) => {
+        state.regions = ids.map(id => state.regions.find(r => r.id === id)!).filter(r => r)
+      },
+    ),
   }),
   selectors: {
     nextColor,

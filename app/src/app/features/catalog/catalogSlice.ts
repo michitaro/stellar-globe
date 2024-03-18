@@ -256,6 +256,14 @@ export const catalogsSlice = createSlice({
           }
         }
       }),
+    catalogReordered: create.preparedReducer(
+      (payload: { ids: string[] }) => {
+        return trackAction({ payload }, `Catalog Reordered`)
+      },
+      (state, { payload: { ids } }) => {
+        state.catalogs = ids.map(id => state.catalogs.find(c => c.id === id) as Catalog)
+      },
+    ),
   }),
   selectors: {
     currentCatalog: state => state.catalogs.find(c => c.id === state.currentCatalogId),

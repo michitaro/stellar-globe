@@ -160,6 +160,7 @@ function onMsgFromPython({
   stateManager,
   storageOptions,
 }: StellarGlobeWidgetEnv): CommType['onMsg'] {
+  let lastErrorAt: number | undefined = undefined
   return wrapTypeCheck({
     Open() { },
     Close() {
@@ -175,7 +176,10 @@ function onMsgFromPython({
       }
     },
     ShowError(msg) {
-      showErrorMessage(msg.params.title, msg.params.body)
+      const now = Number(Date.now())
+      if (lastErrorAt === undefined || now - lastErrorAt > 1000) {
+        showErrorMessage(msg.params.title, msg.params.body)
+      }
     },
     UpdateWidgetState(msg) {
       widget.title.label = msg.title
@@ -291,11 +295,13 @@ function wrapTypeCheck(cbmap: { [K in keyof ToApp]: (msg: ToApp[K]) => void }): 
           if (result instanceof Promise) {
             result.catch(e => {
               alert(e)
+              console.error(e)
             })
           }
         }
         catch (e) {
           alert(e)
+          console.error(e)
         }
       }
       else {

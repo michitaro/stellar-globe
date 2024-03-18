@@ -3,6 +3,7 @@ import { BaseAction } from '../../app/context.js'
 import { createIs, hasValidator } from './createIs.js'
 
 
+// @ts-ignore
 const isBaseAction = createIs<BaseAction>('BaseAction')
 
 

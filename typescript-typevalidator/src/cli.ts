@@ -76,6 +76,10 @@ export function main() {
     code: { source: true, esm: true, es5: true, lines: true, optimize: true, }
   })
   const validatorCode = standaloneCode(ajv)
+
+  // var schema39 = ...; のような行は使っていない割にかなりな容量をしめるのdで削除
+  const validatorCodeCleaned = validatorCode.replace(/^var schema\d+ = .*;$/g, '')
+
   writeFileSync(`${args.out}/ajv.js`, validatorCode)
 }
 

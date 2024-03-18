@@ -55,7 +55,6 @@ function useImportRegions() {
         reader.onload = (e) => {
           try {
             const { $type: _$type, $content } = JSON.parse(e.target?.result as string)
-            console.log($content)
             if (_$type !== $type) {
               throw new Error(`Invalid file schema: ${_$type}`)
             }

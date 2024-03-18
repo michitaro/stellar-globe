@@ -1,3 +1,4 @@
+import { PathLayer$ } from "@stellar-globe/react-stellar-globe"
 import { V4 } from "@stellar-globe/stellar-globe"
 import { FocusableItem, MenuItem } from "@szhsin/react-menu"
 import { Fragment, memo, useCallback, useMemo } from "react"
@@ -10,7 +11,6 @@ import { LineDef, LinearRegionLayer } from "./LinearRegionLayer"
 import { RectDef, RectangularRegionLayer } from "./RectangularRegionLayer"
 import { normalizeSkyCoord, skyCoordFromCoordDef } from "./regionUtils"
 import { regionsSlice } from "./regionsSlice"
-import { PathLayer$ } from "@stellar-globe/react-stellar-globe"
 
 
 export function RegionsLayer() {
@@ -410,7 +410,6 @@ const PathRegionFromDefLayer = memo(({
   // type,
   visible,
 }: SpecificRegionType<'Path'>) => {
-  console.log(paths)
 
   return (
     <PathLayer$
