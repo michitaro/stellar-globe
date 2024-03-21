@@ -124,7 +124,7 @@ export const regionsSlice = createSlice({
       },
       (state, { payload: { id, color, ...rests } }) => {
         if (!state.regions.find(r => r.id === id)) {
-          state.regions.push({ ...rests, id, color: color ?? nextColor(state) })
+          state.regions.push({ ...rests, id, color: color ?? [0, 0, 0, 0] })
         }
       },
     ),
@@ -321,9 +321,10 @@ export function regionCenterAndFov(region: PathRegion) {
   }
   const xyzs = paths.map(p => p.points.map(p => p.position)).flat()
   const center = xyzs.reduce((a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]], [0, 0, 0]).map(v => v / xyzs.length) as V3
-  const maxDist = xyzs.reduce((max, xyz) => Math.max(max, Math.sqrt(xyz[0] ** 2 + xyz[1] ** 2 + xyz[2] ** 2)), 0)
+  const maxDistFromCenter = xyzs.reduce((max, xyz) => Math.max(max, Math.sqrt((xyz[0] - center[0]) ** 2 + (xyz[1] - center[1]) ** 2 + (xyz[2] - center[2]) ** 2)), 0)
+
   return {
     center: SkyCoord.fromXyz(center),
-    fov: Math.asin(maxDist),
+    fov: maxDistFromCenter,
   }
 }
