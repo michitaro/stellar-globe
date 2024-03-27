@@ -213,7 +213,7 @@ function onMsgFromPython({
 
 
 async function typedRespondToQuery<T extends keyof FromApp>(type: T, queryId: string, data: Omit<FromApp[T], 'type'>, options: StorageOptions) {
-  return await respondToQuery(queryId, JSON.stringify({ ...data, type }), options)
+  return await respondToQuery(queryId, JSON.stringify(replaceUndefinedWithNull({ ...data, type })), options)
 }
 
 async function respondToQuery(queryId: string, content: string, options: StorageOptions) {

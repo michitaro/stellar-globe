@@ -1,9 +1,9 @@
 import { useEffect } from "react"
 import { AppState, AppStore, storeInitializerParams } from ".."
 import { debounce } from "../../../common/utils/debounce"
-import { appOnChange } from "./appOnChange"
 import { detectEnvironment } from "../../../common/utils/environment"
 import { createIs } from "../persistentTypeValidation/createIs"
+import { appOnChange } from "./appOnChange"
 
 
 export type StorageState = Partial<ReturnType<typeof localStorageState>>
@@ -14,6 +14,7 @@ function localStorageState(state: AppState) {
     retina: state.camera.retina,
     angleUnit: state.common.angleUnit,
     dialogPositionHint: state.common.dialogPositionHint,
+    magFilter: state.common.magFilter,
   }
 }
 
@@ -42,6 +43,7 @@ export function useLocalStorageSync({
         appOnChange(store, state => state.camera.retina, sync),
         appOnChange(store, state => state.common.angleUnit, sync),
         appOnChange(store, state => state.common.dialogPositionHint, sync),
+        appOnChange(store, state => state.common.magFilter, sync),
       ]
       return () => {
         while (cleanup.length > 0) {
@@ -75,7 +77,8 @@ export const readStorageState = (() => {
     catch {
       /* */
     }
-    alert(`Invalid storage value`)
+    // alert(`Invalid storage value`)
+    console.warn(`Invalid storage value: ${raw}`)
     window.localStorage.removeItem(storageKey())
     return {}
   }

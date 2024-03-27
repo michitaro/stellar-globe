@@ -1,13 +1,25 @@
-build: build-app build-public-jsonschema
+.PHONY: all lib standalone toapp-typevalidator action-typevalidator persistent-typevalidator deploy public-jsonschema
 
-build-app: build-toapp-typevalidator build-action-typevalidator
-	npm run build
+all: standalone lib
 
-build-toapp-typevalidator:
+lib: toapp-typevalidator action-typevalidator persistent-typevalidator
+	npm run build-lib
+
+standalone: persistent-typevalidator
+	npm run build-standalone
+
+toapp-typevalidator:
 	npm run make-toapp-typevalidator
 
-build-action-typevalidator:
+action-typevalidator:
 	npm run make-action-typevalidator
 
-build-public-jsonschema:
+persistent-typevalidator:
+	npm run make-persistent-typevalidator
+
+deploy: standalone
+	rsync -av --delete ./dist/standalone/ hscmap.mtk.nao.ac.jp:htdocs/hscMap5/app/
+
+# This is for Python module
+public-jsonschema:
 	npm run make-public-json-schema

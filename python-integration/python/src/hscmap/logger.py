@@ -17,7 +17,7 @@ class Logger:
         while len(self.buffer) > self.max_length:
             self.buffer.pop(0)
         if js_alert:  # pragma: no cover
-            self._w._show_error(title=level, body=msg)
+            self._w.show_error(title=level, body=msg)
         if js_console:  # pragma: no cover
             self._w.js_console(level, msg)
 

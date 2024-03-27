@@ -15,12 +15,12 @@ class DatasetManager:
         self._w.sync()
 
     @property
-    def tile_layers(self):
+    def tile_layers(self) -> dict[str, 'TileLayer']:
         self._sync()
         return {layer['name']: TileLayer(layer['name'], self._w) for layer in self._w._store_state['tractTileLayers']['layers']}
 
     @cached_property
-    def hips(self):
+    def hips(self) -> 'HipsDatasetManager':
         return HipsDatasetManager(self._w)
 
 
@@ -39,12 +39,12 @@ class TileLayer:
         self._w.sync()
 
     @property
-    def visible(self):
+    def visible(self) -> bool:
         self._sync()
         return self._state()['visible']
 
     @visible.setter
-    def visible(self, value):
+    def visible(self, value) -> None:
         action = LayerToggled(
             type='tractTileLayers/layerToggled',
             payload={
@@ -68,7 +68,7 @@ class HipsDatasetManager:
         return self._w._store_state['hipsLayers'].get('baseUrl')
 
     @base_url.setter
-    def base_url(self, value: Optional[str]):
+    def base_url(self, value: Optional[str]) -> None:
         action = BaseUrlChanged(
             type='hipsLayers/baseUrlChanged',
             payload={
@@ -77,15 +77,15 @@ class HipsDatasetManager:
         )
         self._w._dispatch(action)
 
-    def clear(self):
+    def clear(self) -> None:
         self.base_url = None
 
     @property
-    def properties(self):
+    def properties(self) -> Optional[List[tuple[str, str]]]:
         if self.base_url:
             return get_hips_properties(self.base_url)
 
-    def find_by_name(self, name: str):
+    def find_by_name(self, name: str) -> List['HipsSearchResponse']:
         import requests
         import urllib.parse as parse_url
 
@@ -110,7 +110,7 @@ class HipsSearchResponse:
 
 
 @lru_cache
-def get_hips_properties(base_url: str):
+def get_hips_properties(base_url: str) -> List[tuple[str, str]]:
     import requests
 
     url = f'{base_url}/properties'
@@ -118,7 +118,7 @@ def get_hips_properties(base_url: str):
     return parse_hips_properties(response)
 
 
-def parse_hips_properties(raw_properties: str):
+def parse_hips_properties(raw_properties: str) -> List[tuple[str, str]]:
     # 次のようなstrをパースしlist[tuple[str, str]]に変換する
     # '#' で始まる行はコメントだが、その場合は ('', 値) として返す
 

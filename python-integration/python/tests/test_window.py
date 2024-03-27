@@ -82,7 +82,7 @@ def test_window_title(w: Window):
 
 
 def test_window_snapshot_bytes(w: Window):
-    b = w._snapshot_bytes()
+    b = w.snapshot_bytes()
     assert isinstance(b, bytes)
     assert b[:4] == b'\x89PNG'
 

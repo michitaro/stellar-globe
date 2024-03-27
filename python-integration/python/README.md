@@ -1,5 +1,16 @@
-# Core
+## デプロイ先
 
-## JavaScript
+`https://hscmap.mtk.nao.ac.jp/hscMap5/` 以下に必要なファイルをまとめる。
 
-PythonとJavaScriptの通信で、バックエンドによらない共通の部分をまとめる。
+* `app/`
+* `jupyter/`
+* `python/`
+  * `notebooks/`
+    * `tutorial.ipynb`
+  * `docs/`
+  * `dist/`
+
+
+## Documents
+
+* Sphinxによる概要の説明とAPIリファレンス

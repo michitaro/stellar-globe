@@ -5,7 +5,7 @@ import '../node_modules/@stellar-globe/app/dist/style.css'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  // <React.StrictMode>
+  <React.StrictMode>
     <App />
-  // </React.StrictMode>,
+  </React.StrictMode>,
 )

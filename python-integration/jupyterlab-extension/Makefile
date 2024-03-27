@@ -1,2 +1,7 @@
 build:
-	source ./.venv/bin/activate && jlpm run build
+	source ./.venv/bin/activate && python ./build-for-publish.py --rebuild-dependencies
+
+deploy: build
+	chmod 644 ./dist/*.tar.gz
+	ssh hscmap.mtk.nao.ac.jp mkdir -p htdocs/hscMap5/python/dist
+	rsync -av ./dist/ hscmap.mtk.nao.ac.jp:htdocs/hscMap5/python/dist

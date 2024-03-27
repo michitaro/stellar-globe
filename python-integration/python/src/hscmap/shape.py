@@ -23,6 +23,27 @@ class ShapeList(ShapeBase):
 
 
 @dataclasses.dataclass
+class Polyline(ShapeBase):
+    points: List[SkyCoordOrVec3]
+    color: List[float]
+    close: bool = False
+
+    def paths(self) -> Iterable[Path]:
+        yield Path(
+            close=self.close,
+            joint='NONE',
+            points=[
+                {
+                    'color': self.color,
+                    'position': as_vec3(p).as_list(),
+                    'size': 0,
+                }
+                for p in self.points
+            ],
+        )
+
+
+@dataclasses.dataclass
 class Polygon(ShapeBase):
     center: SkyCoordOrVec3
     radius: Angle
@@ -37,21 +58,11 @@ class Polygon(ShapeBase):
         e1 = e2.cross(o).normalize()
         r = self.radius.radian
         color = self.color
-        paths: List[Path] = [
-            Path(
-                close=True,
-                joint='MITER',
-                points=[
-                    Point(
-                        color=color,
-                        size=0,
-                        position=(o + r * math.cos(2 * math.pi * i / n) * e1 + r * math.sin(2 * math.pi * i / n) * e2).as_list(),
-                    )
-                    for i in range(n)
-                ],
-            )
-        ]
-        return paths
+        yield from Polyline(
+            points=[o + r * math.cos(2 * math.pi * i / n) * e1 + r * math.sin(2 * math.pi * i / n) * e2 for i in range(n)],
+            color=color,
+            close=True,
+        ).paths()
 
 
 @dataclasses.dataclass

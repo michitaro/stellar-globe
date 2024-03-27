@@ -24,14 +24,14 @@ def apply_patch(original: JsonType, patch: List[PatchOperation]) -> JsonType:
             else:  # pragma: no cover
                 raise ValueError(f"Invalid operation: {operation}")
         except Exception as e:  # pragma: no cover
-            raise ValueError(f"Failed to apply {op} on {original}: {e}") from e
+            raise ValueError(f"Failed to apply {op} on {original}") from e
 
     return result
 
 
 def copy_for_mutation(obj: JsonType, parts: List[str]) -> JsonType:
-    # path に沿ってコピーを作成し、そのコピーを返す
-    # 最後に返却されるコピーは、obj と同じ構造を持つが、path に沿ってコピーが作成されている
+    # Create a copy along the path and return the copy.
+    # The copy returned at the end has the same structure as obj,
     obj = shallow_copy(obj)
     parent = obj
     for part in parts[:-1]:

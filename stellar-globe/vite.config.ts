@@ -11,6 +11,8 @@ export default defineConfig({
       outDir: resolve(__dirname, 'types'),
       entryRoot: './src',
     }),
+    // @ts-ignore
+    visualizer({ gzipSize: true }),
   ],
   resolve: {
     alias: alias(),
@@ -19,12 +21,6 @@ export default defineConfig({
     lib: {
       entry: 'src/index.ts',
       formats: ['es'],
-    },
-    rollupOptions: {
-      plugins: [
-        // @ts-ignore
-        visualizer({}),
-      ],
     },
   },
   test: {

@@ -93,7 +93,7 @@ def test_regions_rect(w: Window):
 def test_regions_polygon(w: Window):
     from hscmap.shape import Polygon
 
-    p = w.regions.new_shape(shape=Polygon(center=SkyCoord.from_degree(0, 0), radius=Angle.from_degree(1), n=3))
+    p = w.regions.from_shape(shape=Polygon(center=SkyCoord.from_degree(0, 0), radius=Angle.from_degree(1), n=3))
     assert isinstance(w.regions.members[0], ShapeRegion)
 
     assert isinstance(p.paths, list)

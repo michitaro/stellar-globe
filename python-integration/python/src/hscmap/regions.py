@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Iterable, List, Optional, Tuple, cast
+from typing import List, Optional, Tuple, cast
 
 from .angle import Angle
 from .models.actions.regions.newCircularRegionAdded import Model as NewCircularRegionAdded
@@ -112,7 +112,7 @@ class RegionManager:
         w._dispatch(action)
         return RectangularRegion(id, w)
 
-    def new_shape(self, *, shape: ShapeBase, name=''):
+    def from_shape(self, *, shape: ShapeBase, name=''):
         w = self._w
         id = tinyid()
         action = NewPathRegionAdded(
@@ -384,47 +384,3 @@ type_map = {
     'Rectangular': RectangularRegion,
     'Path': ShapeRegion,
 }
-
-
-'''
-Clientの型定義
-
-type RegionBase = {
-  id: string
-  visible: boolean
-  showLabel: boolean
-  name: string
-  color: V4
-}
-
-export type LinearRegion = RegionBase & {
-  type: 'Linear'
-  start: SkyCoordType
-  end: SkyCoordType
-}
-
-export type CircularRegion = RegionBase & {
-  type: 'Circular'
-  center: SkyCoordType
-  radius: number // radian
-}
-
-export type RectangularRegion = RegionBase & {
-  type: 'Rectangular'
-  minRa: number // radian
-  maxRa: number
-  minDec: number
-  maxDec: number
-}
-
-export type TextRegion = RegionBase & {
-  type: 'Text'
-  position: SkyCoordType
-}
-
-export type PathRegion = RegionBase & {
-  type: 'Path'
-  paths: path.Path[]
-}
-
-'''

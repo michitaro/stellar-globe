@@ -183,20 +183,36 @@ class SdssTrueColorMatrixPng extends ImageFilter {
 }
 
 
+export type MagFilter = 'nearest' | 'linear'
+
+
+type SspTileTextureProviderOptions = {
+  baseUrl: string
+  params: SspTileParams
+  magFilter: MagFilter
+}
+
+
 export class SspTileTextureProvider extends AsyncTextureProvider {
   private tracts: Tract[] = []
   private tractName = new Map<Tract, string>()
   private imageFilter!: ImageFilter
   private params!: SspTileParams
   private imageCache: ReturnType<typeof CachedImageLoader>
-  private magFilter = true
+  private magFilter
+  readonly baseUrl: string
 
   constructor(
     globe: Globe,
-    readonly baseUrl: string,
-    params: SspTileParams,
+    {
+      baseUrl,
+      params,
+      magFilter,
+    }: SspTileTextureProviderOptions,
   ) {
     super(globe)
+    this.baseUrl = baseUrl
+    this.magFilter = magFilter
     this.imageCache = CachedImageLoader()
     this.onRelease(() => this.imageCache.release())
     this.setParams(params)
@@ -318,11 +334,16 @@ export class SspTileTextureProvider extends AsyncTextureProvider {
         gl.generateMipmap(gl.TEXTURE_2D)
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR)
       }
-      if (!this.magFilter && ref.level === 0) {
+      if (this.magFilter === 'nearest' && ref.level === 0) {
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST)
       }
     })
     return tt
+  }
+
+  setMagFilter(magFilter: MagFilter) {
+    this.magFilter = magFilter
+    this.update()
   }
 }
 

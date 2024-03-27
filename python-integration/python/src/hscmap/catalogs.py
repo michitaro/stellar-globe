@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Dict, List, Literal, Optional, Tuple
+from typing import TYPE_CHECKING, Dict, List, Literal, Optional, Tuple, Iterable
 
 from .models.actions.catalogs.catalogAdded import Marker
 from .models.actions.catalogs.catalogAdded import Model as CatalogAdded
@@ -25,11 +25,11 @@ class CatalogManager:
     _w: Window
 
     @property
-    def members(self):
+    def members(self) -> List['Catalog']:
         self._w.sync()
         return [Catalog(c['id'], self._w) for c in self._w._store_state['catalogs']['catalogs']]
 
-    def clear(self):
+    def clear(self) -> None:
         for catalog in self.members:
             catalog.delete()
 
@@ -44,7 +44,7 @@ class CatalogManager:
         base_color: Optional[Color] = None,
         default_marker_type: MarkerType = 'circle',
         open_catalog_table=False,
-    ):
+    ) -> 'Catalog':
         id = tinyid()
         fields = [*table.keys()]
         name = name or f'Catalog {len(self.members) + 1}'
@@ -99,7 +99,7 @@ class CatalogManager:
         base_color: Optional[Color] = None,
         default_marker_type: MarkerType = 'circle',
         open_catalog_table=False,
-    ):
+    ) -> 'Catalog':
         w = self._w
 
         if coord_column is None:  # pragma: no branch
@@ -138,17 +138,19 @@ class CatalogManager:
         ra: List[float],
         dec: List[float],
         *,
+        name: Optional[str] = None,
         color: Optional[List[Optional[Color]]] = None,
         type: Optional[Optional[List[MarkerType]]] = None,
         base_color: Optional[Color] = None,
         default_marker_type: MarkerType = 'circle',
         open_catalog_table=False,
-    ):
-        # ra, dec の長さが同じことを確認
+    ) -> 'Catalog':
+        # Check that the length of ra and dec is the same
         if len(ra) != len(dec):  # pragma: no cover
             raise ValueError('ra and dec must have the same length')
 
         return self._new(
+            name=name,
             table={},
             xyz=[SkyCoord(self._w._angle_input(r), self._w._angle_input(d)).as_vec3().as_list() for r, d in zip(ra, dec)],
             color=color,
@@ -164,7 +166,7 @@ class Catalog:
     id: str
     _w: Window
 
-    def delete(self):
+    def delete(self) -> None:
         self._w.sync()
         self._w._dispatch(
             CatalogDeleted(
@@ -192,53 +194,53 @@ class Catalog:
         )
 
     @property
-    def name(self):
+    def name(self) -> str:
         self._sync()
         return self._state()['name']
 
     @name.setter
-    def name(self, new_name: str):
+    def name(self, new_name: str) -> None:
         self._update(name=new_name)
 
     @property
-    def color(self):
+    def color(self) -> Color:
         self._sync()
         return self._state()['baseColor']
 
     @color.setter
-    def color(self, new_color: Color):
+    def color(self, new_color: Color) -> None:
         self._update(baseColor=new_color)
 
     @property
-    def marker(self):
+    def marker(self) -> MarkerType:
         self._sync()
         return self._state()['defaultType']
 
     @marker.setter
-    def marker(self, new_marker: MarkerType):
+    def marker(self, new_marker: MarkerType) -> None:
         self._update(defaultType=new_marker)
 
     @property
-    def column_names(self):
+    def column_names(self) -> List[str]:
         self._sync()
         return self._state()['fields']
 
     @property
-    def visible(self):
+    def visible(self) -> bool:
         self._sync()
         return self._state()['visible']
 
     @visible.setter
-    def visible(self, new_visible: bool):
+    def visible(self, new_visible: bool) -> None:
         self._update(visible=new_visible)
 
     @property
-    def selected_indices(self):
+    def selected_indices(self) -> List[int]:
         self._sync()
         return [*map(int, self._state()['selectedRecords'].keys())]
 
     @selected_indices.setter
-    def selected_indices(self, indicse: List[int]):
+    def selected_indices(self, indicse: Iterable[int]) -> None:
         # TODO: OPIMIZE
         from hscmap.models.actions.catalogs.recordSelected import Model as RecordSelected
 
@@ -261,7 +263,7 @@ class Catalog:
         for index in new - current:
             toggle(index, True)
 
-    def as_pandas_dataframe(self):
+    def as_pandas_dataframe(self) -> 'pdDataFrame':
         import pandas
 
         fields = self._state()['fields']
@@ -294,22 +296,3 @@ def sample_pandas_data(n_rows: int = 500):
         }
     )
     return df
-
-
-'''
-Catalogの定義
-
-export type Catalog = {
-  id: string
-  name: string
-  markers: Marker[]
-  fields: string[]
-  attributes: string[][]
-  defaultType: MarkerType
-  defaultColor: V4
-  baseColor: V4
-  visible: boolean
-  dialog: DialogState
-  selectedRecords: { [index: number]: true }
-}
-'''

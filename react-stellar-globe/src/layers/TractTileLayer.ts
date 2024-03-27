@@ -16,6 +16,7 @@ const TractTileLayer$: React.FC<TractTileLayerProps> = mountOndemand(memo(props 
     colorParams = TractTileLayer.defaultParams({ type: 'sdssTrueColor' }),
     outline = false,
     visible = true,
+    magFilter = 'linear',
     filterNameDictionary,
   } = props
   const factory = useCallback(
@@ -42,6 +43,12 @@ const TractTileLayer$: React.FC<TractTileLayerProps> = mountOndemand(memo(props 
       layer.setParams(applyFilterNameTranslation(colorParams, filterNameDictionary))
     })
   }, [colorParams, filterNameDictionary, ifLayerReady])
+
+  useEffect(() => {
+    ifLayerReady(layer => {
+      layer.setMagFilter(magFilter)
+    })
+  }, [ifLayerReady, magFilter])
 
   return node
 }), 'visible')

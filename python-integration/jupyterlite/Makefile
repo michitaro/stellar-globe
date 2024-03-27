@@ -6,6 +6,7 @@ serve: rebuild
 	$(python_home)/bin/jupyter lite serve
 
 rebuild: rebuild-dependencies
+	cp ../jupyterlab-extension/tutorial.ipynb ./files/
 	$(python_home)/bin/jupyter lite build
 
 rebuild-dependencies: rebuild-python rebuild-jupyterlab-extension
@@ -21,3 +22,6 @@ rebuild-jupyterlab-extension: rebuild-app
 	$(MAKE) -C ../jupyterlab-extension build
 	$(python_home)/bin/pip uninstall -y stellar_globe_jupyterlab_extension
 	$(python_home)/bin/pip install ../jupyterlab-extension
+
+deploy:
+	rsync -av --delete _output/ hscmap.mtk.nao.ac.jp:htdocs/hscMap5/jupyter/

@@ -1,7 +1,7 @@
 python_home := ./.venv
 miniconda3_python = ~/miniconda3/envs/py3_12/bin/python
 
-.PHONE: setup test test-watch datamodel typecheck typecheck-watch
+.PHONE: setup test test-watch datamodel typecheck typecheck-watch deploy
 
 build:
 	$(python_home)/bin/python -m build
@@ -19,6 +19,7 @@ test-watch:
 	$(python_home)/bin/ptw --runner "$(MAKE) test"
 
 datamodel:
+	$(MAKE) -C ../../app public-jsonschema
 	$(python_home)/bin/python -m devel.gendatamodel
 
 typecheck:
@@ -26,3 +27,7 @@ typecheck:
 
 typecheck-watch:
 	./node_modules/.bin/pyright --watch --pythonpath $(python_home)/bin/python ./src/hscmap
+
+deploy: build
+	ssh hscmap.mtk.nao.ac.jp mkdir -p htdocs/hscMap5/python/dist
+	rsync -av ./dist/ hscmap.mtk.nao.ac.jp:htdocs/hscMap5/python/dist

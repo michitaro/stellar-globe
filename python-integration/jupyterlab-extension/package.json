@@ -1,7 +1,7 @@
 {
     "name": "@stellar-globe/jupyterlab-extension",
-    "version": "0.1.0",
-    "description": "",
+    "version": "0.0.0",
+    "description": "JupyterLab extension for StellarGlobe(hscMap)",
     "keywords": [
         "jupyter",
         "jupyterlab",

@@ -30,6 +30,7 @@ function layerVisible(layerName: string) {
 
 function initialState(): State {
   return {
+    toneDialogVisible: true,
     colorParams: readHashState().tractTileLayerColorParams ?? TractTileLayer.defaultParams({ filters: defaultFilters }),
     layers: [
       {
@@ -65,7 +66,6 @@ function initialState(): State {
       //   visible: layerVisible(rerun),
       // })),
     ],
-    toneDialogVisible: true,
   }
 }
 

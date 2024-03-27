@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 class HscmapServerCommOptions:
     backend_url: str
     frontend_url: str
+    open_browser: bool = False
 
 
 @dataclass
@@ -47,9 +48,10 @@ class HscmapServerComm(CommBase):  # pragma: no cover
         self._conn.send(json.dumps(initial_msg))
         res: dict = json.loads(self._conn.recv())  # type: ignore
         self._id = res['comm_id']
-        # subprocess.check_call(['open', '-a', 'Google Chrome', f'{options.frontend_url}/comms/#{self._id}'])
-        print(f'Open http://localhost:5173/#{self._id}')
-        print('waiting for client...')
+        if options.open_browser:
+            subprocess.check_call(['open', '-a', 'Google Chrome', f'{options.frontend_url}/#{self._id}'])
+        else:
+            print(f'Open {options.frontend_url}/#{self._id} in your browser')
         self._recv_thread = threading.Thread(target=self._websocket_recv_thread)
         self._recv_thread.start()
 

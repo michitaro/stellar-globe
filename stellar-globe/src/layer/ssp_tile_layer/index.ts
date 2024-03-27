@@ -1,20 +1,21 @@
+import { wegblProfile } from '~/devel/webgl-profiler/utils'
 import { Globe } from '~/globe'
 import { Layer } from "~/layer/layer"
 import { Renderer } from "~/renderer/tile_renderer"
 import { TileId } from '~/renderer/tile_renderer/tract'
+import { V3 } from '~/types'
 import { View } from "~/view"
 import { overlayAlpha } from "../overlayAlpha"
 import { AreaRenderer } from "./AreaRenderer"
-import { SspTileTextureProvider } from "./TextureProvider"
+import { MagFilter, SspTileTextureProvider } from "./TextureProvider"
 import { SspTileParams, sspTileDefaultParams, sspTileParamsAssertType } from "./TextureProvider/params"
-import { V3 } from '~/types'
-import { wegblProfile } from '~/devel/webgl-profiler/utils'
 
 
 type Options = {
   baseUrl: string
   outline?: boolean
   colorParams?: SspTileParams
+  magFilter?: MagFilter
 }
 
 type FilterList = ConstructorParameters<typeof AreaRenderer>[2]
@@ -31,10 +32,11 @@ export class SspTileLayer extends Layer {
 
     const baseUrl = options.baseUrl
     const colorParams = options.colorParams ?? sspTileDefaultParams({ type: 'sdssTrueColor' })
+    const magFilter = options.magFilter ?? 'linear'
     const filters = outlineFilter(colorParams)
     this.outline = options.outline ?? false
 
-    const textureProvider = new SspTileTextureProvider(globe, baseUrl, colorParams)
+    const textureProvider = new SspTileTextureProvider(globe, { baseUrl, params: colorParams, magFilter })
     this.onRelease(() => textureProvider.release())
     this.tileRenderer = new Renderer(globe, textureProvider)
     this.onRelease(() => this.tileRenderer.release())
@@ -71,6 +73,11 @@ export class SspTileLayer extends Layer {
 
   private setAreaFilters(filters: FilterList) {
     this.areaRenderer.setFilter(filters)
+    this.globe.requestRefresh()
+  }
+
+  setMagFilter(magFilter: MagFilter) {
+    this.tileRenderer.textureProvider.setMagFilter(magFilter)
     this.globe.requestRefresh()
   }
 

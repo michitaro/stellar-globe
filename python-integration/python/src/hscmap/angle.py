@@ -8,25 +8,28 @@ rad2deg = 180 / math.pi
 
 
 class Angle:
+    '''
+    This class represents an angle.
+    '''
     Unit = Literal['degree', 'radian']
 
-    def __init__(self, radian: float):
+    def __init__(self, radian: float) -> None:
         self._radian = radian
 
     @property
-    def degree(self):
+    def degree(self) -> float:
         return rad2deg * self._radian
 
     @property
-    def radian(self):
+    def radian(self) -> float:
         return self._radian
 
     @classmethod
-    def from_degree(cls, degree: float):
+    def from_degree(cls, degree: float) -> 'Angle':
         return cls(deg2rad * degree)
 
     @classmethod
-    def from_radian(cls, radian: float):
+    def from_radian(cls, radian: float) -> 'Angle':
         return cls(radian)
 
     @classmethod
@@ -40,9 +43,9 @@ class Angle:
         return angle_input, angle_output
 
 
-def _as_degree(angle: Angle):
+def _as_degree(angle: Angle) -> float:
     return angle.degree
 
 
-def _as_radian(angle: Angle):
+def _as_radian(angle: Angle) -> float:
     return angle.radian

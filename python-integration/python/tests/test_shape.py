@@ -14,7 +14,7 @@ def test_shape_grid(w: Window):
         height=Angle.from_degree(0.75),
         width=Angle.from_degree(1),
     )
-    w.regions.new_shape(shape=grid)
+    w.regions.from_shape(shape=grid)
     w.sync()
     shape: ShapeRegion = w.regions.members[-1]  # type: ignore
     assert len(shape.paths) == (div_y + 1) + (div_x + 1)
@@ -27,7 +27,7 @@ def test_shape_list(w: Window):
             Line(color=[1, 1, 1, 1], start=Vec3(2, 2, 2), end=Vec3(3, 3, 3)),
         ]
     )
-    w.regions.new_shape(shape=l)
+    w.regions.from_shape(shape=l)
     w.sync()
     shape: ShapeRegion = w.regions.members[-1]  # type: ignore
     assert len(shape.paths) == 2
