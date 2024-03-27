@@ -241,27 +241,17 @@ class Catalog:
 
     @selected_indices.setter
     def selected_indices(self, indicse: Iterable[int]) -> None:
-        # TODO: OPIMIZE
-        from hscmap.models.actions.catalogs.recordSelected import Model as RecordSelected
+        from hscmap.models.actions.catalogs.recordsBatchSelected import Model as RecordBatchSelected
 
-        def toggle(index: int, selected: bool):
-            self._w._dispatch(
-                RecordSelected(
-                    type='catalogs/recordSelected',
-                    payload={
-                        'id': self.id,
-                        'index': index,
-                        'selected': selected,
-                    },
-                )
-            )
-
-        current = set(self.selected_indices)
-        new = set(indicse)
-        for index in current - new:
-            toggle(index, False)
-        for index in new - current:
-            toggle(index, True)
+        self._w._dispatch(
+            RecordBatchSelected(
+                type='catalogs/recordsBatchSelected',
+                payload={
+                    'id': self.id,
+                    'indices': [*indicse],
+                },
+            ),
+        )
 
     def as_pandas_dataframe(self) -> 'pdDataFrame':
         import pandas

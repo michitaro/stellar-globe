@@ -205,6 +205,19 @@ export const catalogsSlice = createSlice({
           }
         }
       }),
+    recordsBatchSelected: create.preparedReducer(
+      (payload: { id: string, indices: number[] }) => {
+        return trackAction({ payload }, `Catalog Records Batch (De)Selected`)
+      },
+      (state, { payload: { id, indices } }) => {
+        const catalog = state.catalogs.find(c => c.id === id)
+        if (catalog) {
+          catalog.selectedRecords = {}
+          for (const i of indices) {
+            catalog.selectedRecords[i] = true
+          }
+        }
+      }),
     showAttributesToggled: create.reducer<{ show: boolean }>((state, { payload: { show } }) => {
       state.showAttributes = show
     }),
