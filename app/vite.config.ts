@@ -2,6 +2,11 @@ import { defineConfig } from "vitest/config"
 import secrets from './secrets.json'
 
 export default defineConfig({
+  css: {
+    modules: {
+      localsConvention: 'camelCaseOnly',
+    },
+  },
   test: {
     globals: true,
     environment: "jsdom",
