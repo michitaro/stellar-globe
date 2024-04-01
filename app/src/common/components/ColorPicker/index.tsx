@@ -1,5 +1,6 @@
 import { flip, useClick, useDismiss, useFloating, useInteractions } from '@floating-ui/react'
 import { V3, V4 } from "@stellar-globe/stellar-globe"
+import classNames from 'classnames'
 import { Fragment, ReactNode, memo, useRef, useState } from "react"
 import { RgbColor, RgbColorPicker, RgbaColor, RgbaColorPicker } from 'react-colorful'
 import { CSSTransition } from 'react-transition-group'
@@ -33,7 +34,7 @@ function Pallete({
 
   return (
     <Fragment>
-      <div {...getReferenceProps()} ref={refs.setReference}>
+      <div style={{ display: 'inline-block' }} {...getReferenceProps()} ref={refs.setReference}>
         {renderTrigger}
       </div>
       <CSSTransition
@@ -66,10 +67,11 @@ export const ColorPickerRgb = memo(({ color, onChange }: Props<V3>) => {
   return (
     <Pallete
       renderTrigger={
-        <CheckeredPatternBackground>
-          <button
-            className={styles.toggleButton}
+        <CheckeredPatternBackground className={styles.toggleButton} >
+          <div
             style={{
+              height: '100%',
+              flexGrow: 1,
               backgroundColor: `rgb(${r}, ${g}, ${b})`
             }}
           />
@@ -91,10 +93,13 @@ export const ColorPickerRgba = memo(({ color, onChange }: Props<V4>) => {
   return (
     <Pallete
       renderTrigger={
-        <CheckeredPatternBackground>
-          <button
-            className={styles.toggleButton}
+        <CheckeredPatternBackground
+          className={styles.toggleButton}
+        >
+          <div
             style={{
+              height: '100%',
+              flexGrow: 1,
               backgroundColor: `rgba(${r}, ${g}, ${b}, ${a})`
             }}
           />
@@ -110,11 +115,11 @@ export const ColorPickerRgba = memo(({ color, onChange }: Props<V4>) => {
 })
 
 
-function CheckeredPatternBackground({ children }: { children: ReactNode }) {
+function CheckeredPatternBackground({ children, className }: { children: ReactNode, className?: string }) {
   return (
-    <div className={styles.checkeredPattern}>
+    <button className={classNames(styles.checkeredPattern, className)}>
       {children}
-    </div>
+    </button>
   )
 }
 
