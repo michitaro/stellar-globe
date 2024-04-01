@@ -15,6 +15,12 @@ export default defineConfig({
   },
   server: {
     proxy: {
+      '/hsc_ssp/': {
+        target: 'https://hscdata.mtk.nao.ac.jp',
+        secure: false,
+        changeOrigin: true,
+        auth: secrets.stars,
+      },
       '/data/s23b_wide/': {
         target: 'https://hscdata.mtk.nao.ac.jp',
         secure: false,

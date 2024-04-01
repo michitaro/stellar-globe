@@ -43,6 +43,11 @@ function initialState(): State {
         baseUrl: "//hscmap.mtk.nao.ac.jp/hscMap4/data/pdr3_dud",
         visible: layerVisible('PDR3 DUD'),
       },
+      {
+        name: 'U2K V2',
+        baseUrl: "/hsc_ssp/u2k/v2/hscmap/data/u2k_v2_dud2_external_ddoff2/",
+        visible: layerVisible('PDR3 DUD'),
+      },
       // {
       //   name: 'Legacy Archive 2016',
       //   baseUrl: "//hscmap.mtk.nao.ac.jp/hscMap4/data/la2016",
