@@ -31,7 +31,6 @@ build
 *.local
 
 /.gitignore
-/secrets.json
 /.vite
 
 /stats/

@@ -29,5 +29,6 @@ export function commonConfig(configName: string, options: UserConfig = {}): User
     plugins,
     build,
     css,
+    envDir: './vite/env',
   }
 }
