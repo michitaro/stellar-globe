@@ -89,8 +89,7 @@ class HipsDatasetManager:
         import requests
         import urllib.parse as parse_url
 
-        query_server = 'https://alasky.u-strasbg.fr'
-        url = f'{query_server}/MocServer/query?hips_service_url=*&casesensitive=false&obs_title=*{ parse_url.quote(name) }*&dataproduct_type=image&dataproduct_subtype=*&get=record&fields=ID,obs_title,hips_service*,hips_status*&fmt=json'
+        url = f'https://alasky.cds.unistra.fr/MocServer/query?hips_service_url=*&casesensitive=false&obs_title=*{ parse_url.quote(name) }*&dataproduct_type=image&dataproduct_subtype=*&get=record&fields=ID,obs_title,hips_service*,hips_status*&fmt=json'
         response: List = requests.get(url).json()
         return [
             HipsSearchResponse(

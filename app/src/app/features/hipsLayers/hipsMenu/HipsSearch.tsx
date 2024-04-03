@@ -96,7 +96,7 @@ setDisplayName({ SearchResults })
 async function queryHiPS(q: string) {
   if (q.length > 0) {
     const ac = new AbortController()
-    const url = `//alasky.u-strasbg.fr/MocServer/query?hips_service_url*=*&casesensitive=false&obs_title=${encodeURIComponent(`*${q}*`)}&dataproduct_type=image&dataproduct_subtype=*&get=record&fields=ID,obs_title,hips_service*,hips_status*&fmt=json`
+    const url = `//alasky.cds.unistra.fr/MocServer/query?hips_service_url*=*&casesensitive=false&obs_title=${encodeURIComponent(`*${q}*`)}&dataproduct_type=image&dataproduct_subtype=*&get=record&fields=ID,obs_title,hips_service*,hips_status*&fmt=json`
     const promise = (await fetch(url, { signal: ac.signal })).json() as Promise<HipsSurvey[]>
     return Object.assign(promise, { abort: () => ac.abort() })
   }

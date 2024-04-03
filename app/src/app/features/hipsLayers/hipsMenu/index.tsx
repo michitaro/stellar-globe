@@ -27,7 +27,7 @@ export const HipsMenu = memo(() => {
       <HipsDirectoryMenu />
       <MenuItem onClick={() => dispatch(hipsLayersSlice.actions.baseUrlChanged({ baseUrl: undefined }))}>Clear</MenuItem>
       <MenuItem
-        href="http://aladin.cds.unistra.fr/hips/list"
+        href="https://aladin.cds.unistra.fr/hips/list"
         target="_blank"
         rel="noreferrer"
       >
