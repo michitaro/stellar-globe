@@ -47,17 +47,15 @@ export function useFilterMap(baseUrl: string) {
 
 
 function normalizeFilterDef(filterDef: any): FilterDef {
+  // intrinsicNameはディレクトリー名
+  // commonNameで表示に使われる
   const intrinsicName = filterDef.fullName ?? filterDef.value
   if (typeof intrinsicName !== 'string') {
     throw new Error(`Invalid filterDef1: ${JSON.stringify(filterDef)}`)
   }
-  let commonName = filterDef.shortName ?? makeShortName(intrinsicName)
+  const commonName = filterDef.shortName ?? makeCommonName(intrinsicName)
   if (typeof commonName !== 'string') {
     throw new Error(`Invalid filterDef2: ${JSON.stringify(filterDef)}`)
-  }
-  const m = intrinsicName.match(/^NB(\d+)$/)
-  if (m) {
-    commonName = String(Number(m[1]))
   }
   return {
     intrinsicName,
@@ -66,11 +64,11 @@ function normalizeFilterDef(filterDef: any): FilterDef {
 }
 
 
-function makeShortName(fullName: string) {
+function makeCommonName(fullName: string) {
   if (fullName.startsWith('HSC-')) {
     return fullName.substring(4).toLowerCase()
   }
-  for (const m = fullName.match(/(\d+)/); m;) {
+  for (const m = fullName.match(/^NB(\d+)/); m;) {
     return String(Number(m[1]))
   }
   return fullName

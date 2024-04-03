@@ -181,6 +181,20 @@ function FilterSelector({
   filterCandidates,
   filters,
   onChange,
+  maxFilterCandidates = 12,
+}: FilterSelectorProps & { maxFilterCandidates?: number }) {
+  if (filterCandidates.length <= maxFilterCandidates) {
+    return <FilterSelectorForFewCandidates filterCandidates={filterCandidates} filters={filters} onChange={onChange} />
+  }
+  else {
+    return <FilterSelectorForManyCandidates filterCandidates={filterCandidates} filters={filters} onChange={onChange} />
+  }
+}
+
+function FilterSelectorForFewCandidates({
+  filterCandidates,
+  filters,
+  onChange,
 }: FilterSelectorProps) {
   const rgb = [
     { name: 'r', color: '#f33' },
@@ -213,6 +227,61 @@ function FilterSelector({
                 />
               </td>
             ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )
+}
+
+
+function FilterSelectorForManyCandidates({
+  filterCandidates,
+  filters,
+  onChange,
+}: FilterSelectorProps) {
+  const rgb = [
+    { name: 'r', color: '#f33' },
+    { name: 'g', color: '#3f3' },
+    { name: 'b', color: '#33f' },
+  ]
+
+  return (
+    <table>
+      <tbody>
+        <tr>
+          <th>-</th>
+          <td>
+            <select value={
+              [0, 1, 2].every(i => filters[i] === filters[0]) ? filters[0] : '-'
+            } onChange={e => {
+              onChange(produce(filters, _ => {
+                for (let i = 0; i < 3; i++) {
+                  _[i] = e.currentTarget.value
+                }
+              }))
+            }} >
+              {filterCandidates.map(f => (
+                <option key={f} value={f}>{f}</option>
+              ))}
+              <option disabled>-</option>
+            </select>
+          </td>
+        </tr>
+        {[0, 1, 2].map(i => (
+          <tr key={i}>
+            <th style={{ color: rgb[i].color }}>{rgb[i].name}</th>
+            <td>
+              <select value={filters[i]} onChange={e => {
+                onChange(produce(filters, _ => {
+                  _[i] = e.currentTarget.value
+                }))
+              }} >
+                {filterCandidates.map(f => (
+                  <option key={f} value={f}>{f}</option>
+                ))}
+              </select>
+            </td>
           </tr>
         ))}
       </tbody>
