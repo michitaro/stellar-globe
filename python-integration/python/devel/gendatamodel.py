@@ -1,10 +1,11 @@
-import re
 import contextlib
 import json
 import logging
+import re
 import shutil
 import subprocess
 import sys
+import tempfile
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -91,24 +92,27 @@ def generate_datamodel(schema, outfile: Path, replace_map: dict[str, str] = {}):
 
 
 def datamodel_codegen(schema):
-    p = subprocess.Popen(
-        [
-            f'{sys.prefix}/bin/datamodel-codegen',
-            '--input-file-type',
-            'jsonschema',
-            '--input',
-            '/dev/stdin',
-            '--output-model-type',
-            'typing.TypedDict',
-            '--output',
-            '/dev/stdout',
-        ],
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-    )
-    codes_bytes, _ = p.communicate(json.dumps(schema).encode())
-    assert p.returncode == 0
-    codes = codes_bytes.decode()
+    with \
+        tempfile.NamedTemporaryFile('w') as input,\
+        tempfile.NamedTemporaryFile('w') as output:
+        input.write(json.dumps(schema))
+        input.flush()
+        p = subprocess.Popen(
+            [
+                f'{sys.prefix}/bin/datamodel-codegen',
+                '--input-file-type',
+                'jsonschema',
+                '--input',
+                input.name,
+                '--output-model-type',
+                'typing.TypedDict',
+                '--output',
+                output.name,
+            ],
+        )
+        p.wait()
+        assert p.returncode == 0
+        codes = Path(output.name).read_text()
     return codes
 
 
