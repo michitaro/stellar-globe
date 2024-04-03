@@ -1,6 +1,6 @@
 from typing import List
 from .models.actions.hipsLayers.baseUrlChanged import Model as BaseUrlChanged
-from typing import Optional
+from typing import Optional, Dict, Tuple
 from functools import cached_property, lru_cache
 from dataclasses import dataclass
 from .window import Window
@@ -15,7 +15,7 @@ class DatasetManager:
         self._w.sync()
 
     @property
-    def tile_layers(self) -> dict[str, 'TileLayer']:
+    def tile_layers(self) -> Dict[str, 'TileLayer']:
         self._sync()
         return {layer['name']: TileLayer(layer['name'], self._w) for layer in self._w._store_state['tractTileLayers']['layers']}
 
@@ -81,7 +81,7 @@ class HipsDatasetManager:
         self.base_url = None
 
     @property
-    def properties(self) -> Optional[List[tuple[str, str]]]:
+    def properties(self) -> Optional[List[Tuple[str, str]]]:
         if self.base_url:
             return get_hips_properties(self.base_url)
 
@@ -110,7 +110,7 @@ class HipsSearchResponse:
 
 
 @lru_cache
-def get_hips_properties(base_url: str) -> List[tuple[str, str]]:
+def get_hips_properties(base_url: str) -> List[Tuple[str, str]]:
     import requests
 
     url = f'{base_url}/properties'
@@ -118,7 +118,7 @@ def get_hips_properties(base_url: str) -> List[tuple[str, str]]:
     return parse_hips_properties(response)
 
 
-def parse_hips_properties(raw_properties: str) -> List[tuple[str, str]]:
+def parse_hips_properties(raw_properties: str) -> List[Tuple[str, str]]:
     # 次のようなstrをパースしlist[tuple[str, str]]に変換する
     # '#' で始まる行はコメントだが、その場合は ('', 値) として返す
 
