@@ -1,6 +1,6 @@
 .PHONY: all lib standalone toapp-typevalidator action-typevalidator persistent-typevalidator deploy public-jsonschema
 
-all: standalone lib
+all: standalone lib public-jsonschema
 
 lib: toapp-typevalidator action-typevalidator persistent-typevalidator
 	npm run build-lib
@@ -8,13 +8,13 @@ lib: toapp-typevalidator action-typevalidator persistent-typevalidator
 standalone: persistent-typevalidator
 	npm run build-standalone
 
-toapp-typevalidator:
+toapp-typevalidator: node_modules
 	npm run make-toapp-typevalidator
 
-action-typevalidator:
+action-typevalidator: node_modules
 	npm run make-action-typevalidator
 
-persistent-typevalidator:
+persistent-typevalidator: node_modules
 	npm run make-persistent-typevalidator
 
 deploy: standalone
@@ -23,3 +23,6 @@ deploy: standalone
 # This is for Python module
 public-jsonschema:
 	npm run make-public-json-schema
+
+node_modules: package.json package-lock.json
+	npm install

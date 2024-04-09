@@ -40,8 +40,7 @@
     "gl-matrix": "^3.4.3",
     "gzip-js": "^0.3.2"
   },
-  "volta": {
-    "node": "16.17.1",
-    "npm": "8.19.2"
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.6.1"
   }
 }

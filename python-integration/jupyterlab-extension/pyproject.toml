@@ -26,6 +26,12 @@ dependencies = [
 ]
 dynamic = ["version", "description", "authors", "urls", "keywords"]
 
+[project.optional-dependencies]
+dev = [
+    "jupyterlab",
+    "build"
+]
+
 [tool.hatch.version]
 source = "nodejs"
 

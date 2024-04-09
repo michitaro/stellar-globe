@@ -26,3 +26,5 @@ dist-ssr
 /docs
 /types
 /stats.html
+
+/package-lock.json

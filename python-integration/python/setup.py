@@ -18,6 +18,7 @@ setup(
             'datamodel-code-generator==0.25.*',
             'build',
             'sphinx',
+            'websockets',
         ],
         'hscmapserver': [
             'websockets',

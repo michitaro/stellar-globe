@@ -1,13 +1,15 @@
 python_home := ./.venv
-miniconda3_python = ~/miniconda3/envs/py3_12/bin/python
+base_python = ~/miniconda3/envs/py3_12/bin/python
 
-.PHONE: setup test test-watch datamodel typecheck typecheck-watch deploy
+.PHONE: setup test test-watch datamodel typecheck typecheck-watch deploy build
 
 build:
 	$(python_home)/bin/python -m build
 
-setup:
-	$(miniconda3_python) -m venv $(python_home)
+.venv:
+	$(base_python) -m venv .venv
+
+setup: .venv
 	$(python_home)/bin/pip install -U pip
 	$(python_home)/bin/pip install -e .
 	$(python_home)/bin/pip install -e '.[dev]'
@@ -18,8 +20,10 @@ test:
 test-watch:
 	$(python_home)/bin/ptw --runner "$(MAKE) test"
 
-datamodel:
+../../app/jsonschema/public.json:
 	$(MAKE) -C ../../app public-jsonschema
+
+datamodel: ../../app/jsonschema/public.json
 	$(python_home)/bin/python -m devel.gendatamodel
 
 typecheck:

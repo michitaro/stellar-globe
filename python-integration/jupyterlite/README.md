@@ -1,5 +1,5 @@
 ```bash
-pip -U install pip
+pip install -U pip
 pip install jupyterlite-core
 pip install jupyterlite-pyodide-kernel
 pip install jupyterlab
