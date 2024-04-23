@@ -3,11 +3,12 @@ import { memo } from "react"
 import { setDisplayName } from "../../../common/utils/setDisplayName"
 import { useAppContext } from "../../context"
 import { useAppSelector } from "../../store/hooks"
+import { CatalogDialogs } from "../catalog/CatalogDialogs"
 import { CatalogsDialog } from "../catalog/catalogsDialog"
+import { FitsImagesDialog } from "../fitsImage/fitsImagesDialog"
 import { HipsDialog } from "../hipsLayers/HipsDialog"
 import { RegionsDialog } from "../regions/RegionsDialog"
 import { ToneDialog } from "../tractTileLayers/ToneDialog"
-import { CatalogDialogs } from "../catalog/CatalogDialogs"
 
 
 export const Dialogs = memo(({ portal }: { portal: HTMLElement | undefined }) => {
@@ -25,6 +26,7 @@ export const Dialogs = memo(({ portal }: { portal: HTMLElement | undefined }) =>
       <HipsDialog />
       <CatalogsDialog />
       <CatalogDialogs />
+      <FitsImagesDialog />
     </DialogContext>
   )
 })

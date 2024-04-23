@@ -10,6 +10,7 @@ import { regionsSlice } from "../features/regions/regionsSlice"
 import { tractTileLayersSlice } from '../features/tractTileLayers/tractTileLayersSlice'
 import { AppStateWithComputed, stateWithComputed } from "./computedState"
 import { makeStateHistory } from "./stateHistory"
+import { fitsImageSlice } from "../features/fitsImage/fitsImageSlice"
 
 
 export function makeStore({
@@ -39,6 +40,7 @@ export function makeStore({
         [regionsSlice.name]: regionsSlice.reducer,
         [catalogsSlice.name]: catalogsSlice.reducer,
         [develSlice.name]: develSlice.reducer,
+        [fitsImageSlice.name]: fitsImageSlice.reducer,
       },
       middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(

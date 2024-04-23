@@ -12,7 +12,7 @@ import { useIsFullscreen } from '../common/hooks/useFullscreen'
 import MainMenu from "./MainMenu"
 import { MainViewer } from "./MainViewer"
 import { AppContextProvider, useMakeContext, useSetupAppHandle } from "./context"
-import { CatalogDragAndDrop } from './features/catalog/CatalogDragAndDrop'
+import { AppDragAndDrop } from './AppDragAndDrop'
 import { Dialogs } from './features/dialogs/Dialogs'
 import { KeybindsProvider } from './keybindings/appKeybindings'
 import { AppState, StoreChangeEvent } from './store'
@@ -78,10 +78,10 @@ export const App = forwardRef<AppHandle, AppProps>(({
             <StateHistoryProvider stateHistory={stateHistory}>
               <ModalProvider rootElementRef={rootElementRef}>
                 <KeybindsProvider containerRef={rootElementRef} catchAllEvents={catchAllKeyboardEvents}>
-                  <CatalogDragAndDrop>
+                  <AppDragAndDrop>
                     <MainViewer />
                     <MainMenu />
-                  </CatalogDragAndDrop>
+                  </AppDragAndDrop>
                 </KeybindsProvider>
               </ModalProvider>
             </StateHistoryProvider>

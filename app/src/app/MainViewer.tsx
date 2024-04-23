@@ -12,6 +12,7 @@ import { TractTileLayers } from "./features/tractTileLayers/TractTileLayers"
 import { useAppDispatch, useAppSelector } from "./store/hooks"
 import { ContextMenuLayer } from "./MainContextMenu/ContextMenuLayer"
 import { MainContextMenu } from "./MainContextMenu"
+import { FitsImageLayers } from "./features/fitsImage/FitsImageLayers"
 
 
 export function MainViewer() {
@@ -56,6 +57,8 @@ export function MainViewer() {
         <HipparcosCatalogLayer$ {...layers.hipparcosCatalog} />
         <ConstellationLayer$ {...layers.constellation} />
         <GridLayer$ {...layers.grid} />
+
+        <FitsImageLayers />
 
         <TractFrameLayer$ showPatch={layers.tracts.patch} visible={layers.tracts.visible} />
         {layers.tracts.visible &&

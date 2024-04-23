@@ -5,33 +5,31 @@ import { useAppDispatch } from "../../store/hooks"
 import { Catalog, catalogsSlice, parseCatalogCsvText } from "./catalogSlice"
 
 
-export function useAddCatalogFileList() {
+export function useAddCatalogFile() {
   const dispatch = useAppDispatch()
   const getState = useAppGetState()
   const { globeHandle } = useAppContext()
 
-  return useCallback((filelist: FileList) => {
-    for (const file of filelist) {
-      if (file.type === 'text/csv') {
-        const reader = new FileReader()
-        reader.onload = (e) => {
-          const text = e.target?.result as string
-          let parsedResults: ReturnType<typeof parseCatalogCsvText>
-          try {
-            parsedResults = parseCatalogCsvText(text)
-          }
-          catch (error) {
-            alert(error)
-            return
-          }
-          dispatch(catalogsSlice.actions.catalogAdded({ name: file.name, ...parsedResults }))
-          goToCatalog(getState().catalogs.catalogs.slice(-1)[0], globeHandle.current!())
+  return useCallback((file: File) => {
+    if (file.type === 'text/csv') {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        const text = e.target?.result as string
+        let parsedResults: ReturnType<typeof parseCatalogCsvText>
+        try {
+          parsedResults = parseCatalogCsvText(text)
         }
-        reader.readAsText(file)
+        catch (error) {
+          alert(error)
+          return
+        }
+        dispatch(catalogsSlice.actions.catalogAdded({ name: file.name, ...parsedResults }))
+        goToCatalog(getState().catalogs.catalogs.slice(-1)[0], globeHandle.current!())
       }
-      else {
-        alert(`Unsupported file type: ${file.name}: ${file.type}`)
-      }
+      reader.readAsText(file)
+    }
+    else {
+      alert(`Unsupported file type: ${file.name}: ${file.type}`)
     }
   }, [dispatch, getState, globeHandle])
 }

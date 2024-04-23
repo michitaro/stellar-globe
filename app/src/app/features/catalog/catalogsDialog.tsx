@@ -14,7 +14,7 @@ import { AppDialog } from '../../AppDialog'
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
 import { Catalog, catalogsSlice } from "./catalogSlice"
 import { generateCSV } from './generateSampleCsv'
-import { useAddCatalogFileList, useGoToCatalog } from './useAddCatalogFileList'
+import { useAddCatalogFile, useGoToCatalog } from './useAddCatalogFileList'
 
 
 export const CatalogsDialog = memo(() => {
@@ -178,13 +178,15 @@ const CatalogMenu = memo(({ catalog }: { catalog: Catalog }) => {
 
 
 export const CatalogsMenu = memo(() => {
-  const addCatalogFiles = useAddCatalogFileList()
+  const addCatalogFiles = useAddCatalogFile()
   const dispatch = useAppDispatch()
 
   const upload = async () => {
     try {
       const filelist = await askLocalFileList({ multiple: true })
-      addCatalogFiles(filelist)
+      for (const file of filelist) {
+        addCatalogFiles(file)
+      }
     }
     catch {
       // do nothing

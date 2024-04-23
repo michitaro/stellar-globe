@@ -55,6 +55,17 @@ function initialState(): State {
     layers.push(layerDef('Legacy Archive 2016', "//hscmap.mtk.nao.ac.jp/hscMap4/data/la2016"))
   }
 
+  `
+  s23b_deep_step3a_20231229T123743Z
+  s23b_test_step3_minIter15_alltracts_correct2_20221206T050622Z
+  s23b_wide_step3a_20231228T070512Z
+  s23b_dud
+  s23b_wide
+  `.split(/\s+/).map(s => s.trim()).filter(s => s.length > 0).forEach(s => {
+    layers.push(layerDef(s, `../data/${s}`))
+  })
+
+
   return {
     toneDialogVisible: true,
     colorParams: readHashState().tractTileLayerColorParams ?? TractTileLayer.defaultParams({ filters: defaultFilters }),

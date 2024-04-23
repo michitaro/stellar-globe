@@ -26,3 +26,6 @@ public-jsonschema:
 
 node_modules: package.json package-lock.json
 	npm install
+
+s23b_validation: standalone
+	rsync --delete -av ./dist/standalone/ 133.40.210.20:/usr/share/nginx/html/hsc_ssp/dr4/s23b/validation/hscmap-b4eac0dd1a53a105/app/

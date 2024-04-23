@@ -8,12 +8,14 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks"
 import { commonSlice } from "../common/commonSlice"
 import { useAppContext } from "../../context"
 import { catalogsSlice } from "../catalog/catalogSlice"
+import { fitsImageSlice } from "../fitsImage/fitsImageSlice"
 
 export const DialogsMenu = memo(() => {
   const tone = useAppSelector(state => state.tractTileLayers.toneDialogVisible)
   const regions = useAppSelector(state => state.regions.regionsDialogVisible)
   const hips = useAppSelector(state => state.hipsLayers.hipsDialogVisible)
   const catalogsDialog = useAppSelector(state => state.catalogs.catalogsDialogVisible)
+  const localFitsImageDialog = useAppSelector(state => state.fitsImage.dialogVisible)
   const currentPositionHint = useAppSelector(state => state.common.dialogPositionHint)
   const dispatch = useAppDispatch()
   const { dialogContext } = useAppContext()
@@ -40,6 +42,7 @@ export const DialogsMenu = memo(() => {
       <MenuItemWithKeybind type='checkbox' checked={regions} keybind="toggleRegionsDialog"><Icon type='architecture' marginRight />Regions</MenuItemWithKeybind>
       <MenuItemWithKeybind type='checkbox' checked={hips} keybind="toggleHipsDialog"><Icon type='layers' marginRight />HiPS</MenuItemWithKeybind>
       <MenuItemWithKeybind type='checkbox' checked={catalogsDialog} keybind="toggleCatalogsDialog"><Icon type='table' marginRight />Catalogs</MenuItemWithKeybind>
+      <MenuItem type='checkbox' checked={localFitsImageDialog} onClick={() => dispatch(fitsImageSlice.actions.dialogToggled())}><Icon type='photo_library' marginRight />FITS Images</MenuItem>
       <MenuDivider />
       <SubMenu label="Catalogs">
         {
@@ -70,20 +73,20 @@ setDisplayName({ DialogsMenu })
 type PositionHint = Parameters<typeof commonSlice.actions.dialogPositionHintChanged>[0]
 
 
-const positionPresets = {
-  topleft: {
-    top: 8, left: 8,
-  },
-  topright: {
-    top: 8, right: 8,
-  },
-  bottomleft: {
-    bottom: 8, left: 8,
-  },
-  bottomright: {
-    bottom: 8, right: 8,
-  },
-}
+// const positionPresets = {
+//   topleft: {
+//     top: 8, left: 8,
+//   },
+//   topright: {
+//     top: 8, right: 8,
+//   },
+//   bottomleft: {
+//     bottom: 8, left: 8,
+//   },
+//   bottomright: {
+//     bottom: 8, right: 8,
+//   },
+// }
 
 
 function positionHintName(hint: PositionHint) {
