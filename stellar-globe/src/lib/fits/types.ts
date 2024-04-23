@@ -9,7 +9,7 @@ export enum DataType {
 
 export type HduDecodeOption = {
   sourceIndex: number
-  outputDataType: DataType
+  outputDataType?: DataType
   // doNotScaleImageData: boolean
 }
 
@@ -17,7 +17,7 @@ export type HduDecodeOption = {
 export type WorkerRequestMessage = {
   requestId: number
   fileContent: ArrayBuffer
-  hduDecodeOptions?: Partial<HduDecodeOption>[]
+  hduDecodeOptions?: HduDecodeOption[]
 }
 
 

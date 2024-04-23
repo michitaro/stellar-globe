@@ -1,5 +1,5 @@
 import gzip from 'gzip-js'
-import { card, DataType, HduDecodeOption, HduSource, Header, WorkerRequestMessage, WorkerResponseMessage } from "./types"
+import { card, DataType, HduSource, Header, WorkerRequestMessage, WorkerResponseMessage } from "./types"
 
 
 self.addEventListener('message', async e => {
@@ -29,29 +29,44 @@ function decode(request: WorkerRequestMessage): HduSource[] {
 
   const { headers, dataBuffers } = strideArrayBuffer(raw)
 
-  if (!request.hduDecodeOptions)
+  if (!request.hduDecodeOptions) {
     request.hduDecodeOptions = headers.map((_h, i) => ({ sourceIndex: i }))
-
-  // fill omitted fields
-  for (let j = 0; j < request.hduDecodeOptions.length; ++j) {
-    const o = request.hduDecodeOptions[j]
-    // const i = o.sourceIndex == undefined ? (o.sourceIndex = j) : o.sourceIndex
-    o.outputDataType == undefined && (o.outputDataType = DataType.float32)
   }
 
-  return (request.hduDecodeOptions as HduDecodeOption[]).map((o: HduDecodeOption) => {
-    if (o.sourceIndex >= headers.length)
+  return request.hduDecodeOptions.map(o => {
+    if (o.sourceIndex >= headers.length) {
       throw new Error(`hdul.length(${headers.length}) >= sourceIndex(${o.sourceIndex})`)
+    }
+    const dataType = o.outputDataType ?? guessOutputDataType(headers[o.sourceIndex])
     const header = headers[o.sourceIndex]
     const buffer = dataBuffers[o.sourceIndex]
-    const ab = buildTypedArray(header, buffer, o)
+    const ab = buildTypedArray(header, buffer, dataType)
     // const ab = buildTypedArrayWA(header, buffer, o)
-    return { header, data: ab, dataType: o.outputDataType }
+    return { header, data: ab, dataType }
   })
 }
 
 
-function buildTypedArray(header: Header, dv: DataView, o: HduDecodeOption) {
+function guessOutputDataType(header: Header) {
+  const bitpix = card(header, 'BITPIX', 'number')
+  switch (bitpix) {
+    case 8:
+      return DataType.uint8
+    case 16:
+      return DataType.uint16
+    case 32:
+      return DataType.uint32
+    case -32:
+      return DataType.float32
+    case -64:
+      return DataType.float64
+    default:
+      throw new Error(`Invalid bitpix: ${bitpix}`)
+  }
+}
+
+
+function buildTypedArray(header: Header, dv: DataView, dataType: DataType) {
   const { nPixels } = calcDataSize(header)
   const bitpix = card(header, 'BITPIX', 'number')
 
@@ -77,7 +92,7 @@ function buildTypedArray(header: Header, dv: DataView, o: HduDecodeOption) {
   }
 
   let value = (i: number) => picker(i)
-  if ([DataType.float32, DataType.float64].indexOf(o.outputDataType) >= 0) {
+  if ([DataType.float32, DataType.float64].indexOf(dataType) >= 0) {
     const bzero = card(header, 'BZERO', 'number', 0)
     const bscale = card(header, 'BSCALE', 'number', 1)
     value = i => bscale * picker(i) + bzero
@@ -89,12 +104,13 @@ function buildTypedArray(header: Header, dv: DataView, o: HduDecodeOption) {
     [DataType.uint32]: Uint32Array,
     [DataType.float32]: Float32Array,
     [DataType.float64]: Float64Array,
-  }[o.outputDataType]
+  }[dataType]
 
   const array = new outArrayFactory(nPixels)
 
-  for (let i = 0; i < nPixels; ++i)
+  for (let i = 0; i < nPixels; ++i) {
     array[i] = value(i)
+  }
 
   return array.buffer
 }

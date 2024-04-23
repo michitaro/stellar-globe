@@ -9,6 +9,7 @@ import { square } from '~/utils/math'
 import { View } from '~/view'
 import shaderFrag from './frag.glsl?raw'
 import shaderVert from './vert.glsl?raw'
+import { V4 } from '~/types'
 
 
 export class Renderer<TP extends TextureProvider = TextureProvider> {
@@ -20,6 +21,7 @@ export class Renderer<TP extends TextureProvider = TextureProvider> {
   lodBias = 0
   integerLevel = false
   alreadyReleased = false
+  color: V4 = [1, 1, 1, 1]
 
   constructor(
     readonly globe: Globe,
@@ -53,6 +55,7 @@ export class Renderer<TP extends TextureProvider = TextureProvider> {
         const { program } = this
         const r = new TractRenderer(this, tract)
         program.uniform1f({ u_layer_alpha: alpha })
+        program.uniform4fv({ u_color: this.color })
         program.uniformMatrix4fv({ u_pvMatrix: view.mvp.pv })
         r.render(view)
       })

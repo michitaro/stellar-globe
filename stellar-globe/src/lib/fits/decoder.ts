@@ -1,7 +1,7 @@
+import { setWorkerErrorHandler } from "~/utils/setWorkerErrorHandler"
+import DecodeWorker from './decode_worker?worker&inline'
 import { Hdu } from "./hdu"
 import { HduDecodeOption, WorkerRequestMessage, WorkerResponseMessage } from "./types"
-import DecodeWorker from './decode_worker?worker&inline'
-import { setWorkerErrorHandler } from "~/utils/setWorkerErrorHandler"
 
 
 type Callback = {
@@ -15,7 +15,7 @@ class Decoder {
   private requestId = 0
   private callbacks = new Map<number, Callback>()
 
-  decode(fileContent: ArrayBuffer, hduDecodeOptions?: Partial<HduDecodeOption>[]) {
+  decode(fileContent: ArrayBuffer, hduDecodeOptions?: HduDecodeOption[]) {
     return new Promise<Hdu[]>(async (resolve, reject) => {
       const worker = this.setupWorker()
       const requestId = ++this.requestId
@@ -58,7 +58,7 @@ class Decoder {
 }
 
 
-export async function decode(fileContent: ArrayBuffer, hduDecodeOptions?: Partial<HduDecodeOption>[]) {
+export async function decode(fileContent: ArrayBuffer, hduDecodeOptions?: HduDecodeOption[]) {
   const hdul = await Decoder.singleton().decode(fileContent, hduDecodeOptions)
   return hdul
 }

@@ -55,3 +55,5 @@ import * as glMatrix from 'gl-matrix'
 export { glMatrix }
 export { enableWebglProfiler, webglProfileSupported, wegblProfile } from './devel/webgl-profiler/utils'
 export type { CursorStyle } from './globe'
+import * as fits from './lib/fits'
+export { fits }
