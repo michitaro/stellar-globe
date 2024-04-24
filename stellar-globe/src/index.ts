@@ -13,6 +13,7 @@ export { Layer } from './layer/layer'
 export { PointingObject, makePointingObject } from "./layer/layer/PointingObject"
 import { SspTileLayer } from './layer/ssp_tile_layer'
 export { SspTileLayer, SspTileLayer as TractTileLayer }
+export { Tract } from './renderer/tile_renderer/tract'
 export { TextLayer } from './layer/text_layer'
 export type { BillboardText } from './layer/text_layer'
 export { Angle, SkyCoord } from './lib/angle'
@@ -57,3 +58,4 @@ export { enableWebglProfiler, webglProfileSupported, wegblProfile } from './deve
 export type { CursorStyle } from './globe'
 import * as fits from './lib/fits'
 export { fits }
+export { sprintf } from './utils/sprintf'

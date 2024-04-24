@@ -250,7 +250,6 @@ export class Camera implements CameraParams {
     this.globe.requestRefresh()
   }
 
-  /** @internal */
   get pixelRatio() {
     return this.retina ? window.devicePixelRatio : 1
   }
