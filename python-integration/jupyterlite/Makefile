@@ -10,6 +10,7 @@ rebuild: rebuild-dependencies
 	$(MAKE) build
 
 build:
+	mkdir -p pypi files
 	cp ../python/dist/hscmap-0.0.0-py3-none-any.whl ./pypi/
 	cp ../jupyterlab-extension/tutorial.ipynb ./files/
 	$(python_home)/bin/pip uninstall -y stellar_globe_jupyterlab_extension
