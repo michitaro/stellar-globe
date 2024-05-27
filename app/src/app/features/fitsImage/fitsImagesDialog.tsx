@@ -1,5 +1,5 @@
 import styles from './styles.module.scss'
-import { Fragment, memo } from "react"
+import { Fragment, memo, useCallback } from "react"
 import { AppDialog } from "../../AppDialog"
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
 import { fitsImageSlice } from "./fitsImageSlice"
@@ -12,9 +12,22 @@ export const FitsImagesDialog = memo(() => {
   const visible = useAppSelector(state => state.fitsImage.dialogVisible)
   const images = useAppSelector(state => state.fitsImage.images)
 
+  const addMaskURL = useCallback(() => {
+    const url = prompt('Enter URL')
+    if (url) {
+      const name = url.split('/').filter(Boolean).pop() ?? ''
+      dispatch(fitsImageSlice.actions.imageAdded({
+        url,
+        name,
+        hduIndex: 0,
+        maskConfig: { maskBit: 8, color: [1, 0, 1, 1] },
+      }))
+    }
+  }, [dispatch])
+
   return (
     <AppDialog
-      title={<Fragment>Local Fits Images</Fragment>}
+      title={<Fragment>Mask Viewer</Fragment>}
       visible={visible}
     >
       <table>
@@ -43,6 +56,11 @@ export const FitsImagesDialog = memo(() => {
               </td>
             </tr>
           ))}
+          <tr>
+            <td colSpan={4}>
+              <button onClick={addMaskURL} ><Icon type='add' /></button>
+            </td>
+          </tr>
         </tbody>
       </table>
     </AppDialog>

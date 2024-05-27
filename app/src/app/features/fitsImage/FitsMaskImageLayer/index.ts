@@ -1,11 +1,16 @@
 import { Globe, Layer, V4, View, fits, tile } from "@stellar-globe/stellar-globe"
 import { FitsMaskTextureProvider } from "./textureProvider"
 
+export type MaskMapMeta = {
+  tracts: { [tractName: string]: any }
+}
+
 
 type Options = {
-  hdu: fits.Hdu
   color: V4
   maskBit: number
+  meta: MaskMapMeta
+  baseUrl: string
 }
 
 
@@ -15,6 +20,8 @@ export class FitsMaskImageLayer extends Layer {
   constructor(globe: Globe, readonly options: Options) {
     super(globe)
     this.tileRenderer = new tile.Renderer(this.globe, new FitsMaskTextureProvider(this.globe, options))
+    this.tileRenderer.integerLevel = true
+    this.tileRenderer.lodBias = 0
     this.tileRenderer.color = options.color
     this.onRelease(() => {
       this.tileRenderer.textureProvider.release()

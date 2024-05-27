@@ -12,6 +12,7 @@ import { AppStateWithComputed } from "./computedState"
 import { StorageState } from "./stateSync/StorageSync"
 import { HashState } from "./stateSync/hashSync"
 import type { FromApp, ToApp } from "../../../types/commTools"
+import { fitsImageSlice } from "../features/fitsImage/fitsImageSlice"
 
 
 type AddValidatorName<A, B extends string> = A & { __validatorName__: B }
@@ -45,6 +46,7 @@ export type ActionValidatorJsonSchema = {
     ActionsWithValidatorOfSlice<typeof regionsSlice> &
     ActionsWithValidatorOfSlice<typeof catalogsSlice> &
     ActionsWithValidatorOfSlice<typeof develSlice> &
+    ActionsWithValidatorOfSlice<typeof fitsImageSlice> &
     {}
   )
 }
@@ -68,6 +70,7 @@ export type PublicJsonSchema = {
     ActionsOfSlice<typeof regionsSlice> &
     ActionsOfSlice<typeof catalogsSlice> &
     ActionsOfSlice<typeof develSlice> &
+    ActionsOfSlice<typeof fitsImageSlice> &
     {}
   )
   ToApp: ToApp

@@ -1,38 +1,35 @@
 import { useLayerBind } from "@stellar-globe/react-stellar-globe"
 import { Globe, V4, fits } from "@stellar-globe/stellar-globe"
-import { memo, useCallback, useEffect, useMemo, useState } from "react"
-import { FitsMaskImageLayer } from "."
+import { memo, useCallback, useEffect, useState } from "react"
+import { FitsMaskImageLayer, MaskMapMeta } from "."
 import { useIsMounted } from "../../../../common/hooks/useIsMounted"
+
 
 type Props = {
   url: string
-  hduIndex?: number
-  hduIndexChanged?: (hduIndex: number) => void
   visible?: boolean
   maskBit: number
   color: V4
 }
 
+type Meta = MaskMapMeta
+
 
 export function FitsImageLayer$(props: Props) {
   const isMounted = useIsMounted()
-  const { url, hduIndex, hduIndexChanged } = props
-  const [cache, setCache] = useState<fits.Hdu[] | undefined>()
+  const { url } = props
+  const [cache, setCache] = useState<Meta | undefined>()
   useEffect(() => {
     (async () => {
-      const hdul = await fits.Fits.fetch(url)
-      console.log(isMounted())
+      const meta = await (await fetch(`${url}/meta.json`)).json() as Meta
       if (isMounted() && url === props.url) {
-        const newHduIndex = find2dHdu(hdul)
-        hduIndexChanged?.(newHduIndex)
-        setCache(hdul)
+        setCache(meta)
       }
     })()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.url, url])
-  const hdu = useMemo(() => cache?.[hduIndex ?? 0], [cache, hduIndex])
-  if (hdu && hdu.card('BITPIX', 'number') >= 0) {
-    return <SafeFitsMaskImageLayer visible={props.visible} hdu={hdu} maskBit={props.maskBit} color={props.color} />
+  if (cache) {
+    return <SafeFitsMaskImageLayer visible={props.visible} meta={cache} maskBit={props.maskBit} color={props.color} baseUrl={url} />
   }
 }
 
@@ -54,13 +51,14 @@ function find2dHdu(hdul: fits.Hdu[]) {
 
 
 const SafeFitsMaskImageLayer: React.FC<{
-  hdu: fits.Hdu
+  meta: Meta,
   visible?: boolean
   maskBit: number
   color: V4
-}> = memo(({ hdu, color, maskBit, visible = true }) => {
+  baseUrl: string
+}> = memo(({ meta, color, maskBit, baseUrl, visible = true }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const factory = useCallback((globe: Globe) => new FitsMaskImageLayer(globe, { hdu, color, maskBit }), [hdu, maskBit])
+  const factory = useCallback((globe: Globe) => new FitsMaskImageLayer(globe, { meta, color, maskBit, baseUrl }), [maskBit, baseUrl])
   const { node, ifLayerReady } = useLayerBind<FitsMaskImageLayer>(factory, visible)
   useEffect(() => {
     ifLayerReady(layer => {
