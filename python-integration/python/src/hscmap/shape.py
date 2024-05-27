@@ -48,6 +48,7 @@ class Polygon(ShapeBase):
     center: SkyCoordOrVec3
     radius: Angle
     n: int
+    offset: float = 0
     up: Vec3 = dataclasses.field(default_factory=lambda: Vec3(0, 0, 1))
     color: List[float] = dataclasses.field(default_factory=lambda: [0.5, 0.5, 0.5, 1.0])
 
@@ -59,7 +60,7 @@ class Polygon(ShapeBase):
         r = self.radius.radian
         color = self.color
         yield from Polyline(
-            points=[o + r * math.cos(2 * math.pi * i / n) * e1 + r * math.sin(2 * math.pi * i / n) * e2 for i in range(n)],
+            points=[o + r * math.cos(2 * math.pi * i / n + self.offset) * e1 + r * math.sin(2 * math.pi * i / n + self.offset) * e2 for i in range(n)],
             color=color,
             close=True,
         ).paths()
