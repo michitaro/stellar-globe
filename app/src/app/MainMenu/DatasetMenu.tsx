@@ -4,11 +4,22 @@ import { tractTileLayersSlice } from '../features/tractTileLayers/tractTileLayer
 import { useAppDispatch, useAppSelector } from '../store/hooks'
 import { Icon } from '../../common/components/Icon'
 import { HipsMenu } from '../features/hipsLayers/hipsMenu'
+import { useCallback } from 'react'
 
 
 export function DatasetMenu() {
   const layers = useAppSelector(state => state.tractTileLayers.layers)
   const dispatch = useAppDispatch()
+
+  const addTileLayer = useCallback(() => {
+    const baseUrl = prompt('Enter the URL of the tile layer')
+    if (baseUrl) {
+      dispatch(tractTileLayersSlice.actions.layerAdded({
+        baseUrl,
+        name: baseUrl.split('/').filter(s => s.length > 0).pop() ?? baseUrl,
+      }))
+    }
+  }, [dispatch])
 
   return (
     <MenuBarItem label={<Icon type="folder_open" />}>
@@ -23,6 +34,10 @@ export function DatasetMenu() {
           }}
         >{name}</MenuItem>
       ))}
+      <MenuDivider />
+      <MenuItem onClick={addTileLayer}>
+        Add Tile Layer...
+      </MenuItem>
       <MenuDivider />
       <MenuHeader>HiPS</MenuHeader>
       <HipsMenu />

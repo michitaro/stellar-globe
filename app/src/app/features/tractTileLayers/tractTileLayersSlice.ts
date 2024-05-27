@@ -90,6 +90,15 @@ export const tractTileLayersSlice = createSlice({
     toneDialogToggled(state, { payload: { open } }: PayloadAction<{ open?: boolean }>) {
       state.toneDialogVisible = open ?? !state.toneDialogVisible
     },
+    layerAdded(state, { payload: { name, baseUrl } }: PayloadAction<{ name: string, baseUrl: string }>) {
+      state.layers.push({ name, baseUrl, visible: true })
+    },
+    layerRemoved(state, { payload: { name } }: PayloadAction<{ name: string }>) {
+      const index = state.layers.findIndex(l => l.name === name)
+      if (index >= 0) {
+        state.layers.splice(index, 1)
+      }
+    },
   },
   selectors: {
     activeLayers: createSelector(
