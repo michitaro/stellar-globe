@@ -162,6 +162,7 @@ class TractRenderer {
       const tt = textureProvider.get(id)
       const tile = Tile.get(id)
       if (tt) {
+        tt.touch()
         cb(tile, tt)
         doRequest && tt.needUpdate() && textureProvider.requestTile(id, {
           fadeIn: false,

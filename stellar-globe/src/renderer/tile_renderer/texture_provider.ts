@@ -219,4 +219,7 @@ export class TileTexture {
   needUpdate() {
     return this.revision < this.tp.revision
   }
+
+  touch() {
+  }
 }
