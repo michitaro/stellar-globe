@@ -28,7 +28,6 @@ export class Globe {
   readonly camera: Camera
   readonly animations: AnimationManager
 
-  /** @internal */
   readonly canvas: Canvas
 
   readonly dataRepository: string
