@@ -14,7 +14,7 @@ export class Tract {
   readonly pixelScale: number
   readonly refPoint: V3
   readonly id = serialNumber()
-  readonly fov = deg2rad(1.8)
+  readonly fov = deg2rad(1.8) // 1.8deg is for HSC
   readonly tileSize: number
   readonly minTileLevel: number
   readonly maxTileLevel: number

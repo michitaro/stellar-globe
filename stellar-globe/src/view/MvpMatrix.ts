@@ -11,8 +11,8 @@ export class MvpMatrix {
   readonly up: V3
   // readonly right: V3
   readonly aspectRatio: number
-  readonly fovy: number
-  readonly arc: number
+  readonly fovy: number // これは視野のようなものだが、modeによって値が変わる
+  readonly arc: number // これは視野のようなものだが、modeによらず安定
   readonly radius: number
 
   constructor(readonly pv: mat4) {
