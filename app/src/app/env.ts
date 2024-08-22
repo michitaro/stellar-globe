@@ -21,7 +21,7 @@ export function env(): Env {
     data: {
       u2k: target === 'u2k',
       la2016: target === 'legacy-archive',
-      pdr3: true,
+      pdr3: target === 'public',
       idr: target === 'internal',
     },
   }

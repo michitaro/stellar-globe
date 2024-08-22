@@ -22,7 +22,16 @@ type MaskConfig = {
 function initialState(): State {
   return {
     dialogVisible: false,
-    images: [],
+    // dialogVisible: false,
+    images: [
+      // {
+      //   hduIndex: 0,
+      //   id: '1',
+      //   name: 's23b-deblend',
+      //   maskConfig: { maskBit: 8, color: [1, 0, 1, 1] },
+      //   url: '../niu/s23b-mask/'
+      // },
+    ],
   }
 }
 

@@ -28,6 +28,8 @@ function layerVisible(layerName: string) {
   switch (env().target) {
     case 'u2k':
       return (readHashState().datasets ?? ['U2K V2']).includes(layerName)
+    case 'internal':
+      return (readHashState().datasets ?? ['s23b Wide', 's23b Deep']).includes(layerName)
     default:
       return (readHashState().datasets ?? ['PDR3 Wide', 'PDR3 DUD']).includes(layerName)
   }
@@ -45,6 +47,8 @@ function layerDef(name: string, baseUrl: string) {
 
 function initialState(): State {
   const layers: State['layers'] = [
+    layerDef('s23b Wide', "../data/s23b_wide"),
+    layerDef('s23b Deep', "../data/s23b_deep"),
     layerDef('PDR3 Wide', "//hscmap.mtk.nao.ac.jp/hscMap4/data/pdr3_wide"),
     layerDef('PDR3 DUD', "//hscmap.mtk.nao.ac.jp/hscMap4/data/pdr3_dud"),
   ]
@@ -54,17 +58,6 @@ function initialState(): State {
   if (env().data.la2016) {
     layers.push(layerDef('Legacy Archive 2016', "//hscmap.mtk.nao.ac.jp/hscMap4/data/la2016"))
   }
-
-  `
-  s23b_deep_step3a_20231229T123743Z
-  s23b_test_step3_minIter15_alltracts_correct2_20221206T050622Z
-  s23b_wide_step3a_20231228T070512Z
-  s23b_dud
-  s23b_wide
-  `.split(/\s+/).map(s => s.trim()).filter(s => s.length > 0).forEach(s => {
-    layers.push(layerDef(s, `../data/${s}`))
-  })
-
 
   return {
     toneDialogVisible: true,

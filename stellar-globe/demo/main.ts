@@ -57,7 +57,7 @@ function main() {
     onClick: (i) => console.log(i)
   })
 
-  // globe.addNewLayer(TriangleStirpLayer)
+  globe.addNewLayer(TriangleStirpLayer)
 }
 
 
