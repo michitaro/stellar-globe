@@ -73,6 +73,20 @@ export function useViewKeybindings() {
       shortcut: '0',
     }
 
+    const rotate90: Keybind = {
+      action() {
+        globeHandle.current?.().camera.jumpTo({ roll: globeHandle.current!().camera.roll + angle.deg2rad(90) })
+      },
+      shortcut: 'Shift+Ctrl+ArrowRight',
+    }
+
+    const rotate270 = {
+      action() {
+        globeHandle.current?.().camera.jumpTo({ roll: globeHandle.current!().camera.roll + angle.deg2rad(-90) })
+      },
+      shortcut: 'Shift+Ctrl+ArrowLeft',
+    }
+
     const zoomKeys = {
       zoom2arcmin: makeZoomKeybind('1', angle.Angle.fromAmin(2).rad),
       zoom20arcmin: makeZoomKeybind('2', angle.Angle.fromAmin(20).rad),
@@ -81,6 +95,8 @@ export function useViewKeybindings() {
       zoom10deg: makeZoomKeybind('5', angle.Angle.fromDeg(10).rad),
       zoomArctan2: makeZoomKeybind('5', 2),
       zoomHscScale,
+      rotate90,
+      rotate270,
     }
 
     const northUp: Keybind = {

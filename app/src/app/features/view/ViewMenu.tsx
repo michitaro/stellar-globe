@@ -40,6 +40,8 @@ export function ViewMenu() {
         <MenuItemWithKeybind keybind='zoom10deg'>10&deg;</MenuItemWithKeybind>
         <MenuItemWithKeybind keybind='zoomArctan2'>tan(&theta;)=2</MenuItemWithKeybind>
         <MenuItemWithKeybind keybind='zoomHscScale'>1:1 Pixel Mapping (HSC)</MenuItemWithKeybind>
+        <MenuDivider />
+        <MenuItem>Rotate 90&deg;</MenuItem>
       </SubMenu>
       <MenuItemWithKeybind keybind='moveToCoords'>Move to Specified Coordinates</MenuItemWithKeybind>
       <MenuItemWithKeybind keybind='northUp'>NorthUp</MenuItemWithKeybind>
