@@ -5,6 +5,7 @@ from typing import Literal, Optional, Tuple
 from .angle import Angle
 from .models.store import CameraParams
 from .models.JumpTo import Model as JumpToMessage
+from .models.actions.camera.paramsChanged import Model as ParamsChangedMessage
 from .window import Window
 
 
@@ -65,6 +66,14 @@ class Camera:
         '''
         self._sync()
         return self._w._store_state['camera']['params']
+
+    @params.setter
+    def params(self, value: CameraParams):
+        action = ParamsChangedMessage(
+            type='camera/paramsChanged',
+            payload=value,
+        )
+        self._w._dispatch(action)
 
     @property
     def center(self) -> Tuple[float, float]:

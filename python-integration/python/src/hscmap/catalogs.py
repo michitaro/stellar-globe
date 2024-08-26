@@ -73,16 +73,13 @@ class CatalogManager:
         action = CatalogAdded(
             type='catalogs/catalogAdded',
             payload={
-                'openDialog': open_catalog_table,
-                'params': {
-                    'id': id,
-                    'name': name,
-                    'attributes': attributes,
-                    'baseColor': base_color,
-                    'defaultType': default_marker_type,
-                    'fields': fields,
-                    'markers': markers,
-                },
+                'id': id,
+                'name': name,
+                'attributes': attributes,
+                'baseColor': base_color,
+                'defaultType': default_marker_type,
+                'fields': fields,
+                'markers': markers,
             },
         )
         self._w._dispatch(action)
@@ -258,7 +255,7 @@ class Catalog:
 
         fields = self._state()['fields']
         rows = self._state()['attributes']
-        return pandas.DataFrame(rows, columns=fields)
+        return pandas.DataFrame(rows, columns=fields)  # type: ignore
 
 
 def sample_pandas_data(n_rows: int = 500):

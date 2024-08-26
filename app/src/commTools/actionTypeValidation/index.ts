@@ -1,19 +1,13 @@
 import type { validateAction as validateActionType } from '../../../types/commTools/index.js'
-import { BaseAction } from '../../app/context.js'
-import { createIs, hasValidator } from './createIs.js'
-
-
-// @ts-ignore
-const isBaseAction = createIs<BaseAction>('BaseAction')
+import { isBaseAction, isAction, hasActionValidator } from './validator.js'
 
 
 export function validateAction(action: any) {
   const errors: string[] = []
   do {
     if (isBaseAction(action)) {
-      const type = action.type.replace(/\//g, `$`)
-      if (hasValidator(type)) {
-        const isValidAction = createIs(type as any)
+      if (hasActionValidator(action.type)) {
+        const isValidAction = isAction(action.type)
         if (isValidAction(action)) {
           break
         }

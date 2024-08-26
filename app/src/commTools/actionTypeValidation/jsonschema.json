@@ -1,2447 +1,357 @@
 {
-  "type": "object",
-  "properties": {
-    "BaseAction": {
-      "$ref": "#/definitions/AddValidatorName<BaseAction,\"BaseAction\">"
-    },
-    "Actions": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "common/unitChanged": {
-          "$ref": "#/definitions/AddValidatorName<{payload:{angleUnit:AngleUnit;};type:\"common/unitChanged\";},\"common$unitChanged\">"
-        },
-        "common/dialogPositionHintChanged": {
-          "$ref": "#/definitions/AddValidatorName<{payload:Partial<Record<\"top\"|\"bottom\"|\"left\"|\"right\",number>>;type:\"common/dialogPositionHintChanged\";},\"common$dialogPositionHintChanged\">"
-        },
-        "appearanceLayers/propsUpdated": {
-          "$ref": "#/definitions/AddValidatorName<{payload:{which:keyofState;props:Partial<{visible:boolean;}|({fadeInDuration?:number|undefined;imageSize?:512|1024|undefined;}&{visible?:boolean|undefined;})|ConstellationLayerProps|{visible:true;}|{visible:boolean;}|{visible:boolean;frame:boolean;patch:boolean;}>;};type:\"appearanceLayers/propsUpdated\";},\"appearanceLayers$propsUpdated\">"
-        },
-        "appearanceLayers/visibleToggled": {
-          "$ref": "#/definitions/AddValidatorName<{payload:keyofState;type:\"appearanceLayers/visibleToggled\";},\"appearanceLayers$visibleToggled\">"
-        },
-        "camera/projectionUpdated": {
-          "$ref": "#/definitions/AddValidatorName<{payload:CameraMode;type:\"camera/projectionUpdated\";},\"camera$projectionUpdated\">"
-        },
-        "camera/retinaToggled": {
-          "$ref": "#/definitions/AddValidatorName<{payload:undefined;type:\"camera/retinaToggled\";},\"camera$retinaToggled\">"
-        },
-        "camera/paramsChanged": {
-          "$ref": "#/definitions/AddValidatorName<{payload:CameraParams;type:\"camera/paramsChanged\";},\"camera$paramsChanged\">"
-        },
-        "tractTileLayers/colorParamsUpdated": {
-          "$ref": "#/definitions/AddValidatorName<{payload:{params:SspTileParams;};type:\"tractTileLayers/colorParamsUpdated\";},\"tractTileLayers$colorParamsUpdated\">"
-        },
-        "tractTileLayers/layerToggled": {
-          "$ref": "#/definitions/AddValidatorName<{payload:{name:string;visible:boolean;};type:\"tractTileLayers/layerToggled\";},\"tractTileLayers$layerToggled\">"
-        },
-        "tractTileLayers/toneDialogToggled": {
-          "$ref": "#/definitions/AddValidatorName<{payload:{open?:boolean|undefined;};type:\"tractTileLayers/toneDialogToggled\";},\"tractTileLayers$toneDialogToggled\">"
-        },
-        "hipsLayers/baseUrlChanged": {
-          "$ref": "#/definitions/AddValidatorName<{payload:{baseUrl?:string|undefined;};type:\"hipsLayers/baseUrlChanged\";},\"hipsLayers$baseUrlChanged\">"
-        },
-        "hipsLayers/hipsDialogToggled": {
-          "$ref": "#/definitions/AddValidatorName<{payload:{open?:boolean|undefined;};type:\"hipsLayers/hipsDialogToggled\";},\"hipsLayers$hipsDialogToggled\">"
-        },
-        "regions/toolChanged": {
-          "$ref": "#/definitions/AddValidatorName<{payload:{tool:ToolType;};type:\"regions/toolChanged\";},\"regions$toolChanged\">"
-        },
-        "regions/toolPinnedToggled": {
-          "$ref": "#/definitions/AddValidatorName<{payload:undefined;type:\"regions/toolPinnedToggled\";},\"regions$toolPinnedToggled\">"
-        },
-        "regions/autoColorToggled": {
-          "$ref": "#/definitions/AddValidatorName<{payload:undefined;type:\"regions/autoColorToggled\";},\"regions$autoColorToggled\">"
-        },
-        "regions/newLinearRegionAdded": {
-          "$ref": "#/definitions/AddValidatorName<{payload:{type:\"Linear\";visible:boolean;name:string;showLabel:boolean;start:SkyCoordType;end:SkyCoordType;color?:V4|undefined;id:string;};type:\"regions/newLinearRegionAdded\";},\"regions$newLinearRegionAdded\">"
-        },
-        "regions/newCircularRegionAdded": {
-          "$ref": "#/definitions/AddValidatorName<{payload:{type:\"Circular\";visible:boolean;center:SkyCoordType;name:string;showLabel:boolean;radius:number;color?:V4|undefined;id:string;};type:\"regions/newCircularRegionAdded\";},\"regions$newCircularRegionAdded\">"
-        },
-        "regions/newRectangularRegionAdded": {
-          "$ref": "#/definitions/AddValidatorName<{payload:{type:\"Rectangular\";visible:boolean;name:string;showLabel:boolean;minRa:number;maxRa:number;minDec:number;maxDec:number;color?:V4|undefined;id:string;};type:\"regions/newRectangularRegionAdded\";},\"regions$newRectangularRegionAdded\">"
-        },
-        "regions/newTextRegionAdded": {
-          "$ref": "#/definitions/AddValidatorName<{payload:{type:\"Text\";visible:boolean;name:string;showLabel:boolean;position:SkyCoordType;color?:V4|undefined;id:string;};type:\"regions/newTextRegionAdded\";},\"regions$newTextRegionAdded\">"
-        },
-        "regions/newPathRegionAdded": {
-          "$ref": "#/definitions/AddValidatorName<{payload:{type:\"Path\";visible:boolean;name:string;showLabel:boolean;paths:Path[];color?:V4|undefined;id:string;};type:\"regions/newPathRegionAdded\";},\"regions$newPathRegionAdded\">"
-        },
-        "regions/regionUpdated": {
-          "$ref": "#/definitions/AddValidatorName<{payload:{id:string;regionDef:Region;};type:\"regions/regionUpdated\";},\"regions$regionUpdated\">"
-        },
-        "regions/regionsCleared": {
-          "$ref": "#/definitions/AddValidatorName<{payload:{};type:\"regions/regionsCleared\";},\"regions$regionsCleared\">"
-        },
-        "regions/regionDeleted": {
-          "$ref": "#/definitions/AddValidatorName<{payload:{id:string;};type:\"regions/regionDeleted\";},\"regions$regionDeleted\">"
-        },
-        "regions/regionsDialogToggled": {
-          "$ref": "#/definitions/AddValidatorName<{payload:{open?:boolean|undefined;};type:\"regions/regionsDialogToggled\";},\"regions$regionsDialogToggled\">"
-        },
-        "regions/regionsImported": {
-          "$ref": "#/definitions/AddValidatorName<{payload:{regions:Region[];};type:\"regions/regionsImported\";},\"regions$regionsImported\">"
-        },
-        "catalogs/catalogAdded": {
-          "$ref": "#/definitions/AddValidatorName<{payload:{params:{id:string;name:string;markers:Marker[];fields:string[];attributes:string[][];defaultType?:\"circle\"|\"plus\"|\"x\"|\"hollowPlus\"|\"hollowX\"|\"dot\"|\"circledHollowPlus\"|\"circledHollowX\"|\"diamond\"|\"square\"|\"asterisk\"|\"hollowAsterisk\"|\"circledHollowAsterisk\"|\"triangle\"|\"pentagon\"|undefined;baseColor?:V4|undefined;};openDialog:boolean;};type:\"catalogs/catalogAdded\";},\"catalogs$catalogAdded\">"
-        },
-        "catalogs/catalogDeleted": {
-          "$ref": "#/definitions/AddValidatorName<{payload:{id:string;};type:\"catalogs/catalogDeleted\";},\"catalogs$catalogDeleted\">"
-        },
-        "catalogs/catalogUpdated": {
-          "$ref": "#/definitions/AddValidatorName<{payload:Partial<Catalog>&{id:string;};type:\"catalogs/catalogUpdated\";},\"catalogs$catalogUpdated\">"
-        },
-        "catalogs/catalogSelected": {
-          "$ref": "#/definitions/AddValidatorName<{payload:{id:string;};type:\"catalogs/catalogSelected\";},\"catalogs$catalogSelected\">"
-        },
-        "catalogs/catalogsDialogToggled": {
-          "$ref": "#/definitions/AddValidatorName<{payload:{open?:boolean|undefined;};type:\"catalogs/catalogsDialogToggled\";},\"catalogs$catalogsDialogToggled\">"
-        },
-        "catalogs/dialogToggled": {
-          "$ref": "#/definitions/AddValidatorName<{payload:{id:string;opened?:boolean|undefined;};type:\"catalogs/dialogToggled\";},\"catalogs$dialogToggled\">"
-        },
-        "catalogs/dialogsClosed": {
-          "$ref": "#/definitions/AddValidatorName<{payload:{};type:\"catalogs/dialogsClosed\";},\"catalogs$dialogsClosed\">"
-        },
-        "catalogs/focusedPositionChanged": {
-          "$ref": "#/definitions/AddValidatorName<{payload:{position?:V3|undefined;};type:\"catalogs/focusedPositionChanged\";},\"catalogs$focusedPositionChanged\">"
-        },
-        "catalogs/recordSelected": {
-          "$ref": "#/definitions/AddValidatorName<{payload:{id:string;index:number;selected?:boolean|undefined;};type:\"catalogs/recordSelected\";},\"catalogs$recordSelected\">"
-        },
-        "devel/profilerToggled": {
-          "$ref": "#/definitions/AddValidatorName<{payload:{active:boolean;};type:\"devel/profilerToggled\";},\"devel$profilerToggled\">"
-        }
-      },
-      "required": [
-        "appearanceLayers/propsUpdated",
-        "appearanceLayers/visibleToggled",
-        "camera/paramsChanged",
-        "camera/projectionUpdated",
-        "camera/retinaToggled",
-        "catalogs/catalogAdded",
-        "catalogs/catalogDeleted",
-        "catalogs/catalogSelected",
-        "catalogs/catalogUpdated",
-        "catalogs/catalogsDialogToggled",
-        "catalogs/dialogToggled",
-        "catalogs/dialogsClosed",
-        "catalogs/focusedPositionChanged",
-        "catalogs/recordSelected",
-        "common/dialogPositionHintChanged",
-        "common/unitChanged",
-        "devel/profilerToggled",
-        "hipsLayers/baseUrlChanged",
-        "hipsLayers/hipsDialogToggled",
-        "regions/autoColorToggled",
-        "regions/newCircularRegionAdded",
-        "regions/newLinearRegionAdded",
-        "regions/newPathRegionAdded",
-        "regions/newRectangularRegionAdded",
-        "regions/newTextRegionAdded",
-        "regions/regionDeleted",
-        "regions/regionUpdated",
-        "regions/regionsCleared",
-        "regions/regionsDialogToggled",
-        "regions/regionsImported",
-        "regions/toolChanged",
-        "regions/toolPinnedToggled",
-        "tractTileLayers/colorParamsUpdated",
-        "tractTileLayers/layerToggled",
-        "tractTileLayers/toneDialogToggled"
-      ]
-    }
-  },
-  "additionalProperties": false,
-  "required": [
-    "Actions",
-    "BaseAction"
-  ],
-  "definitions": {
-    "AddValidatorName<BaseAction,\"BaseAction\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string"
-        },
-        "payload": {},
-        "__validatorName__": {
-          "type": "string",
-          "const": "BaseAction"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
-    },
-    "AddValidatorName<{payload:{angleUnit:AngleUnit;};type:\"common/unitChanged\";},\"common$unitChanged\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "payload": {
-          "description": "The type of the action's payload.",
-          "type": "object",
-          "properties": {
-            "angleUnit": {
-              "$ref": "#/definitions/AngleUnit"
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "angleUnit"
-          ]
-        },
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "common/unitChanged"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "common$unitChanged"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
-    },
-    "AngleUnit": {
-      "enum": [
-        "degree",
-        "radian",
-        "sexadecimal"
-      ],
-      "type": "string"
-    },
-    "AddValidatorName<{payload:Partial<Record<\"top\"|\"bottom\"|\"left\"|\"right\",number>>;type:\"common/dialogPositionHintChanged\";},\"common$dialogPositionHintChanged\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "payload": {
-          "$ref": "#/definitions/Partial<Record<\"top\"|\"bottom\"|\"left\"|\"right\",number>>"
-        },
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "common/dialogPositionHintChanged"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "common$dialogPositionHintChanged"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
-    },
-    "Partial<Record<\"top\"|\"bottom\"|\"left\"|\"right\",number>>": {
-      "description": "The type of the action's payload.",
-      "type": "object",
-      "properties": {
-        "top": {
-          "type": "number"
-        },
-        "bottom": {
-          "type": "number"
-        },
-        "left": {
-          "type": "number"
-        },
-        "right": {
-          "type": "number"
-        }
-      },
-      "additionalProperties": false
-    },
-    "AddValidatorName<{payload:{which:keyofState;props:Partial<{visible:boolean;}|({fadeInDuration?:number|undefined;imageSize?:512|1024|undefined;}&{visible?:boolean|undefined;})|ConstellationLayerProps|{visible:true;}|{visible:boolean;}|{visible:boolean;frame:boolean;patch:boolean;}>;};type:\"appearanceLayers/propsUpdated\";},\"appearanceLayers$propsUpdated\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "payload": {
-          "description": "The type of the action's payload.",
-          "type": "object",
-          "properties": {
-            "which": {
-              "$ref": "#/definitions/Which"
-            },
-            "props": {
-              "$ref": "#/definitions/Partial<{visible:boolean;}|({fadeInDuration?:number|undefined;imageSize?:512|1024|undefined;}&{visible?:boolean|undefined;})|ConstellationLayerProps|{visible:true;}|{visible:boolean;}|{visible:boolean;frame:boolean;patch:boolean;}>"
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "props",
-            "which"
-          ]
-        },
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "appearanceLayers/propsUpdated"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "appearanceLayers$propsUpdated"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
-    },
-    "Which": {
-      "enum": [
-        "constellation",
-        "esoMilkyWay",
-        "grid",
-        "hipparcosCatalog",
-        "nearbyGalaxiesAndNebulas",
-        "tracts"
-      ],
-      "type": "string"
-    },
-    "Partial<{visible:boolean;}|({fadeInDuration?:number|undefined;imageSize?:512|1024|undefined;}&{visible?:boolean|undefined;})|ConstellationLayerProps|{visible:true;}|{visible:boolean;}|{visible:boolean;frame:boolean;patch:boolean;}>": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/Partial<{visible:boolean;}>"
-        },
-        {
-          "$ref": "#/definitions/Partial<{fadeInDuration?:number|undefined;imageSize?:512|1024|undefined;}&{visible?:boolean|undefined;}>"
-        },
-        {
-          "$ref": "#/definitions/Partial<ConstellationLayerProps>"
-        },
-        {
-          "$ref": "#/definitions/Partial<{visible:true;}>"
-        },
-        {
-          "$ref": "#/definitions/Partial<{visible:boolean;}>_1"
-        },
-        {
-          "$ref": "#/definitions/Partial<{visible:boolean;frame:boolean;patch:boolean;}>"
-        }
-      ]
-    },
-    "Partial<{visible:boolean;}>": {
-      "type": "object",
-      "properties": {
-        "visible": {
-          "type": "boolean"
-        }
-      },
-      "additionalProperties": false
-    },
-    "Partial<{fadeInDuration?:number|undefined;imageSize?:512|1024|undefined;}&{visible?:boolean|undefined;}>": {
-      "type": "object",
-      "properties": {
-        "fadeInDuration": {
-          "type": "number"
-        },
-        "imageSize": {
-          "enum": [
-            1024,
-            512
-          ],
-          "type": "number"
-        },
-        "visible": {
-          "type": "boolean"
-        }
-      },
-      "additionalProperties": false
-    },
-    "Partial<ConstellationLayerProps>": {
-      "type": "object",
-      "properties": {
-        "showLines": {
-          "type": "boolean"
-        },
-        "showNames": {
-          "type": "boolean"
-        },
-        "lang": {
-          "enum": [
-            "English",
-            "Hiragana",
-            "Kanji"
-          ],
-          "type": "string"
-        },
-        "fadeInDuration": {
-          "type": "number"
-        },
-        "nameFont": {
-          "type": "string"
-        },
-        "nameColor": {
-          "type": "string"
-        },
-        "visible": {
-          "type": "boolean"
-        }
-      },
-      "additionalProperties": false
-    },
-    "Partial<{visible:true;}>": {
-      "type": "object",
-      "properties": {
-        "visible": {
-          "const": true,
-          "type": "boolean"
-        }
-      },
-      "additionalProperties": false
-    },
-    "Partial<{visible:boolean;}>_1": {
-      "type": "object",
-      "properties": {
-        "visible": {
-          "type": "boolean"
-        }
-      },
-      "additionalProperties": false
-    },
-    "Partial<{visible:boolean;frame:boolean;patch:boolean;}>": {
-      "type": "object",
-      "properties": {
-        "visible": {
-          "type": "boolean"
-        },
-        "frame": {
-          "type": "boolean"
-        },
-        "patch": {
-          "type": "boolean"
-        }
-      },
-      "additionalProperties": false
-    },
-    "AddValidatorName<{payload:keyofState;type:\"appearanceLayers/visibleToggled\";},\"appearanceLayers$visibleToggled\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "payload": {
-          "$ref": "#/definitions/P"
-        },
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "appearanceLayers/visibleToggled"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "appearanceLayers$visibleToggled"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
-    },
-    "P": {
-      "description": "The type of the action's payload.",
-      "enum": [
-        "constellation",
-        "esoMilkyWay",
-        "grid",
-        "hipparcosCatalog",
-        "nearbyGalaxiesAndNebulas",
-        "tracts"
-      ],
-      "type": "string"
-    },
-    "AddValidatorName<{payload:CameraMode;type:\"camera/projectionUpdated\";},\"camera$projectionUpdated\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "payload": {
-          "$ref": "#/definitions/P_1"
-        },
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "camera/projectionUpdated"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "camera$projectionUpdated"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
-    },
-    "P_1": {
-      "description": "The type of the action's payload.",
-      "enum": [
-        "FLOATING_EYE",
-        "GNOMONIC",
-        "STEREOGRAPHIC"
-      ],
-      "type": "string"
-    },
-    "AddValidatorName<{payload:undefined;type:\"camera/retinaToggled\";},\"camera$retinaToggled\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "camera/retinaToggled"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "camera$retinaToggled"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "type"
-      ]
-    },
-    "AddValidatorName<{payload:CameraParams;type:\"camera/paramsChanged\";},\"camera$paramsChanged\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "payload": {
-          "$ref": "#/definitions/CameraParams"
-        },
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "camera/paramsChanged"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "camera$paramsChanged"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
-    },
-    "CameraParams": {
-      "description": "The type of the action's payload.",
-      "type": "object",
-      "properties": {
-        "theta": {
-          "type": "number"
-        },
-        "phi": {
-          "type": "number"
-        },
-        "roll": {
-          "type": "number"
-        },
-        "za": {
-          "type": "number"
-        },
-        "zd": {
-          "type": "number"
-        },
-        "zp": {
-          "type": "number"
-        },
-        "fovy": {
-          "type": "number"
-        }
-      },
-      "additionalProperties": false,
-      "required": [
-        "fovy",
-        "phi",
-        "roll",
-        "theta",
-        "za",
-        "zd",
-        "zp"
-      ]
-    },
-    "AddValidatorName<{payload:{params:SspTileParams;};type:\"tractTileLayers/colorParamsUpdated\";},\"tractTileLayers$colorParamsUpdated\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "payload": {
-          "description": "The type of the action's payload.",
-          "type": "object",
-          "properties": {
-            "params": {
-              "$ref": "#/definitions/SspTileParams"
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "params"
-          ]
-        },
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "tractTileLayers/colorParamsUpdated"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "tractTileLayers$colorParamsUpdated"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
-    },
-    "SspTileParams": {
-      "anyOf": [
-        {
-          "type": "object",
-          "properties": {
-            "type": {
-              "type": "string",
-              "const": "simpleRgb"
-            },
-            "filters": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "simpleRgb": {
-              "type": "object",
-              "properties": {
-                "beta": {
-                  "type": "number"
-                },
-                "a": {
-                  "type": "number"
-                },
-                "bias": {
-                  "type": "number"
-                },
-                "b0": {
-                  "type": "number"
-                }
-              },
-              "additionalProperties": false,
-              "required": [
-                "a",
-                "b0",
-                "beta",
-                "bias"
-              ]
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "filters",
-            "simpleRgb",
-            "type"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "type": {
-              "type": "string",
-              "const": "simpleColorMatrix"
-            },
-            "filters": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "simpleColorMatrix": {
-              "type": "object",
-              "properties": {
-                "colors": {
-                  "type": "array",
-                  "items": {
-                    "type": "array",
-                    "items": [
-                      {
-                        "type": "number"
-                      },
-                      {
-                        "type": "number"
-                      },
-                      {
-                        "type": "number"
-                      }
-                    ],
-                    "minItems": 3,
-                    "maxItems": 3
-                  }
-                },
-                "beta": {
-                  "type": "number"
-                },
-                "a": {
-                  "type": "number"
-                },
-                "bias": {
-                  "type": "number"
-                },
-                "b0": {
-                  "type": "number"
-                }
-              },
-              "additionalProperties": false,
-              "required": [
-                "a",
-                "b0",
-                "beta",
-                "bias",
-                "colors"
-              ]
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "filters",
-            "simpleColorMatrix",
-            "type"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "type": {
-              "type": "string",
-              "const": "sdssTrueColor"
-            },
-            "filters": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "sdssTrueColor": {
-              "type": "object",
-              "properties": {
-                "beta": {
-                  "type": "number"
-                },
-                "a": {
-                  "type": "number"
-                },
-                "bias": {
-                  "type": "number"
-                },
-                "b0": {
-                  "type": "number"
-                }
-              },
-              "additionalProperties": false,
-              "required": [
-                "a",
-                "b0",
-                "beta",
-                "bias"
-              ]
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "filters",
-            "sdssTrueColor",
-            "type"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "type": {
-              "type": "string",
-              "const": "sdssTrueColorMatrix"
-            },
-            "filters": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "sdssTrueColorMatrix": {
-              "type": "object",
-              "properties": {
-                "colors": {
-                  "type": "array",
-                  "items": {
-                    "type": "array",
-                    "items": [
-                      {
-                        "type": "number"
-                      },
-                      {
-                        "type": "number"
-                      },
-                      {
-                        "type": "number"
-                      }
-                    ],
-                    "minItems": 3,
-                    "maxItems": 3
-                  }
-                },
-                "beta": {
-                  "type": "number"
-                },
-                "a": {
-                  "type": "number"
-                },
-                "bias": {
-                  "type": "number"
-                },
-                "b0": {
-                  "type": "number"
-                }
-              },
-              "additionalProperties": false,
-              "required": [
-                "a",
-                "b0",
-                "beta",
-                "bias",
-                "colors"
-              ]
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "filters",
-            "sdssTrueColorMatrix",
-            "type"
-          ]
-        }
-      ]
-    },
-    "AddValidatorName<{payload:{name:string;visible:boolean;};type:\"tractTileLayers/layerToggled\";},\"tractTileLayers$layerToggled\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "payload": {
-          "description": "The type of the action's payload.",
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string"
-            },
-            "visible": {
-              "type": "boolean"
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "name",
-            "visible"
-          ]
-        },
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "tractTileLayers/layerToggled"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "tractTileLayers$layerToggled"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
-    },
-    "AddValidatorName<{payload:{open?:boolean|undefined;};type:\"tractTileLayers/toneDialogToggled\";},\"tractTileLayers$toneDialogToggled\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "payload": {
-          "description": "The type of the action's payload.",
-          "type": "object",
-          "properties": {
-            "open": {
-              "type": "boolean"
-            }
-          },
-          "additionalProperties": false
-        },
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "tractTileLayers/toneDialogToggled"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "tractTileLayers$toneDialogToggled"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
-    },
-    "AddValidatorName<{payload:{baseUrl?:string|undefined;};type:\"hipsLayers/baseUrlChanged\";},\"hipsLayers$baseUrlChanged\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "payload": {
-          "description": "The type of the action's payload.",
-          "type": "object",
-          "properties": {
-            "baseUrl": {
-              "type": "string"
-            }
-          },
-          "additionalProperties": false
-        },
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "hipsLayers/baseUrlChanged"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "hipsLayers$baseUrlChanged"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
-    },
-    "AddValidatorName<{payload:{open?:boolean|undefined;};type:\"hipsLayers/hipsDialogToggled\";},\"hipsLayers$hipsDialogToggled\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "payload": {
-          "description": "The type of the action's payload.",
-          "type": "object",
-          "properties": {
-            "open": {
-              "type": "boolean"
-            }
-          },
-          "additionalProperties": false
-        },
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "hipsLayers/hipsDialogToggled"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "hipsLayers$hipsDialogToggled"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
-    },
-    "AddValidatorName<{payload:{tool:ToolType;};type:\"regions/toolChanged\";},\"regions$toolChanged\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "payload": {
-          "description": "The type of the action's payload.",
-          "type": "object",
-          "properties": {
-            "tool": {
-              "$ref": "#/definitions/ToolType"
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "tool"
-          ]
-        },
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "regions/toolChanged"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "regions$toolChanged"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
-    },
-    "ToolType": {
-      "enum": [
-        "circle",
-        "line",
-        "pan",
-        "path",
-        "rect",
-        "text"
-      ],
-      "type": "string"
-    },
-    "AddValidatorName<{payload:undefined;type:\"regions/toolPinnedToggled\";},\"regions$toolPinnedToggled\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "regions/toolPinnedToggled"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "regions$toolPinnedToggled"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "type"
-      ]
-    },
-    "AddValidatorName<{payload:undefined;type:\"regions/autoColorToggled\";},\"regions$autoColorToggled\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "regions/autoColorToggled"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "regions$autoColorToggled"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "type"
-      ]
-    },
-    "AddValidatorName<{payload:{type:\"Linear\";visible:boolean;name:string;showLabel:boolean;start:SkyCoordType;end:SkyCoordType;color?:V4|undefined;id:string;};type:\"regions/newLinearRegionAdded\";},\"regions$newLinearRegionAdded\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "payload": {
-          "description": "The type of the action's payload.",
-          "type": "object",
-          "properties": {
-            "type": {
-              "type": "string",
-              "const": "Linear"
-            },
-            "visible": {
-              "type": "boolean"
-            },
-            "name": {
-              "type": "string"
-            },
-            "showLabel": {
-              "type": "boolean"
-            },
-            "start": {
-              "type": "object",
-              "properties": {
-                "ra": {
-                  "type": "number"
-                },
-                "dec": {
-                  "type": "number"
-                }
-              },
-              "additionalProperties": false,
-              "required": [
-                "dec",
-                "ra"
-              ]
-            },
-            "end": {
-              "type": "object",
-              "properties": {
-                "ra": {
-                  "type": "number"
-                },
-                "dec": {
-                  "type": "number"
-                }
-              },
-              "additionalProperties": false,
-              "required": [
-                "dec",
-                "ra"
-              ]
-            },
-            "color": {
-              "type": "array",
-              "items": [
-                {
-                  "type": "number"
-                },
-                {
-                  "type": "number"
-                },
-                {
-                  "type": "number"
-                },
-                {
-                  "type": "number"
-                }
-              ],
-              "minItems": 4,
-              "maxItems": 4
-            },
-            "id": {
-              "type": "string"
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "end",
-            "id",
-            "name",
-            "showLabel",
-            "start",
-            "type",
-            "visible"
-          ]
-        },
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "regions/newLinearRegionAdded"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "regions$newLinearRegionAdded"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
-    },
-    "AddValidatorName<{payload:{type:\"Circular\";visible:boolean;center:SkyCoordType;name:string;showLabel:boolean;radius:number;color?:V4|undefined;id:string;};type:\"regions/newCircularRegionAdded\";},\"regions$newCircularRegionAdded\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "payload": {
-          "description": "The type of the action's payload.",
-          "type": "object",
-          "properties": {
-            "type": {
-              "type": "string",
-              "const": "Circular"
-            },
-            "visible": {
-              "type": "boolean"
-            },
-            "center": {
-              "type": "object",
-              "properties": {
-                "ra": {
-                  "type": "number"
-                },
-                "dec": {
-                  "type": "number"
-                }
-              },
-              "additionalProperties": false,
-              "required": [
-                "dec",
-                "ra"
-              ]
-            },
-            "name": {
-              "type": "string"
-            },
-            "showLabel": {
-              "type": "boolean"
-            },
-            "radius": {
-              "type": "number"
-            },
-            "color": {
-              "type": "array",
-              "items": [
-                {
-                  "type": "number"
-                },
-                {
-                  "type": "number"
-                },
-                {
-                  "type": "number"
-                },
-                {
-                  "type": "number"
-                }
-              ],
-              "minItems": 4,
-              "maxItems": 4
-            },
-            "id": {
-              "type": "string"
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "center",
-            "id",
-            "name",
-            "radius",
-            "showLabel",
-            "type",
-            "visible"
-          ]
-        },
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "regions/newCircularRegionAdded"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "regions$newCircularRegionAdded"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
-    },
-    "AddValidatorName<{payload:{type:\"Rectangular\";visible:boolean;name:string;showLabel:boolean;minRa:number;maxRa:number;minDec:number;maxDec:number;color?:V4|undefined;id:string;};type:\"regions/newRectangularRegionAdded\";},\"regions$newRectangularRegionAdded\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "payload": {
-          "description": "The type of the action's payload.",
-          "type": "object",
-          "properties": {
-            "type": {
-              "type": "string",
-              "const": "Rectangular"
-            },
-            "visible": {
-              "type": "boolean"
-            },
-            "name": {
-              "type": "string"
-            },
-            "showLabel": {
-              "type": "boolean"
-            },
-            "minRa": {
-              "type": "number"
-            },
-            "maxRa": {
-              "type": "number"
-            },
-            "minDec": {
-              "type": "number"
-            },
-            "maxDec": {
-              "type": "number"
-            },
-            "color": {
-              "type": "array",
-              "items": [
-                {
-                  "type": "number"
-                },
-                {
-                  "type": "number"
-                },
-                {
-                  "type": "number"
-                },
-                {
-                  "type": "number"
-                }
-              ],
-              "minItems": 4,
-              "maxItems": 4
-            },
-            "id": {
-              "type": "string"
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "id",
-            "maxDec",
-            "maxRa",
-            "minDec",
-            "minRa",
-            "name",
-            "showLabel",
-            "type",
-            "visible"
-          ]
-        },
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "regions/newRectangularRegionAdded"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "regions$newRectangularRegionAdded"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
-    },
-    "AddValidatorName<{payload:{type:\"Text\";visible:boolean;name:string;showLabel:boolean;position:SkyCoordType;color?:V4|undefined;id:string;};type:\"regions/newTextRegionAdded\";},\"regions$newTextRegionAdded\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "payload": {
-          "description": "The type of the action's payload.",
-          "type": "object",
-          "properties": {
-            "type": {
-              "type": "string",
-              "const": "Text"
-            },
-            "visible": {
-              "type": "boolean"
-            },
-            "name": {
-              "type": "string"
-            },
-            "showLabel": {
-              "type": "boolean"
-            },
-            "position": {
-              "type": "object",
-              "properties": {
-                "ra": {
-                  "type": "number"
-                },
-                "dec": {
-                  "type": "number"
-                }
-              },
-              "additionalProperties": false,
-              "required": [
-                "dec",
-                "ra"
-              ]
-            },
-            "color": {
-              "type": "array",
-              "items": [
-                {
-                  "type": "number"
-                },
-                {
-                  "type": "number"
-                },
-                {
-                  "type": "number"
-                },
-                {
-                  "type": "number"
-                }
-              ],
-              "minItems": 4,
-              "maxItems": 4
-            },
-            "id": {
-              "type": "string"
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "id",
-            "name",
-            "position",
-            "showLabel",
-            "type",
-            "visible"
-          ]
-        },
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "regions/newTextRegionAdded"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "regions$newTextRegionAdded"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
-    },
-    "AddValidatorName<{payload:{type:\"Path\";visible:boolean;name:string;showLabel:boolean;paths:Path[];color?:V4|undefined;id:string;};type:\"regions/newPathRegionAdded\";},\"regions$newPathRegionAdded\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "payload": {
-          "description": "The type of the action's payload.",
-          "type": "object",
-          "properties": {
-            "type": {
-              "type": "string",
-              "const": "Path"
-            },
-            "visible": {
-              "type": "boolean"
-            },
-            "name": {
-              "type": "string"
-            },
-            "showLabel": {
-              "type": "boolean"
-            },
-            "paths": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "points": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "position": {
-                          "type": "array",
-                          "items": [
-                            {
-                              "type": "number"
-                            },
-                            {
-                              "type": "number"
-                            },
-                            {
-                              "type": "number"
-                            }
-                          ],
-                          "minItems": 3,
-                          "maxItems": 3
-                        },
-                        "color": {
-                          "type": "array",
-                          "items": [
-                            {
-                              "type": "number"
-                            },
-                            {
-                              "type": "number"
-                            },
-                            {
-                              "type": "number"
-                            },
-                            {
-                              "type": "number"
-                            }
-                          ],
-                          "minItems": 4,
-                          "maxItems": 4
-                        },
-                        "size": {
-                          "type": "number"
-                        }
-                      },
-                      "additionalProperties": false,
-                      "required": [
-                        "color",
-                        "position",
-                        "size"
-                      ]
-                    }
-                  },
-                  "close": {
-                    "type": "boolean"
-                  },
-                  "joint": {
-                    "$ref": "#/definitions/JOINT"
-                  }
-                },
-                "additionalProperties": false,
-                "required": [
-                  "close",
-                  "joint",
-                  "points"
-                ]
-              }
-            },
-            "color": {
-              "type": "array",
-              "items": [
-                {
-                  "type": "number"
-                },
-                {
-                  "type": "number"
-                },
-                {
-                  "type": "number"
-                },
-                {
-                  "type": "number"
-                }
-              ],
-              "minItems": 4,
-              "maxItems": 4
-            },
-            "id": {
-              "type": "string"
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "id",
-            "name",
-            "paths",
-            "showLabel",
-            "type",
-            "visible"
-          ]
-        },
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "regions/newPathRegionAdded"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "regions$newPathRegionAdded"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
-    },
-    "JOINT": {
-      "enum": [
-        "MITER",
-        "NONE"
-      ],
-      "type": "string"
-    },
-    "AddValidatorName<{payload:{id:string;regionDef:Region;};type:\"regions/regionUpdated\";},\"regions$regionUpdated\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "payload": {
-          "description": "The type of the action's payload.",
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string"
-            },
-            "regionDef": {
-              "$ref": "#/definitions/Region"
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "id",
-            "regionDef"
-          ]
-        },
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "regions/regionUpdated"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "regions$regionUpdated"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
-    },
-    "Region": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/LinearRegion"
-        },
-        {
-          "$ref": "#/definitions/CircularRegion"
-        },
-        {
-          "$ref": "#/definitions/RectangularRegion"
-        },
-        {
-          "$ref": "#/definitions/TextRegion"
-        },
-        {
-          "$ref": "#/definitions/PathRegion"
-        }
-      ]
-    },
-    "LinearRegion": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "visible": {
-          "type": "boolean"
-        },
-        "showLabel": {
-          "type": "boolean"
-        },
-        "name": {
-          "type": "string"
-        },
-        "color": {
-          "type": "array",
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
-          "minItems": 4,
-          "maxItems": 4
-        },
-        "type": {
-          "type": "string",
-          "const": "Linear"
-        },
-        "start": {
-          "type": "object",
-          "properties": {
-            "ra": {
-              "type": "number"
-            },
-            "dec": {
-              "type": "number"
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "dec",
-            "ra"
-          ]
-        },
-        "end": {
-          "type": "object",
-          "properties": {
-            "ra": {
-              "type": "number"
-            },
-            "dec": {
-              "type": "number"
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "dec",
-            "ra"
-          ]
-        }
-      },
-      "required": [
-        "color",
-        "end",
-        "id",
-        "name",
-        "showLabel",
-        "start",
-        "type",
-        "visible"
-      ]
-    },
-    "CircularRegion": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "visible": {
-          "type": "boolean"
-        },
-        "showLabel": {
-          "type": "boolean"
-        },
-        "name": {
-          "type": "string"
-        },
-        "color": {
-          "type": "array",
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
-          "minItems": 4,
-          "maxItems": 4
-        },
-        "type": {
-          "type": "string",
-          "const": "Circular"
-        },
-        "center": {
-          "type": "object",
-          "properties": {
-            "ra": {
-              "type": "number"
-            },
-            "dec": {
-              "type": "number"
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "dec",
-            "ra"
-          ]
-        },
-        "radius": {
-          "type": "number"
-        }
-      },
-      "required": [
-        "center",
-        "color",
-        "id",
-        "name",
-        "radius",
-        "showLabel",
-        "type",
-        "visible"
-      ]
-    },
-    "RectangularRegion": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "visible": {
-          "type": "boolean"
-        },
-        "showLabel": {
-          "type": "boolean"
-        },
-        "name": {
-          "type": "string"
-        },
-        "color": {
-          "type": "array",
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
-          "minItems": 4,
-          "maxItems": 4
-        },
-        "type": {
-          "type": "string",
-          "const": "Rectangular"
-        },
-        "minRa": {
-          "type": "number"
-        },
-        "maxRa": {
-          "type": "number"
-        },
-        "minDec": {
-          "type": "number"
-        },
-        "maxDec": {
-          "type": "number"
-        }
-      },
-      "required": [
-        "color",
-        "id",
-        "maxDec",
-        "maxRa",
-        "minDec",
-        "minRa",
-        "name",
-        "showLabel",
-        "type",
-        "visible"
-      ]
-    },
-    "TextRegion": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "visible": {
-          "type": "boolean"
-        },
-        "showLabel": {
-          "type": "boolean"
-        },
-        "name": {
-          "type": "string"
-        },
-        "color": {
-          "type": "array",
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
-          "minItems": 4,
-          "maxItems": 4
-        },
-        "type": {
-          "type": "string",
-          "const": "Text"
-        },
-        "position": {
-          "type": "object",
-          "properties": {
-            "ra": {
-              "type": "number"
-            },
-            "dec": {
-              "type": "number"
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "dec",
-            "ra"
-          ]
-        }
-      },
-      "required": [
-        "color",
-        "id",
-        "name",
-        "position",
-        "showLabel",
-        "type",
-        "visible"
-      ]
-    },
-    "PathRegion": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "visible": {
-          "type": "boolean"
-        },
-        "showLabel": {
-          "type": "boolean"
-        },
-        "name": {
-          "type": "string"
-        },
-        "color": {
-          "type": "array",
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
-          "minItems": 4,
-          "maxItems": 4
-        },
-        "type": {
-          "type": "string",
-          "const": "Path"
-        },
-        "paths": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "points": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "position": {
-                      "type": "array",
-                      "items": [
-                        {
-                          "type": "number"
-                        },
-                        {
-                          "type": "number"
-                        },
-                        {
-                          "type": "number"
-                        }
-                      ],
-                      "minItems": 3,
-                      "maxItems": 3
-                    },
-                    "color": {
-                      "type": "array",
-                      "items": [
-                        {
-                          "type": "number"
-                        },
-                        {
-                          "type": "number"
-                        },
-                        {
-                          "type": "number"
-                        },
-                        {
-                          "type": "number"
-                        }
-                      ],
-                      "minItems": 4,
-                      "maxItems": 4
-                    },
-                    "size": {
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": false,
-                  "required": [
-                    "color",
-                    "position",
-                    "size"
-                  ]
-                }
-              },
-              "close": {
-                "type": "boolean"
-              },
-              "joint": {
-                "$ref": "#/definitions/JOINT"
-              }
-            },
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "additionalProperties": false,
+    "definitions": {
+        "AngleUnit": {
+            "enum": [
+                "degree",
+                "radian",
+                "sexadecimal"
+            ],
+            "type": "string"
+        },
+        "BaseAction": {
+            "$ref": "#/definitions/__type"
+        },
+        "CircularRegion": {
             "additionalProperties": false,
-            "required": [
-              "close",
-              "joint",
-              "points"
-            ]
-          }
-        }
-      },
-      "required": [
-        "color",
-        "id",
-        "name",
-        "paths",
-        "showLabel",
-        "type",
-        "visible"
-      ]
-    },
-    "AddValidatorName<{payload:{};type:\"regions/regionsCleared\";},\"regions$regionsCleared\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "payload": {
-          "description": "The type of the action's payload.",
-          "type": "object",
-          "properties": {}
-        },
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "regions/regionsCleared"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "regions$regionsCleared"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
-    },
-    "AddValidatorName<{payload:{id:string;};type:\"regions/regionDeleted\";},\"regions$regionDeleted\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "payload": {
-          "description": "The type of the action's payload.",
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string"
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "id"
-          ]
-        },
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "regions/regionDeleted"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "regions$regionDeleted"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
-    },
-    "AddValidatorName<{payload:{open?:boolean|undefined;};type:\"regions/regionsDialogToggled\";},\"regions$regionsDialogToggled\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "payload": {
-          "description": "The type of the action's payload.",
-          "type": "object",
-          "properties": {
-            "open": {
-              "type": "boolean"
-            }
-          },
-          "additionalProperties": false
-        },
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "regions/regionsDialogToggled"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "regions$regionsDialogToggled"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
-    },
-    "AddValidatorName<{payload:{regions:Region[];};type:\"regions/regionsImported\";},\"regions$regionsImported\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "payload": {
-          "description": "The type of the action's payload.",
-          "type": "object",
-          "properties": {
-            "regions": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Region"
-              }
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "regions"
-          ]
-        },
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "regions/regionsImported"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "regions$regionsImported"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
-    },
-    "AddValidatorName<{payload:{params:{id:string;name:string;markers:Marker[];fields:string[];attributes:string[][];defaultType?:\"circle\"|\"plus\"|\"x\"|\"hollowPlus\"|\"hollowX\"|\"dot\"|\"circledHollowPlus\"|\"circledHollowX\"|\"diamond\"|\"square\"|\"asterisk\"|\"hollowAsterisk\"|\"circledHollowAsterisk\"|\"triangle\"|\"pentagon\"|undefined;baseColor?:V4|undefined;};openDialog:boolean;};type:\"catalogs/catalogAdded\";},\"catalogs$catalogAdded\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "payload": {
-          "description": "The type of the action's payload.",
-          "type": "object",
-          "properties": {
-            "params": {
-              "type": "object",
-              "properties": {
+            "properties": {
+                "center": {
+                    "$ref": "#/definitions/SkyCoordType"
+                },
+                "color": {
+                    "$ref": "#/definitions/V4_1"
+                },
                 "id": {
-                  "type": "string"
+                    "type": "string"
                 },
                 "name": {
-                  "type": "string"
-                },
-                "markers": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "position": {
-                        "type": "array",
-                        "items": [
-                          {
-                            "type": "number"
-                          },
-                          {
-                            "type": "number"
-                          },
-                          {
-                            "type": "number"
-                          }
-                        ],
-                        "minItems": 3,
-                        "maxItems": 3
-                      },
-                      "color": {
-                        "type": "array",
-                        "items": [
-                          {
-                            "type": "number"
-                          },
-                          {
-                            "type": "number"
-                          },
-                          {
-                            "type": "number"
-                          },
-                          {
-                            "type": "number"
-                          }
-                        ],
-                        "minItems": 4,
-                        "maxItems": 4
-                      },
-                      "type": {
-                        "enum": [
-                          "asterisk",
-                          "circle",
-                          "circledHollowAsterisk",
-                          "circledHollowPlus",
-                          "circledHollowX",
-                          "diamond",
-                          "dot",
-                          "hollowAsterisk",
-                          "hollowPlus",
-                          "hollowX",
-                          "pentagon",
-                          "plus",
-                          "square",
-                          "triangle",
-                          "x"
-                        ],
-                        "type": "string"
-                      }
-                    },
-                    "additionalProperties": false,
-                    "required": [
-                      "position"
-                    ]
-                  }
-                },
-                "fields": {
-                  "type": "array",
-                  "items": {
                     "type": "string"
-                  }
                 },
-                "attributes": {
-                  "type": "array",
-                  "items": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  }
+                "radius": {
+                    "type": "number"
                 },
-                "defaultType": {
-                  "enum": [
-                    "asterisk",
-                    "circle",
-                    "circledHollowAsterisk",
-                    "circledHollowPlus",
-                    "circledHollowX",
-                    "diamond",
-                    "dot",
-                    "hollowAsterisk",
-                    "hollowPlus",
-                    "hollowX",
-                    "pentagon",
-                    "plus",
-                    "square",
-                    "triangle",
-                    "x"
-                  ],
-                  "type": "string"
+                "showLabel": {
+                    "type": "boolean"
                 },
-                "baseColor": {
-                  "type": "array",
-                  "items": [
-                    {
-                      "type": "number"
-                    },
-                    {
-                      "type": "number"
-                    },
-                    {
-                      "type": "number"
-                    },
-                    {
-                      "type": "number"
-                    }
-                  ],
-                  "minItems": 4,
-                  "maxItems": 4
+                "type": {
+                    "const": "Circular",
+                    "type": "string"
+                },
+                "visible": {
+                    "type": "boolean"
                 }
-              },
-              "additionalProperties": false,
-              "required": [
-                "attributes",
-                "fields",
+            },
+            "required": [
+                "center",
+                "color",
                 "id",
-                "markers",
-                "name"
-              ]
-            },
-            "openDialog": {
-              "type": "boolean"
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "openDialog",
-            "params"
-          ]
+                "name",
+                "radius",
+                "showLabel",
+                "type",
+                "visible"
+            ],
+            "type": "object"
         },
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "catalogs/catalogAdded"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "catalogs$catalogAdded"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
-    },
-    "AddValidatorName<{payload:{id:string;};type:\"catalogs/catalogDeleted\";},\"catalogs$catalogDeleted\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "payload": {
-          "description": "The type of the action's payload.",
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string"
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "id"
-          ]
-        },
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "catalogs/catalogDeleted"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "catalogs$catalogDeleted"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
-    },
-    "AddValidatorName<{payload:Partial<Catalog>&{id:string;};type:\"catalogs/catalogUpdated\";},\"catalogs$catalogUpdated\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "payload": {
-          "description": "The type of the action's payload.",
-          "additionalProperties": false,
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string"
-            },
-            "name": {
-              "type": "string"
-            },
-            "markers": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "position": {
-                    "type": "array",
-                    "items": [
-                      {
-                        "type": "number"
-                      },
-                      {
-                        "type": "number"
-                      },
-                      {
-                        "type": "number"
-                      }
+        "ColorParams": {
+            "anyOf": [
+                {
+                    "additionalProperties": false,
+                    "properties": {
+                        "filters": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        },
+                        "simpleRgb": {
+                            "additionalProperties": false,
+                            "properties": {
+                                "a": {
+                                    "type": "number"
+                                },
+                                "b0": {
+                                    "type": "number"
+                                },
+                                "beta": {
+                                    "type": "number"
+                                },
+                                "bias": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "a",
+                                "b0",
+                                "beta",
+                                "bias"
+                            ],
+                            "type": "object"
+                        },
+                        "type": {
+                            "const": "simpleRgb",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "filters",
+                        "simpleRgb",
+                        "type"
                     ],
-                    "minItems": 3,
-                    "maxItems": 3
-                  },
-                  "color": {
-                    "type": "array",
-                    "items": [
-                      {
-                        "type": "number"
-                      },
-                      {
-                        "type": "number"
-                      },
-                      {
-                        "type": "number"
-                      },
-                      {
-                        "type": "number"
-                      }
-                    ],
-                    "minItems": 4,
-                    "maxItems": 4
-                  },
-                  "type": {
-                    "enum": [
-                      "asterisk",
-                      "circle",
-                      "circledHollowAsterisk",
-                      "circledHollowPlus",
-                      "circledHollowX",
-                      "diamond",
-                      "dot",
-                      "hollowAsterisk",
-                      "hollowPlus",
-                      "hollowX",
-                      "pentagon",
-                      "plus",
-                      "square",
-                      "triangle",
-                      "x"
-                    ],
-                    "type": "string"
-                  }
+                    "type": "object"
                 },
-                "additionalProperties": false,
-                "required": [
-                  "position"
-                ]
-              }
-            },
-            "fields": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "attributes": {
-              "type": "array",
-              "items": {
-                "type": "array",
-                "items": {
-                  "type": "string"
+                {
+                    "additionalProperties": false,
+                    "properties": {
+                        "filters": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        },
+                        "simpleColorMatrix": {
+                            "additionalProperties": false,
+                            "properties": {
+                                "a": {
+                                    "type": "number"
+                                },
+                                "b0": {
+                                    "type": "number"
+                                },
+                                "beta": {
+                                    "type": "number"
+                                },
+                                "bias": {
+                                    "type": "number"
+                                },
+                                "colors": {
+                                    "items": {
+                                        "items": [
+                                            {
+                                                "type": "number"
+                                            },
+                                            {
+                                                "type": "number"
+                                            },
+                                            {
+                                                "type": "number"
+                                            }
+                                        ],
+                                        "maxItems": 3,
+                                        "minItems": 3,
+                                        "type": "array"
+                                    },
+                                    "type": "array"
+                                }
+                            },
+                            "required": [
+                                "a",
+                                "b0",
+                                "beta",
+                                "bias",
+                                "colors"
+                            ],
+                            "type": "object"
+                        },
+                        "type": {
+                            "const": "simpleColorMatrix",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "filters",
+                        "simpleColorMatrix",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "additionalProperties": false,
+                    "properties": {
+                        "filters": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        },
+                        "sdssTrueColor": {
+                            "additionalProperties": false,
+                            "properties": {
+                                "a": {
+                                    "type": "number"
+                                },
+                                "b0": {
+                                    "type": "number"
+                                },
+                                "beta": {
+                                    "type": "number"
+                                },
+                                "bias": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "a",
+                                "b0",
+                                "beta",
+                                "bias"
+                            ],
+                            "type": "object"
+                        },
+                        "type": {
+                            "const": "sdssTrueColor",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "filters",
+                        "sdssTrueColor",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "additionalProperties": false,
+                    "properties": {
+                        "filters": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        },
+                        "sdssTrueColorMatrix": {
+                            "additionalProperties": false,
+                            "properties": {
+                                "a": {
+                                    "type": "number"
+                                },
+                                "b0": {
+                                    "type": "number"
+                                },
+                                "beta": {
+                                    "type": "number"
+                                },
+                                "bias": {
+                                    "type": "number"
+                                },
+                                "colors": {
+                                    "items": {
+                                        "items": [
+                                            {
+                                                "type": "number"
+                                            },
+                                            {
+                                                "type": "number"
+                                            },
+                                            {
+                                                "type": "number"
+                                            }
+                                        ],
+                                        "maxItems": 3,
+                                        "minItems": 3,
+                                        "type": "array"
+                                    },
+                                    "type": "array"
+                                }
+                            },
+                            "required": [
+                                "a",
+                                "b0",
+                                "beta",
+                                "bias",
+                                "colors"
+                            ],
+                            "type": "object"
+                        },
+                        "type": {
+                            "const": "sdssTrueColorMatrix",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "filters",
+                        "sdssTrueColorMatrix",
+                        "type"
+                    ],
+                    "type": "object"
                 }
-              }
+            ]
+        },
+        "ConstellationLang": {
+            "enum": [
+                "English",
+                "Hiragana",
+                "Kanji"
+            ],
+            "type": "string"
+        },
+        "DialogState": {
+            "$ref": "#/definitions/DialogState_1"
+        },
+        "DialogState_1": {
+            "$ref": "#/definitions/__type_32"
+        },
+        "JOINT": {
+            "enum": [
+                "MITER",
+                "NONE"
+            ],
+            "type": "string"
+        },
+        "LinearRegion": {
+            "additionalProperties": false,
+            "properties": {
+                "color": {
+                    "$ref": "#/definitions/V4_1"
+                },
+                "end": {
+                    "$ref": "#/definitions/SkyCoordType"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "showLabel": {
+                    "type": "boolean"
+                },
+                "start": {
+                    "$ref": "#/definitions/SkyCoordType"
+                },
+                "type": {
+                    "const": "Linear",
+                    "type": "string"
+                },
+                "visible": {
+                    "type": "boolean"
+                }
             },
-            "defaultType": {
-              "enum": [
+            "required": [
+                "color",
+                "end",
+                "id",
+                "name",
+                "showLabel",
+                "start",
+                "type",
+                "visible"
+            ],
+            "type": "object"
+        },
+        "MagFilter": {
+            "enum": [
+                "linear",
+                "nearest"
+            ],
+            "type": "string"
+        },
+        "Marker": {
+            "$ref": "#/definitions/__type_46"
+        },
+        "MarkerType": {
+            "enum": [
                 "asterisk",
                 "circle",
                 "circledHollowAsterisk",
@@ -2457,343 +367,3022 @@
                 "square",
                 "triangle",
                 "x"
-              ],
-              "type": "string"
-            },
-            "defaultColor": {
-              "type": "array",
-              "items": [
-                {
-                  "type": "number"
+            ],
+            "type": "string"
+        },
+        "MaskConfig": {
+            "$ref": "#/definitions/__type_52"
+        },
+        "P": {
+            "$ref": "#/definitions/__type_1"
+        },
+        "P_1": {
+            "$ref": "#/definitions/__type_2"
+        },
+        "P_10": {
+            "$ref": "#/definitions/__type_14"
+        },
+        "P_11": {
+            "$ref": "#/definitions/__type_15"
+        },
+        "P_12": {
+            "$ref": "#/definitions/__type_16"
+        },
+        "P_13": {
+            "$ref": "#/definitions/__type_17"
+        },
+        "P_14": {
+            "$ref": "#/definitions/__type_18"
+        },
+        "P_15": {
+            "$ref": "#/definitions/__type_19"
+        },
+        "P_16": {
+            "$ref": "#/definitions/__object"
+        },
+        "P_17": {
+            "$ref": "#/definitions/__object_1"
+        },
+        "P_18": {
+            "$ref": "#/definitions/__object_2"
+        },
+        "P_19": {
+            "$ref": "#/definitions/__object_3"
+        },
+        "P_2": {
+            "description": "The type of the action's payload.",
+            "type": "boolean"
+        },
+        "P_20": {
+            "$ref": "#/definitions/__object_4"
+        },
+        "P_21": {
+            "$ref": "#/definitions/__type_21"
+        },
+        "P_22": {
+            "$ref": "#/definitions/__type_22"
+        },
+        "P_23": {
+            "$ref": "#/definitions/__type_23"
+        },
+        "P_24": {
+            "$ref": "#/definitions/__type_24"
+        },
+        "P_25": {
+            "$ref": "#/definitions/__type_25"
+        },
+        "P_26": {
+            "$ref": "#/definitions/__type_26"
+        },
+        "P_27": {
+            "$ref": "#/definitions/__type_28"
+        },
+        "P_28": {
+            "$ref": "#/definitions/__type_29"
+        },
+        "P_29": {
+            "$ref": "#/definitions/__type_30"
+        },
+        "P_3": {
+            "$ref": "#/definitions/__type_3"
+        },
+        "P_30": {
+            "$ref": "#/definitions/__object_5"
+        },
+        "P_31": {
+            "$ref": "#/definitions/__type_31"
+        },
+        "P_32": {
+            "additionalProperties": false,
+            "description": "The type of the action's payload.",
+            "properties": {
+                "attributes": {
+                    "items": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    },
+                    "type": "array"
                 },
-                {
-                  "type": "number"
+                "baseColor": {
+                    "$ref": "#/definitions/V4"
                 },
-                {
-                  "type": "number"
+                "defaultColor": {
+                    "$ref": "#/definitions/V4"
                 },
-                {
-                  "type": "number"
+                "defaultType": {
+                    "$ref": "#/definitions/MarkerType"
+                },
+                "dialog": {
+                    "$ref": "#/definitions/DialogState"
+                },
+                "fields": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "markers": {
+                    "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                            "color": {
+                                "$ref": "#/definitions/V4"
+                            },
+                            "position": {
+                                "$ref": "#/definitions/V3"
+                            },
+                            "type": {
+                                "$ref": "#/definitions/MarkerType"
+                            }
+                        },
+                        "required": [
+                            "position"
+                        ],
+                        "type": "object"
+                    },
+                    "type": "array"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "selectedRecords": {
+                    "additionalProperties": false,
+                    "patternProperties": {
+                        "^[0-9]+$": {
+                            "const": true,
+                            "type": "boolean"
+                        }
+                    },
+                    "type": "object"
+                },
+                "visible": {
+                    "type": "boolean"
                 }
-              ],
-              "minItems": 4,
-              "maxItems": 4
             },
-            "baseColor": {
-              "type": "array",
-              "items": [
-                {
-                  "type": "number"
+            "required": [
+                "id"
+            ],
+            "type": "object"
+        },
+        "P_33": {
+            "$ref": "#/definitions/__type_33"
+        },
+        "P_34": {
+            "$ref": "#/definitions/__type_34"
+        },
+        "P_35": {
+            "$ref": "#/definitions/__type_35"
+        },
+        "P_36": {
+            "$ref": "#/definitions/__type_36"
+        },
+        "P_37": {
+            "$ref": "#/definitions/__type_37"
+        },
+        "P_38": {
+            "$ref": "#/definitions/__type_38"
+        },
+        "P_39": {
+            "$ref": "#/definitions/__type_39"
+        },
+        "P_4": {
+            "$ref": "#/definitions/__type_4"
+        },
+        "P_40": {
+            "$ref": "#/definitions/__type_40"
+        },
+        "P_41": {
+            "$ref": "#/definitions/__type_41"
+        },
+        "P_42": {
+            "$ref": "#/definitions/__type_42"
+        },
+        "P_43": {
+            "$ref": "#/definitions/__type_43"
+        },
+        "P_44": {
+            "$ref": "#/definitions/__type_44"
+        },
+        "P_45": {
+            "$ref": "#/definitions/__type_45"
+        },
+        "P_46": {
+            "$ref": "#/definitions/__type_47"
+        },
+        "P_47": {
+            "$ref": "#/definitions/__type_48"
+        },
+        "P_48": {
+            "$ref": "#/definitions/__type_49"
+        },
+        "P_49": {
+            "$ref": "#/definitions/__type_50"
+        },
+        "P_5": {
+            "description": "The type of the action's payload.",
+            "enum": [
+                "constellation",
+                "esoMilkyWay",
+                "grid",
+                "hipparcosCatalog",
+                "nearbyGalaxiesAndNebulas",
+                "tracts"
+            ],
+            "type": "string"
+        },
+        "P_50": {
+            "$ref": "#/definitions/__type_51"
+        },
+        "P_51": {
+            "$ref": "#/definitions/__object_6"
+        },
+        "P_52": {
+            "$ref": "#/definitions/__type_53"
+        },
+        "P_53": {
+            "$ref": "#/definitions/__type_54"
+        },
+        "P_6": {
+            "description": "The type of the action's payload.",
+            "enum": [
+                "FLOATING_EYE",
+                "GNOMONIC",
+                "STEREOGRAPHIC"
+            ],
+            "type": "string"
+        },
+        "P_7": {
+            "$ref": "#/definitions/__type_11"
+        },
+        "P_8": {
+            "$ref": "#/definitions/__type_12"
+        },
+        "P_9": {
+            "$ref": "#/definitions/__type_13"
+        },
+        "Partial": {
+            "$ref": "#/definitions/__type_5"
+        },
+        "Partial_1": {
+            "$ref": "#/definitions/__type_6"
+        },
+        "Partial_2": {
+            "$ref": "#/definitions/__type_7"
+        },
+        "Partial_3": {
+            "$ref": "#/definitions/__type_8"
+        },
+        "Partial_4": {
+            "$ref": "#/definitions/__type_9"
+        },
+        "Partial_5": {
+            "$ref": "#/definitions/__type_10"
+        },
+        "Partial_6": {
+            "$ref": "#/definitions/__type_27"
+        },
+        "Partial_7": {
+            "$ref": "#/definitions/__type_55"
+        },
+        "PathRegion": {
+            "additionalProperties": false,
+            "properties": {
+                "color": {
+                    "$ref": "#/definitions/V4_1"
                 },
-                {
-                  "type": "number"
+                "id": {
+                    "type": "string"
                 },
-                {
-                  "type": "number"
+                "name": {
+                    "type": "string"
                 },
-                {
-                  "type": "number"
+                "paths": {
+                    "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                            "close": {
+                                "type": "boolean"
+                            },
+                            "joint": {
+                                "$ref": "#/definitions/JOINT"
+                            },
+                            "points": {
+                                "items": {
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "color": {
+                                            "$ref": "#/definitions/V4_1"
+                                        },
+                                        "position": {
+                                            "$ref": "#/definitions/V3"
+                                        },
+                                        "size": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "required": [
+                                        "color",
+                                        "position",
+                                        "size"
+                                    ],
+                                    "type": "object"
+                                },
+                                "type": "array"
+                            }
+                        },
+                        "required": [
+                            "close",
+                            "joint",
+                            "points"
+                        ],
+                        "type": "object"
+                    },
+                    "type": "array"
+                },
+                "showLabel": {
+                    "type": "boolean"
+                },
+                "type": {
+                    "const": "Path",
+                    "type": "string"
+                },
+                "visible": {
+                    "type": "boolean"
                 }
-              ],
-              "minItems": 4,
-              "maxItems": 4
             },
-            "visible": {
-              "type": "boolean"
-            },
-            "dialog": {
-              "type": "object",
-              "properties": {
-                "opened": {
-                  "type": "boolean"
+            "required": [
+                "color",
+                "id",
+                "name",
+                "paths",
+                "showLabel",
+                "type",
+                "visible"
+            ],
+            "type": "object"
+        },
+        "Props": {
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/Partial"
                 },
+                {
+                    "$ref": "#/definitions/Partial_1"
+                },
+                {
+                    "$ref": "#/definitions/Partial_2"
+                },
+                {
+                    "$ref": "#/definitions/Partial_3"
+                },
+                {
+                    "$ref": "#/definitions/Partial_4"
+                },
+                {
+                    "$ref": "#/definitions/Partial_5"
+                }
+            ]
+        },
+        "RectangularRegion": {
+            "additionalProperties": false,
+            "properties": {
+                "color": {
+                    "$ref": "#/definitions/V4_1"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "maxDec": {
+                    "type": "number"
+                },
+                "maxRa": {
+                    "type": "number"
+                },
+                "minDec": {
+                    "type": "number"
+                },
+                "minRa": {
+                    "type": "number"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "showLabel": {
+                    "type": "boolean"
+                },
+                "type": {
+                    "const": "Rectangular",
+                    "type": "string"
+                },
+                "visible": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "color",
+                "id",
+                "maxDec",
+                "maxRa",
+                "minDec",
+                "minRa",
+                "name",
+                "showLabel",
+                "type",
+                "visible"
+            ],
+            "type": "object"
+        },
+        "Region": {
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/LinearRegion"
+                },
+                {
+                    "$ref": "#/definitions/CircularRegion"
+                },
+                {
+                    "$ref": "#/definitions/RectangularRegion"
+                },
+                {
+                    "$ref": "#/definitions/TextRegion"
+                },
+                {
+                    "$ref": "#/definitions/PathRegion"
+                }
+            ]
+        },
+        "SkyCoordType": {
+            "$ref": "#/definitions/__type_20"
+        },
+        "T": {
+            "const": "common/unitChanged",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_1": {
+            "const": "common/dialogPositionHintChanged",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_10": {
+            "const": "tractTileLayers/layerToggled",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_11": {
+            "const": "tractTileLayers/toneDialogToggled",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_12": {
+            "const": "tractTileLayers/layerAdded",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_13": {
+            "const": "tractTileLayers/layerRemoved",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_14": {
+            "const": "hipsLayers/baseUrlChanged",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_15": {
+            "const": "hipsLayers/hipsDialogToggled",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_16": {
+            "const": "regions/toolChanged",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_17": {
+            "const": "regions/toolPinnedToggled",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_18": {
+            "const": "regions/autoColorToggled",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_19": {
+            "const": "regions/newLinearRegionAdded",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_2": {
+            "const": "common/activeChanged",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_20": {
+            "const": "regions/newCircularRegionAdded",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_21": {
+            "const": "regions/newRectangularRegionAdded",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_22": {
+            "const": "regions/newTextRegionAdded",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_23": {
+            "const": "regions/newPathRegionAdded",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_24": {
+            "const": "regions/regionUpdated",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_25": {
+            "const": "regions/regionsCleared",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_26": {
+            "const": "regions/regionDeleted",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_27": {
+            "const": "regions/regionsDialogToggled",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_28": {
+            "const": "regions/regionsImported",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_29": {
+            "const": "regions/regionsBatchUpdated",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_3": {
+            "const": "common/magFilterChanged",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_30": {
+            "const": "regions/regionsBatchDeleted",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_31": {
+            "const": "regions/regionsReordered",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_32": {
+            "const": "regions/regionsRenameGroup",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_33": {
+            "const": "catalogs/catalogAdded",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_34": {
+            "const": "catalogs/catalogDeleted",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_35": {
+            "const": "catalogs/catalogUpdated",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_36": {
+            "const": "catalogs/rowsFiltered",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_37": {
+            "const": "catalogs/selectionInverted",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_38": {
+            "const": "catalogs/allRowsSelected",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_39": {
+            "const": "catalogs/catalogMerged",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_4": {
+            "const": "appearanceLayers/propsUpdated",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_40": {
+            "const": "catalogs/catalogDuplicated",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_41": {
+            "const": "catalogs/catalogSelected",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_42": {
+            "const": "catalogs/catalogsDialogToggled",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_43": {
+            "const": "catalogs/dialogToggled",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_44": {
+            "const": "catalogs/dialogsClosed",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_45": {
+            "const": "catalogs/focusedPositionChanged",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_46": {
+            "const": "catalogs/recordSelected",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_47": {
+            "const": "catalogs/recordsBatchSelected",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_48": {
+            "const": "catalogs/showAttributesToggled",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_49": {
+            "const": "catalogs/rowAdded",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_5": {
+            "const": "appearanceLayers/visibleToggled",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_50": {
+            "const": "catalogs/rowDeleted",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_51": {
+            "const": "catalogs/fieldAdded",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_52": {
+            "const": "catalogs/cellUpdated",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_53": {
+            "const": "catalogs/catalogReordered",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_54": {
+            "const": "devel/profilerToggled",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_55": {
+            "const": "fitsImage/dialogToggled",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_56": {
+            "const": "fitsImage/imageAdded",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_57": {
+            "const": "fitsImage/imageRemoved",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_58": {
+            "const": "fitsImage/imageMaskConfigUpdated",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_6": {
+            "const": "camera/projectionUpdated",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_7": {
+            "const": "camera/retinaToggled",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_8": {
+            "const": "camera/paramsChanged",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_9": {
+            "const": "tractTileLayers/colorParamsUpdated",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "TextRegion": {
+            "additionalProperties": false,
+            "properties": {
+                "color": {
+                    "$ref": "#/definitions/V4_1"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "position": {
+                    "$ref": "#/definitions/SkyCoordType"
+                },
+                "showLabel": {
+                    "type": "boolean"
+                },
+                "type": {
+                    "const": "Text",
+                    "type": "string"
+                },
+                "visible": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "color",
+                "id",
+                "name",
+                "position",
+                "showLabel",
+                "type",
+                "visible"
+            ],
+            "type": "object"
+        },
+        "ToolType": {
+            "enum": [
+                "circle",
+                "line",
+                "pan",
+                "path",
+                "rect",
+                "text"
+            ],
+            "type": "string"
+        },
+        "V3": {
+            "items": [
+                {
+                    "type": "number"
+                },
+                {
+                    "type": "number"
+                },
+                {
+                    "type": "number"
+                }
+            ],
+            "maxItems": 3,
+            "minItems": 3,
+            "type": "array"
+        },
+        "V3_1": {
+            "$ref": "#/definitions/V3"
+        },
+        "V4": {
+            "$ref": "#/definitions/V4_1"
+        },
+        "V4_1": {
+            "items": [
+                {
+                    "type": "number"
+                },
+                {
+                    "type": "number"
+                },
+                {
+                    "type": "number"
+                },
+                {
+                    "type": "number"
+                }
+            ],
+            "maxItems": 4,
+            "minItems": 4,
+            "type": "array"
+        },
+        "Which": {
+            "enum": [
+                "constellation",
+                "esoMilkyWay",
+                "grid",
+                "hipparcosCatalog",
+                "nearbyGalaxiesAndNebulas",
+                "tracts"
+            ],
+            "type": "string"
+        },
+        "__object": {
+            "additionalProperties": false,
+            "properties": {
+                "color": {
+                    "$ref": "#/definitions/V4"
+                },
+                "end": {
+                    "$ref": "#/definitions/SkyCoordType"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "showLabel": {
+                    "type": "boolean"
+                },
+                "start": {
+                    "$ref": "#/definitions/SkyCoordType"
+                },
+                "type": {
+                    "const": "Linear",
+                    "type": "string"
+                },
+                "visible": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "end",
+                "id",
+                "name",
+                "showLabel",
+                "start",
+                "type",
+                "visible"
+            ],
+            "type": "object"
+        },
+        "__object_1": {
+            "additionalProperties": false,
+            "properties": {
+                "center": {
+                    "$ref": "#/definitions/SkyCoordType"
+                },
+                "color": {
+                    "$ref": "#/definitions/V4"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "radius": {
+                    "type": "number"
+                },
+                "showLabel": {
+                    "type": "boolean"
+                },
+                "type": {
+                    "const": "Circular",
+                    "type": "string"
+                },
+                "visible": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "center",
+                "id",
+                "name",
+                "radius",
+                "showLabel",
+                "type",
+                "visible"
+            ],
+            "type": "object"
+        },
+        "__object_2": {
+            "additionalProperties": false,
+            "properties": {
+                "color": {
+                    "$ref": "#/definitions/V4"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "maxDec": {
+                    "type": "number"
+                },
+                "maxRa": {
+                    "type": "number"
+                },
+                "minDec": {
+                    "type": "number"
+                },
+                "minRa": {
+                    "type": "number"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "showLabel": {
+                    "type": "boolean"
+                },
+                "type": {
+                    "const": "Rectangular",
+                    "type": "string"
+                },
+                "visible": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "id",
+                "maxDec",
+                "maxRa",
+                "minDec",
+                "minRa",
+                "name",
+                "showLabel",
+                "type",
+                "visible"
+            ],
+            "type": "object"
+        },
+        "__object_3": {
+            "additionalProperties": false,
+            "properties": {
+                "color": {
+                    "$ref": "#/definitions/V4"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "position": {
+                    "$ref": "#/definitions/SkyCoordType"
+                },
+                "showLabel": {
+                    "type": "boolean"
+                },
+                "type": {
+                    "const": "Text",
+                    "type": "string"
+                },
+                "visible": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "id",
+                "name",
+                "position",
+                "showLabel",
+                "type",
+                "visible"
+            ],
+            "type": "object"
+        },
+        "__object_4": {
+            "additionalProperties": false,
+            "properties": {
+                "color": {
+                    "$ref": "#/definitions/V4"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "paths": {
+                    "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                            "close": {
+                                "type": "boolean"
+                            },
+                            "joint": {
+                                "$ref": "#/definitions/JOINT"
+                            },
+                            "points": {
+                                "items": {
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "color": {
+                                            "$ref": "#/definitions/V4_1"
+                                        },
+                                        "position": {
+                                            "$ref": "#/definitions/V3"
+                                        },
+                                        "size": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "required": [
+                                        "color",
+                                        "position",
+                                        "size"
+                                    ],
+                                    "type": "object"
+                                },
+                                "type": "array"
+                            }
+                        },
+                        "required": [
+                            "close",
+                            "joint",
+                            "points"
+                        ],
+                        "type": "object"
+                    },
+                    "type": "array"
+                },
+                "showLabel": {
+                    "type": "boolean"
+                },
+                "type": {
+                    "const": "Path",
+                    "type": "string"
+                },
+                "visible": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "id",
+                "name",
+                "paths",
+                "showLabel",
+                "type",
+                "visible"
+            ],
+            "type": "object"
+        },
+        "__object_5": {
+            "additionalProperties": false,
+            "properties": {
+                "attributes": {
+                    "items": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    },
+                    "type": "array"
+                },
+                "baseColor": {
+                    "$ref": "#/definitions/V4"
+                },
+                "defaultType": {
+                    "$ref": "#/definitions/MarkerType"
+                },
+                "fields": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "markers": {
+                    "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                            "color": {
+                                "$ref": "#/definitions/V4"
+                            },
+                            "position": {
+                                "$ref": "#/definitions/V3"
+                            },
+                            "type": {
+                                "$ref": "#/definitions/MarkerType"
+                            }
+                        },
+                        "required": [
+                            "position"
+                        ],
+                        "type": "object"
+                    },
+                    "type": "array"
+                },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "attributes",
+                "fields",
+                "id",
+                "markers",
+                "name"
+            ],
+            "type": "object"
+        },
+        "__object_6": {
+            "additionalProperties": false,
+            "properties": {
+                "hduIndex": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "maskConfig": {
+                    "$ref": "#/definitions/MaskConfig"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "hduIndex",
+                "id",
+                "maskConfig",
+                "name",
+                "url"
+            ],
+            "type": "object"
+        },
+        "__type": {
+            "additionalProperties": false,
+            "properties": {
+                "payload": {},
+                "type": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "payload",
+                "type"
+            ],
+            "type": "object"
+        },
+        "__type_1": {
+            "additionalProperties": false,
+            "properties": {
+                "angleUnit": {
+                    "$ref": "#/definitions/AngleUnit"
+                }
+            },
+            "required": [
+                "angleUnit"
+            ],
+            "type": "object"
+        },
+        "__type_10": {
+            "additionalProperties": false,
+            "properties": {
+                "frame": {
+                    "type": "boolean"
+                },
+                "patch": {
+                    "type": "boolean"
+                },
+                "visible": {
+                    "type": "boolean"
+                }
+            },
+            "type": "object"
+        },
+        "__type_11": {
+            "additionalProperties": false,
+            "properties": {
+                "fovy": {
+                    "type": "number"
+                },
+                "phi": {
+                    "type": "number"
+                },
+                "roll": {
+                    "type": "number"
+                },
+                "theta": {
+                    "type": "number"
+                },
+                "za": {
+                    "type": "number"
+                },
+                "zd": {
+                    "type": "number"
+                },
+                "zp": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "fovy",
+                "phi",
+                "roll",
+                "theta",
+                "za",
+                "zd",
+                "zp"
+            ],
+            "type": "object"
+        },
+        "__type_12": {
+            "additionalProperties": false,
+            "properties": {
+                "params": {
+                    "$ref": "#/definitions/ColorParams"
+                }
+            },
+            "required": [
+                "params"
+            ],
+            "type": "object"
+        },
+        "__type_13": {
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "visible": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "name",
+                "visible"
+            ],
+            "type": "object"
+        },
+        "__type_14": {
+            "additionalProperties": false,
+            "properties": {
+                "open": {
+                    "type": "boolean"
+                }
+            },
+            "type": "object"
+        },
+        "__type_15": {
+            "additionalProperties": false,
+            "properties": {
+                "baseUrl": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "baseUrl",
+                "name"
+            ],
+            "type": "object"
+        },
+        "__type_16": {
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name"
+            ],
+            "type": "object"
+        },
+        "__type_17": {
+            "additionalProperties": false,
+            "properties": {
+                "baseUrl": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "__type_18": {
+            "additionalProperties": false,
+            "properties": {
+                "open": {
+                    "type": "boolean"
+                }
+            },
+            "type": "object"
+        },
+        "__type_19": {
+            "additionalProperties": false,
+            "properties": {
+                "tool": {
+                    "$ref": "#/definitions/ToolType"
+                }
+            },
+            "required": [
+                "tool"
+            ],
+            "type": "object"
+        },
+        "__type_2": {
+            "additionalProperties": false,
+            "properties": {
+                "bottom": {
+                    "type": "number"
+                },
+                "left": {
+                    "type": "number"
+                },
+                "right": {
+                    "type": "number"
+                },
+                "top": {
+                    "type": "number"
+                }
+            },
+            "type": "object"
+        },
+        "__type_20": {
+            "additionalProperties": false,
+            "properties": {
+                "dec": {
+                    "type": "number"
+                },
+                "ra": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "dec",
+                "ra"
+            ],
+            "type": "object"
+        },
+        "__type_21": {
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "regionDef": {
+                    "$ref": "#/definitions/Region"
+                }
+            },
+            "required": [
+                "id",
+                "regionDef"
+            ],
+            "type": "object"
+        },
+        "__type_22": {
+            "properties": {},
+            "type": "object"
+        },
+        "__type_23": {
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "id"
+            ],
+            "type": "object"
+        },
+        "__type_24": {
+            "additionalProperties": false,
+            "properties": {
+                "open": {
+                    "type": "boolean"
+                }
+            },
+            "type": "object"
+        },
+        "__type_25": {
+            "additionalProperties": false,
+            "properties": {
+                "regions": {
+                    "items": {
+                        "$ref": "#/definitions/Region"
+                    },
+                    "type": "array"
+                }
+            },
+            "required": [
+                "regions"
+            ],
+            "type": "object"
+        },
+        "__type_26": {
+            "additionalProperties": false,
+            "properties": {
+                "nameStartsWith": {
+                    "type": "string"
+                },
+                "regionDef": {
+                    "$ref": "#/definitions/Partial_6"
+                }
+            },
+            "required": [
+                "nameStartsWith",
+                "regionDef"
+            ],
+            "type": "object"
+        },
+        "__type_27": {
+            "additionalProperties": false,
+            "properties": {
+                "color": {
+                    "$ref": "#/definitions/V4"
+                },
+                "showLabel": {
+                    "type": "boolean"
+                },
+                "visible": {
+                    "type": "boolean"
+                }
+            },
+            "type": "object"
+        },
+        "__type_28": {
+            "additionalProperties": false,
+            "properties": {
+                "nameStartsWith": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "nameStartsWith"
+            ],
+            "type": "object"
+        },
+        "__type_29": {
+            "additionalProperties": false,
+            "properties": {
+                "ids": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                }
+            },
+            "required": [
+                "ids"
+            ],
+            "type": "object"
+        },
+        "__type_3": {
+            "additionalProperties": false,
+            "properties": {
+                "magFilter": {
+                    "$ref": "#/definitions/MagFilter"
+                }
+            },
+            "required": [
+                "magFilter"
+            ],
+            "type": "object"
+        },
+        "__type_30": {
+            "additionalProperties": false,
+            "properties": {
+                "nameStartsWith": {
+                    "type": "string"
+                },
+                "newName": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "nameStartsWith",
+                "newName"
+            ],
+            "type": "object"
+        },
+        "__type_31": {
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "id"
+            ],
+            "type": "object"
+        },
+        "__type_32": {
+            "additionalProperties": false,
+            "properties": {
                 "checked": {
-                  "type": "object",
-                  "additionalProperties": false,
-                  "patternProperties": {
-                    "^[0-9]+$": {
-                      "type": "boolean"
-                    }
-                  }
+                    "additionalProperties": false,
+                    "patternProperties": {
+                        "^[0-9]+$": {
+                            "type": "boolean"
+                        }
+                    },
+                    "type": "object"
+                },
+                "opened": {
+                    "type": "boolean"
                 }
-              },
-              "additionalProperties": false,
-              "required": [
+            },
+            "required": [
                 "checked",
                 "opened"
-              ]
-            },
-            "selectedRecords": {
-              "type": "object",
-              "additionalProperties": false,
-              "patternProperties": {
-                "^[0-9]+$": {
-                  "type": "boolean",
-                  "const": true
-                }
-              }
-            }
-          },
-          "required": [
-            "id"
-          ]
+            ],
+            "type": "object"
         },
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "catalogs/catalogUpdated"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "catalogs$catalogUpdated"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
-    },
-    "AddValidatorName<{payload:{id:string;};type:\"catalogs/catalogSelected\";},\"catalogs$catalogSelected\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "payload": {
-          "description": "The type of the action's payload.",
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string"
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "id"
-          ]
-        },
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "catalogs/catalogSelected"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "catalogs$catalogSelected"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
-    },
-    "AddValidatorName<{payload:{open?:boolean|undefined;};type:\"catalogs/catalogsDialogToggled\";},\"catalogs$catalogsDialogToggled\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "payload": {
-          "description": "The type of the action's payload.",
-          "type": "object",
-          "properties": {
-            "open": {
-              "type": "boolean"
-            }
-          },
-          "additionalProperties": false
-        },
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "catalogs/catalogsDialogToggled"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "catalogs$catalogsDialogToggled"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
-    },
-    "AddValidatorName<{payload:{id:string;opened?:boolean|undefined;};type:\"catalogs/dialogToggled\";},\"catalogs$dialogToggled\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "payload": {
-          "description": "The type of the action's payload.",
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string"
-            },
-            "opened": {
-              "type": "boolean"
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "id"
-          ]
-        },
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "catalogs/dialogToggled"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "catalogs$dialogToggled"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
-    },
-    "AddValidatorName<{payload:{};type:\"catalogs/dialogsClosed\";},\"catalogs$dialogsClosed\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "payload": {
-          "description": "The type of the action's payload.",
-          "type": "object",
-          "properties": {}
-        },
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "catalogs/dialogsClosed"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "catalogs$dialogsClosed"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
-    },
-    "AddValidatorName<{payload:{position?:V3|undefined;};type:\"catalogs/focusedPositionChanged\";},\"catalogs$focusedPositionChanged\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "payload": {
-          "description": "The type of the action's payload.",
-          "type": "object",
-          "properties": {
-            "position": {
-              "type": "array",
-              "items": [
-                {
-                  "type": "number"
+        "__type_33": {
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string"
                 },
-                {
-                  "type": "number"
-                },
-                {
-                  "type": "number"
+                "selected": {
+                    "type": "boolean"
                 }
-              ],
-              "minItems": 3,
-              "maxItems": 3
-            }
-          },
-          "additionalProperties": false
-        },
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "catalogs/focusedPositionChanged"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "catalogs$focusedPositionChanged"
-        }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
-    },
-    "AddValidatorName<{payload:{id:string;index:number;selected?:boolean|undefined;};type:\"catalogs/recordSelected\";},\"catalogs$recordSelected\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "payload": {
-          "description": "The type of the action's payload.",
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string"
             },
-            "index": {
-              "type": "number"
+            "required": [
+                "id",
+                "selected"
+            ],
+            "type": "object"
+        },
+        "__type_34": {
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
             },
-            "selected": {
-              "type": "boolean"
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "id",
-            "index"
-          ]
+            "required": [
+                "id"
+            ],
+            "type": "object"
         },
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "catalogs/recordSelected"
+        "__type_35": {
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "selected": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "id",
+                "selected"
+            ],
+            "type": "object"
         },
-        "__validatorName__": {
-          "type": "string",
-          "const": "catalogs$recordSelected"
+        "__type_36": {
+            "additionalProperties": false,
+            "properties": {
+                "deleteSrc": {
+                    "type": "boolean"
+                },
+                "dstId": {
+                    "type": "string"
+                },
+                "onlySelected": {
+                    "type": "boolean"
+                },
+                "srcId": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "deleteSrc",
+                "dstId",
+                "onlySelected",
+                "srcId"
+            ],
+            "type": "object"
+        },
+        "__type_37": {
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "id"
+            ],
+            "type": "object"
+        },
+        "__type_38": {
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "id"
+            ],
+            "type": "object"
+        },
+        "__type_39": {
+            "additionalProperties": false,
+            "properties": {
+                "open": {
+                    "type": "boolean"
+                }
+            },
+            "type": "object"
+        },
+        "__type_4": {
+            "additionalProperties": false,
+            "properties": {
+                "props": {
+                    "$ref": "#/definitions/Props"
+                },
+                "which": {
+                    "$ref": "#/definitions/Which"
+                }
+            },
+            "required": [
+                "props",
+                "which"
+            ],
+            "type": "object"
+        },
+        "__type_40": {
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "opened": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "id"
+            ],
+            "type": "object"
+        },
+        "__type_41": {
+            "additionalProperties": false,
+            "properties": {
+                "position": {
+                    "$ref": "#/definitions/V3_1"
+                }
+            },
+            "type": "object"
+        },
+        "__type_42": {
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "index": {
+                    "type": "number"
+                },
+                "selected": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "id",
+                "index"
+            ],
+            "type": "object"
+        },
+        "__type_43": {
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "indices": {
+                    "items": {
+                        "type": "number"
+                    },
+                    "type": "array"
+                }
+            },
+            "required": [
+                "id",
+                "indices"
+            ],
+            "type": "object"
+        },
+        "__type_44": {
+            "additionalProperties": false,
+            "properties": {
+                "show": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "show"
+            ],
+            "type": "object"
+        },
+        "__type_45": {
+            "additionalProperties": false,
+            "properties": {
+                "attributes": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "insertAt": {
+                    "type": "number"
+                },
+                "marker": {
+                    "$ref": "#/definitions/Marker"
+                }
+            },
+            "required": [
+                "attributes",
+                "id",
+                "insertAt",
+                "marker"
+            ],
+            "type": "object"
+        },
+        "__type_46": {
+            "additionalProperties": false,
+            "properties": {
+                "color": {
+                    "$ref": "#/definitions/V4"
+                },
+                "position": {
+                    "$ref": "#/definitions/V3"
+                },
+                "type": {
+                    "$ref": "#/definitions/MarkerType"
+                }
+            },
+            "required": [
+                "position"
+            ],
+            "type": "object"
+        },
+        "__type_47": {
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "index": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "id",
+                "index"
+            ],
+            "type": "object"
+        },
+        "__type_48": {
+            "additionalProperties": false,
+            "properties": {
+                "field": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "insertAt": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "field",
+                "id",
+                "insertAt"
+            ],
+            "type": "object"
+        },
+        "__type_49": {
+            "additionalProperties": false,
+            "properties": {
+                "field": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "index": {
+                    "type": "number"
+                },
+                "value": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "field",
+                "id",
+                "index",
+                "value"
+            ],
+            "type": "object"
+        },
+        "__type_5": {
+            "additionalProperties": false,
+            "properties": {
+                "visible": {
+                    "type": "boolean"
+                }
+            },
+            "type": "object"
+        },
+        "__type_50": {
+            "additionalProperties": false,
+            "properties": {
+                "ids": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                }
+            },
+            "required": [
+                "ids"
+            ],
+            "type": "object"
+        },
+        "__type_51": {
+            "additionalProperties": false,
+            "properties": {
+                "active": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "active"
+            ],
+            "type": "object"
+        },
+        "__type_52": {
+            "additionalProperties": false,
+            "properties": {
+                "color": {
+                    "$ref": "#/definitions/V4_1"
+                },
+                "maskBit": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "color",
+                "maskBit"
+            ],
+            "type": "object"
+        },
+        "__type_53": {
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "id"
+            ],
+            "type": "object"
+        },
+        "__type_54": {
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "maskConfig": {
+                    "$ref": "#/definitions/Partial_7"
+                }
+            },
+            "required": [
+                "id",
+                "maskConfig"
+            ],
+            "type": "object"
+        },
+        "__type_55": {
+            "additionalProperties": false,
+            "properties": {
+                "color": {
+                    "$ref": "#/definitions/V4"
+                },
+                "maskBit": {
+                    "type": "number"
+                }
+            },
+            "type": "object"
+        },
+        "__type_6": {
+            "additionalProperties": false,
+            "properties": {
+                "fadeInDuration": {
+                    "type": "number"
+                },
+                "imageSize": {
+                    "enum": [
+                        1024,
+                        512
+                    ],
+                    "type": "number"
+                },
+                "visible": {
+                    "type": "boolean"
+                }
+            },
+            "type": "object"
+        },
+        "__type_7": {
+            "additionalProperties": false,
+            "properties": {
+                "fadeInDuration": {
+                    "type": "number"
+                },
+                "lang": {
+                    "$ref": "#/definitions/ConstellationLang"
+                },
+                "nameColor": {
+                    "type": "string"
+                },
+                "nameFont": {
+                    "type": "string"
+                },
+                "showLines": {
+                    "type": "boolean"
+                },
+                "showNames": {
+                    "type": "boolean"
+                },
+                "visible": {
+                    "type": "boolean"
+                }
+            },
+            "type": "object"
+        },
+        "__type_8": {
+            "additionalProperties": false,
+            "properties": {
+                "visible": {
+                    "const": true,
+                    "type": "boolean"
+                }
+            },
+            "type": "object"
+        },
+        "__type_9": {
+            "additionalProperties": false,
+            "properties": {
+                "visible": {
+                    "type": "boolean"
+                }
+            },
+            "type": "object"
         }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
     },
-    "AddValidatorName<{payload:{active:boolean;};type:\"devel/profilerToggled\";},\"devel$profilerToggled\">": {
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "payload": {
-          "description": "The type of the action's payload.",
-          "type": "object",
-          "properties": {
-            "active": {
-              "type": "boolean"
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "active"
-          ]
+    "properties": {
+        "Actions": {
+            "additionalProperties": false,
+            "properties": {
+                "appearanceLayers/propsUpdated": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_4"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_4"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "appearanceLayers/visibleToggled": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_5"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_5"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "camera/paramsChanged": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_7"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_8"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "camera/projectionUpdated": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_6"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_6"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "camera/retinaToggled": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "type": {
+                            "$ref": "#/definitions/T_7"
+                        }
+                    },
+                    "required": [
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "catalogs/allRowsSelected": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_35"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_38"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "catalogs/catalogAdded": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_30"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_33"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "catalogs/catalogDeleted": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_31"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_34"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "catalogs/catalogDuplicated": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_37"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_40"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "catalogs/catalogMerged": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_36"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_39"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "catalogs/catalogReordered": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_49"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_53"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "catalogs/catalogSelected": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_38"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_41"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "catalogs/catalogUpdated": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_32"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_35"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "catalogs/catalogsDialogToggled": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_39"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_42"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "catalogs/cellUpdated": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_48"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_52"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "catalogs/dialogToggled": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_40"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_43"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "catalogs/dialogsClosed": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_22"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_44"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "catalogs/fieldAdded": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_47"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_51"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "catalogs/focusedPositionChanged": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_41"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_45"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "catalogs/recordSelected": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_42"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_46"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "catalogs/recordsBatchSelected": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_43"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_47"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "catalogs/rowAdded": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_45"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_49"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "catalogs/rowDeleted": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_46"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_50"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "catalogs/rowsFiltered": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_33"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_36"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "catalogs/selectionInverted": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_34"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_37"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "catalogs/showAttributesToggled": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_44"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_48"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "common/activeChanged": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_2"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_2"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "common/dialogPositionHintChanged": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_1"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_1"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "common/magFilterChanged": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_3"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_3"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "common/unitChanged": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "devel/profilerToggled": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_50"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_54"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "fitsImage/dialogToggled": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "type": {
+                            "$ref": "#/definitions/T_55"
+                        }
+                    },
+                    "required": [
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "fitsImage/imageAdded": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_51"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_56"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "fitsImage/imageMaskConfigUpdated": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_53"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_58"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "fitsImage/imageRemoved": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_52"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_57"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "hipsLayers/baseUrlChanged": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_13"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_14"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "hipsLayers/hipsDialogToggled": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_14"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_15"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "regions/autoColorToggled": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "type": {
+                            "$ref": "#/definitions/T_18"
+                        }
+                    },
+                    "required": [
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "regions/newCircularRegionAdded": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_17"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_20"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "regions/newLinearRegionAdded": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_16"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_19"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "regions/newPathRegionAdded": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_20"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_23"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "regions/newRectangularRegionAdded": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_18"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_21"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "regions/newTextRegionAdded": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_19"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_22"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "regions/regionDeleted": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_23"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_26"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "regions/regionUpdated": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_21"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_24"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "regions/regionsBatchDeleted": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_27"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_30"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "regions/regionsBatchUpdated": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_26"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_29"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "regions/regionsCleared": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_22"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_25"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "regions/regionsDialogToggled": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_24"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_27"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "regions/regionsImported": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_25"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_28"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "regions/regionsRenameGroup": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_29"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_32"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "regions/regionsReordered": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_28"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_31"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "regions/toolChanged": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_15"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_16"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "regions/toolPinnedToggled": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "type": {
+                            "$ref": "#/definitions/T_17"
+                        }
+                    },
+                    "required": [
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "tractTileLayers/colorParamsUpdated": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_8"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_9"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "tractTileLayers/layerAdded": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_11"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_12"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "tractTileLayers/layerRemoved": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_12"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_13"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "tractTileLayers/layerToggled": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_9"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_10"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "tractTileLayers/toneDialogToggled": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_10"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_11"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                }
+            },
+            "required": [
+                "appearanceLayers/propsUpdated",
+                "appearanceLayers/visibleToggled",
+                "camera/paramsChanged",
+                "camera/projectionUpdated",
+                "camera/retinaToggled",
+                "catalogs/allRowsSelected",
+                "catalogs/catalogAdded",
+                "catalogs/catalogDeleted",
+                "catalogs/catalogDuplicated",
+                "catalogs/catalogMerged",
+                "catalogs/catalogReordered",
+                "catalogs/catalogSelected",
+                "catalogs/catalogUpdated",
+                "catalogs/catalogsDialogToggled",
+                "catalogs/cellUpdated",
+                "catalogs/dialogToggled",
+                "catalogs/dialogsClosed",
+                "catalogs/fieldAdded",
+                "catalogs/focusedPositionChanged",
+                "catalogs/recordSelected",
+                "catalogs/recordsBatchSelected",
+                "catalogs/rowAdded",
+                "catalogs/rowDeleted",
+                "catalogs/rowsFiltered",
+                "catalogs/selectionInverted",
+                "catalogs/showAttributesToggled",
+                "common/activeChanged",
+                "common/dialogPositionHintChanged",
+                "common/magFilterChanged",
+                "common/unitChanged",
+                "devel/profilerToggled",
+                "fitsImage/dialogToggled",
+                "fitsImage/imageAdded",
+                "fitsImage/imageMaskConfigUpdated",
+                "fitsImage/imageRemoved",
+                "hipsLayers/baseUrlChanged",
+                "hipsLayers/hipsDialogToggled",
+                "regions/autoColorToggled",
+                "regions/newCircularRegionAdded",
+                "regions/newLinearRegionAdded",
+                "regions/newPathRegionAdded",
+                "regions/newRectangularRegionAdded",
+                "regions/newTextRegionAdded",
+                "regions/regionDeleted",
+                "regions/regionUpdated",
+                "regions/regionsBatchDeleted",
+                "regions/regionsBatchUpdated",
+                "regions/regionsCleared",
+                "regions/regionsDialogToggled",
+                "regions/regionsImported",
+                "regions/regionsRenameGroup",
+                "regions/regionsReordered",
+                "regions/toolChanged",
+                "regions/toolPinnedToggled",
+                "tractTileLayers/colorParamsUpdated",
+                "tractTileLayers/layerAdded",
+                "tractTileLayers/layerRemoved",
+                "tractTileLayers/layerToggled",
+                "tractTileLayers/toneDialogToggled"
+            ],
+            "type": "object"
         },
-        "type": {
-          "description": "the type used for the action type.",
-          "type": "string",
-          "const": "devel/profilerToggled"
-        },
-        "__validatorName__": {
-          "type": "string",
-          "const": "devel$profilerToggled"
+        "BaseAction": {
+            "$ref": "#/definitions/BaseAction"
         }
-      },
-      "required": [
-        "__validatorName__",
-        "payload",
-        "type"
-      ]
-    }
-  },
-  "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "required": [
+        "Actions",
+        "BaseAction"
+    ],
+    "type": "object"
 }
+

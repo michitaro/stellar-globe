@@ -77,14 +77,14 @@ export function useViewKeybindings() {
       action() {
         globeHandle.current?.().camera.jumpTo({ roll: globeHandle.current!().camera.roll + angle.deg2rad(90) })
       },
-      shortcut: 'Shift+Ctrl+ArrowRight',
+      shortcut: 'Shift+Ctrl+ArrowLeft',
     }
 
     const rotate270 = {
       action() {
         globeHandle.current?.().camera.jumpTo({ roll: globeHandle.current!().camera.roll + angle.deg2rad(-90) })
       },
-      shortcut: 'Shift+Ctrl+ArrowLeft',
+      shortcut: 'Shift+Ctrl+ArrowRight',
     }
 
     const zoomKeys = {

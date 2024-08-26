@@ -3,7 +3,7 @@ import { AppState, AppStore, storeInitializerParams } from ".."
 import { debounce } from "../../../common/utils/debounce"
 import { detectEnvironment } from "../../../common/utils/environment"
 import { deserialize, serialize } from "../../../common/utils/serialize"
-import { createIs } from "../persistentTypeValidation/createIs"
+import { createIs } from "../persistentTypeValidation"
 import { appOnChange } from "./appOnChange"
 
 

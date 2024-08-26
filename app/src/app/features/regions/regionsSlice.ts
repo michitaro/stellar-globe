@@ -180,6 +180,14 @@ export const regionsSlice = createSlice({
         state.regions = ids.map(id => state.regions.find(r => r.id === id)!).filter(r => r)
       },
     ),
+    regionsRenameGroup: create.preparedReducer(
+      (payload: { nameStartsWith: string, newName: string }) => trackAction({ payload }, 'Regions Rename Group'),
+      (state, { payload: { nameStartsWith, newName } }) => {
+        state.regions.filter(r => r.name.startsWith(nameStartsWith)).forEach(r => {
+          r.name = `${newName}/${r.name.slice(nameStartsWith.length)}`
+        })
+      },
+    ),
   }),
   selectors: {
     nextColor,

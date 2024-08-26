@@ -2,7 +2,7 @@ import { useEffect } from "react"
 import { AppState, AppStore, storeInitializerParams } from ".."
 import { debounce } from "../../../common/utils/debounce"
 import { detectEnvironment } from "../../../common/utils/environment"
-import { createIs } from "../persistentTypeValidation/createIs"
+import { createIs } from "../persistentTypeValidation"
 import { appOnChange } from "./appOnChange"
 
 
@@ -77,9 +77,9 @@ export const readStorageState = (() => {
     catch {
       /* */
     }
-    // alert(`Invalid storage value`)
-    console.warn(`Invalid storage value: ${raw}`)
+    alert(`Invalid storage value: ${raw}`)
     window.localStorage.removeItem(storageKey())
+    location.reload()
     return {}
   }
 

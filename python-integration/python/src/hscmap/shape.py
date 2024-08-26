@@ -100,6 +100,21 @@ class Grid(ShapeBase):
             p2 = o + (width * x * e1) + (height * y2 * e2)
             yield from Line(p1, p2, self.color).paths()
 
+    def cell_center_vecs(self):
+        o = as_vec3(self.center)
+        e0 = self.up
+        e1 = o.cross(e0).normalize()
+        e2 = o.cross(e1).normalize()
+        div_x = self.div_x
+        div_y = self.div_y
+        width = self.width.radian
+        height = self.height.radian
+        for i in range(div_y):
+            y = ((i + 0.5) - div_y / 2) / div_y
+            for j in range(div_x):
+                x = ((j + 0.5) - div_x / 2) / div_x
+                yield o + (width * x * e1) + (height * y * e2)
+
 
 @dataclasses.dataclass
 class Line(ShapeBase):

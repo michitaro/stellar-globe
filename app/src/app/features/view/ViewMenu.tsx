@@ -41,7 +41,14 @@ export function ViewMenu() {
         <MenuItemWithKeybind keybind='zoomArctan2'>tan(&theta;)=2</MenuItemWithKeybind>
         <MenuItemWithKeybind keybind='zoomHscScale'>1:1 Pixel Mapping (HSC)</MenuItemWithKeybind>
         <MenuDivider />
-        <MenuItem>Rotate 90&deg;</MenuItem>
+        <MenuItemWithKeybind keybind='rotate90'>
+          <Icon type="rotate_left" marginRight />
+          Rotate 90&deg;
+        </MenuItemWithKeybind>
+        <MenuItemWithKeybind keybind='rotate270'>
+          <Icon type="rotate_right" marginRight />
+          Rotate -90&deg;
+        </MenuItemWithKeybind>
       </SubMenu>
       <MenuItemWithKeybind keybind='moveToCoords'>Move to Specified Coordinates</MenuItemWithKeybind>
       <MenuItemWithKeybind keybind='northUp'>NorthUp</MenuItemWithKeybind>

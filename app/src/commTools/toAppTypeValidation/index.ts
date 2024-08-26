@@ -1,24 +1,15 @@
 import { ToApp, validateToAppMessage as validateToAppMessageType } from "../../../types/commTools"
-import { createIs } from './createIs'
+import { isValidMessage } from './validator'
 
 
 export function validateToAppMessage(type: keyof ToApp, message: any): { errors: string[] } {
-  const is = safe(() => createIs(type))
-  if (is === undefined) {
+  const validate = isValidMessage(type)
+  if (validate === undefined) {
     return { errors: [`Validator not found: ${type}`] }
   }
-  is(message)
-  const errors = is.errors ?? [] as string[]
+  validate(message)
+  const errors = validate.errors ?? [] as string[]
   return { errors }
-}
-
-
-function safe<T>(cb: () => T): T | undefined {
-  try {
-    return cb()
-  } catch {
-    return
-  }
 }
 
 type AssertTypeImplements<T, U extends T> = T

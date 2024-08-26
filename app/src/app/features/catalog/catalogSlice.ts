@@ -46,21 +46,16 @@ export const catalogsSlice = createSlice({
   initialState,
   reducers: create => ({
     catalogAdded: create.preparedReducer(
-      // npm run make-public-json-schema した時に出る↓のエラーはこの辺りが原因
-      // exception evaluating initializer for property params
-      (params: NewCatalogParams, options: { openDialog?: boolean } = {}) => {
-        const id = params.id ?? nanoid()
+      (payload: NewCatalogParams) => {
+        const id = payload.id ?? nanoid()
         return trackAction({
-          payload: {
-            params: { ...params, id },
-            openDialog: !!options.openDialog,
-          }
-        }, `Catalog ${params.name} Added`)
+          payload: { ...payload, id },
+        }, `Catalog ${payload.name} Added`)
       },
-      (state, { payload: { params, openDialog } }) => {
-        const id = params.id
+      (state, { payload }) => {
+        const id = payload.id
         if (!state.catalogs.find(c => c.id === id)) {
-          const { name, markers, fields, attributes, defaultType, baseColor } = params
+          const { name, markers, fields, attributes, defaultType, baseColor } = payload
           const catalog: Catalog = {
             id,
             name,
@@ -71,7 +66,7 @@ export const catalogsSlice = createSlice({
             defaultType: defaultType ?? 'circle',
             defaultColor: [1, 1, 1, 1] as V4,
             visible: true,
-            dialog: defaultDialogState({ opened: openDialog }),
+            dialog: defaultDialogState({ opened: true }),
             selectedRecords: {},
           }
           state.catalogs.push(catalog)

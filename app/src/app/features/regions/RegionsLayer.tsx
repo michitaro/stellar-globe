@@ -277,6 +277,19 @@ const RectangularRegionFromDefLayer = memo(({
     maxDec,
   }), [maxDec, maxRa, minDec, minRa])
 
+  const duplicate = useCallback(() => {
+    dispatch(regionsSlice.actions.newRectangularRegionAdded({
+      type: 'Rectangular',
+      name,
+      minRa,
+      maxRa,
+      maxDec,
+      minDec,
+      visible: true,
+      showLabel: true,
+    }))
+  }, [dispatch, maxDec, maxRa, minDec, minRa, name])
+
   return (
     <RectangularRegionLayer
       rectDef={rectDef}
@@ -285,6 +298,7 @@ const RectangularRegionFromDefLayer = memo(({
       onChange={onRectDefChange}
       showLabel={showLabel}
     >
+      <MenuItem onClick={duplicate}><Icon type='content_copy' marginRight />Duplicate</MenuItem>
       <MenuItem
         onClick={() => {
           dispatch(regionsSlice.actions.regionDeleted({ id }))

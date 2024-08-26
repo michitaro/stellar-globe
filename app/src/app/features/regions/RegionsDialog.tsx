@@ -1,7 +1,7 @@
 import { resizableY } from "@stellar-globe/react-draggable-dialog"
 import { V4 } from "@stellar-globe/stellar-globe"
 import { MaterialSymbol } from "material-symbols"
-import { Fragment, memo, useCallback, useState } from "react"
+import { Fragment, memo, useCallback, useMemo, useState } from "react"
 import { ColorPickerRgba } from "../../../common/components/ColorPicker"
 import EditableDiv from "../../../common/components/EditableDiv"
 import { Icon } from "../../../common/components/Icon"
@@ -18,7 +18,7 @@ export const RegionsDialog = memo(() => {
   const visible = useAppSelector(state => state.regions.regionsDialogVisible)
   const regions = useAppSelector(state => state.regions.regions)
   const dispatch = useAppDispatch()
-  const groupedRegions = groupRegions(regions)
+  const groupedRegions = useMemo(() => groupRegions(regions), [regions])
 
   return (
     <AppDialog
@@ -81,7 +81,15 @@ const RegionGroupTr = memo(({ group, depth }: { group: Group, depth: number }) =
           </button>
         </td>
         <td>
-          {indent(baseName(group.name), depth)}
+          <EditableDiv
+            value={group.name}
+            display={name => name && indent(baseName(name), depth)}
+            onChange={newName => dispatch(
+              regionsSlice.actions.regionsRenameGroup({
+                nameStartsWith: `${group.name}/`,
+                newName,
+              })
+            )} />
         </td>
         <td>
           {/* set visibility */}

@@ -15,12 +15,9 @@ import type { FromApp, ToApp } from "../../../types/commTools"
 import { fitsImageSlice } from "../features/fitsImage/fitsImageSlice"
 
 
-type AddValidatorName<A, B extends string> = A & { __validatorName__: B }
-
-
 export type PersistentStateJsonSchema = {
-  HashState: AddValidatorName<HashState, 'HashState'>,
-  StorageState: AddValidatorName<StorageState, 'StorageState'>
+  HashState: HashState
+  StorageState: StorageState
 }
 
 
@@ -31,12 +28,12 @@ type ActionsOfSlice<S extends Slice> = {
   [K in ActionsNames<S> as PickAction<S, K>['type']]: PickAction<S, K>
 }
 type ActionsWithValidatorOfSlice<S extends Slice> = {
-  [K in ActionsNames<S> as PickAction<S, K>['type']]: AddValidatorName<PickAction<S, K>, `${S['name']}$${K & string}`>
+  [K in ActionsNames<S> as PickAction<S, K>['type']]: PickAction<S, K>
 }
 
 
 export type ActionValidatorJsonSchema = {
-  BaseAction: AddValidatorName<BaseAction, 'BaseAction'>
+  BaseAction: BaseAction
   Actions: (
     ActionsWithValidatorOfSlice<typeof commonSlice> &
     ActionsWithValidatorOfSlice<typeof appearanceLayersSlice> &
@@ -53,7 +50,7 @@ export type ActionValidatorJsonSchema = {
 
 
 export type ToAppValidatorJsonSchema = {
-  [K in keyof ToApp]: AddValidatorName<ToApp[K], K>
+  [K in keyof ToApp]: ToApp[K]
 }
 
 
