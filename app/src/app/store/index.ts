@@ -11,6 +11,7 @@ import { tractTileLayersSlice } from '../features/tractTileLayers/tractTileLayer
 import { AppStateWithComputed, stateWithComputed } from "./computedState"
 import { makeStateHistory } from "./stateHistory"
 import { fitsImageSlice } from "../features/fitsImage/fitsImageSlice"
+import { indicatorSlice } from "../features/indicator/indicatorSlice"
 
 
 export function makeStore({
@@ -35,6 +36,7 @@ export function makeStore({
         [commonSlice.name]: commonSlice.reducer,
         [appearanceLayersSlice.name]: appearanceLayersSlice.reducer,
         [cameraSlice.name]: cameraSlice.reducer,
+        [indicatorSlice.name]: indicatorSlice.reducer,
         [tractTileLayersSlice.name]: tractTileLayersSlice.reducer,
         [hipsLayersSlice.name]: hipsLayersSlice.reducer,
         [regionsSlice.name]: regionsSlice.reducer,

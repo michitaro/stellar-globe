@@ -21,6 +21,7 @@ import { AppStateWithComputed } from './store/computedState'
 import { useLocalStorageSync } from './store/stateSync/StorageSync'
 import { useHashSync } from './store/stateSync/hashSync'
 import styles from './style.module.scss'
+import { Indicator } from './features/indicator/Indicator'
 
 
 export type AppProps = {
@@ -82,6 +83,7 @@ export const App = forwardRef<AppHandle, AppProps>(({
                     <MainViewer />
                     <MainMenu />
                   </AppDragAndDrop>
+                  <Indicator />
                 </KeybindsProvider>
               </ModalProvider>
             </StateHistoryProvider>

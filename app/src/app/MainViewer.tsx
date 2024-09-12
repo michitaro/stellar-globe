@@ -13,6 +13,8 @@ import { useAppDispatch, useAppSelector } from "./store/hooks"
 import { ContextMenuLayer } from "./MainContextMenu/ContextMenuLayer"
 import { MainContextMenu } from "./MainContextMenu"
 import { FitsImageLayers } from "./features/fitsImage/FitsImageLayers"
+import { useCallback } from "react"
+import { indicatorSlice } from "./features/indicator/indicatorSlice"
 
 
 export function MainViewer() {
@@ -27,6 +29,10 @@ export function MainViewer() {
     dispatch(cameraSlice.actions.paramsChanged({ fovy, phi, roll, theta, za, zd, zp }))
   })
 
+  const onPointerMove = useCallback((e: GlobeEventMap['pointer-move']) => {
+    dispatch(indicatorSlice.actions.mouseCoordUpdated([e.coord.a.rad, e.coord.d.rad]))
+  }, [dispatch])
+
   const hips = useAppSelector(state => state.hipsLayers)
 
   return (
@@ -38,7 +44,7 @@ export function MainViewer() {
       noDefaultLayers
       preserveBuffer
     >
-      <GlobeEventLayer$ onCameraMove={onCameraMove} />
+      <GlobeEventLayer$ onCameraMove={onCameraMove} onPointerMove={onPointerMove} />
       <ZoomLayer$ />
       <RollLayer$ />
       <TouchLayer$ />

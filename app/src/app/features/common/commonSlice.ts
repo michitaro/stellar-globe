@@ -32,6 +32,13 @@ export const commonSlice = createSlice({
     unitChanged(state, { payload: { angleUnit } }: PayloadAction<{ angleUnit: AngleUnit }>) {
       state.angleUnit = angleUnit
     },
+    unitToggled(state) {
+      state.angleUnit = ({
+        sexadecimal: 'degree',
+        degree: 'radian',
+        radian: 'sexadecimal',
+      } as const)[state.angleUnit]
+    },
     dialogPositionHintChanged(state, { payload: positionHint }: PayloadAction<PositionHint>) {
       state.dialogPositionHint = positionHint
     },
