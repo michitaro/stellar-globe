@@ -20,4 +20,5 @@ export default defineConfig(commonConfig('dev', {
       },
     }
   },
+  
 }))
