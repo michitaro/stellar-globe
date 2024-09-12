@@ -5,6 +5,7 @@ import { copyToClipboard } from "../../common/utils/copyToClipboard"
 import { AngleUnit } from "../../common/utils/formatAngle"
 import { AddCoordinatesToCatalogMenu } from "./AddCoordinatesToCatalogMenu"
 import { SimbadMenu } from "./SimbadMenu"
+import { NedMenu } from "./NedMenu"
 
 
 type Props = {
@@ -22,6 +23,7 @@ export function MainContextMenu({
   return (
     <Fragment>
       <SimbadMenu openedAt={openedAt} />
+      <NedMenu openedAt={openedAt} />
       <SubMenu label='Copy Coordinates'>
         <MenuItem onClick={() => copyCoords('degree')}>in Degree</MenuItem>
         <MenuItem onClick={() => copyCoords('sexadecimal')}>in Sexadecimal</MenuItem>
