@@ -122,6 +122,14 @@ const CatalogDialog = memo(({ catalog, dialog }: { catalog: Catalog, dialog: Non
     dispatch(catalogsSlice.actions.allRowsSelected({ id: catalog.id, selected: !batchSelectState }))
   }, [batchSelectState, catalog.id, dispatch])
 
+  const updateActiveColumnBatch = (active: boolean) => {
+    updateActiveColumn(_ => {
+      for (let i = 0; i < _.length; i++) {
+        _[i] = active
+      }
+    })
+  }
+
   return (
     <AppDialog
       title={catalog.name}
@@ -142,6 +150,9 @@ const CatalogDialog = memo(({ catalog, dialog }: { catalog: Catalog, dialog: Non
           <MenuItem type="checkbox" checked={focusFollowsUpDownArrowsKeys} onClick={() => setFocusFollowsUpDownArrowsKeys(!focusFollowsUpDownArrowsKeys)}>Focus Follows ↑↓ Keys</MenuItem>
           <MenuDivider />
           <SubMenu label="Columns">
+            <MenuItem onClick={() => updateActiveColumnBatch(true)}>Select All</MenuItem>
+            <MenuItem onClick={() => updateActiveColumnBatch(false)}>Deselected All</MenuItem>
+            <MenuDivider />
             {
               catalog.fields.map((f, i) => (
                 <MenuItem key={i} type='checkbox' checked={activeColumn[i]} onClick={() => updateActiveColumn(_ => {

@@ -4,6 +4,8 @@ import { askLocalFileList } from "../../../common/utils/askLocalFileList"
 import { downloadJson } from "../../../common/utils/downloadFile"
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
 import { regionsSlice } from "./regionsSlice"
+import { useImportRegionJson } from "./useImportRegionFile"
+import { readJsonFile } from "../../../common/utils/readJsonFile"
 
 
 export function RegionsMenu() {
@@ -29,15 +31,12 @@ export function RegionsMenu() {
 }
 
 
-const $type = 'hscMap5/regions'
-
-
 function useExportRegions() {
   const regions = useAppSelector(state => state.regions.regions)
   const exportRegions = useCallback(() => {
     const filename = prompt('Filename?', 'regions.json')
     if (filename) {
-      downloadJson({ content: { $type, $content: regions }, filename })
+      downloadJson({ content: { $type: useImportRegionJson.$type, $content: regions }, filename })
     }
   }, [regions])
   return exportRegions
@@ -45,31 +44,23 @@ function useExportRegions() {
 
 
 function useImportRegions() {
-  const dispatch = useAppDispatch()
+  const importRegionFile = useImportRegionJson()
 
   const uploadRegions = useCallback(async () => {
     const files = await askLocalFileList({ multiple: true })
     for (const file of files) {
       if (file.type === 'application/json') {
-        const reader = new FileReader()
-        reader.onload = (e) => {
-          try {
-            const { $type: _$type, $content } = JSON.parse(e.target?.result as string)
-            if (_$type !== $type) {
-              throw new Error(`Invalid file schema: ${_$type}`)
-            }
-            dispatch(regionsSlice.actions.regionsImported({ regions: $content }))
-          }
-          catch (e) {
-            alert(e)
-          }
+        try {
+          importRegionFile(await readJsonFile(file))
         }
-        reader.readAsText(file)
+        catch (e) {
+          alert(e)
+        }
       }
       else {
         alert(`Unsupported file type: ${file.type} -> ${file.type}`)
       }
     }
-  }, [])
+  }, [importRegionFile])
   return uploadRegions
 }
