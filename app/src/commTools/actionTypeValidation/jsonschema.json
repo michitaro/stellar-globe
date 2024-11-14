@@ -825,292 +825,297 @@
             "type": "string"
         },
         "T_1": {
-            "const": "common/dialogPositionHintChanged",
+            "const": "common/unitToggled",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_10": {
-            "const": "tractTileLayers/layerToggled",
+            "const": "tractTileLayers/colorParamsUpdated",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_11": {
-            "const": "tractTileLayers/toneDialogToggled",
+            "const": "tractTileLayers/layerToggled",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_12": {
-            "const": "tractTileLayers/layerAdded",
+            "const": "tractTileLayers/toneDialogToggled",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_13": {
-            "const": "tractTileLayers/layerRemoved",
+            "const": "tractTileLayers/layerAdded",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_14": {
-            "const": "hipsLayers/baseUrlChanged",
+            "const": "tractTileLayers/layerRemoved",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_15": {
-            "const": "hipsLayers/hipsDialogToggled",
+            "const": "hipsLayers/baseUrlChanged",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_16": {
-            "const": "regions/toolChanged",
+            "const": "hipsLayers/hipsDialogToggled",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_17": {
-            "const": "regions/toolPinnedToggled",
+            "const": "regions/toolChanged",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_18": {
-            "const": "regions/autoColorToggled",
+            "const": "regions/toolPinnedToggled",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_19": {
-            "const": "regions/newLinearRegionAdded",
+            "const": "regions/autoColorToggled",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_2": {
-            "const": "common/activeChanged",
+            "const": "common/dialogPositionHintChanged",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_20": {
-            "const": "regions/newCircularRegionAdded",
+            "const": "regions/newLinearRegionAdded",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_21": {
-            "const": "regions/newRectangularRegionAdded",
+            "const": "regions/newCircularRegionAdded",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_22": {
-            "const": "regions/newTextRegionAdded",
+            "const": "regions/newRectangularRegionAdded",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_23": {
-            "const": "regions/newPathRegionAdded",
+            "const": "regions/newTextRegionAdded",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_24": {
-            "const": "regions/regionUpdated",
+            "const": "regions/newPathRegionAdded",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_25": {
-            "const": "regions/regionsCleared",
+            "const": "regions/regionUpdated",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_26": {
-            "const": "regions/regionDeleted",
+            "const": "regions/regionsCleared",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_27": {
-            "const": "regions/regionsDialogToggled",
+            "const": "regions/regionDeleted",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_28": {
-            "const": "regions/regionsImported",
+            "const": "regions/regionsDialogToggled",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_29": {
-            "const": "regions/regionsBatchUpdated",
+            "const": "regions/regionsImported",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_3": {
-            "const": "common/magFilterChanged",
+            "const": "common/activeChanged",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_30": {
-            "const": "regions/regionsBatchDeleted",
+            "const": "regions/regionsBatchUpdated",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_31": {
-            "const": "regions/regionsReordered",
+            "const": "regions/regionsBatchDeleted",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_32": {
-            "const": "regions/regionsRenameGroup",
+            "const": "regions/regionsReordered",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_33": {
-            "const": "catalogs/catalogAdded",
+            "const": "regions/regionsRenameGroup",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_34": {
-            "const": "catalogs/catalogDeleted",
+            "const": "catalogs/catalogAdded",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_35": {
-            "const": "catalogs/catalogUpdated",
+            "const": "catalogs/catalogDeleted",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_36": {
-            "const": "catalogs/rowsFiltered",
+            "const": "catalogs/catalogUpdated",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_37": {
-            "const": "catalogs/selectionInverted",
+            "const": "catalogs/rowsFiltered",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_38": {
-            "const": "catalogs/allRowsSelected",
+            "const": "catalogs/selectionInverted",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_39": {
-            "const": "catalogs/catalogMerged",
+            "const": "catalogs/allRowsSelected",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_4": {
-            "const": "appearanceLayers/propsUpdated",
+            "const": "common/magFilterChanged",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_40": {
-            "const": "catalogs/catalogDuplicated",
+            "const": "catalogs/catalogMerged",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_41": {
-            "const": "catalogs/catalogSelected",
+            "const": "catalogs/catalogDuplicated",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_42": {
-            "const": "catalogs/catalogsDialogToggled",
+            "const": "catalogs/catalogSelected",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_43": {
-            "const": "catalogs/dialogToggled",
+            "const": "catalogs/catalogsDialogToggled",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_44": {
-            "const": "catalogs/dialogsClosed",
+            "const": "catalogs/dialogToggled",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_45": {
-            "const": "catalogs/focusedPositionChanged",
+            "const": "catalogs/dialogsClosed",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_46": {
-            "const": "catalogs/recordSelected",
+            "const": "catalogs/focusedPositionChanged",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_47": {
-            "const": "catalogs/recordsBatchSelected",
+            "const": "catalogs/recordSelected",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_48": {
-            "const": "catalogs/showAttributesToggled",
+            "const": "catalogs/recordsBatchSelected",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_49": {
-            "const": "catalogs/rowAdded",
+            "const": "catalogs/showAttributesToggled",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_5": {
-            "const": "appearanceLayers/visibleToggled",
+            "const": "appearanceLayers/propsUpdated",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_50": {
-            "const": "catalogs/rowDeleted",
+            "const": "catalogs/rowAdded",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_51": {
-            "const": "catalogs/fieldAdded",
+            "const": "catalogs/rowDeleted",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_52": {
-            "const": "catalogs/cellUpdated",
+            "const": "catalogs/fieldAdded",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_53": {
-            "const": "catalogs/catalogReordered",
+            "const": "catalogs/cellUpdated",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_54": {
-            "const": "devel/profilerToggled",
+            "const": "catalogs/catalogReordered",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_55": {
-            "const": "fitsImage/dialogToggled",
+            "const": "devel/profilerToggled",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_56": {
-            "const": "fitsImage/imageAdded",
+            "const": "fitsImage/dialogToggled",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_57": {
-            "const": "fitsImage/imageRemoved",
+            "const": "fitsImage/imageAdded",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_58": {
+            "const": "fitsImage/imageRemoved",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_59": {
             "const": "fitsImage/imageMaskConfigUpdated",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_6": {
-            "const": "camera/projectionUpdated",
+            "const": "appearanceLayers/visibleToggled",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_7": {
-            "const": "camera/retinaToggled",
+            "const": "camera/projectionUpdated",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_8": {
-            "const": "camera/paramsChanged",
+            "const": "camera/retinaToggled",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_9": {
-            "const": "tractTileLayers/colorParamsUpdated",
+            "const": "camera/paramsChanged",
             "description": "the type used for the action type.",
             "type": "string"
         },
@@ -2390,7 +2395,7 @@
                             "$ref": "#/definitions/P_4"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_4"
+                            "$ref": "#/definitions/T_5"
                         }
                     },
                     "required": [
@@ -2406,7 +2411,7 @@
                             "$ref": "#/definitions/P_5"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_5"
+                            "$ref": "#/definitions/T_6"
                         }
                     },
                     "required": [
@@ -2422,7 +2427,7 @@
                             "$ref": "#/definitions/P_7"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_8"
+                            "$ref": "#/definitions/T_9"
                         }
                     },
                     "required": [
@@ -2438,7 +2443,7 @@
                             "$ref": "#/definitions/P_6"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_6"
+                            "$ref": "#/definitions/T_7"
                         }
                     },
                     "required": [
@@ -2451,7 +2456,7 @@
                     "additionalProperties": false,
                     "properties": {
                         "type": {
-                            "$ref": "#/definitions/T_7"
+                            "$ref": "#/definitions/T_8"
                         }
                     },
                     "required": [
@@ -2466,7 +2471,7 @@
                             "$ref": "#/definitions/P_35"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_38"
+                            "$ref": "#/definitions/T_39"
                         }
                     },
                     "required": [
@@ -2482,7 +2487,7 @@
                             "$ref": "#/definitions/P_30"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_33"
+                            "$ref": "#/definitions/T_34"
                         }
                     },
                     "required": [
@@ -2498,7 +2503,7 @@
                             "$ref": "#/definitions/P_31"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_34"
+                            "$ref": "#/definitions/T_35"
                         }
                     },
                     "required": [
@@ -2514,7 +2519,7 @@
                             "$ref": "#/definitions/P_37"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_40"
+                            "$ref": "#/definitions/T_41"
                         }
                     },
                     "required": [
@@ -2530,7 +2535,7 @@
                             "$ref": "#/definitions/P_36"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_39"
+                            "$ref": "#/definitions/T_40"
                         }
                     },
                     "required": [
@@ -2546,7 +2551,7 @@
                             "$ref": "#/definitions/P_49"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_53"
+                            "$ref": "#/definitions/T_54"
                         }
                     },
                     "required": [
@@ -2562,7 +2567,7 @@
                             "$ref": "#/definitions/P_38"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_41"
+                            "$ref": "#/definitions/T_42"
                         }
                     },
                     "required": [
@@ -2578,7 +2583,7 @@
                             "$ref": "#/definitions/P_32"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_35"
+                            "$ref": "#/definitions/T_36"
                         }
                     },
                     "required": [
@@ -2594,7 +2599,7 @@
                             "$ref": "#/definitions/P_39"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_42"
+                            "$ref": "#/definitions/T_43"
                         }
                     },
                     "required": [
@@ -2610,7 +2615,7 @@
                             "$ref": "#/definitions/P_48"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_52"
+                            "$ref": "#/definitions/T_53"
                         }
                     },
                     "required": [
@@ -2626,7 +2631,7 @@
                             "$ref": "#/definitions/P_40"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_43"
+                            "$ref": "#/definitions/T_44"
                         }
                     },
                     "required": [
@@ -2642,7 +2647,7 @@
                             "$ref": "#/definitions/P_22"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_44"
+                            "$ref": "#/definitions/T_45"
                         }
                     },
                     "required": [
@@ -2658,7 +2663,7 @@
                             "$ref": "#/definitions/P_47"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_51"
+                            "$ref": "#/definitions/T_52"
                         }
                     },
                     "required": [
@@ -2674,7 +2679,7 @@
                             "$ref": "#/definitions/P_41"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_45"
+                            "$ref": "#/definitions/T_46"
                         }
                     },
                     "required": [
@@ -2690,7 +2695,7 @@
                             "$ref": "#/definitions/P_42"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_46"
+                            "$ref": "#/definitions/T_47"
                         }
                     },
                     "required": [
@@ -2706,7 +2711,7 @@
                             "$ref": "#/definitions/P_43"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_47"
+                            "$ref": "#/definitions/T_48"
                         }
                     },
                     "required": [
@@ -2722,7 +2727,7 @@
                             "$ref": "#/definitions/P_45"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_49"
+                            "$ref": "#/definitions/T_50"
                         }
                     },
                     "required": [
@@ -2738,7 +2743,7 @@
                             "$ref": "#/definitions/P_46"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_50"
+                            "$ref": "#/definitions/T_51"
                         }
                     },
                     "required": [
@@ -2754,7 +2759,7 @@
                             "$ref": "#/definitions/P_33"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_36"
+                            "$ref": "#/definitions/T_37"
                         }
                     },
                     "required": [
@@ -2770,7 +2775,7 @@
                             "$ref": "#/definitions/P_34"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_37"
+                            "$ref": "#/definitions/T_38"
                         }
                     },
                     "required": [
@@ -2786,7 +2791,7 @@
                             "$ref": "#/definitions/P_44"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_48"
+                            "$ref": "#/definitions/T_49"
                         }
                     },
                     "required": [
@@ -2802,7 +2807,7 @@
                             "$ref": "#/definitions/P_2"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_2"
+                            "$ref": "#/definitions/T_3"
                         }
                     },
                     "required": [
@@ -2818,7 +2823,7 @@
                             "$ref": "#/definitions/P_1"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_1"
+                            "$ref": "#/definitions/T_2"
                         }
                     },
                     "required": [
@@ -2834,7 +2839,7 @@
                             "$ref": "#/definitions/P_3"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_3"
+                            "$ref": "#/definitions/T_4"
                         }
                     },
                     "required": [
@@ -2859,6 +2864,18 @@
                     ],
                     "type": "object"
                 },
+                "common/unitToggled": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "type": {
+                            "$ref": "#/definitions/T_1"
+                        }
+                    },
+                    "required": [
+                        "type"
+                    ],
+                    "type": "object"
+                },
                 "devel/profilerToggled": {
                     "additionalProperties": false,
                     "properties": {
@@ -2866,7 +2883,7 @@
                             "$ref": "#/definitions/P_50"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_54"
+                            "$ref": "#/definitions/T_55"
                         }
                     },
                     "required": [
@@ -2879,7 +2896,7 @@
                     "additionalProperties": false,
                     "properties": {
                         "type": {
-                            "$ref": "#/definitions/T_55"
+                            "$ref": "#/definitions/T_56"
                         }
                     },
                     "required": [
@@ -2894,7 +2911,7 @@
                             "$ref": "#/definitions/P_51"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_56"
+                            "$ref": "#/definitions/T_57"
                         }
                     },
                     "required": [
@@ -2910,7 +2927,7 @@
                             "$ref": "#/definitions/P_53"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_58"
+                            "$ref": "#/definitions/T_59"
                         }
                     },
                     "required": [
@@ -2926,7 +2943,7 @@
                             "$ref": "#/definitions/P_52"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_57"
+                            "$ref": "#/definitions/T_58"
                         }
                     },
                     "required": [
@@ -2942,7 +2959,7 @@
                             "$ref": "#/definitions/P_13"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_14"
+                            "$ref": "#/definitions/T_15"
                         }
                     },
                     "required": [
@@ -2958,7 +2975,7 @@
                             "$ref": "#/definitions/P_14"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_15"
+                            "$ref": "#/definitions/T_16"
                         }
                     },
                     "required": [
@@ -2971,7 +2988,7 @@
                     "additionalProperties": false,
                     "properties": {
                         "type": {
-                            "$ref": "#/definitions/T_18"
+                            "$ref": "#/definitions/T_19"
                         }
                     },
                     "required": [
@@ -2986,7 +3003,7 @@
                             "$ref": "#/definitions/P_17"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_20"
+                            "$ref": "#/definitions/T_21"
                         }
                     },
                     "required": [
@@ -3002,7 +3019,7 @@
                             "$ref": "#/definitions/P_16"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_19"
+                            "$ref": "#/definitions/T_20"
                         }
                     },
                     "required": [
@@ -3018,7 +3035,7 @@
                             "$ref": "#/definitions/P_20"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_23"
+                            "$ref": "#/definitions/T_24"
                         }
                     },
                     "required": [
@@ -3034,7 +3051,7 @@
                             "$ref": "#/definitions/P_18"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_21"
+                            "$ref": "#/definitions/T_22"
                         }
                     },
                     "required": [
@@ -3050,7 +3067,7 @@
                             "$ref": "#/definitions/P_19"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_22"
+                            "$ref": "#/definitions/T_23"
                         }
                     },
                     "required": [
@@ -3066,7 +3083,7 @@
                             "$ref": "#/definitions/P_23"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_26"
+                            "$ref": "#/definitions/T_27"
                         }
                     },
                     "required": [
@@ -3082,7 +3099,7 @@
                             "$ref": "#/definitions/P_21"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_24"
+                            "$ref": "#/definitions/T_25"
                         }
                     },
                     "required": [
@@ -3098,7 +3115,7 @@
                             "$ref": "#/definitions/P_27"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_30"
+                            "$ref": "#/definitions/T_31"
                         }
                     },
                     "required": [
@@ -3114,7 +3131,7 @@
                             "$ref": "#/definitions/P_26"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_29"
+                            "$ref": "#/definitions/T_30"
                         }
                     },
                     "required": [
@@ -3130,7 +3147,7 @@
                             "$ref": "#/definitions/P_22"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_25"
+                            "$ref": "#/definitions/T_26"
                         }
                     },
                     "required": [
@@ -3146,7 +3163,7 @@
                             "$ref": "#/definitions/P_24"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_27"
+                            "$ref": "#/definitions/T_28"
                         }
                     },
                     "required": [
@@ -3162,7 +3179,7 @@
                             "$ref": "#/definitions/P_25"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_28"
+                            "$ref": "#/definitions/T_29"
                         }
                     },
                     "required": [
@@ -3178,7 +3195,7 @@
                             "$ref": "#/definitions/P_29"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_32"
+                            "$ref": "#/definitions/T_33"
                         }
                     },
                     "required": [
@@ -3194,7 +3211,7 @@
                             "$ref": "#/definitions/P_28"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_31"
+                            "$ref": "#/definitions/T_32"
                         }
                     },
                     "required": [
@@ -3210,7 +3227,7 @@
                             "$ref": "#/definitions/P_15"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_16"
+                            "$ref": "#/definitions/T_17"
                         }
                     },
                     "required": [
@@ -3223,7 +3240,7 @@
                     "additionalProperties": false,
                     "properties": {
                         "type": {
-                            "$ref": "#/definitions/T_17"
+                            "$ref": "#/definitions/T_18"
                         }
                     },
                     "required": [
@@ -3238,7 +3255,7 @@
                             "$ref": "#/definitions/P_8"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_9"
+                            "$ref": "#/definitions/T_10"
                         }
                     },
                     "required": [
@@ -3254,7 +3271,7 @@
                             "$ref": "#/definitions/P_11"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_12"
+                            "$ref": "#/definitions/T_13"
                         }
                     },
                     "required": [
@@ -3270,7 +3287,7 @@
                             "$ref": "#/definitions/P_12"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_13"
+                            "$ref": "#/definitions/T_14"
                         }
                     },
                     "required": [
@@ -3286,7 +3303,7 @@
                             "$ref": "#/definitions/P_9"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_10"
+                            "$ref": "#/definitions/T_11"
                         }
                     },
                     "required": [
@@ -3302,7 +3319,7 @@
                             "$ref": "#/definitions/P_10"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_11"
+                            "$ref": "#/definitions/T_12"
                         }
                     },
                     "required": [
@@ -3343,6 +3360,7 @@
                 "common/dialogPositionHintChanged",
                 "common/magFilterChanged",
                 "common/unitChanged",
+                "common/unitToggled",
                 "devel/profilerToggled",
                 "fitsImage/dialogToggled",
                 "fitsImage/imageAdded",
