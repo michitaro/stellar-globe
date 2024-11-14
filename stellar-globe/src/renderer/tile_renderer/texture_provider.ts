@@ -220,6 +220,6 @@ export class TileTexture {
     return this.revision < this.tp.revision
   }
 
-  touch() {
+  beforeRender() {
   }
 }

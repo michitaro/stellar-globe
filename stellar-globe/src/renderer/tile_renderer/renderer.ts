@@ -162,7 +162,6 @@ class TractRenderer {
       const tt = textureProvider.get(id)
       const tile = Tile.get(id)
       if (tt) {
-        tt.touch()
         cb(tile, tt)
         doRequest && tt.needUpdate() && textureProvider.requestTile(id, {
           fadeIn: false,
@@ -207,6 +206,7 @@ class Tile {
   }
 
   render(alpha: number, renderer: Renderer, tt: TileTexture) {
+    tt.beforeRender()
     const { gl, program } = renderer
     gl.bindTexture(gl.TEXTURE_2D, tt.tex.name)
     program.uniform1f({ u_alpha: alpha * tt.fadeAlpha })
