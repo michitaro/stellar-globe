@@ -1,7 +1,7 @@
-@import 'src/theme.scss';
+@use 'src/theme.scss';
 
 .lineInfo {
-  @include background;
+  @include theme.background;
   display: flex;
   align-items: center;
   padding: 2px 8px;
@@ -11,6 +11,6 @@
   white-space: nowrap;
 
   &:hover {
-    @include active;
+    @include theme.active;
   }
 }

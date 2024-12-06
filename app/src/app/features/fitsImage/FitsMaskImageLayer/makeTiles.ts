@@ -35,34 +35,34 @@ export interface MakeTileResponse {
 }
 
 
-function makeTiles({ header, ab }: MakeTileRequest): MakeTileResponse {
-  const tileSize = 256
-  const bitpix = card(header, 'BITPIX', 'number')
-  let nx = card(header, 'NAXIS1', 'number')
-  let ny = card(header, 'NAXIS2', 'number')
-  let array = convertToFloat32(ab, bitpix)
+// function makeTiles({ header, ab }: MakeTileRequest): MakeTileResponse {
+//   const tileSize = 256
+//   const bitpix = card(header, 'BITPIX', 'number')
+//   let nx = card(header, 'NAXIS1', 'number')
+//   let ny = card(header, 'NAXIS2', 'number')
+//   let array = convertToFloat32(ab, bitpix)
 
-  const tiles: MakeTileResponse["tiles"] = {}
+//   const tiles: MakeTileResponse["tiles"] = {}
 
-  for (let zi = 0; zi <= 8; ++zi) {
-    for (let yi = 0; yi * tileSize < ny; ++yi) {
-      for (let xi = 0; xi * tileSize < nx; ++xi) {
-        const tile = new Float32Array(tileSize * tileSize)
-        const y0 = yi * tileSize
-        const x0 = xi * tileSize
-        for (let y = 0; y < tileSize && y + y0 < ny; ++y) {
-          for (let x = 0; x < tileSize && x + x0 < nx; ++x) {
-            tile[y * tileSize + x] = array[(y0 + y) * nx + (x0 + x)]
-          }
-        }
-        tiles[`${zi}/${yi}/${xi}`] = tile.buffer
-      }
-    }
-    [array, ny, nx] = halfShrink(array, ny, nx)
-  }
+//   for (let zi = 0; zi <= 8; ++zi) {
+//     for (let yi = 0; yi * tileSize < ny; ++yi) {
+//       for (let xi = 0; xi * tileSize < nx; ++xi) {
+//         const tile = new Float32Array(tileSize * tileSize)
+//         const y0 = yi * tileSize
+//         const x0 = xi * tileSize
+//         for (let y = 0; y < tileSize && y + y0 < ny; ++y) {
+//           for (let x = 0; x < tileSize && x + x0 < nx; ++x) {
+//             tile[y * tileSize + x] = array[(y0 + y) * nx + (x0 + x)]
+//           }
+//         }
+//         tiles[`${zi}/${yi}/${xi}`] = tile.buffer
+//       }
+//     }
+//     [array, ny, nx] = halfShrink(array, ny, nx)
+//   }
 
-  return { type: 'float32', tiles }
-}
+//   return { type: 'float32', tiles }
+// }
 
 function halfShrink(a: Float32Array, ny: number, nx: number): [Float32Array, number, number] {
   const ny0 = (ny + 1) >> 1 << 1 // safe region
@@ -125,6 +125,7 @@ export function buildMaskTiles(hdu: fits.Hdu, bitMask: number): { [path: string]
         tiles[`${zi}/${yi}/${xi}`] = tile
       }
     }
+    // @ts-ignore
     [array, ny, nx] = halfShrink(array, ny, nx)
   }
 

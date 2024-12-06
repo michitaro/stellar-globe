@@ -1,4 +1,4 @@
-@import 'src/theme.scss';
+@use 'src/theme.scss';
 
 .main {
   // background-color: black;
@@ -19,7 +19,7 @@
 
   button,
   select {
-    @include hoverable;
+    @include theme.hoverable;
     padding: 0 4px;
     margin: 0 4px;
     border: 0 none black;

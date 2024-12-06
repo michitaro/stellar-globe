@@ -1,7 +1,7 @@
-@import 'src/theme.scss';
+@use 'src/theme.scss';
 
 .dialog {
-  @include background;
+  @include theme.background;
   box-shadow: 0 0 8px rgba(#222, 1), 0 0 4px rgba(#777, 1);
   border-radius: 8px 8px 0 0;
   overflow: hidden;
@@ -14,7 +14,7 @@
 }
 
 .titlebar {
-  @include background;
+  @include theme.background;
   color: white;
   // padding: 8px;
   display: flex;

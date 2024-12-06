@@ -13,7 +13,7 @@ export class SizeLimitedMap<K, V> {
   set maxSize(value: number) {
     this._maxSize = value
     if (this.map.size > this._maxSize) {
-      this.map.delete(this.map.keys().next().value)
+      this.map.delete(this.map.keys().next().value!)
     }
   }
 

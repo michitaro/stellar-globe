@@ -1,14 +1,14 @@
-@import 'src/theme.scss';
+@use 'src/theme.scss';
 
 .menuBar {
   display: flex;
   align-items: stretch;
 
-  @include background;
+  @include theme.background;
   padding: 0 8px;
 
   button.menuBarItem {
-    @include reset;
+    @include theme.reset;
     background-color: transparent;
     font-size: large;
     padding: 8px 12px;
@@ -18,7 +18,7 @@
     align-items: center;
 
     &.active {
-      @include active;
+      @include theme.active;
     }
   }
 }
@@ -40,6 +40,6 @@ button.hoverMenuButton {
   font-size: x-small;
 
   &.active {
-    @include active;
+    @include theme.active;
   }
 }
