@@ -39,7 +39,7 @@ function main() {
   initTileLayer(globe)
   globe.addNewLayer(GridLayer)
   globe.addNewLayer(HipparcosCatalogLayer)
-  globe.addNewLayer(ConstellationLayer, { showLines: true, showNames: true, lang: 'English' })
+  globe.addNewLayer(ConstellationLayer, { showLines: true, showNames: false, lang: 'English' })
   globe.addNewLayer(hips.SimpleImageLayer, hipsUrl)
   globe.addNewLayer(BeautifulObjectLayer, 'm31')
   globe.addNewLayer(EsoMilkyWayLayer)
