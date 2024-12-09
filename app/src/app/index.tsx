@@ -1,4 +1,4 @@
-// import '@stellar-globe/react-draggable-dialog/style.css'
+import '@stellar-globe/react-draggable-dialog/style.css'
 import { Globe } from '@stellar-globe/stellar-globe'
 import '@szhsin/react-menu/dist/index.css'
 import classNames from 'classnames'

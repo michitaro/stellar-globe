@@ -101,7 +101,7 @@ export const CircularRegionLayer = ({
             renderMenuButton={() => (
               <div className={styles.lineInfo} >
                 {menuButton ?? infoText}
-                <Icon type="expand_more" />
+                <Icon type="keyboard_arrow_down" />
               </div>
             )}
           >

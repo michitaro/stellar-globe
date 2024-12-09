@@ -98,7 +98,7 @@ export const RectangularRegionLayer = ({
       <Fragment>
         <Icon type='height' />
         {formatAngle(height, angleUnit)}
-        <Icon type='width' marginLeft />
+        <Icon type='arrow_range' marginLeft />
         {formatAngle(width, angleUnit)}
       </Fragment>
     )
@@ -123,7 +123,7 @@ export const RectangularRegionLayer = ({
             renderMenuButton={() => (
               <div className={styles.lineInfo} >
                 {infoText}
-                <Icon type="expand_more" />
+                <Icon type="keyboard_arrow_down" />
               </div>
             )}
           >

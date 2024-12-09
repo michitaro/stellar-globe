@@ -243,10 +243,10 @@ const CatalogDialog = memo(({ catalog, dialog }: { catalog: Catalog, dialog: Non
         <div className={styles.navigation}>
           <div className={styles.pages}>
             <button onClick={() => setPage(0)} disabled={page <= 0}><Icon type='first_page' /></button>
-            <button onClick={() => setPage(page - 1)} disabled={page <= 0}  ><Icon type='navigate_before' /></button>
+            <button onClick={() => setPage(page - 1)} disabled={page <= 0}  ><Icon type='keyboard_arrow_left' /></button>
             <input style={{ textAlign: 'center' }} type='text' value={page + 1} onChange={e => ifValidNumberString(e.currentTarget.value, n => setPage(Math.max(0, n - 1)))} size={4} />
             / {maxPage}
-            <button onClick={() => setPage(_ => _ + 1)} disabled={page + 1 >= maxPage} ><Icon type='navigate_next' /></button>
+            <button onClick={() => setPage(_ => _ + 1)} disabled={page + 1 >= maxPage} ><Icon type='keyboard_arrow_right' /></button>
             <button onClick={() => setPage(maxPage - 1)} disabled={page + 1 >= maxPage} ><Icon type='last_page' /></button>
             ({pageStart + 1}-{Math.min(pageEnd, catalog.attributes.length)})
           </div>

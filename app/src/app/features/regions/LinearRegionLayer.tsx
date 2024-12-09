@@ -69,7 +69,7 @@ export const LinearRegionLayer = ({
     <Fragment>
       <Icon type="architecture" />
       {formatAngle(lineDef.start.angle(lineDef.end).rad, angleUnit)}
-      <Icon type="expand_more" />
+      <Icon type="keyboard_arrow_down" />
     </Fragment>
   ), [angleUnit, lineDef])
 
