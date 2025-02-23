@@ -8,6 +8,7 @@ import sys
 import tempfile
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+from typing import Dict
 
 from .extractschema import extractSchema
 from .pycodemanipulate import replace_definition, replace_type_annotation
@@ -63,7 +64,7 @@ def main():
 def make_models_parallel():
     with ThreadPoolExecutor() as executor:
 
-        def f(schema, outfile: Path, replace_map: dict[str, str] = {}):
+        def f(schema, outfile: Path, replace_map: Dict[str, str] = {}):
             def g():
                 generate_datamodel(schema, outfile, replace_map)
 
@@ -72,7 +73,7 @@ def make_models_parallel():
         yield f
 
 
-def generate_datamodel(schema, outfile: Path, replace_map: dict[str, str] = {}):
+def generate_datamodel(schema, outfile: Path, replace_map: Dict[str, str] = {}):
     logging.info(f'Generating {outfile}...')
     try:
         codes = datamodel_codegen(schema)

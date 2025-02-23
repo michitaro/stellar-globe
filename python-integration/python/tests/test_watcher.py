@@ -1,3 +1,4 @@
+from typing import List
 from hscmap import Window
 from hscmap.regions import RegionBase, TextRegion
 from hscmap.comm.mock import MockComm
@@ -9,7 +10,7 @@ def test_watch(w: Window):
     def watch_on():
         return len(w.regions.members)
 
-    history: list[RegionBase] = []
+    history: List[RegionBase] = []
 
     def on_change():
         history.append(w.regions.members[-1])

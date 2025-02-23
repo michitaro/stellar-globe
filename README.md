@@ -1,11 +1,19 @@
-## Development
+## 依存関係
 
-See `Dockerfile` for the build environment.
+* `python-integration`
+  * `app`
+    * `stellar-globe`
+    * `react-draggable-dialog`
+    * `react-stellar-globe`
 
-## Build by Docker
+## Python Integration
 
-```bash
-mkdir -p products
-docker build -t stellar-globe .
-docker run -i --rm  stellar-globe tar -cf- -C /products . | tar -xvf- -C products
-```
+* `jupyterlab-extension`
+  * JupyterLabとappの仲介をする
+* `python`
+  * Pythonモジュール`hscmap`
+
+## 型情報
+
+型情報の大元は`app`のTypeScriptで決められる。
+TypeScriptの型チェッカーも`app`に含まれる。
