@@ -30,6 +30,7 @@ export function TractNumbersLayer() {
     for (let ii = -3; ii <= size; ++ii) {
       const iii = i + ii
       const j = ringsTract.ia2j(iii, a.rad)
+      if (iii < 0 || iii >= ringsTract.numRings) continue
       for (let jj = -3; jj <= size; ++jj) {
         const jjj = j + jj
         const [aaa, ddd] = ringsTract.ij2ad(iii, jjj)
