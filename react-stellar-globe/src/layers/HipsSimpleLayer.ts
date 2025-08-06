@@ -5,8 +5,9 @@ import { makePureLayerComponent, setDisplayName } from "../GlobeContext"
 const HipsSimpleLayer$ = makePureLayerComponent<{
   visible?: boolean,
   baseUrl: string,
+  animationLod?: number,
 }>(
-  (globe, { baseUrl }) => new hips.SimpleImageLayer(globe, baseUrl),
+  (globe, { baseUrl, animationLod }) => new hips.SimpleImageLayer(globe, baseUrl, { animationLod }),
   'visible',
 )
 
