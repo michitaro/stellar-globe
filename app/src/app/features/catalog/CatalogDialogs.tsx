@@ -31,6 +31,7 @@ setDisplayName({ CatalogDialogs })
 const CatalogDialog = memo(({ catalog, dialog }: { catalog: Catalog, dialog: NonNullable<Catalog['dialog']> }) => {
   const [focusFollowsUpDownArrowsKeys, setFocusFollowsUpDownArrowsKeys] = useState(true)
   const [jumpAnimationEnabled, setJumpAnimationEnabled] = useState(false)
+  const [focusOnMouseOver, setFocusOnMouseOver] = useState(false)
   const [editMode, setEditMode] = useState(false)
 
   const dispatch = useAppDispatch()
@@ -150,6 +151,7 @@ const CatalogDialog = memo(({ catalog, dialog }: { catalog: Catalog, dialog: Non
           <MenuDivider />
           <MenuItem type="checkbox" checked={focusFollowsUpDownArrowsKeys} onClick={() => setFocusFollowsUpDownArrowsKeys(!focusFollowsUpDownArrowsKeys)}>Focus Follows ↑↓ Keys</MenuItem>
           <MenuItem type="checkbox" checked={jumpAnimationEnabled} onClick={() => setJumpAnimationEnabled(!jumpAnimationEnabled)}>Jump Animation Enabled</MenuItem>
+          <MenuItem type="checkbox" checked={focusOnMouseOver} onClick={() => setFocusOnMouseOver(!focusOnMouseOver)}>Focus on Mouse Over</MenuItem>
           <MenuDivider />
           <SubMenu label="Columns">
             <MenuItem onClick={() => updateActiveColumnBatch(true)}>Select All</MenuItem>
@@ -211,7 +213,7 @@ const CatalogDialog = memo(({ catalog, dialog }: { catalog: Catalog, dialog: Non
                       focus(pageStart + i, { jump: true })
                     }}
                     onMouseEnter={() => {
-                      if (!isFocused) {
+                      if (focusOnMouseOver && !isFocused) {
                         focus(pageStart + i, { jump: false })
                       }
                     }}
