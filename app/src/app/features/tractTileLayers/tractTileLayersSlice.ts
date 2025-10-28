@@ -58,6 +58,9 @@ function initialState(): State {
   if (env().data.la2016) {
     layers.push(layerDef('Legacy Archive 2016', "//hscmap.mtk.nao.ac.jp/hscMap4/data/la2016"))
   }
+  if (env().data.la2020) {
+    layers.push(layerDef('Legacy Archive 2020', "http://133.40.210.1:8000/la-Dn7Qd9L5CMAAi4OsIh0A/la"))
+  }
 
   return {
     toneDialogVisible: true,
