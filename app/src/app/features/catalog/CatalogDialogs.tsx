@@ -149,7 +149,7 @@ const CatalogDialog = memo(({ catalog, dialog }: { catalog: Catalog, dialog: Non
             Delete Unselected Rows
           </MenuItem>
           <MenuDivider />
-          <MenuItem type="checkbox" checked={focusFollowsUpDownArrowsKeys} onClick={() => setFocusFollowsUpDownArrowsKeys(!focusFollowsUpDownArrowsKeys)}>Focus Follows ↑↓ Keys</MenuItem>
+          <MenuItem type="checkbox" checked={focusFollowsUpDownArrowsKeys} onClick={() => setFocusFollowsUpDownArrowsKeys(!focusFollowsUpDownArrowsKeys)}>Camera Follows ↑↓ Keys</MenuItem>
           <MenuItem type="checkbox" checked={jumpAnimationEnabled} onClick={() => setJumpAnimationEnabled(!jumpAnimationEnabled)}>Jump Animation Enabled</MenuItem>
           <MenuItem type="checkbox" checked={focusOnMouseOver} onClick={() => setFocusOnMouseOver(!focusOnMouseOver)}>Focus on Mouse Over</MenuItem>
           <MenuDivider />
@@ -197,7 +197,7 @@ const CatalogDialog = memo(({ catalog, dialog }: { catalog: Catalog, dialog: Non
           </thead>
         </table>
         <div className={classNames(styles.tableWrapper, isFocused && styles.hasFocus)}>
-          <table tabIndex={0} ref={tableRef} onKeyDown={onKeyDown} onBlur={unfocus}>
+          <table tabIndex={0} ref={tableRef} onKeyDown={onKeyDown}>
             <tbody
               onMouseLeave={() => {
                 if (!isFocused) {
