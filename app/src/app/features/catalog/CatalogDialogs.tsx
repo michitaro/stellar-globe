@@ -30,6 +30,7 @@ setDisplayName({ CatalogDialogs })
 
 const CatalogDialog = memo(({ catalog, dialog }: { catalog: Catalog, dialog: NonNullable<Catalog['dialog']> }) => {
   const [focusFollowsUpDownArrowsKeys, setFocusFollowsUpDownArrowsKeys] = useState(true)
+  const [jumpAnimationEnabled, setJumpAnimationEnabled] = useState(false)
   const [editMode, setEditMode] = useState(false)
 
   const dispatch = useAppDispatch()
@@ -58,9 +59,9 @@ const CatalogDialog = memo(({ catalog, dialog }: { catalog: Catalog, dialog: Non
     const globe = globeHandle.current?.()
     if (globe) {
       const marker = catalog.markers[index]
-      globe.camera.jumpTo({}, { coord: SkyCoord.fromXyz(marker.position) })
+      globe.camera.jumpTo({}, { coord: SkyCoord.fromXyz(marker.position), duration: jumpAnimationEnabled ? undefined : 0 })
     }
-  }, [catalog.markers, globeHandle])
+  }, [catalog.markers, globeHandle, jumpAnimationEnabled])
 
   const [focusedIndex, setFocusedIndex] = useState<undefined | number>(undefined)
 
@@ -148,6 +149,7 @@ const CatalogDialog = memo(({ catalog, dialog }: { catalog: Catalog, dialog: Non
           </MenuItem>
           <MenuDivider />
           <MenuItem type="checkbox" checked={focusFollowsUpDownArrowsKeys} onClick={() => setFocusFollowsUpDownArrowsKeys(!focusFollowsUpDownArrowsKeys)}>Focus Follows ↑↓ Keys</MenuItem>
+          <MenuItem type="checkbox" checked={jumpAnimationEnabled} onClick={() => setJumpAnimationEnabled(!jumpAnimationEnabled)}>Jump Animation Enabled</MenuItem>
           <MenuDivider />
           <SubMenu label="Columns">
             <MenuItem onClick={() => updateActiveColumnBatch(true)}>Select All</MenuItem>
