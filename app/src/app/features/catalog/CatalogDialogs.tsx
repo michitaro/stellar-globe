@@ -13,6 +13,7 @@ import { Catalog, catalogsSlice } from "./catalogSlice"
 import styles from './styles.module.scss'
 import EditableDiv from "../../../common/components/EditableDiv"
 import { TriStateCheckBox } from "../../../common/components/TriStateCheckBox"
+import NumericInput from "../../../common/components/NumericInput"
 
 
 export const CatalogDialogs = memo(() => {
@@ -107,12 +108,15 @@ const CatalogDialog = memo(({ catalog, dialog }: { catalog: Catalog, dialog: Non
           dispatch(catalogsSlice.actions.recordSelected({ id: catalog.id, index: focusedIndex }))
         }
         break
+      case 'Escape':
+        unfocus()
+        break
       default:
         return
     }
     e.stopPropagation()
     e.preventDefault()
-  }, [catalog.attributes.length, catalog.id, dispatch, focus, focusFollowsUpDownArrowsKeys, focusedIndex])
+  }, [catalog.attributes.length, catalog.id, dispatch, focus, focusFollowsUpDownArrowsKeys, focusedIndex, unfocus])
 
   const batchSelectState: null | boolean = useMemo(() => {
     const n = Object.keys(catalog.selectedRecords).length
@@ -198,13 +202,7 @@ const CatalogDialog = memo(({ catalog, dialog }: { catalog: Catalog, dialog: Non
         </table>
         <div className={classNames(styles.tableWrapper, isFocused && styles.hasFocus)}>
           <table tabIndex={0} ref={tableRef} onKeyDown={onKeyDown}>
-            <tbody
-              onMouseLeave={() => {
-                if (!isFocused) {
-                  unfocus()
-                }
-              }}
-            >
+            <tbody>
               {
                 pagedAttributes.map((row, i) => (
                   <tr
@@ -248,7 +246,12 @@ const CatalogDialog = memo(({ catalog, dialog }: { catalog: Catalog, dialog: Non
           <div className={styles.pages}>
             <button onClick={() => setPage(0)} disabled={page <= 0}><Icon type='first_page' /></button>
             <button onClick={() => setPage(page - 1)} disabled={page <= 0}  ><Icon type='keyboard_arrow_left' /></button>
-            <input style={{ textAlign: 'center' }} type='text' value={page + 1} onChange={e => ifValidNumberString(e.currentTarget.value, n => setPage(Math.max(0, n - 1)))} size={4} />
+            <NumericInput
+              style={{ textAlign: 'center' }}
+              value={page + 1}
+              onChange={n => setPage(Math.max(0, Math.floor(n) - 1))}
+              size={4}
+            />
             / {maxPage}
             <button onClick={() => setPage(_ => _ + 1)} disabled={page + 1 >= maxPage} ><Icon type='keyboard_arrow_right' /></button>
             <button onClick={() => setPage(maxPage - 1)} disabled={page + 1 >= maxPage} ><Icon type='last_page' /></button>
@@ -259,8 +262,11 @@ const CatalogDialog = memo(({ catalog, dialog }: { catalog: Catalog, dialog: Non
             Edit Mode
           </label>
           <div>
-            <input type="text" value={rowsPerPage} size={4} style={{ textAlign: 'center' }}
-              onChange={e => ifValidNumberString(e.currentTarget.value, n => setRowsPerPage(Math.max(1, n)))}
+            <NumericInput
+              value={rowsPerPage}
+              size={4}
+              style={{ textAlign: 'center' }}
+              onChange={n => setRowsPerPage(Math.max(1, Math.floor(n)))}
             /> rows per page
           </div>
         </div>
@@ -269,11 +275,3 @@ const CatalogDialog = memo(({ catalog, dialog }: { catalog: Catalog, dialog: Non
   )
 })
 setDisplayName({ CatalogDialog })
-
-
-function ifValidNumberString<T>(s: string, cb: (n: number) => T): T | undefined {
-  const n = Number(s)
-  if (Number.isFinite(n)) {
-    return cb(n)
-  }
-}
