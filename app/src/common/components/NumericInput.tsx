@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react'
 
 
-type NumericInputProps = React.HTMLProps<HTMLInputElement> & {
+type NumericInputProps = Omit<React.HTMLProps<HTMLInputElement>, 'value' | 'onChange'> & {
   value: number
   onChange: (newValue: number) => void
+  transform?: (value: number) => number
 }
 
 function NumericInput(props: NumericInputProps) {
-  const { value, onChange, ...inputProps } = props
+  const { value, onChange, transform, ...inputProps } = props
   const [inputValue, setInputValue] = useState(value.toString())
 
 
   useEffect(() => {
-    // props.valueが変更された時にinputValueを更新します。
     setInputValue(value.toString())
   }, [value])
 
@@ -32,8 +32,9 @@ function NumericInput(props: NumericInputProps) {
 
   const validateAndSubmitInput = () => {
     const numericValue = Number(inputValue)
-    if (!isNaN(numericValue)) {
-      onChange(numericValue)
+    if (Number.isFinite(numericValue)) {
+      const finalValue = transform ? transform(numericValue) : numericValue
+      onChange(finalValue)
     } else {
       setInputValue(value.toString())
     }
