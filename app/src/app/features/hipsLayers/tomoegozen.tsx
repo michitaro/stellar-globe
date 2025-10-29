@@ -24,16 +24,24 @@ function tomoegozenUrl(url: string) {
 export const TomoegozenSubmenu = memo(() => {
   const dispatch = useAppDispatch()
   const currentBaseUrl = useAppSelector(state => state.hipsLayers.baseUrl)
+  const deepestackUrl = 'https://tomoe.mtk.ioa.s.u-tokyo.ac.jp/skyatlas/data/deepstack'
 
   return (
     <SubMenu label="Tomo-e Gozen" overflow="auto">
       <MenuItem
+        href="https://tomoe.mtk.ioa.s.u-tokyo.ac.jp"
+        target="_blank"
+        rel="noreferrer"
+      >
+        Tomo-e Gozen
+      </MenuItem>
+      <MenuItem
         type='checkbox'
-        checked={currentBaseUrl === tomoegozenUrl('https://tomoe.mtk.ioa.s.u-tokyo.ac.jp/skyatlas/data/deepstack_v20211014')}
+        checked={currentBaseUrl === tomoegozenUrl(deepestackUrl)}
         onClick={() => dispatch(hipsLayersSlice.actions.baseUrlChanged({
-          baseUrl: tomoegozenUrl('https://tomoe.mtk.ioa.s.u-tokyo.ac.jp/skyatlas/data/deepstack_v20211014')
+          baseUrl: tomoegozenUrl(deepestackUrl)
         }))}
-      >deepstack_v20211014</MenuItem>
+      >Deep Stack</MenuItem>
       <MenuDivider />
       <Suspense fallback={<MenuItem disabled>Loading...</MenuItem>}>
         <TomoegozenEntries />
