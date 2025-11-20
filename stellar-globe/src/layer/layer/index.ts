@@ -4,7 +4,20 @@ import { ReleaseCallbacks } from "~/utils/EventManager"
 import { View } from "~/view"
 import { PointingObject } from "./PointingObject"
 
-
+/**
+ * Base class for all layers in the Globe viewer.
+ * Layers are responsible for rendering content on the celestial sphere.
+ * 
+ * @example
+ * ```typescript
+ * class MyLayer extends Layer {
+ *   render(view: View) {
+ *     // Custom rendering logic
+ *   }
+ * }
+ * globe.addLayer(new MyLayer(globe));
+ * ```
+ */
 export class Layer {
   constructor(
     readonly globe: Globe,

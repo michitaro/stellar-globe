@@ -23,7 +23,17 @@ type GlobeOptions = {
   webgl?: 'webgl' | 'webgl2'
 }
 
-
+/**
+ * The main class for the Stellar Globe viewer.
+ * This class manages the WebGL canvas, camera, layers, and rendering loop.
+ * 
+ * @example
+ * ```typescript
+ * const container = document.getElementById('viewer');
+ * const globe = new Globe(container);
+ * globe.addNewLayer(GridLayer);
+ * ```
+ */
 export class Globe {
   readonly camera: Camera
   readonly animations: AnimationManager

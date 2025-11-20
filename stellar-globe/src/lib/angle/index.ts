@@ -2,7 +2,10 @@ import { sprintf } from '~/utils/sprintf'
 import { V3 } from '~/types'
 import { clip } from '~/utils/math'
 
-
+/**
+ * Represents an angle with conversion utilities between different units.
+ * Supports radians, degrees, arc minutes, and arc seconds.
+ */
 export class Angle {
   readonly rad: number
 
@@ -31,7 +34,11 @@ export class Angle {
   }
 }
 
-
+/**
+ * Represents a celestial coordinate on the celestial sphere.
+ * Stores right ascension (a) and declination (d) as Angle objects.
+ * Provides conversion to/from Cartesian (xyz) coordinates.
+ */
 export class SkyCoord {
   constructor(
     readonly a: Angle,
