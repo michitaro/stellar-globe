@@ -28,7 +28,6 @@ type StorageOptions = IndexedDBStorageOptions | FileStorageOptions
 
 type IndexedDBStorageOptions = {
   type: 'indexeddb'
-  dbname: string
 }
 
 type FileStorageOptions = {
@@ -241,7 +240,8 @@ async function respondToQuery(queryId: string, content: string, options: Storage
 
 function saveFileOnJupyterLiteIndexedDB(filename: string, content: string, options: IndexedDBStorageOptions) {
   return new Promise<void>((resolve, reject) => {
-    const request = indexedDB.open(options.dbname)
+    const dbname = `JupyterLite Storage - ${rootPath()}`
+    const request = indexedDB.open(dbname)
     request.onsuccess = () => {
       const db = request.result
       const tx = db.transaction('files', 'readwrite')
@@ -270,6 +270,17 @@ function saveFileOnJupyterLiteIndexedDB(filename: string, content: string, optio
       reject(request.error)
     }
   })
+}
+
+function rootPath() {
+  // http://127.0.0.1:8000/lab/index.html → /
+  // http://127.0.0.1:8000/some-path/lab/index.html → /some-path
+  const path = window.location.pathname
+  const match = path.match(/^(.*\/)lab\/index.html$/)
+  if (match) {
+    return match[1]
+  }
+  return '/'
 }
 
 

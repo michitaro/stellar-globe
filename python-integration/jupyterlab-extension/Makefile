@@ -4,7 +4,7 @@ setup:
 	uv sync --dev
 
 build:
-	uv build
+	bash -c 'source ./.venv/bin/activate && jlpm build'
 
 deploy: build
 	chmod 644 ./dist/*.tar.gz

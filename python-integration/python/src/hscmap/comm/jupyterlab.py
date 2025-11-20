@@ -92,7 +92,7 @@ def extra_options() -> ExtraOptions:
 
         # if 'serviceWorker' not in dir(js.navigator):
         #     raise ValueError('Service Worker is not supported on this browser')
-        return {'storage': {'type': 'indexeddb', 'dbname': 'JupyterLite Storage'}}
+        return {'storage': {'type': 'indexeddb'}}
     else:
         return {'storage': {'type': 'file'}}
 

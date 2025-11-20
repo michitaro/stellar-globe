@@ -1,4 +1,4 @@
-export function EventEmitter<T = void>({ once }: { once: boolean }) {
+export function EventEmitter<T = void>({ once }: { once?: boolean } = {}) {
   const cbs: ((value: T) => void)[] = []
 
   const on = (cb: (value: T) => void) => {

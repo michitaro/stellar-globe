@@ -10,10 +10,11 @@ rebuild: rebuild-dependencies
 	$(MAKE) build
 
 build:
+	rm -rf pypi files _output
 	mkdir -p pypi files
 	cp ../python/dist/hscmap-0.0.0-py3-none-any.whl ./pypi/
 	cp ../jupyterlab-extension/tutorial.ipynb ./files/
-	uv pip uninstall -y stellar_globe_jupyterlab_extension
+	uv pip uninstall stellar_globe_jupyterlab_extension
 	uv pip install ../jupyterlab-extension
 	uv run jupyter lite build
 
