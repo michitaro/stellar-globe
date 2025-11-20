@@ -247,6 +247,46 @@ pip uninstall stellar_globe_jupyterlab_extension
 
 また、`jupyter labextension list` で確認できる `labextensions` フォルダ内の `@stellar-globe/jupyterlab-extension` シンボリックリンクを削除する必要があります。
 
+## テスト
+
+### TypeScript/フロントエンドのテスト
+
+このプロジェクトでは `jest` と `@testing-library/react` を使用してテストを実行します。
+
+#### テストの実行
+
+```bash
+# 一度だけテストを実行
+jlpm test
+
+# ウォッチモードでテストを実行
+jlpm test:watch
+
+# カバレッジレポート付きでテストを実行
+jlpm test:coverage
+```
+
+#### テストファイル
+
+テストファイルは `src/__tests__/` ディレクトリに配置されています：
+
+* `eventemitter.test.ts`: EventEmitterのテスト
+* `cropCanvasToAspectRatio.test.ts`: キャンバスのクロップ機能のテスト
+* `setup.ts`: テスト環境のセットアップ
+
+#### カバレッジ
+
+テストカバレッジは `coverage/` ディレクトリに生成されます。
+`coverage/lcov-report/index.html` をブラウザで開くと視覚的にカバレッジを確認できます。
+
+### Pythonのテスト
+
+Python側のテストは現在未実装です。将来的には以下のようなテストを追加予定：
+
+* パッケージのインストールテスト
+* JupyterLab拡張の登録テスト
+* 基本的な統合テスト
+
 ## パッケージング
 
 リリース手順については [RELEASE.md](RELEASE.md) を参照してください。
