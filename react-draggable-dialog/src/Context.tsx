@@ -36,7 +36,18 @@ export type DialogContextHandle = {
   rearrange: () => void
 }
 
-
+/**
+ * Context provider that manages multiple dialog instances.
+ * Handles dialog z-index ordering, positioning, and portal rendering.
+ * 
+ * @example
+ * ```tsx
+ * <DialogContext>
+ *   <Dialog title="Dialog 1">Content 1</Dialog>
+ *   <Dialog title="Dialog 2">Content 2</Dialog>
+ * </DialogContext>
+ * ```
+ */
 // eslint-disable-next-line react/display-name
 export const DialogContext = forwardRef<DialogContextHandle, Props>(({
   children,

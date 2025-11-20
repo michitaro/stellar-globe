@@ -25,7 +25,8 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:noninteractive": "vitest run",
-    "typed-scss-module": "typed-scss-modules src -n camel"
+    "typed-scss-module": "typed-scss-modules src -n camel",
+    "typedoc": "typedoc src/index.ts"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -54,6 +55,7 @@
     "jsdom": "^27.2.0",
     "sass": "^1.82.0",
     "typed-scss-modules": "^8.0.1",
+    "typedoc": "^0.27.3",
     "typescript": "^5.7.2",
     "vite": "^6.0.3",
     "vite-plugin-dts": "^4.3.0",

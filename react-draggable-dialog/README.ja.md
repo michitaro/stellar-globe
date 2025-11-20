@@ -49,3 +49,25 @@ function App() {
 npm install
 npm run dev
 ```
+
+ブラウザで `http://localhost:5173/` にアクセスすると、サンプルが表示されます。
+`example/Example.tsx` にサンプルコードが含まれています。
+
+## APIドキュメントの生成
+
+TypeDocを使用してAPIドキュメントを生成できます。
+
+```bash
+npm run typedoc
+```
+
+生成されたドキュメントは `docs` ディレクトリに出力されます。
+
+## サンプルコードの実行
+
+以下のコマンドで開発サーバーを起動し、サンプルコードを実行できます。
+
+```bash
+npm install
+npm run dev
+```

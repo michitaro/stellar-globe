@@ -43,7 +43,19 @@ export type DialogHandle = {
   autoResize: () => void
 }
 
-
+/**
+ * A draggable and resizable dialog component.
+ * Provides a window-like UI element with title bar and content area.
+ * 
+ * @example
+ * ```tsx
+ * <DialogContext>
+ *   <Dialog title="My Dialog" positionHint={{ left: 100, top: 100 }}>
+ *     <p>Dialog content</p>
+ *   </Dialog>
+ * </DialogContext>
+ * ```
+ */
 export const Dialog = forwardRef<DialogHandle, DialogProps>(function Dialog(props, ref) {
   const [autoResizeTrigger, setAutoSizeTrigger] = useState({})
 
