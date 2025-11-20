@@ -1,11 +1,11 @@
 # stellar_globe_jupyterlab_extension
 
-JupyterLabの拡張機能として、Stellar Globe (HSC Map) をJupyterLabのタブ内に表示するためのパッケージです。
+JupyterLabの拡張機能として、Stellar Globe (hscMap) をJupyterLabのタブ内に表示するためのパッケージです。
 
 ## 目的
 
-* JupyterLabのタブ内でHSC Mapを表示
-* PythonカーネルとHSC Map間の通信をJupyter Commで実現
+* JupyterLabのタブ内でhscMapを表示
+* PythonカーネルとhscMap間の通信をJupyter Commで実現
 * データ解析とビジュアライゼーションの統合環境を提供
 
 ## 動作環境
@@ -22,7 +22,7 @@ pip install stellar_globe_jupyterlab_extension
 
 ### TypeScript側 (`src/`)
 
-* `StellarGlobeWidget.tsx`: メインのReactウィジェット。HSC Mapアプリケーションをiframe内に表示
+* `StellarGlobeWidget.tsx`: メインのReactウィジェット。hscMapアプリケーションをiframe内に表示
 * `index.ts`: JupyterLab拡張のエントリーポイント
 * `types.ts`: 型定義
 * `eventemitter.ts`: イベントハンドリング
@@ -36,8 +36,8 @@ pip install stellar_globe_jupyterlab_extension
 ### 通信の仕組み
 
 1. Python側で `hscmap.Window()` を呼び出すとJupyter Commが作成される
-2. JupyterLab拡張がCommを検出し、新しいタブでHSC Mapを開く
-3. Python↔HSC Map間でComm経由でメッセージをやり取り
+2. JupyterLab拡張がCommを検出し、新しいタブでhscMapを開く
+3. Python↔hscMap間でComm経由でメッセージをやり取り
 
 ## 開発手順
 

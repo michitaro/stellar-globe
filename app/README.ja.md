@@ -1,7 +1,7 @@
 # @stellar-globe/app
 
 Stellar Globeプロジェクトのメインアプリケーションです。
-HSC Mapとして動作するWebアプリケーションの実装を含みます。
+hscMapとして動作するWebアプリケーションの実装を含みます。
 
 ## 目的
 

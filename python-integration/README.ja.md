@@ -1,6 +1,6 @@
 # Python Integration
 
-Python環境からStellar Globe (HSC Map) を利用・制御するためのツール群です。
+Python環境からStellar Globe (hscMap) を利用・制御するためのツール群です。
 
 ## 構成コンポーネント
 
@@ -10,10 +10,10 @@ JupyterLab内のウィジェットとして、またはリモートのビュー�
 
 ### `jupyterlab-extension`
 JupyterLab用の拡張機能です。
-JupyterLabのタブ内にHSC Mapを表示し、Pythonカーネルと通信するための機能を提供します。
+JupyterLabのタブ内にhscMapを表示し、Pythonカーネルと通信するための機能を提供します。
 
 ### `hscmap-server`
-JupyterLabを使用せずに、単独のWebサーバーとしてHSC Mapを配信・制御するためのサーバーアプリケーションです。
+JupyterLabを使用せずに、単独のWebサーバーとしてhscMapを配信・制御するためのサーバーアプリケーションです。
 
 ## 使用方法
 

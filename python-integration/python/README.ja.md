@@ -1,10 +1,10 @@
 # Python Integration - hscmap/stellarglobe
 
-Python環境からStellar Globe (HSC Map) アプリケーションを操作するためのクライアントライブラリです。
+Python環境からStellar Globe (hscMap) アプリケーションを操作するためのクライアントライブラリです。
 
 ## 目的
 
-* Python（特にJupyter環境）からHSC Mapを制御
+* Python（特にJupyter環境）からhscMapを制御
 * 型安全な通信の実現
 * データ可視化と解析の連携
 
@@ -25,7 +25,7 @@ make setup
 ## パッケージ構成
 
 ### `src/hscmap/`
-メインパッケージディレクトリ。HSC Mapとの通信機能を提供します。
+メインパッケージディレクトリ。hscMapとの通信機能を提供します。
 
 主要なモジュール：
 * `window.py`: ウィンドウ（ビューワーインスタンス）の管理

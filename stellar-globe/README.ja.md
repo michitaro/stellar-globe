@@ -35,7 +35,7 @@ if (container) {
 ### `Layer`
 地図上のレイヤーを表す基底クラスです。
 以下のようなサブクラスがあります。
-* `SspTileLayer`: HSC Map形式のタイル画像を表示するレイヤー。
+* `SspTileLayer`: hscMap形式のタイル画像を表示するレイヤー。
 * `PanLayer`, `ZoomLayer`, `RollLayer`: マウス操作による視点移動を提供するレイヤー。
 * `GridLayer`: 座標グリッドを表示するレイヤー。
 * `ConstellationLayer`: 星座線を表示するレイヤー。
