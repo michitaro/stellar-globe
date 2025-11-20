@@ -29,6 +29,7 @@
     "build-standalone": "tsc && vite build -c ./vite/vite.standalone.config.ts",
     "build-lib": "tsc && vite build -c ./vite/vite.lib.config.ts",
     "test": "vitest",
+    "test:noninteractive": "vitest run",
     "lint": "eslint .",
     "type-check": "tsc",
     "typed-scss-module": "typed-scss-modules src -n camel",

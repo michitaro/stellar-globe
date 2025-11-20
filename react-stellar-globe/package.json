@@ -21,7 +21,8 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "type-check": "tsc --noEmit",
-    "test": "vitest"
+    "test": "vitest",
+    "test:noninteractive": "vitest run"
   },
   "peerDependencies": {
     "@stellar-globe/stellar-globe": "file:../stellar-globe",

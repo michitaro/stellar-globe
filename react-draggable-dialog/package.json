@@ -24,6 +24,7 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test": "vitest",
+    "test:noninteractive": "vitest run",
     "typed-scss-module": "typed-scss-modules src -n camel"
   },
   "dependencies": {

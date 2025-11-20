@@ -22,7 +22,8 @@
     "preview": "vite preview",
     "type-check": "tsc --noEmit",
     "typedoc": "typedoc src/index.ts",
-    "test": "vitest"
+    "test": "vitest",
+    "test:noninteractive": "vitest run"
   },
   "devDependencies": {
     "@types/gzip-js": "^0.3.5",
