@@ -4,11 +4,11 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   test: {
-    include: ['./tests/**/*.{ts,tsx}'],
+    include: ['./tests/**/*.test.{ts,tsx}'],
     environment: 'jsdom',
     setupFiles: ['./tests/setup.ts'],
     coverage: {
-      reporter: ['html'],
+      reporter: ['html', 'text'],
       reportsDirectory: './coverage'
     },
   },
