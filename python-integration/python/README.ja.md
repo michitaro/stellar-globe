@@ -52,51 +52,145 @@ Python側とTypeScript側（app）で型の整合性を保つため、以下の�
    * `app/jsonschema/public.json` をPython側で読み込み
    
 2. **データモデルの自動生成**: 
+   `app/jsonschema/public.json` から Python の型ヒント付きデータクラスを自動生成します。
+   生成には `datamodel-code-generator` ライブラリを使用しており、
+   JSON SchemaからPydanticベースのデータクラスを生成します。
    ```bash
    make datamodel
    ```
-   このコマンドで `app/jsonschema/public.json` から Python の型ヒント付きデータクラスを生成
+   このコマンドにより、`src/hscmap/generated_types.py` が生成されます。
 
-3. **実行時検証**: `jsonschema` ライブラリを使用して送受信メッセージを検証
-   * Python→app: メッセージ送信前に検証
+3. **実行時検証**: 
+   `jsonschema` ライブラリを使用して送受信メッセージを検証します。
+   * Python→app: メッセージ送信前に `validators.py` で検証
    * app→Python: メッセージ受信時に検証
+   
+   検証は `jsonschema.validate()` 関数を使用し、JSON Schema仕様に準拠した厳密なチェックを行います。
 
 ### app 側の型チェック
 
-app側の型チェックについては `app/README.ja.md` を参照してください。
+app側では `ajv` ライブラリ（Another JSON Schema Validator）を使用して、
+同じJSON Schemaに基づいた実行時検証を行います。
+詳細は `app/README.ja.md` を参照してください。
 
 ### 型の整合性を保つ手順
 
 1. `app/types/commTools/index.d.ts` で型を更新
-2. `app` で `npm run refresh-types` を実行
+2. `app` で `npm run refresh-types` を実行してJSON Schemaを再生成
 3. `python-integration/python` で `make datamodel` を実行してPython型を再生成
 4. Python側のコードを更新して新しい型を使用
 
-## Makefile のターゲット説明
+## テスト
 
-### `make setup`
-開発環境のセットアップ。仮想環境の作成と依存パッケージのインストールを行います。
+このプロジェクトでは `pytest` を使用してテストを実行します。
+テストは `tests/` ディレクトリ配下にあり、カバレッジレポートも生成されます。
 
-### `make test`
-pytestを実行してテストを行います。カバレッジレポートも生成されます。
+### テストの実行
 
-### `make test-watch`
-テストをwatch modeで実行します。ファイル変更時に自動的に再実行されます。
+基本的なテスト実行（開発環境のセットアップ後）：
+```bash
+make test
+```
 
-### `make datamodel`
-`app/jsonschema/public.json` からPythonのデータモデルを自動生成します。
+これは以下のコマンドと等価です：
+```bash
+pytest --cov=hscmap --cov-report=html --ff -x -s tests
+```
 
-### `make typecheck`
-Pyright を使用して型チェックを行います。
+オプションの説明：
+* `--cov=hscmap`: `hscmap` パッケージのカバレッジを測定
+* `--cov-report=html`: HTMLレポートを `htmlcov/` に生成
+* `--ff`: 前回失敗したテストを最初に実行
+* `-x`: 最初の失敗で停止
+* `-s`: print文の出力を表示
 
-### `make typecheck-watch`
-型チェックをwatch modeで実行します。
+### ウォッチモード
 
-### `make build`
-配布用パッケージをビルドします（wheel, tar.gz）。
+ファイルの変更を監視して自動的にテストを再実行：
+```bash
+make test-watch
+```
 
-### `make deploy`
-ビルドしたパッケージをデプロイサーバーにアップロードします。
+### テストマーカー
+
+`pytest.ini` でテストマーカーが定義されています：
+* `slow`: 実行に時間がかかるテスト（デフォルトでスキップされます）
+* `hot`: 開発中のテスト
+
+slowマーク付きテストも実行する場合：
+```bash
+pytest -m "" tests
+```
+
+特定のマーカーのみ実行：
+```bash
+pytest -m "hot" tests
+```
+
+### カバレッジレポート
+
+テスト実行後、`htmlcov/index.html` をブラウザで開くことで、
+視覚的にカバレッジを確認できます。
+
+## 開発ツール
+
+### 開発環境のセットアップ
+
+仮想環境の作成と依存パッケージのインストールを行います：
+```bash
+make setup
+```
+
+このコマンドは以下を実行します：
+1. `.venv` ディレクトリに仮想環境を作成
+2. pip を最新版に更新
+3. 本パッケージを開発モード（`-e`）でインストール
+4. 開発用依存パッケージ（pytest、pyright など）をインストール
+
+### 型チェック
+
+Pyright を使用した静的型チェックを実行します：
+```bash
+make typecheck
+```
+
+ウォッチモードでファイル変更を監視：
+```bash
+make typecheck-watch
+```
+
+Pyrightは Microsoft が開発した高速なPython型チェッカーで、
+`pyrightconfig.json` で設定されています。
+
+### データモデルの生成
+
+`app/jsonschema/public.json` からPythonのデータモデルを自動生成します：
+```bash
+make datamodel
+```
+
+このコマンドは：
+1. 必要に応じて `app` ディレクトリで JSON Schema を生成
+2. `datamodel-code-generator` を実行して型ヒント付きクラスを生成
+3. 生成されたコードを `src/hscmap/generated_types.py` に配置
+
+### ビルド
+
+配布用パッケージ（wheel と tar.gz）をビルドします：
+```bash
+make build
+```
+
+生成されたパッケージは `dist/` ディレクトリに配置されます。
+
+### デプロイ
+
+ビルドしたパッケージをデプロイサーバーにアップロードします：
+```bash
+make deploy
+```
+
+これにより `hscmap.mtk.nao.ac.jp` サーバーにパッケージがアップロードされます。
 
 ## デプロイ先
 
