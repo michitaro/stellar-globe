@@ -72,6 +72,76 @@ Pythonから `app` のアプリケーションを操作することができま�
 これにより、データ解析環境であるJupyterLabなどと連携し、解析結果をビューワー上に可視化したり、ビューワーの状態をPythonから制御したりすることが可能です。
 `app` はJupyterLabのタブ内で動作させるか、または独自のHTTPサーバーを用いて動作させることができます。
 
+## ビルド手順
+
+プロジェクト全体をビルドするには、以下のコマンドを実行します：
+
+```bash
+bash ./build.bash
+```
+
+### 前提条件
+
+ビルドには以下の環境が必要です：
+
+* **Node.js**: バージョン 18 以降を推奨
+* **Python**: バージョン 3.12 以降（`python-integration` のビルドに必要）
+* **npm/yarn**: Node.js パッケージマネージャー
+
+### ビルドスクリプトの内容
+
+`build.bash` は以下の順序でビルドを実行します：
+
+1. **`stellar-globe`**: コアライブラリのビルド
+2. **`react-stellar-globe`**: Reactラッパーのビルド
+3. **`react-draggable-dialog`**: ダイアログコンポーネントのビルド
+4. **`app`**: メインアプリケーションのビルド
+   - 型検証用JSON Schemaの生成
+   - ライブラリ版のビルド
+   - スタンドアロン版のビルド
+5. **`python-integration/python`**: Pythonライブラリのビルド（Python環境が必要）
+6. **`python-integration/jupyterlab-extension`**: JupyterLab拡張のビルド
+7. **`python-integration/jupyterlite`**: JupyterLite用ビルド
+
+### 部分的なビルド
+
+特定のコンポーネントのみビルドする場合は、各ディレクトリで `make` または `npm run build` を実行します：
+
+```bash
+# stellar-globeのみビルド
+cd stellar-globe
+npm install
+npm run build
+
+# appのみビルド
+cd app
+npm install
+npm run build-lib        # ライブラリ版
+npm run build-standalone # スタンドアロン版
+```
+
+### トラブルシューティング
+
+**Python仮想環境のエラー**
+
+`python-integration/python` のビルドで仮想環境がない場合、事前に以下を実行してください：
+
+```bash
+cd python-integration/python
+make setup
+```
+
+**依存パッケージのエラー**
+
+各コンポーネントで `npm install` を実行して依存パッケージをインストールしてください：
+
+```bash
+cd stellar-globe && npm install
+cd ../react-stellar-globe && npm install
+cd ../react-draggable-dialog && npm install
+cd ../app && npm install
+```
+
 ## 本家リポジトリとミラー
 
 本家リポジトリは以下にあります:
