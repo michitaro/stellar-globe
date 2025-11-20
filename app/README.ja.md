@@ -95,6 +95,131 @@ Python側では、同じJSON Schemaを使用して型チェックを行います
 2. `npm run refresh-types` を実行してJSON Schemaを再生成
 3. Python側でも対応する型定義を更新
 
+## Pythonとのやりとりの詳細
+
+### 概要
+
+`app` はJupyter環境（JupyterLab、JupyterLite）からPythonを通じて制御できるように設計されています。
+通信は主にJupyter Commメカニズムを通じて行われ、iframe内で動作する `app` とJupyterLabのウィジェット間でメッセージをやり取りします。
+
+### メッセージの受信
+
+`app` は以下の2つのAPIを提供しており、外部からメッセージを受け取ります：
+
+1. **`AppHandle.dispatchAction()`**
+   - Redux アクションをディスパッチするAPI
+   - `app/src/app/index.tsx` の `AppHandle` 型で定義
+   - JupyterLab拡張は `ToApp.Dispatch` メッセージを受け取ると、このメソッドを呼び出す
+
+2. **直接的なメソッド呼び出し**
+   - `AppHandle` 型で定義されている各種メソッド（`globe()`, `getState()`, `activate()`, `deactivate()` など）
+   - iframe経由でなく、直接 `AppHandle` インスタンスにアクセスできる場合に利用
+
+### メッセージフロー
+
+#### Python → app
+
+1. **Pythonからのメッセージ送信**
+   ```python
+   # hscmapライブラリから
+   window.jump_to(ra=180, dec=0, fov=1)
+   ```
+
+2. **Jupyter Commでの転送**
+   - Pythonライブラリ (`python-integration/python`) が `ToApp` 型のメッセージをJupyter Comm経由で送信
+   - メッセージは `types/commTools/index.d.ts` で定義された型に準拠
+
+3. **JupyterLab拡張での受信**
+   - `python-integration/jupyterlab-extension/src/StellarGlobeWidget.tsx` の `onMsgFromPython()` 関数がメッセージを受信
+   - `validateToAppMessage()` で型チェック
+   - メッセージタイプに応じた処理を実行：
+     * `Dispatch`: Redux actionをdispatch
+     * `JumpTo`: 座標へのジャンプ
+     * `ShowError`: エラーダイアログの表示
+     * など
+
+4. **appでの処理**
+   - Redux actionの場合、通常のReduxフローで処理
+   - storeが更新され、UIが再レンダリング
+
+#### app → Python
+
+1. **appからのイベント**
+   - Redux storeの変更が `onStoreChange` コールバックで検出される
+   - `python-integration/jupyterlab-extension/src/StellarGlobeWidget.tsx` で実装
+
+2. **状態の差分計算**
+   - `StateManager` クラス (`app/src/commTools/storesync/StateManager.ts`) が状態の履歴を管理
+   - `generateJsonPatch()` でJSON Patch形式の差分を計算
+
+3. **Jupyter Commでの送信**
+   - `FromApp.StoreChanged` メッセージとして差分を送信
+   - Pythonライブラリが受信して、状態を同期
+
+4. **Pythonでの処理**
+   - 受信した差分をPython側の状態モデルに適用
+   - 必要に応じてコールバックを実行
+
+### メッセージの型定義
+
+#### ToApp（Python → app）
+
+`types/commTools/index.d.ts` で定義されています：
+
+* `Open`: 新しいウィンドウを開く
+* `Close`: ウィンドウを閉じる
+* `Dispatch`: Redux actionをdispatch
+* `ShowError`: エラーメッセージを表示
+* `JumpTo`: 指定座標にジャンプ
+* `QueryState`: 現在の状態を問い合わせ
+* など
+
+#### FromApp（app → Python）
+
+* `Ready`: appの初期化完了を通知
+* `Closed`: ウィンドウが閉じられた
+* `StoreChanged`: Redux storeが変更された（差分情報を含む）
+* `QueryStateResponse`: 状態問い合わせへの応答
+
+### 型安全性の確保
+
+#### 実行時検証
+
+1. **受信時の検証**
+   - `validateToAppMessage()`: Python→appのメッセージを検証
+   - `validateAction()`: Redux actionを検証
+   - `ajv` ライブラリを使用してJSON Schemaベースの検証
+
+2. **送信時の検証**
+   - TypeScriptの型システムで送信メッセージの型をチェック
+   - コンパイル時にエラーを検出
+
+#### 開発時の型チェック
+
+1. **TypeScript型定義**
+   - `types/commTools/index.d.ts` で全メッセージの型を定義
+   - 実装コードで型を参照し、コンパイラがチェック
+
+2. **Python型定義**
+   - `app/jsonschema/public.json` から自動生成
+   - `dataclasses-json` を使用して型ヒント付きクラスを生成
+
+### ストア同期の仕組み
+
+`StateManager` クラスは以下の機能を提供します：
+
+1. **履歴管理**
+   - 直近N個の状態を保持（デフォルト5個）
+   - リビジョン番号で管理
+
+2. **差分計算**
+   - `generateJsonPatch()` でJSON Patch (RFC 6902) 形式の差分を生成
+   - 大きな状態でも効率的に転送
+
+3. **部分的な同期**
+   - `patchFrom(baseRevision)` で指定リビジョンからの差分を取得
+   - ネットワークの遅延やロスに対応
+
 ## 型情報の更新
 
 型定義ファイルを更新する場合は以下のコマンドを実行してください。
