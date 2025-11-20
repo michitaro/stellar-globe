@@ -274,9 +274,11 @@ function saveFileOnJupyterLiteIndexedDB(filename: string, content: string, optio
 
 function rootPath() {
   // http://127.0.0.1:8000/lab/index.html → /
+  // http://127.0.0.1:8000/lab/ → /
   // http://127.0.0.1:8000/some-path/lab/index.html → /some-path
+  // http://127.0.0.1:8000/some-path/lab/ → /some-path
   const path = window.location.pathname
-  const match = path.match(/^(.*\/)lab\/index.html$/)
+  const match = path.match(/^(.*\/)lab\/(?:index\.html)?$/)
   if (match) {
     return match[1]
   }
