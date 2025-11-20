@@ -135,6 +135,9 @@ function lineBodyPointingObject(layer: MouseLayer) {
         return { hit: false, passThrough: false }
       }
       const B = mat3.invert(mat3.create(), A)
+      if (!B) {
+        return { hit: false, passThrough: false }
+      }
       const q = vec3.transformMat3(vec3.create(), p, B)
       const d = 1.e-2 * globe.camera.fovy
       const hit = q[0] >= 0 && q[1] >= 0 && Math.abs(q[2]) <= d

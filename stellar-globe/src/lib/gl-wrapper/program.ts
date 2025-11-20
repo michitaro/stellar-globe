@@ -89,21 +89,21 @@ export class Program {
   uniformMatrix4fv(matrices: { [name: string]: Float32Array | mat4 }, transpose: boolean = false) {
     for (let name in matrices) {
       let matrix = matrices[name]
-      this.gl.uniformMatrix4fv(this.uniformLocation(name), transpose, matrix)
+      this.gl.uniformMatrix4fv(this.uniformLocation(name), transpose, matrix as Float32Array)
     }
   }
 
   uniformMatrix3fv(matrices: { [name: string]: Float32Array | mat3 }, transpose: boolean = false) {
     for (let name in matrices) {
       let matrix = matrices[name]
-      this.gl.uniformMatrix3fv(this.uniformLocation(name), transpose, matrix)
+      this.gl.uniformMatrix3fv(this.uniformLocation(name), transpose, matrix as Float32Array)
     }
   }
 
   uniformMatrix2fv(matrices: { [name: string]: Float32Array | mat2 }, transpose: boolean = false) {
     for (let name in matrices) {
       let matrix = matrices[name]
-      this.gl.uniformMatrix2fv(this.uniformLocation(name), transpose, matrix)
+      this.gl.uniformMatrix2fv(this.uniformLocation(name), transpose, matrix as Float32Array)
     }
   }
 

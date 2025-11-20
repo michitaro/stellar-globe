@@ -23,7 +23,7 @@ export class MvpMatrix {
       [b[12] - (b[8] * b[15]) / b[11], b[13] - (b[9] * b[15]) / b[11], b[14] - (b[10] * b[15]) / b[11]]
     // |this.direction| == 1 if pv does not have scale matrix in its factors
     const up: vec3 = [b[4] - (b[7] * b[8]) / b[11], b[5] - (b[7] * b[9]) / b[11], b[6] - (b[7] * b[10]) / b[11]]
-    this.up = up
+    this.up = up as V3
     const right = [b[0] - (b[3] * b[8]) / b[11], b[1] - (b[3] * b[9]) / b[11], b[2] - (b[3] * b[10]) / b[11]]
     // @ts-ignore
     const upLen = vec3.len(up)
