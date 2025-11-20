@@ -53,3 +53,16 @@ function App() {
 npm install
 npm run dev
 ```
+
+ブラウザで `http://localhost:5173/examples/` にアクセスすると、サンプル一覧が表示されます。
+`examples/BasicUsage/` には基本的な使用例が含まれています。
+
+## APIドキュメントの生成
+
+TypeDocを使用してAPIドキュメントを生成できます。
+
+```bash
+npm run typedoc
+```
+
+生成されたドキュメントは `docs` ディレクトリに出力されます。

@@ -22,7 +22,8 @@
     "preview": "vite preview",
     "type-check": "tsc --noEmit",
     "test": "vitest",
-    "test:noninteractive": "vitest run"
+    "test:noninteractive": "vitest run",
+    "typedoc": "typedoc src/index.ts"
   },
   "peerDependencies": {
     "@stellar-globe/stellar-globe": "file:../stellar-globe",

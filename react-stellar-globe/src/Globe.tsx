@@ -8,7 +8,19 @@ type GlobeProps = GlobeOptions & GlobeHooks & {
   children?: ReactNode
 }
 
-
+/**
+ * The root component for the Stellar Globe React viewer.
+ * This component manages the Globe instance and provides context for child layer components.
+ * 
+ * @example
+ * ```tsx
+ * <Globe$>
+ *   <PanLayer$ />
+ *   <ZoomLayer$ />
+ *   <GridLayer$ />
+ * </Globe$>
+ * ```
+ */
 export const Globe$ = forwardRef<GlobeHandle, GlobeProps>(function Globe$(
   {
     children,
