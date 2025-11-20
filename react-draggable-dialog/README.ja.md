@@ -40,3 +40,12 @@ function App() {
 
 ### `DarkDialog`
 `Dialog` のスタイルバリエーション（ダークテーマ用）です。
+
+## サンプルコードの実行
+
+以下のコマンドで開発サーバーを起動し、サンプルコードを実行できます。
+
+```bash
+npm install
+npm run dev
+```
