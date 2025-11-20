@@ -1,12 +1,12 @@
 # Python Integration - hscmap/stellarglobe
 
-Client library for controlling Stellar Globe (HSC Map) application from Python environments.
+A client library for operating the Stellar Globe (hscMap) application from Python environments.
 
 ## Purpose
 
-* Control HSC Map from Python (especially Jupyter environments)
+* Control hscMap from Python (especially in Jupyter environments)
 * Achieve type-safe communication
-* Integration of data visualization and analysis
+* Integrate data visualization and analysis
 
 ## Installation
 
@@ -14,7 +14,7 @@ Client library for controlling Stellar Globe (HSC Map) application from Python e
 pip install hscmap
 ```
 
-Or for development version:
+Or development version:
 
 ```bash
 git clone <repository>
@@ -25,9 +25,9 @@ make setup
 ## Package Structure
 
 ### `src/hscmap/`
-Main package directory. Provides communication functionality with HSC Map.
+Main package directory. Provides communication functionality with hscMap.
 
-Key modules:
+Main modules:
 * `window.py`: Window (viewer instance) management
 * `comm.py`: Jupyter Comm communication implementation
 * `types.py`: Type definitions
@@ -40,63 +40,156 @@ General astronomical calculations and utilities (for future extensions)
 Test code using pytest
 
 ### `docs/`
-Documentation source using Sphinx
+Sphinx documentation source
 
 ## Type Checking Mechanism for Integration with app
 
-To maintain type consistency between Python and TypeScript (app), the following mechanism is implemented.
+To maintain type consistency between Python and TypeScript (`app`) sides, the following mechanism is implemented.
 
 ### Mechanism
 
 1. **Common JSON Schema**: Use JSON Schema generated on the `app` side
    * Load `app/jsonschema/public.json` on Python side
    
-2. **Automatic Data Model Generation**: 
+2. **Automatic data model generation**: 
+   Automatically generate Python type-hinted dataclasses from `app/jsonschema/public.json`.
+   Uses the `datamodel-code-generator` library to generate Pydantic-based dataclasses from JSON Schema.
    ```bash
    make datamodel
    ```
-   This command generates Python dataclasses with type hints from `app/jsonschema/public.json`
+   This command generates `src/hscmap/generated_types.py`.
 
-3. **Runtime Validation**: Validate sent and received messages using the `jsonschema` library
-   * Python→app: Validate before sending message
-   * app→Python: Validate when receiving message
+3. **Runtime validation**: 
+   Validate sent and received messages using the `jsonschema` library.
+   * Python→app: Validate in `validators.py` before sending messages
+   * app→Python: Validate when receiving messages
+   
+   Validation uses `jsonschema.validate()` function for strict checking compliant with JSON Schema specification.
 
 ### Type Checking on app Side
 
-For type checking on the app side, refer to `app/README.md`.
+On the app side, runtime validation is performed using the `ajv` library (Another JSON Schema Validator)
+based on the same JSON Schema.
+See `app/README.ja.md` for details.
 
 ### Procedure to Maintain Type Consistency
 
 1. Update types in `app/types/commTools/index.d.ts`
-2. Run `npm run refresh-types` in `app`
+2. Run `npm run refresh-types` in `app` to regenerate JSON Schema
 3. Run `make datamodel` in `python-integration/python` to regenerate Python types
 4. Update Python code to use new types
 
-## Makefile Target Descriptions
+## Testing
 
-### `make setup`
-Set up development environment. Creates virtual environment and installs dependencies.
+This project uses `pytest` to run tests.
+Tests are located in the `tests/` directory and coverage reports are also generated.
 
-### `make test`
-Run pytest to execute tests. Coverage reports are also generated.
+### Running Tests
 
-### `make test-watch`
-Run tests in watch mode. Automatically re-runs on file changes.
+Basic test execution (after setting up development environment):
+```bash
+make test
+```
 
-### `make datamodel`
-Automatically generate Python data models from `app/jsonschema/public.json`.
+This is equivalent to:
+```bash
+pytest --cov=hscmap --cov-report=html --ff -x -s tests
+```
 
-### `make typecheck`
-Perform type checking using Pyright.
+Option descriptions:
+* `--cov=hscmap`: Measure coverage of `hscmap` package
+* `--cov-report=html`: Generate HTML report in `htmlcov/`
+* `--ff`: Run previously failed tests first
+* `-x`: Stop at first failure
+* `-s`: Display print statement output
 
-### `make typecheck-watch`
-Run type checking in watch mode.
+### Watch Mode
 
-### `make build`
-Build distribution packages (wheel, tar.gz).
+Automatically rerun tests when files change:
+```bash
+make test-watch
+```
 
-### `make deploy`
-Upload built packages to deployment server.
+### Test Markers
+
+Test markers are defined in `pytest.ini`:
+* `slow`: Tests that take time to run (skipped by default)
+* `hot`: Tests under development
+
+To run tests marked as slow:
+```bash
+pytest -m "" tests
+```
+
+Run only specific markers:
+```bash
+pytest -m "hot" tests
+```
+
+### Coverage Report
+
+After running tests, open `htmlcov/index.html` in a browser
+to view coverage visually.
+
+## Development Tools
+
+### Development Environment Setup
+
+Create virtual environment and install dependencies:
+```bash
+make setup
+```
+
+This command:
+1. Create virtual environment in `.venv` directory
+2. Update pip to latest version
+3. Install this package in development mode (`-e`)
+4. Install development dependencies (pytest, pyright, etc.)
+
+### Type Checking
+
+Run static type checking using Pyright:
+```bash
+make typecheck
+```
+
+Watch mode to monitor file changes:
+```bash
+make typecheck-watch
+```
+
+Pyright is a fast Python type checker developed by Microsoft,
+configured in `pyrightconfig.json`.
+
+### Data Model Generation
+
+Auto-generate Python data models from `app/jsonschema/public.json`:
+```bash
+make datamodel
+```
+
+This command:
+1. Generate JSON Schema in `app` directory if needed
+2. Run `datamodel-code-generator` to generate type-hinted classes
+3. Place generated code in `src/hscmap/generated_types.py`
+
+### Build
+
+Build distribution packages (wheel and tar.gz):
+```bash
+make build
+```
+
+Generated packages are placed in `dist/` directory.
+
+### Deploy
+
+Upload built packages to deployment server:
+```bash
+make deploy
+```
+
+This uploads packages to `hscmap.mtk.nao.ac.jp` server.
 
 ## Deployment Destination
 
@@ -104,7 +197,4 @@ The following files are placed under `https://hscmap.mtk.nao.ac.jp/hscMap5/`:
 
 * `app/`: HSC Map application main body
 * `jupyter/`: JupyterLab extension
-* `python/`: Python package
-  * `notebooks/`: Tutorial notebooks
-  * `docs/`: Sphinx documentation
-  * `dist/`: Distribution packages
+* `python/`: Python client library

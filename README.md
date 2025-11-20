@@ -1,7 +1,12 @@
+<!-- 
+* Component names like app, stellar-globe, react-stellar-globe, react-draggable-dialog should be wrapped in ``
+-->
 # Stellar Globe
 
 Stellar Globe is an all-sky viewer project used in the Hyper Suprime-Cam (HSC) Public Data Release and other applications.
-It runs in web browsers and aims to display large-scale astronomical image data quickly and flexibly.
+It runs in web browsers and is designed to display large-scale astronomical image data quickly and flexibly.
+
+**This application is being developed as part of the [HSC-SSP project](https://hsc.mtk.nao.ac.jp/ssp/) at the National Astronomical Observatory of Japan.**
 
 ## Key Features
 
@@ -66,6 +71,76 @@ graph TD
 The `app` application can be controlled from Python.
 This enables integration with data analysis environments like JupyterLab, allowing visualization of analysis results in the viewer and control of viewer state from Python.
 The `app` can run within a JupyterLab tab or using a custom HTTP server.
+
+## Build Instructions
+
+To build the entire project, run the following command:
+
+```bash
+bash ./build.bash
+```
+
+### Prerequisites
+
+The build requires the following environment:
+
+* **Node.js**: Version 18 or later recommended
+* **Python**: Version 3.12 or later (required for building `python-integration`)
+* **npm/yarn**: Node.js package manager
+
+### Build Script Details
+
+`build.bash` executes builds in the following order:
+
+1. **`stellar-globe`**: Build the core library
+2. **`react-stellar-globe`**: Build the React wrapper
+3. **`react-draggable-dialog`**: Build the dialog component
+4. **`app`**: Build the main application
+   - Generate JSON Schema for type validation
+   - Build library version
+   - Build standalone version
+5. **`python-integration/python`**: Build Python library (requires Python environment)
+6. **`python-integration/jupyterlab-extension`**: Build JupyterLab extension
+7. **`python-integration/jupyterlite`**: Build for JupyterLite
+
+### Partial Build
+
+To build only specific components, run `make` or `npm run build` in each directory:
+
+```bash
+# Build only stellar-globe
+cd stellar-globe
+npm install
+npm run build
+
+# Build only app
+cd app
+npm install
+npm run build-lib        # Library version
+npm run build-standalone # Standalone version
+```
+
+### Troubleshooting
+
+**Python Virtual Environment Errors**
+
+If the build for `python-integration/python` fails due to missing virtual environment, run the following first:
+
+```bash
+cd python-integration/python
+make setup
+```
+
+**Dependency Package Errors**
+
+Install dependencies for each component by running `npm install`:
+
+```bash
+cd stellar-globe && npm install
+cd ../react-stellar-globe && npm install
+cd ../react-draggable-dialog && npm install
+cd ../app && npm install
+```
 
 ## Main Repository and Mirrors
 

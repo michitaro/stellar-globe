@@ -68,10 +68,3 @@ npm run typedoc
 ```
 
 The generated documentation will be output to the `docs` directory.
-
-You can start the development server and run sample code with the following commands:
-
-```bash
-npm install
-npm run dev
-```
