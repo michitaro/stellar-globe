@@ -1,4 +1,10 @@
-.PHONY: dev
+.PHONY: dev setup test
+
+setup:
+	uv sync --dev
 
 dev:
-	./.venv/bin/uvicorn hscmapserver:app --reload
+	uv run uvicorn hscmapserver:app --reload
+
+test:
+	uv run pytest

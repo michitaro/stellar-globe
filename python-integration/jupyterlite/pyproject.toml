@@ -1,0 +1,26 @@
+[project]
+name = "stellar-globe-jupyterlite"
+version = "0.0.0"
+description = "JupyterLite build for Stellar Globe"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Framework :: Jupyter",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+dependencies = []
+
+[tool.uv]
+dev-dependencies = [
+    "jupyterlab",
+    "jupyterlite-core",
+    "jupyterlite-pyodide-kernel",
+]

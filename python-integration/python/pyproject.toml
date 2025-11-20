@@ -1,0 +1,58 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hscmap"
+version = "0.0.0"
+description = "Python client library for controlling hscMap viewer"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Framework :: Jupyter",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "pytest-watch",
+    "pandas",
+    "numpy",
+    "requests",
+    "datamodel-code-generator==0.25.*",
+    "build",
+    "sphinx",
+    "websockets",
+]
+hscmapserver = [
+    "websockets",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=8.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-watch>=4.2.0",
+    "pandas>=2.0.0",
+    "numpy>=1.24.0",
+    "requests>=2.31.0",
+    "datamodel-code-generator==0.25.*",
+    "build>=1.0.0",
+    "sphinx>=7.0.0",
+    "websockets>=12.0",
+]
