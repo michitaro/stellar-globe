@@ -1,41 +1,45 @@
-## 概要
+# @stellar-globe/app
 
-JupyterLiteの登場によりJupyterはクライアントサイドで完結する環境で動くようになった。
-JupyterLiteはinteractiveなmatplotlib, numpy, astropyなどが動作する。
+Stellar Globeプロジェクトのメインアプリケーションです。
+HSC Mapとして動作するWebアプリケーションの実装を含みます。
 
-hscMap4に存在していた、グラフ表示機能、ウインドウ機能などをJupyterの機能を利用することで実現できる。
-Jupyterの機能で実現できる機能はhscMap本体には含めないこととしコード量削減をはかる。
+## 目的
 
-## 設計
+* 全天ビューワーアプリケーションの提供
+* Jupyter環境（JupyterLab, JupyterLite）との連携
+* ユーザーインターフェースの提供
 
-* Reduxを使用
-  * 自動的にJupyterから呼び出せるAPIが整備される。
-  * （RTKにより以前に比べRedux関連のコード記述量が減っている）
+## 使用方法
 
-## 型情報のエクスポート
+### 開発サーバーの起動
 
-* RTKによって作られる方は`vite-dts-plugin`を使用して、型情報をエクスポートすることはできなかった。
-* `types/index.d.ts`は手動で作っている。
-* ↑の型は`export.ts`で矛盾がないかコンパイル時にチェックする。
-      
-## 型チェッカーの更新
+```bash
+npm install
+npm run dev
+```
+
+### ビルド
+
+```bash
+npm run build-lib       # ライブラリとしてビルド
+npm run build-standalone # スタンドアロンアプリとしてビルド
+```
+
+## 設計方針
+
+* **Reduxの利用**: アプリケーションの状態管理にRedux (Redux Toolkit) を使用しています。これにより、外部（Pythonなど）からの状態操作を容易にしています。
+* **Jupyter連携**: Jupyterの機能を利用することで、グラフ表示などの高度な解析機能を委譲し、本体の軽量化を図っています。
+
+## 主要な機能
+
+* 全天画像の表示・操作
+* カタログデータのオーバーレイ
+* 外部連携API (CommTools)
+
+## 型情報の更新
+
+型定義ファイルを更新する場合は以下のコマンドを実行してください。
 
 ```bash
 npm run refresh-types
 ```
-
-## TODO
-
-* [x] 右クリック
-  * [x] SIMBAD
-* [x] カタログdialog
-* [ ] ~~カタログクリックイベント~~
-* [x] Jupyter Region
-* [ ] 位置、階調同期Dock
-
-
-## Trouble Shooting
-
-#### typesVersions in package.json
-
-https://www.npmjs.com/package/typescript-subpath-exports-workaround

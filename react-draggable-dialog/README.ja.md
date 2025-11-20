@@ -1,61 +1,42 @@
-* 検討
-  * [ ] drag中にrenderingが起きると位置が飛ぶ
-    * dnd-kitに由来するようだ
-      * transformの値がジャンプしている
-  * [x] 初回移動まではpositionHintを反映
-    * positionHintにright, bottomが指定された場合や、leftが50vwなどの場合に初回移動まではその設定を反映する
-  * [x] minmax
-    * sizeHintで指定？
-    * CSSの指定ができるとよい
-  * [ ] タイトルバーにフォーカスが当たってる時に矢印キーを押すとキーボードイベントがstopされない
-  * [x] 初期visible=falseの場合
-  * [x] hintされている場所がすでに埋まっている場合
-  * [x] rememberPosition prop
-    * falseの場合、初回表示時にreposition
-  * [x] contextにpositionFinderを指定可能に
+# @stellar-globe/react-draggable-dialog
 
-* Dialog
-  * 概要
-    * dragできる
-    * クリックでz-indexを調整
-    * 大きさの決め方
-      * 指定なし
-        * resizable: false
-          * 常に内容により決まる
-        * resizable: true
-          * マウント時に内容により決まる
-          * サイズ変更後はサイズが保持される
-          * サイズ変更前は内容により自動で変わる
-      * 指定あり
-        * width, heightで指定。(ピクセル単位でなくても良い。right, leftの組み合わせでは決められない)
-        * resizable: false
-          * 指定と内容により決まる (widthだけの指定だと高さが可変になったり。)
-        * resizable: true
-          * マウント時に指定と内容により決まる
-          * 以後の内容の変更によっては変わらない
-    * 初期位置の決め方
-      * 指定あり
-        * マウント時にその値で決める
-        * left, top, right, bottomで決める
-      * 指定なし
-        * マウント時に自動で決める
-    * 実装
-      * useState({ size, position })
-        * positionのみの場合がある
+ドラッグ移動やリサイズが可能なダイアログボックスを提供するReactコンポーネントライブラリです。
+`stellar-globe` アプリケーションのUI構築に使用されていますが、独立して利用することも可能です。
 
-  * props
-    * title
-    * children
-    * resizable: boolean
-    * positionHint?
-    * size?
+## 目的
 
-* Position = { left, top }
-* Size = { width, height }
-* Rect = Position & Size
+* ドラッグ可能なウィンドウシステムの提供
+* ウィンドウの重なり順（Z-index）の管理
+* リサイズ機能
 
-* Resizable
-  * props
-    * nodeRef
-    * rect: Rect | undefined
-    * onChange: (rect: Rect) => void
+## 使用方法
+
+アプリケーション全体（またはダイアログを表示したい領域）を `DialogContext` で囲み、その内部で `Dialog` コンポーネントを使用します。
+
+```tsx
+import { DialogContext, Dialog } from "@stellar-globe/react-draggable-dialog";
+import "@stellar-globe/react-draggable-dialog/style.css"; // スタイルの読み込みが必要
+
+function App() {
+  return (
+    <DialogContext>
+      <Dialog title="サンプルダイアログ" initialPosition={{ x: 100, y: 100 }}>
+        <p>ダイアログの内容です。</p>
+      </Dialog>
+    </DialogContext>
+  );
+}
+```
+
+## 主要なコンポーネント
+
+### `DialogContext`
+ダイアログの状態（位置、サイズ、フォーカスなど）を管理するコンテキストプロバイダーです。
+複数のダイアログ間の重なり順を制御します。
+
+### `Dialog`
+基本的なダイアログコンポーネントです。
+タイトルバーによるドラッグ移動、端によるリサイズが可能です。
+
+### `DarkDialog`
+`Dialog` のスタイルバリエーション（ダークテーマ用）です。
