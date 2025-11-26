@@ -1,5 +1,5 @@
 import { Program } from '../lib/gl-wrapper'
-import { VisualEffectParams } from '.'
+import { VisualEffectParams } from './VisualEffectParams'
 
 
 /**
