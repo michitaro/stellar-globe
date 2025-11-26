@@ -42,8 +42,19 @@ import * as math from './utils/math'
 export { text2imageData } from "./utils/text2imagedata"
 export * as triangleStrip from './renderer/triangle_renderer'
 export { testEchoWorker } from './devel/echo-worker'
-export { DistortionParams } from './distorters'
-export { PlanetariumDistorterParams } from './distorters/PlanetariumDistorterParams'
+export { 
+  VisualEffectParams, 
+  DistortionParams,
+  PlanetariumEffect,
+  MotionBlurEffect,
+  GlowEffect,
+  FrostedGlassEffect,
+  RippleEffect,
+  WarpEffect,
+  PassThroughEffect,
+} from './visualEffects'
+// 後方互換性のためのエイリアス
+export { PlanetariumEffect as PlanetariumDistorterParams } from './visualEffects/PlanetariumEffect'
 export type { LayerConstructorRestParameters } from './globe'
 export { ClickableMarkerLayer, MarkerLayer } from './layer/marker_layer'
 export { PathLayer } from './layer/path_layer'

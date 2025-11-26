@@ -1,5 +1,5 @@
 import { wegblProfile } from "~/devel/webgl-profiler/utils"
-import { Distorter, DistortionParams } from "~/distorters"
+import { VisualEffectRenderer, VisualEffectParams } from "~/visualEffects"
 import { Layer } from "~/layer/layer"
 import { PanLayer } from "~/layer/pan_layer"
 import { RollLayer } from "~/layer/roll_layer"
@@ -16,11 +16,13 @@ import { PointerEventManager } from "./pointer_event"
 type GlobeOptions = {
   preserveBuffer?: boolean
   viewOptions?: ConstructorParameters<typeof Camera>[1]
-  distortion?: DistortionParams
+  /** ビジュアルエフェクト（後処理） */
+  visualEffect?: VisualEffectParams
+  /** @deprecated visualEffect を使用してください */
+  distortion?: VisualEffectParams
   noDefaultLayers?: boolean
   jsdomTest?: boolean
   dataRepository?: string
-  webgl?: 'webgl' | 'webgl2'
 }
 
 /**
@@ -42,7 +44,8 @@ export class Globe {
 
   readonly dataRepository: string
 
-  private readonly distorter?: Distorter
+  private visualEffectRenderer?: VisualEffectRenderer
+  private _visualEffect?: VisualEffectParams
 
   constructor(
     readonly containerElement: HTMLElement,
@@ -63,10 +66,10 @@ export class Globe {
 
     this.camera = new Camera(this, { aspectRatio: this.canvas.aspectRatio, ...(options.viewOptions ?? {}) })
 
-    // TODO: cleanup
-    if (options.distortion) {
-      this.distorter = new Distorter(this.gl, options.distortion)
-      this.onRelease(() => this.distorter!.release())
+    // ビジュアルエフェクトの設定（後方互換性のためdistortionもサポート）
+    const effectParams = options.visualEffect ?? options.distortion
+    if (effectParams) {
+      this.setVisualEffect(effectParams)
     }
 
     if (!options.noDefaultLayers) {
@@ -78,6 +81,36 @@ export class Globe {
     }
 
     this.onRelease(() => this._alreadyReleased = true)
+    this.onRelease(() => {
+      if (this.visualEffectRenderer) {
+        this.visualEffectRenderer.release()
+      }
+    })
+  }
+
+  /**
+   * ビジュアルエフェクトを設定する
+   * @param effect 設定するエフェクト（nullで解除）
+   */
+  setVisualEffect(effect: VisualEffectParams | null) {
+    if (this.visualEffectRenderer) {
+      this.visualEffectRenderer.release()
+      this.visualEffectRenderer = undefined
+    }
+    if (effect) {
+      this._visualEffect = effect
+      this.visualEffectRenderer = new VisualEffectRenderer(this.gl, effect)
+    } else {
+      this._visualEffect = undefined
+    }
+    this.requestRefresh()
+  }
+
+  /**
+   * 現在のビジュアルエフェクトを取得
+   */
+  get visualEffect(): VisualEffectParams | undefined {
+    return this._visualEffect
   }
 
   private _alreadyReleased = false
@@ -190,9 +223,9 @@ export class Globe {
       gl.colorMask(true, true, true, true)
       gl.clearColor(0, 0, 0, 1)
       gl.clear(gl.COLOR_BUFFER_BIT)
-      if (this.distorter) {
-        this.distorter.pipeAndDraw(() => {
-          const scale = this.distorter!.params.scale
+      if (this.visualEffectRenderer && this._visualEffect) {
+        this.visualEffectRenderer.pipeAndDraw(() => {
+          const scale = this._visualEffect!.scale
           const { width: width0, height: height0 } = canvasEl
           canvasEl.width = Math.floor(canvasEl.width * scale)
           canvasEl.height = Math.floor(canvasEl.height * scale)

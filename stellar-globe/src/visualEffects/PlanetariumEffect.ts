@@ -1,11 +1,17 @@
 import { Program } from '../lib/gl-wrapper'
-import { DistortionParams } from '.'
+import { VisualEffectParams } from '.'
 
 
-
-export class PlanetariumDistorterParams extends DistortionParams {
+/**
+ * プラネタリウム投影用エフェクト
+ * 通常の画像を魚眼レンズのような円形投影に変換する
+ */
+export class PlanetariumEffect extends VisualEffectParams {
+  /** ガンマ補正値 */
   gamma = 1;
+  /** アルファ（明るさ）係数 */
   alpha = 1;
+  /** レンダリングスケール */
   scale = 1.5;
 
   fragShader() {

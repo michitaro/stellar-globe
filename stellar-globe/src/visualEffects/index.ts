@@ -2,21 +2,47 @@ import { AttribList, Program } from '../lib/gl-wrapper'
 import { CaptureTarget } from '../globe/CaptureTarget'
 
 
-export abstract class DistortionParams {
+/**
+ * ビジュアルエフェクトのパラメータを定義する抽象クラス
+ * 各エフェクトはこのクラスを継承して実装する
+ */
+export abstract class VisualEffectParams {
+  /** レンダリングスケール（高解像度でレンダリングしてから縮小） */
   scale = 1
+  /** フラグメントシェーダーのソースコードを返す */
   abstract fragShader(): string
+  /** シェーダーのuniform変数を設定 */
   abstract setUniforms(program: Program): void
+  /** エフェクトの更新処理（アニメーション用） */
+  update?(deltaTime: number): void
 }
 
+// 後方互換性のためのエイリアス
+/** @deprecated VisualEffectParams を使用してください */
+export const DistortionParams = VisualEffectParams
 
-export class Distorter {
+// エフェクトの再エクスポート
+export { PlanetariumEffect } from './PlanetariumEffect'
+export { MotionBlurEffect } from './MotionBlurEffect'
+export { GlowEffect } from './GlowEffect'
+export { FrostedGlassEffect } from './FrostedGlassEffect'
+export { RippleEffect } from './RippleEffect'
+export { WarpEffect } from './WarpEffect'
+export { PassThroughEffect } from './PassThroughEffect'
+
+
+/**
+ * ビジュアルエフェクトのレンダラー
+ * シーンをオフスクリーンにレンダリングし、エフェクトを適用して画面に描画する
+ */
+export class VisualEffectRenderer {
   private attribList: AttribList
   private program: Program
   private captureTarget: CaptureTarget
 
   constructor(
     readonly gl: WebGL2RenderingContext,
-    readonly params: DistortionParams,
+    readonly params: VisualEffectParams,
   ) {
     this.captureTarget = new CaptureTarget(gl)
     this.attribList = new AttribList(gl, {
