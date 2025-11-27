@@ -99,7 +99,7 @@ export class Globe {
     }
     if (effect) {
       this._visualEffect = effect
-      this.visualEffectRenderer = new VisualEffectRenderer(this.gl, effect)
+      this.visualEffectRenderer = new VisualEffectRenderer(this.gl, effect, this)
     } else {
       this._visualEffect = undefined
     }

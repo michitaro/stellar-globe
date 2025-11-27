@@ -5,6 +5,10 @@ import { MarkerType, markerTypes } from '~/layer/marker_layer/marker'
 import { 
   VisualEffectParams,
   GlowEffect, 
+  GaussianBlurEffect,
+  BloomEffect,
+  AfterimageEffect,
+  TransitionEffect,
   FrostedGlassEffect, 
   RippleEffect, 
   WarpEffect,
@@ -158,6 +162,10 @@ function initVisualEffectsDemo(globe: Globe) {
     { key: '3', name: 'Ripple (波紋)', effect: new RippleEffect() },
     { key: '4', name: 'Warp (ワープ)', effect: new WarpEffect() },
     { key: '5', name: 'Planetarium (プラネタリウム)', effect: new PlanetariumEffect() },
+    { key: '6', name: 'Gaussian Blur (ガウシアンブラー)', effect: new GaussianBlurEffect() },
+    { key: '7', name: 'Bloom (ブルーム)', effect: new BloomEffect() },
+    { key: '8', name: 'Afterimage (残像)', effect: new AfterimageEffect() },
+    { key: '9', name: 'Transition (トランジション)', effect: new TransitionEffect() },
   ]
 
   let currentEffectIndex = 0
@@ -234,7 +242,8 @@ function initVisualEffectsDemo(globe: Globe) {
       <div style="font-weight: bold; margin-bottom: 8px;">Visual Effects (キーで切り替え)</div>
       ${effects.map(e => `<div><kbd>${e.key}</kbd> ${e.name}</div>`).join('')}
       <div style="margin-top: 8px; font-size: 11px; color: #aaa;">
-        W: ワープ開始/終了
+        W: ワープ開始/終了<br>
+        T: トランジションデモ
       </div>
     `
     panel.style.cssText = `
@@ -249,6 +258,8 @@ function initVisualEffectsDemo(globe: Globe) {
       font-size: 12px;
       z-index: 10000;
       line-height: 1.6;
+      max-height: 80vh;
+      overflow-y: auto;
     `
     panel.querySelectorAll('kbd').forEach(kbd => {
       ;(kbd as HTMLElement).style.cssText = `
@@ -287,8 +298,44 @@ function initVisualEffectsDemo(globe: Globe) {
         globe.requestRefresh()
       }
     }
+
+    // Tキーでトランジションデモ
+    if (e.key === 't' || e.key === 'T') {
+      const transitionIndex = effects.findIndex(ef => ef.effect instanceof TransitionEffect)
+      if (transitionIndex >= 0) {
+        const transition = effects[transitionIndex].effect as TransitionEffect
+        
+        // 現在のエフェクトがトランジションでない場合は切り替え
+        if (currentEffectIndex !== transitionIndex) {
+          setEffect(transitionIndex)
+        }
+        
+        // トランジションタイプを順番に切り替え
+        const types: Array<'dissolve' | 'wipe' | 'swirl' | 'zoom' | 'slide'> = ['dissolve', 'wipe', 'swirl', 'zoom', 'slide']
+        const currentTypeIndex = types.indexOf(transition.type)
+        transition.type = types[(currentTypeIndex + 1) % types.length]
+        
+        // トランジションアニメーションを実行
+        transition.progress = 0
+        const duration = 2000
+        const startTime = performance.now()
+        
+        function animateTransition() {
+          const elapsed = performance.now() - startTime
+          transition.progress = Math.min(elapsed / duration, 1)
+          globe.requestRefresh()
+          
+          if (transition.progress < 1) {
+            requestAnimationFrame(animateTransition)
+          }
+        }
+        
+        showNotification(`Transition: ${transition.type}`)
+        animateTransition()
+      }
+    }
   })
 
   createHelpPanel()
-  console.log('Visual Effects Demo initialized. Press 0-5 to switch effects.')
+  console.log('Visual Effects Demo initialized. Press 0-9 to switch effects.')
 }

@@ -50,104 +50,23 @@ if (container) {
 
 `VisualEffectParams` を継承したクラスを使用して、描画に後処理エフェクトを適用できます。
 
-### 利用可能なエフェクト
-
-| クラス名 | 説明 |
-|---------|------|
-| `GlowEffect` | 明るい部分を光らせるグロー/ブルーム効果 |
-| `FrostedGlassEffect` | すりガラス越しに見るようなぼかし効果 |
-| `RippleEffect` | 水面の波紋のような変形効果（アニメーション対応） |
-| `WarpEffect` | Star Warsのハイパースペースジャンプのような光の筋効果 |
-| `PlanetariumEffect` | プラネタリウム投影用の魚眼変形 |
-| `PassThroughEffect` | 何も変更しないパススルー（デバッグ用） |
-
-### 使用例
-
 ```typescript
-import { Globe, GlowEffect, WarpEffect } from '@stellar-globe/stellar-globe';
+import { Globe, GlowEffect } from '@stellar-globe/stellar-globe';
 
-const container = document.getElementById('container');
 const globe = new Globe(container, {
-  // コンストラクタでエフェクトを指定
   visualEffect: new GlowEffect()
 });
 
-// または動的にエフェクトを変更
+// 動的にエフェクトを変更
 globe.setVisualEffect(new WarpEffect());
 
 // エフェクトを解除
 globe.setVisualEffect(null);
 ```
 
-### エフェクトのパラメータ調整
+利用可能なエフェクト: `GlowEffect`, `GaussianBlurEffect`, `BloomEffect`, `FrostedGlassEffect`, `RippleEffect`, `WarpEffect`, `PlanetariumEffect`, `AfterimageEffect`, `TransitionEffect` など
 
-各エフェクトにはパラメータがあり、効果の強度などを調整できます。
-
-```typescript
-const glow = new GlowEffect();
-glow.intensity = 1.5;  // グローの強度
-glow.threshold = 0.4;  // グローの閾値
-glow.radius = 4.0;     // グローの拡散範囲
-
-globe.setVisualEffect(glow);
-```
-
-### アニメーション対応エフェクト
-
-一部のエフェクト（`RippleEffect`, `FrostedGlassEffect`）はアニメーションに対応しています。
-`update(deltaTime)` メソッドを呼び出すことで時間経過による変化を実現できます。
-
-```typescript
-const ripple = new RippleEffect();
-globe.setVisualEffect(ripple);
-
-// アニメーションループ
-let lastTime = performance.now();
-function animate() {
-  const now = performance.now();
-  ripple.update(now - lastTime);
-  lastTime = now;
-  globe.requestRefresh();
-  requestAnimationFrame(animate);
-}
-animate();
-```
-
-### カスタムエフェクトの作成
-
-`VisualEffectParams` を継承して独自のエフェクトを作成できます。
-
-```typescript
-import { VisualEffectParams, Program } from '@stellar-globe/stellar-globe';
-
-class MyCustomEffect extends VisualEffectParams {
-  myParam = 1.0;
-
-  fragShader() {
-    return `
-      precision mediump float;
-      uniform sampler2D u_raw;
-      uniform mat2 u_tex_matrix;
-      uniform float u_my_param;
-      varying vec2 v_coord;
-
-      void main(void) {
-        vec2 texCoord = u_tex_matrix * v_coord;
-        vec4 color = texture2D(u_raw, texCoord);
-        // ここにカスタム処理を記述
-        color.rgb *= u_my_param;
-        gl_FragColor = color;
-      }
-    `;
-  }
-
-  setUniforms(program: Program) {
-    program.uniform1f({
-      u_my_param: this.myParam
-    });
-  }
-}
-```
+詳細は [ビジュアルエフェクト詳細ドキュメント](./VisualEffects.ja.md) を参照してください。
 
 ## デモの実行
 
@@ -162,20 +81,6 @@ npm run dev
 
 ブラウザで `http://localhost:5173/demo/` にアクセスするとデモが表示されます。
 
-### ビジュアルエフェクトのデモ
-
-デモページでは、以下のキーボードショートカットでエフェクトを切り替えられます：
-
-| キー | エフェクト |
-|------|-----------|
-| `0` | エフェクトなし |
-| `1` | グロー |
-| `2` | すりガラス |
-| `3` | 波紋 |
-| `4` | ワープ |
-| `5` | プラネタリウム |
-| `W` | ワープ効果の開始/終了 |
-
 ## APIドキュメントの生成
 
 TypeDocを使用してAPIドキュメントを生成できます。
@@ -185,10 +90,3 @@ npm run typedoc
 ```
 
 生成されたドキュメントは `docs` ディレクトリに出力されます。
-
-以下のコマンドで開発サーバーを起動し、サンプルコードを実行できます。
-
-```bash
-npm install
-npm run dev
-```

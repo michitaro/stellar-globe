@@ -13,6 +13,8 @@ export class GlowEffect extends VisualEffectParams {
   threshold = 0.5
   /** グローの拡散範囲 */
   radius = 3.0
+  /** アスペクト比（縦横比補正用） */
+  aspectRatio = 1.0
 
   fragShader() {
     return `
@@ -22,14 +24,16 @@ export class GlowEffect extends VisualEffectParams {
       uniform float         u_intensity;
       uniform float         u_threshold;
       uniform float         u_radius;
+      uniform float         u_aspect_ratio;
       varying vec2          v_coord;
 
       void main(void) {
           vec2 texCoord = u_tex_matrix * v_coord;
           vec4 color = texture2D(u_raw, texCoord);
           
-          // ピクセルサイズ（テクスチャサイズに依存）
-          vec2 pixelSize = vec2(1.0 / 1024.0);
+          // ピクセルサイズ（正規化座標系で、アスペクト比を考慮）
+          float basePixelSize = 0.002;
+          vec2 pixelSize = vec2(basePixelSize, basePixelSize * u_aspect_ratio);
           
           // ガウシアンブラー風のサンプリングでグローを計算
           vec4 glow = vec4(0.0);
@@ -38,15 +42,21 @@ export class GlowEffect extends VisualEffectParams {
           for (float x = -4.0; x <= 4.0; x += 1.0) {
               for (float y = -4.0; y <= 4.0; y += 1.0) {
                   vec2 offset = vec2(x, y) * pixelSize * u_radius;
-                  vec4 sample = texture2D(u_raw, u_tex_matrix * (v_coord + offset));
+                  vec2 sampleCoord = v_coord + offset;
+                  
+                  // 境界外のサンプリングをクランプ
+                  sampleCoord = clamp(sampleCoord, vec2(0.001), vec2(0.999));
+                  
+                  vec2 sampleTexCoord = u_tex_matrix * sampleCoord;
+                  vec4 sampleColor = texture2D(u_raw, sampleTexCoord);
                   
                   // 明るさを計算
-                  float brightness = dot(sample.rgb, vec3(0.299, 0.587, 0.114));
+                  float brightness = dot(sampleColor.rgb, vec3(0.299, 0.587, 0.114));
                   
                   // 閾値以上の部分のみグローに寄与
                   if (brightness > u_threshold) {
                       float weight = exp(-(x*x + y*y) / 8.0);
-                      glow += sample * weight * (brightness - u_threshold);
+                      glow += sampleColor * weight * (brightness - u_threshold);
                       totalWeight += weight;
                   }
               }
@@ -69,6 +79,7 @@ export class GlowEffect extends VisualEffectParams {
       u_intensity: this.intensity,
       u_threshold: this.threshold,
       u_radius: this.radius,
+      u_aspect_ratio: this.aspectRatio,
     })
   }
 }
