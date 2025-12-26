@@ -54,11 +54,13 @@ Python側とTypeScript側（app）で型の整合性を保つため、以下の�
 2. **データモデルの自動生成**: 
    `app/jsonschema/public.json` から Python の型ヒント付きデータクラスを自動生成します。
    生成には `datamodel-code-generator` ライブラリを使用しており、
-   JSON SchemaからPydanticベースのデータクラスを生成します。
+   JSON SchemaからTypedDictベースのデータクラスを生成します。
    ```bash
    make datamodel
    ```
-   このコマンドにより、`src/hscmap/generated_types.py` が生成されます。
+   このコマンドにより、`src/hscmap/models/` ディレクトリ以下にモデルが生成されます。
+   例えば、`src/hscmap/models/actions/catalogs/catalogAdded.py` には
+   `catalogAdded` アクションのペイロード型が含まれます。
 
 3. **実行時検証**: 
    `jsonschema` ライブラリを使用して送受信メッセージを検証します。
@@ -149,7 +151,7 @@ make setup
 
 ### 型チェック
 
-Pyright を使用した静的型チェックを実行します：
+uvでインストールされたPyrightを使用した静的型チェックを実行します：
 ```bash
 make typecheck
 ```
@@ -172,7 +174,12 @@ make datamodel
 このコマンドは：
 1. 必要に応じて `app` ディレクトリで JSON Schema を生成
 2. `datamodel-code-generator` を実行して型ヒント付きクラスを生成
-3. 生成されたコードを `src/hscmap/generated_types.py` に配置
+3. 生成されたコードを `src/hscmap/models/` ディレクトリに配置
+
+生成されるファイルの例：
+- `src/hscmap/models/actions/catalogs/catalogAdded.py`: カタログ追加アクションの型
+- `src/hscmap/models/store.py`: Redux Storeの状態型
+- `src/hscmap/models/frontend/Ready.py`: app→Pythonメッセージの型
 
 ### ビルド
 

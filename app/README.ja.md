@@ -91,9 +91,47 @@ Python側では、同じJSON Schemaを使用して型チェックを行います
 
 ### 型の更新手順
 
+型定義を更新する際は、変更する場所に応じて以下の手順に従ってください。
+
+#### Reduxアクションの型を変更する場合
+
+例：`catalogAdded` アクションに新しいフィールドを追加する場合
+
+1. **TypeScript側の型を更新**
+   - `src/app/features/catalog/catalogSlice.ts` などの対応するSliceファイルで型（例：`NewCatalogParams`）を更新
+   - reducerの実装も必要に応じて更新
+
+2. **JSON Schemaを再生成**
+   ```bash
+   cd app
+   npm run refresh-types
+   ```
+
+3. **Python側のモデルを再生成**
+   ```bash
+   cd python-integration/python
+   make datamodel
+   ```
+   これにより `src/hscmap/models/` 以下のファイルが更新されます。
+
+4. **Python側のコードを更新**
+   - 新しいフィールドを使用するPythonコードを更新（例：`catalogs.py`）
+
+5. **型チェックを実行**
+   ```bash
+   # TypeScript側
+   cd app && npx tsc --noEmit
+   
+   # Python側
+   cd python-integration/python && make typecheck
+   ```
+
+#### ToAppメッセージの型を変更する場合
+
 1. `types/commTools/index.d.ts` で型定義を更新
 2. `npm run refresh-types` を実行してJSON Schemaを再生成
-3. Python側でも対応する型定義を更新
+3. Python側で `make datamodel` を実行してPython型を再生成
+4. Python側のコードを更新して新しい型を使用
 
 ## Pythonとのやりとりの詳細
 

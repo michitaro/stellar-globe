@@ -53,11 +53,13 @@ To maintain type consistency between Python and TypeScript (`app`) sides, the fo
    
 2. **Automatic data model generation**: 
    Automatically generate Python type-hinted dataclasses from `app/jsonschema/public.json`.
-   Uses the `datamodel-code-generator` library to generate Pydantic-based dataclasses from JSON Schema.
+   Uses the `datamodel-code-generator` library to generate TypedDict-based dataclasses from JSON Schema.
    ```bash
    make datamodel
    ```
-   This command generates `src/hscmap/generated_types.py`.
+   This command generates models under the `src/hscmap/models/` directory.
+   For example, `src/hscmap/models/actions/catalogs/catalogAdded.py` contains
+   the payload type for the `catalogAdded` action.
 
 3. **Runtime validation**: 
    Validate sent and received messages using the `jsonschema` library.
@@ -148,7 +150,7 @@ This command:
 
 ### Type Checking
 
-Run static type checking using Pyright:
+Run static type checking using Pyright installed via uv:
 ```bash
 make typecheck
 ```
@@ -171,7 +173,12 @@ make datamodel
 This command:
 1. Generate JSON Schema in `app` directory if needed
 2. Run `datamodel-code-generator` to generate type-hinted classes
-3. Place generated code in `src/hscmap/generated_types.py`
+3. Place generated code in `src/hscmap/models/` directory
+
+Examples of generated files:
+- `src/hscmap/models/actions/catalogs/catalogAdded.py`: Catalog add action type
+- `src/hscmap/models/store.py`: Redux Store state type
+- `src/hscmap/models/frontend/Ready.py`: app→Python message type
 
 ### Build
 

@@ -91,9 +91,47 @@ See the `python-integration/python` documentation for details.
 
 ### Type Update Procedure
 
+When updating type definitions, follow these steps according to what you are changing.
+
+#### Modifying Redux Action Types
+
+Example: Adding a new field to the `catalogAdded` action
+
+1. **Update TypeScript types**
+   - Update the type (e.g., `NewCatalogParams`) in the corresponding Slice file like `src/app/features/catalog/catalogSlice.ts`
+   - Update the reducer implementation as needed
+
+2. **Regenerate JSON Schema**
+   ```bash
+   cd app
+   npm run refresh-types
+   ```
+
+3. **Regenerate Python models**
+   ```bash
+   cd python-integration/python
+   make datamodel
+   ```
+   This updates files under `src/hscmap/models/`.
+
+4. **Update Python code**
+   - Update Python code that uses the new field (e.g., `catalogs.py`)
+
+5. **Run type checking**
+   ```bash
+   # TypeScript side
+   cd app && npx tsc --noEmit
+   
+   # Python side
+   cd python-integration/python && make typecheck
+   ```
+
+#### Modifying ToApp Message Types
+
 1. Update type definitions in `types/commTools/index.d.ts`
 2. Run `npm run refresh-types` to regenerate JSON Schema
-3. Update corresponding type definitions on Python side as well
+3. Run `make datamodel` on Python side to regenerate Python types
+4. Update Python code to use new types
 
 ## Details of Python Communication
 

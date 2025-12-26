@@ -6,7 +6,7 @@
   また、それを呼び出すMakefileのコマンドも修正してください。
   実際に型チェックを行い、問題がないことを確認してください。
 
-* [ ] Pythonからcatalogを追加する時のcatalog windowの表示について
+* [x] Pythonからcatalogを追加する時のcatalog windowの表示について
 
   `python-integration/python/src/hscmap/catalogs.py:Catalog._new`で`open_catalog_table`の値が現在無視されています。
 
