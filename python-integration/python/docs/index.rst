@@ -42,7 +42,7 @@ The `hscmap` package can be installed via pip:
 
    pip install jupyterlab # if you haven't installed JupyterLab yet
    pip install https://hscmap.mtk.nao.ac.jp/hscMap5/python/dist/hscmap-0.0.0.tar.gz
-   pip install https://hscmap.mtk.nao.ac.jp/hscMap5/python/dist/stellar_globe_jupyterlab_extension-0.0.0.tar.gz
+   pip install https://hscmap.mtk.nao.ac.jp/hscMap5/python/dist/stellar_globe_jupyterlab_extension-0.0.0-py3-none-any.whl
 
 Tutorial
 ========
