@@ -19,10 +19,10 @@ datamodel: ../../app/jsonschema/public.json
 	uv run python -m devel.gendatamodel
 
 typecheck:
-	./node_modules/.bin/pyright
+	uv run pyright
 
 typecheck-watch:
-	./node_modules/.bin/pyright --watch
+	uv run pyright --watch
 
 deploy: build
 	ssh hscmap.mtk.nao.ac.jp mkdir -p htdocs/hscMap5/python/dist
