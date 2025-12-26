@@ -80,6 +80,7 @@ class CatalogManager:
                 'defaultType': default_marker_type,
                 'fields': fields,
                 'markers': markers,
+                'openCatalogTable': open_catalog_table,
             },
         )
         self._w._dispatch(action)

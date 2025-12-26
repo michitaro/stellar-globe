@@ -2302,6 +2302,9 @@
                                 },
                                 "name": {
                                     "type": "string"
+                                },
+                                "openCatalogTable": {
+                                    "type": "boolean"
                                 }
                             },
                             "required": [

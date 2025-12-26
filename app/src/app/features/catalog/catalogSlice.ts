@@ -38,6 +38,7 @@ export type NewCatalogParams = {
   attributes: string[][]
   defaultType?: MarkerType
   baseColor?: V4
+  openCatalogTable?: boolean
 }
 
 
@@ -55,7 +56,7 @@ export const catalogsSlice = createSlice({
       (state, { payload }) => {
         const id = payload.id
         if (!state.catalogs.find(c => c.id === id)) {
-          const { name, markers, fields, attributes, defaultType, baseColor } = payload
+          const { name, markers, fields, attributes, defaultType, baseColor, openCatalogTable } = payload
           const catalog: Catalog = {
             id,
             name,
@@ -66,7 +67,7 @@ export const catalogsSlice = createSlice({
             defaultType: defaultType ?? 'circle',
             defaultColor: [1, 1, 1, 1] as V4,
             visible: true,
-            dialog: defaultDialogState({ opened: true }),
+            dialog: defaultDialogState({ opened: openCatalogTable ?? true }),
             selectedRecords: {},
           }
           state.catalogs.push(catalog)
