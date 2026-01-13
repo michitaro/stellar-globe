@@ -58,6 +58,7 @@ export { PlanetariumEffect as PlanetariumDistorterParams } from './visualEffects
 export type { LayerConstructorRestParameters } from './globe'
 export { ClickableMarkerLayer, MarkerLayer } from './layer/marker_layer'
 export { PathLayer } from './layer/path_layer'
+export type { DimOnZoomOption } from './layer/path_layer'
 export { markerTypes } from './layer/marker_layer/marker'
 export type { MarkerType } from './layer/marker_layer/marker'
 export type { GlobeEventMap } from './globe/events'

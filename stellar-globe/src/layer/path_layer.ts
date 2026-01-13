@@ -5,17 +5,24 @@ import { Layer } from "./layer"
 import { overlayAlpha } from "./overlayAlpha"
 
 
+/**
+ * dimOnZoomの型
+ * - boolean: true の場合は組み込みの overlayAlpha 関数を使用
+ * - (fovy: number) => number: カスタム関数で fovy からアルファ値を計算
+ */
+export type DimOnZoomOption = boolean | ((fovy: number) => number)
+
 type PathLayerOptions = {
   paths: Path[]
   blendMode?: BlendMode
-  dimOnZoom?: boolean
+  dimOnZoom?: DimOnZoomOption
   darkenNarrowLine?: boolean
 }
 
 
 export class PathLayer extends Layer {
   protected pathRenderer!: Renderer
-  private _dimOnZoom: boolean
+  private _dimOnZoom: DimOnZoomOption
 
   constructor(
     globe: Globe,
@@ -32,7 +39,16 @@ export class PathLayer extends Layer {
   }
 
   render(view: View) {
-    const alpha = this._dimOnZoom ? overlayAlpha(view) : 1
+    let alpha: number
+    if (typeof this._dimOnZoom === 'function') {
+      // カスタム関数でアルファ値を計算
+      alpha = this._dimOnZoom(view.mvp.fovy)
+    } else if (this._dimOnZoom) {
+      // boolean true の場合は組み込みの overlayAlpha を使用
+      alpha = overlayAlpha(view)
+    } else {
+      alpha = 1
+    }
     this.pathRenderer.render(view, alpha)
   }
 
@@ -46,7 +62,7 @@ export class PathLayer extends Layer {
     this.globe.requestRefresh()
   }
 
-  set dimOnZoom(dimOnZoom: boolean) {
+  set dimOnZoom(dimOnZoom: DimOnZoomOption) {
     this._dimOnZoom = dimOnZoom
     this.globe.requestRefresh()
   }
