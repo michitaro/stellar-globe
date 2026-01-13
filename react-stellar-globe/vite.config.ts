@@ -20,7 +20,7 @@ export default defineConfig({
       fileName: (format) => `react-stellar-globe.${format}.js`,
     },
     rollupOptions: {
-      external: ['react', 'react-dom', '@stellar-globe/stellar-globe'],
+      external: ['react', 'react-dom', 'react/jsx-runtime', '@stellar-globe/stellar-globe'],
     },
   },
 })
