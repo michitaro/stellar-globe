@@ -11,19 +11,19 @@ Enables building all-sky viewers with declarative JSX syntax.
 
 ## Usage
 
-Use the `Globe$` component as the root, and place various layer components as its children.
+Use the `Globe` component as the root, and place various layer components as its children.
 
 ```tsx
-import { Globe$, PanLayer$, ZoomLayer$ } from '@stellar-globe/react-stellar-globe';
+import { Globe, PanLayer, ZoomLayer } from '@stellar-globe/react-stellar-globe';
 
 function App() {
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
-      <Globe$>
-        <PanLayer$ />
-        <ZoomLayer$ />
+      <Globe>
+        <PanLayer />
+        <ZoomLayer />
         {/* Other layers */}
-      </Globe$>
+      </Globe>
     </div>
   );
 }
@@ -31,16 +31,16 @@ function App() {
 
 ## Key Components
 
-### `Globe$`
+### `Globe`
 Component that serves as the viewer container. Internally creates and manages the `stellar-globe` `Globe` instance.
 
 ### Layer Components
 React components corresponding to each layer in `stellar-globe`.
-* `TractTileLayer$`: Tile image layer
-* `PanLayer$`, `ZoomLayer$`, `RollLayer$`: Operation layers
-* `GridLayer$`: Grid layer
-* `ConstellationLayer$`: Constellation layer
-* `MarkerLayer$`: Marker layer
+* `TractTileLayer`: Tile image layer
+* `PanLayer`, `ZoomLayer`, `RollLayer`: Operation layers
+* `GridLayer`: Grid layer
+* `ConstellationLayer`: Constellation layer
+* `MarkerLayer`: Marker layer
 
 ### Hooks
 * `useGetGlobe`: Hook for accessing the `Globe` instance.

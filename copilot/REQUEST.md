@@ -1,24 +1,36 @@
-* [x] pyrightについて
+* [x] シンボル名の変更の提案
 
-  現在pythonパッケージの静的型チェックにはpyrightを使っている。
-  そのために各pythonパッケージのディレクトリ内にnode_modulesやpackage.jsonが存在している。
-  これらを削除してuvによってインストールしたpyrightを使うようにしてください。
-  また、それを呼び出すMakefileのコマンドも修正してください。
-  実際に型チェックを行い、問題がないことを確認してください。
+  このライブラリ群にはシンボルの末尾が`$`で終わるものがいくつかあります。
+  (特に`react-stellar-globe`に多いです)
+  これらはcoreライブラリのシンボルと衝突しないために付けられたものですが、
+  ラッパーだけの利用者にとっては紛らわしいです。
 
-* [x] Pythonからcatalogを追加する時のcatalog windowの表示について
+  これを解消するためのシンボル名の変更を提案してください。
+  まずは現状の使われ方を調査する必要があるでしょう。
 
-  `python-integration/python/src/hscmap/catalogs.py:Catalog._new`で`open_catalog_table`の値が現在無視されています。
+  → 提案書を作成しました: [copilot/symbol-rename-proposal.md](symbol-rename-proposal.md)
 
-  これが反映されるようにしてください。
+* [x] 提案書の整理
 
-  `app/src/app/features/catalog/catalogSlice.ts`の`catalogAdded`アクションを修正する必要があるかもしれません。
+  案1でいきましょう。
+  提案書をその方向で整理して下さい。
 
-  関連するドキュメントを読んで、型ファイルなどを適宜更新してください。
+  → 整理しました
 
-* [ ] 今回の作業を踏まえての`app`や`python-integration/python`の変更のドキュメントの改良
+* [x] 変更の実施
 
-  今回の作業を踏まえて、`app/README.ja.md`や`python-integration/python/README.ja.md`の内容がわかりにくいところがあれば改良してください。
+  提案に基づいて変更を実施してください。
+  テスト・ビルドの確認もお願いします。
+
+  ライブラリ利用者のための移行ドキュメントの整備もお願いします。
+
+  → 完了しました:
+  - react-stellar-globe内のシンボル名を変更し、deprecationアノテーションを追加
+  - READMEを更新
+  - examples/BasicUsage/main.tsxを更新
+  - app/内の使用箇所を更新
+  - 移行ドキュメントを作成: react-stellar-globe/MIGRATION.md, MIGRATION.ja.md
+  - ビルド・テストを確認済み
 
 * [ ] 指示者に追加の依頼がないか確認
 

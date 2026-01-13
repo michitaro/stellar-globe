@@ -1,4 +1,4 @@
-import { DomLayer$, PathLayer$, useLayerBind } from "@stellar-globe/react-stellar-globe"
+import { DomLayer, PathLayer, useLayerBind } from "@stellar-globe/react-stellar-globe"
 import { Globe, GlobePointerDragEvent, Layer, SkyCoord, V2, V3, V4, glMatrix, makePointingObject } from "@stellar-globe/stellar-globe"
 import { produce } from 'immer'
 import { Fragment, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react"
@@ -36,7 +36,7 @@ export const CircularRegionLayer = ({
   onlyCenter = false,
   menuButton,
 }: Props) => {
-  type Paths = Parameters<typeof PathLayer$>[0]['paths']
+  type Paths = Parameters<typeof PathLayer>[0]['paths']
 
   const [circleDef, setCircleDef] = useState(circleDefProp)
 
@@ -83,7 +83,7 @@ export const CircularRegionLayer = ({
   return (
     <Fragment>
       {onlyCenter ||
-        <PathLayer$
+        <PathLayer
           paths={paths}
           blendMode="NORMAL"
           dimOnZoom={false}
@@ -96,7 +96,7 @@ export const CircularRegionLayer = ({
         markerType="hollowPlus"
       />
       {showLabel && (
-        <DomLayer$ position={menuXyz} offset={offset} >
+        <DomLayer position={menuXyz} offset={offset} >
           <RegularMenu
             renderMenuButton={() => (
               <div className={styles.lineInfo} >
@@ -107,7 +107,7 @@ export const CircularRegionLayer = ({
           >
             {children}
           </RegularMenu>
-        </DomLayer$>
+        </DomLayer>
       )}
       {onChange && (
         <MouseLayer$ circleDef={circleDef} onChange={setCircleDef} onSubmit={onSubmit} />

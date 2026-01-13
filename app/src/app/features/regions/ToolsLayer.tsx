@@ -1,4 +1,4 @@
-import { PanLayer$ } from '@stellar-globe/react-stellar-globe'
+import { PanLayer } from '@stellar-globe/react-stellar-globe'
 import { GlobePointerDragEvent, GlobePointerEvent, SkyCoord, V4 } from '@stellar-globe/stellar-globe'
 import { Fragment, ReactNode, memo, useCallback, useMemo, useState } from 'react'
 import { setDisplayName } from '../../../common/utils/setDisplayName'
@@ -16,7 +16,7 @@ export function ToolsLayer({ children }: { children: ReactNode }) {
 
   return (
     <Fragment>
-      <PanLayer$ enabled={tool === 'pan'} />
+      <PanLayer enabled={tool === 'pan'} />
       {children}
       {tool === 'line' && <NewLinearRegionLayer />}
       {tool === 'circle' && <NewCircularRegionLayer />}

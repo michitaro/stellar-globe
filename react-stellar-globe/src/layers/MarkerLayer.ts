@@ -1,18 +1,18 @@
-import { ClickableMarkerLayer, Globe, MarkerLayer } from "@stellar-globe/stellar-globe"
+import { ClickableMarkerLayer as CoreClickableMarkerLayer, Globe, MarkerLayer as CoreMarkerLayer } from "@stellar-globe/stellar-globe"
 import React, { memo, useCallback, useEffect } from "react"
 import { useLayerBind } from ".."
 import { setDisplayName } from "../GlobeContext"
 
 
-type MarkerLayerProps = ConstructorParameters<typeof MarkerLayer>[1] & {
+type MarkerLayerProps = ConstructorParameters<typeof CoreMarkerLayer>[1] & {
   visible?: boolean
 }
 
-const MarkerLayer$: React.FC<MarkerLayerProps> = memo(props => {
+const MarkerLayer: React.FC<MarkerLayerProps> = memo(props => {
   const { visible = true, ...options } = props
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const factory = useCallback((globe: Globe) => new MarkerLayer(globe, options), [])
-  const { node, ifLayerReady } = useLayerBind<MarkerLayer>(factory, visible)
+  const factory = useCallback((globe: Globe) => new CoreMarkerLayer(globe, options), [])
+  const { node, ifLayerReady } = useLayerBind<CoreMarkerLayer>(factory, visible)
   const { defaultColor, defaultType, markers, baseColor, markerSize, markerWidth } = options
 
   useEffect(() => {
@@ -31,20 +31,22 @@ const MarkerLayer$: React.FC<MarkerLayerProps> = memo(props => {
   return node
 })
 
-setDisplayName({ MarkerLayer$ })
-export { MarkerLayer$ }
+setDisplayName({ MarkerLayer })
+export { MarkerLayer }
+
+/** @deprecated Use MarkerLayer instead */
+export const MarkerLayer$ = MarkerLayer
 
 
-
-type ClickableMarkerLayerProps = ConstructorParameters<typeof ClickableMarkerLayer>[1] & {
+type ClickableMarkerLayerProps = ConstructorParameters<typeof CoreClickableMarkerLayer>[1] & {
   visible?: boolean
 }
 
-const ClickableMarkerLayer$: React.FC<ClickableMarkerLayerProps> = memo(props => {
+const ClickableMarkerLayer: React.FC<ClickableMarkerLayerProps> = memo(props => {
   const { visible = true, ...options } = props
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const factory = useCallback((globe: Globe) => new ClickableMarkerLayer(globe, options), [])
-  const { node, ifLayerReady } = useLayerBind<ClickableMarkerLayer>(factory, visible)
+  const factory = useCallback((globe: Globe) => new CoreClickableMarkerLayer(globe, options), [])
+  const { node, ifLayerReady } = useLayerBind<CoreClickableMarkerLayer>(factory, visible)
   const { defaultColor, defaultType, markers, dimmAlpha, onClick, onHoverChange, baseColor, markerSize, markerWidth } = options
 
   useEffect(() => {
@@ -66,5 +68,8 @@ const ClickableMarkerLayer$: React.FC<ClickableMarkerLayerProps> = memo(props =>
   return node
 })
 
-setDisplayName({ ClickableMarkerLayer$ })
-export { ClickableMarkerLayer$ }
+setDisplayName({ ClickableMarkerLayer })
+export { ClickableMarkerLayer }
+
+/** @deprecated Use ClickableMarkerLayer instead */
+export const ClickableMarkerLayer$ = ClickableMarkerLayer

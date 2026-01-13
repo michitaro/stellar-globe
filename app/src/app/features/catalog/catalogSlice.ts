@@ -1,5 +1,5 @@
 import { createSlice, nanoid } from "@reduxjs/toolkit"
-import { ClickableMarkerLayer$ } from '@stellar-globe/react-stellar-globe'
+import { ClickableMarkerLayer } from '@stellar-globe/react-stellar-globe'
 import { MarkerType, SkyCoord, V3, V4, markerTypes } from "@stellar-globe/stellar-globe"
 import Papa from 'papaparse'
 import { colorSeries } from '../../../common/utils/colorsys'
@@ -384,7 +384,7 @@ function findCoordsCols(fields: string[]): [number, number] {
 }
 
 
-export type Marker = Parameters<typeof ClickableMarkerLayer$>[0]['markers'][number]
+export type Marker = Parameters<typeof ClickableMarkerLayer>[0]['markers'][number]
 
 
 export type Catalog = {

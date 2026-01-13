@@ -11,19 +11,19 @@
 
 ## 使用方法
 
-`Globe$` コンポーネントをルートとして、その子要素として各種レイヤーコンポーネントを配置します。
+`Globe` コンポーネントをルートとして、その子要素として各種レイヤーコンポーネントを配置します。
 
 ```tsx
-import { Globe$, PanLayer$, ZoomLayer$ } from '@stellar-globe/react-stellar-globe';
+import { Globe, PanLayer, ZoomLayer } from '@stellar-globe/react-stellar-globe';
 
 function App() {
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
-      <Globe$>
-        <PanLayer$ />
-        <ZoomLayer$ />
+      <Globe>
+        <PanLayer />
+        <ZoomLayer />
         {/* その他のレイヤー */}
-      </Globe$>
+      </Globe>
     </div>
   );
 }
@@ -31,16 +31,16 @@ function App() {
 
 ## 主要なコンポーネント
 
-### `Globe$`
+### `Globe`
 ビューワーのコンテナとなるコンポーネントです。内部で `stellar-globe` の `Globe` インスタンスを生成・管理します。
 
 ### レイヤーコンポーネント
 `stellar-globe` の各レイヤーに対応するReactコンポーネントです。
-* `TractTileLayer$`: タイル画像レイヤー
-* `PanLayer$`, `ZoomLayer$`, `RollLayer$`: 操作系レイヤー
-* `GridLayer$`: グリッドレイヤー
-* `ConstellationLayer$`: 星座レイヤー
-* `MarkerLayer$`: マーカーレイヤー
+* `TractTileLayer`: タイル画像レイヤー
+* `PanLayer`, `ZoomLayer`, `RollLayer`: 操作系レイヤー
+* `GridLayer`: グリッドレイヤー
+* `ConstellationLayer`: 星座レイヤー
+* `MarkerLayer`: マーカーレイヤー
 
 ### フック
 * `useGetGlobe`: `Globe` インスタンスにアクセスするためのフックです。

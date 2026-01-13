@@ -1,11 +1,14 @@
-import { EsoMilkyWayLayer } from "@stellar-globe/stellar-globe"
+import { EsoMilkyWayLayer as CoreEsoMilkyWayLayer } from "@stellar-globe/stellar-globe"
 import { makePureLayerComponent, setDisplayName } from "../GlobeContext"
 
-const EsoMilkyWayLayer$ = makePureLayerComponent<
-  ConstructorParameters<typeof EsoMilkyWayLayer>[1] &
+const EsoMilkyWayLayer = makePureLayerComponent<
+  ConstructorParameters<typeof CoreEsoMilkyWayLayer>[1] &
   { visible?: boolean }
->((globe, options) => new EsoMilkyWayLayer(globe, options), 'visible')
+>((globe, options) => new CoreEsoMilkyWayLayer(globe, options), 'visible')
 
-setDisplayName({ EsoMilkyWayLayer$ })
+setDisplayName({ EsoMilkyWayLayer })
 
-export { EsoMilkyWayLayer$ }
+export { EsoMilkyWayLayer }
+
+/** @deprecated Use EsoMilkyWayLayer instead */
+export const EsoMilkyWayLayer$ = EsoMilkyWayLayer

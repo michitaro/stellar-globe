@@ -1,4 +1,4 @@
-import type { TractTileLayer$ } from '@stellar-globe/react-stellar-globe'
+import type { TractTileLayer as ReactTractTileLayer } from '@stellar-globe/react-stellar-globe'
 import { LogScaleRange } from "@stellar-globe/react-stellar-globe"
 import { TractTileLayer, V3 } from "@stellar-globe/stellar-globe"
 import { produce } from 'immer'
@@ -9,7 +9,7 @@ import { defaultFilters } from '../tractTileLayersSlice'
 import styles from './styles.module.scss'
 
 
-type ColorParams = NonNullable<Parameters<typeof TractTileLayer$>[0]['colorParams']>
+type ColorParams = NonNullable<Parameters<typeof ReactTractTileLayer>[0]['colorParams']>
 type MixerType = ColorParams['type']
 
 

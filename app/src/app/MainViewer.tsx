@@ -1,4 +1,4 @@
-import { BeautifulObjectLayer$, ConstellationLayer$, EsoMilkyWayLayer$, Globe$, GlobeEventLayer$, GridLayer$, HipparcosCatalogLayer$, HipsSimpleLayer$, RollLayer$, TouchLayer$, ZoomLayer$ } from "@stellar-globe/react-stellar-globe"
+import { BeautifulObjectLayer, ConstellationLayer, EsoMilkyWayLayer, Globe, GlobeEventLayer, GridLayer, HipparcosCatalogLayer, HipsSimpleLayer, RollLayer, TouchLayer, ZoomLayer } from "@stellar-globe/react-stellar-globe"
 import { GlobeEventMap } from "@stellar-globe/stellar-globe"
 import { debounce } from "../common/utils/debounce"
 import { useAppContext } from "./context"
@@ -36,7 +36,7 @@ export function MainViewer() {
   const hips = useAppSelector(state => state.hipsLayers)
 
   return (
-    <Globe$
+    <Globe
       ref={globeHandle}
       projection={camera.projection}
       retina={camera.retina}
@@ -44,25 +44,25 @@ export function MainViewer() {
       noDefaultLayers
       preserveBuffer
     >
-      <GlobeEventLayer$ onCameraMove={onCameraMove} onPointerMove={onPointerMove} />
-      <ZoomLayer$ />
-      <RollLayer$ />
-      <TouchLayer$ />
+      <GlobeEventLayer onCameraMove={onCameraMove} onPointerMove={onPointerMove} />
+      <ZoomLayer />
+      <RollLayer />
+      <TouchLayer />
       <ContextMenuLayer render={(openedAt) => (
         <MainContextMenu openedAt={openedAt} />
       )} />
 
       <ToolsLayer>
-        <BeautifulObjectLayer$ {...layers.nearbyGalaxiesAndNebulas} />
+        <BeautifulObjectLayer {...layers.nearbyGalaxiesAndNebulas} />
 
-        {hips.baseUrl && <HipsSimpleLayer$ baseUrl={hips.baseUrl} />}
+        {hips.baseUrl && <HipsSimpleLayer baseUrl={hips.baseUrl} />}
         <TractTileLayers />
 
-        <EsoMilkyWayLayer$ {...layers.esoMilkyWay} />
+        <EsoMilkyWayLayer {...layers.esoMilkyWay} />
 
-        <HipparcosCatalogLayer$ {...layers.hipparcosCatalog} />
-        <ConstellationLayer$ {...layers.constellation} />
-        <GridLayer$ {...layers.grid} />
+        <HipparcosCatalogLayer {...layers.hipparcosCatalog} />
+        <ConstellationLayer {...layers.constellation} />
+        <GridLayer {...layers.grid} />
 
         <FitsImageLayers />
 
@@ -73,6 +73,6 @@ export function MainViewer() {
         <CatalogLayers />
         <RegionsLayer />
       </ToolsLayer>
-    </Globe$>
+    </Globe>
   )
 }

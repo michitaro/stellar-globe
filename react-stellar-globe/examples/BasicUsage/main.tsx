@@ -2,7 +2,7 @@ import { BillboardText, Globe, MarkerType, SkyCoord, TractTileLayer, V3, V4, mar
 import { produce } from 'immer'
 import React, { useMemo, useState } from 'react'
 import ReactDOM from 'react-dom/client'
-import { ClickableMarkerLayer$, ConstellationLayer$, EsoMilkyWayLayer$, Globe$, GridLayer$, HipparcosCatalogLayer$, HipsSimpleLayer$, TractTileLayer$, TextLayer$, DomLayer$ } from '../../src'
+import { ClickableMarkerLayer, ConstellationLayer, EsoMilkyWayLayer, Globe as ReactGlobe, GridLayer, HipparcosCatalogLayer, HipsSimpleLayer, TractTileLayer as ReactTractTileLayer, TextLayer, DomLayer } from '../../src'
 import { LogScaleRange } from '../../src/LogScaleRange'
 import './style.scss'
 
@@ -48,7 +48,7 @@ function App() {
 
   const [history, setHistory] = useState<number[]>([])
 
-  const clickableMarkerLayerProps: Parameters<typeof ClickableMarkerLayer$>[0] = useMemo(() => ({
+  const clickableMarkerLayerProps: Parameters<typeof ClickableMarkerLayer>[0] = useMemo(() => ({
     defaultColor: [1, 2, 1, 1],
     defaultType: 'circle',
     dimmAlpha: 0.75,
@@ -69,33 +69,33 @@ function App() {
   return (
     <div>
       <div style={{ width: '100vw', height: '100vh' }}>
-        <Globe$ {...globeOptions}>
-          <TractTileLayer$
+        <ReactGlobe {...globeOptions}>
+          <ReactTractTileLayer
             baseUrl='//hscmap.mtk.nao.ac.jp/hscMap4/data/pdr3_wide'
             outline={area}
             colorParams={colorParams}
             visible={baseType === 'tile'}
           />
-          <TractTileLayer$
+          <ReactTractTileLayer
             baseUrl='//hscmap.mtk.nao.ac.jp/hscMap4/data/pdr3_dud'
             outline={area}
             colorParams={colorParams}
             visible={dud && baseType === 'tile'}
           />
-          <HipsSimpleLayer$
+          <HipsSimpleLayer
             baseUrl='//alasky.cds.unistra.fr/Pan-STARRS/DR1/color-i-r-g'
             visible={baseType === 'hips'}
           />
-          <GridLayer$ />
-          <ConstellationLayer$ showNames={constellationNames} visible={constellation} />
-          <HipparcosCatalogLayer$ visible={catalog} />
-          <EsoMilkyWayLayer$ fadeInDuration={400} visible={milkyway} />
-          <TextLayer$ defaultColor='white' defaultFont='24pt sans-serif' texts={texts} />
-          <ClickableMarkerLayer$ {...clickableMarkerLayerProps} />
-          <DomLayer$ position={domPosition}>
+          <GridLayer />
+          <ConstellationLayer showNames={constellationNames} visible={constellation} />
+          <HipparcosCatalogLayer visible={catalog} />
+          <EsoMilkyWayLayer fadeInDuration={400} visible={milkyway} />
+          <TextLayer defaultColor='white' defaultFont='24pt sans-serif' texts={texts} />
+          <ClickableMarkerLayer {...clickableMarkerLayerProps} />
+          <DomLayer position={domPosition}>
             <button onClick={() => alert('ok')}>DomLayer</button>
-          </DomLayer$>
-        </Globe$>
+          </DomLayer>
+        </ReactGlobe>
       </div>
       <div className='controlpanel'>
         <label>

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import type { ConstellationLayer$, EsoMilkyWayLayer$ } from "@stellar-globe/react-stellar-globe"
+import type { ConstellationLayer, EsoMilkyWayLayer } from "@stellar-globe/react-stellar-globe"
 import { hipsLayersSlice } from "../hipsLayers/hipsLayersSlice"
 import { readHashState } from "../../store/stateSync/hashSync"
 
@@ -11,8 +11,8 @@ type State = {
   grid: {
     visible: boolean
   }
-  esoMilkyWay: ExtractProps<typeof EsoMilkyWayLayer$>
-  constellation: ExtractProps<typeof ConstellationLayer$>
+  esoMilkyWay: ExtractProps<typeof EsoMilkyWayLayer>
+  constellation: ExtractProps<typeof ConstellationLayer>
   nearbyGalaxiesAndNebulas: {
     visible: true
   }

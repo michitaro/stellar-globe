@@ -17,7 +17,7 @@ type SharedState = {
 }
 
 
-class DomLayer extends Layer {
+class DomLayerImpl extends Layer {
   constructor(globe: Globe, public shared: SharedState) {
     super(globe)
   }
@@ -48,7 +48,7 @@ type Props = {
 }
 
 
-export function DomLayer$({
+export function DomLayer({
   children,
   position,
   offset = [0, 0],
@@ -82,8 +82,8 @@ export function DomLayer$({
   }, [getGlobe, offset])
 
   const shared = useRef<SharedState>({ position, onProject })
-  const factory = useCallback((globe: Globe) => new DomLayer(globe, shared.current), [])
-  const { node, ifLayerReady } = useLayerBind<DomLayer>(factory, visible)
+  const factory = useCallback((globe: Globe) => new DomLayerImpl(globe, shared.current), [])
+  const { node, ifLayerReady } = useLayerBind<DomLayerImpl>(factory, visible)
 
   const newShared = useMemo<SharedState>(() => ({ position, onProject }), [onProject, position])
   useEffect(() => {
@@ -106,3 +106,6 @@ export function DomLayer$({
     </Fragment>
   )
 }
+
+/** @deprecated Use DomLayer instead */
+export const DomLayer$ = DomLayer

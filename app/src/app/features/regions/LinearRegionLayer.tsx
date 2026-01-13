@@ -1,4 +1,4 @@
-import { DomLayer$, PathLayer$, useLayerBind } from "@stellar-globe/react-stellar-globe"
+import { DomLayer, PathLayer, useLayerBind } from "@stellar-globe/react-stellar-globe"
 import { Globe, GlobePointerDragEvent, GlobePointerEvent, Layer, SkyCoord, V2, V3, V4, glMatrix, makePointingObject } from "@stellar-globe/stellar-globe"
 import { produce } from 'immer'
 import { Fragment, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react"
@@ -32,7 +32,7 @@ export const LinearRegionLayer = ({
   children,
   showLabel,
 }: Props) => {
-  type Paths = Parameters<typeof PathLayer$>[0]['paths']
+  type Paths = Parameters<typeof PathLayer>[0]['paths']
 
   const [lineDef, setLineDef] = useState(lineDefProp)
 
@@ -75,14 +75,14 @@ export const LinearRegionLayer = ({
 
   return (
     <Fragment>
-      <PathLayer$
+      <PathLayer
         paths={paths}
         blendMode="NORMAL"
         dimOnZoom={false}
         darkenNarrowLine={false}
       />
       {showLabel &&
-        <DomLayer$ position={position} offset={offset} >
+        <DomLayer position={position} offset={offset} >
           <RegularMenu
             renderMenuButton={() =>
               <div className={styles.lineInfo} >
@@ -92,7 +92,7 @@ export const LinearRegionLayer = ({
           >
             {children}
           </RegularMenu>
-        </DomLayer$>
+        </DomLayer>
       }
       {onChange && (
         <MouseLayer$ lineDef={lineDef} onChange={setLineDef} onSubmit={onSubmit} />

@@ -1,5 +1,5 @@
 import styles from './styles.module.scss'
-import { ClickableMarkerLayer$, MarkerLayer$ } from "@stellar-globe/react-stellar-globe"
+import { ClickableMarkerLayer, MarkerLayer } from "@stellar-globe/react-stellar-globe"
 import { Fragment, memo, useCallback, useMemo, useRef, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
 import { Catalog, Marker, catalogsSlice } from "./catalogSlice"
@@ -16,7 +16,7 @@ export const CatalogLayers = memo(() => {
   return (
     <Fragment>
       {catalogs.map(c => (
-        <CatalogLayer$
+        <CatalogLayer
           key={c.id}
           catalog={c}
         />
@@ -40,10 +40,10 @@ type CatalogProps = {
 }
 
 
-const CatalogLayer$ = memo(({ catalog }: CatalogProps) => {
+const CatalogLayer = memo(({ catalog }: CatalogProps) => {
   const dispatch = useAppDispatch()
 
-  type OnHoverChange = Parameters<typeof ClickableMarkerLayer$>[0]['onHoverChange']
+  type OnHoverChange = Parameters<typeof ClickableMarkerLayer>[0]['onHoverChange']
 
   const [showObjectInspector, setShowObjectInspector] = useState(false)
   const [hoverIndex, setHoverIndex] = useState<number | null>(null)
@@ -68,7 +68,7 @@ const CatalogLayer$ = memo(({ catalog }: CatalogProps) => {
     return markers
   }, [catalog.markers, catalog.selectedRecords])
 
-  type OnClick = NonNullable<Parameters<typeof ClickableMarkerLayer$>[0]['onClick']>
+  type OnClick = NonNullable<Parameters<typeof ClickableMarkerLayer>[0]['onClick']>
   const onClick: OnClick = useCallback(e => {
     dispatch(catalogsSlice.actions.recordSelected({ id: catalog.id, index: e.index }))
   }, [catalog.id, dispatch])
@@ -79,7 +79,7 @@ const CatalogLayer$ = memo(({ catalog }: CatalogProps) => {
 
   return (
     <Fragment>
-      <ClickableMarkerLayer$
+      <ClickableMarkerLayer
         defaultColor={catalog.defaultColor}
         defaultType={catalog.defaultType}
         dimmAlpha={0.75}
@@ -89,7 +89,7 @@ const CatalogLayer$ = memo(({ catalog }: CatalogProps) => {
         onHoverChange={onHoverChange}
         onClick={onClick}
       />
-      <MarkerLayer$
+      <MarkerLayer
         markerSize={64}
         markerWidth={0.05}
         defaultColor={selectedColor}

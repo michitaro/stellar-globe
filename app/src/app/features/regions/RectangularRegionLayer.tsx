@@ -1,4 +1,4 @@
-import { DomLayer$, PathLayer$, useLayerBind } from "@stellar-globe/react-stellar-globe"
+import { DomLayer, PathLayer, useLayerBind } from "@stellar-globe/react-stellar-globe"
 import { CursorStyle, Globe, GlobePointerDragEvent, GlobePointerEvent, Layer, SkyCoord, V2, V3, V4, makePointingObject } from "@stellar-globe/stellar-globe"
 import { produce } from 'immer'
 import { Fragment, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react"
@@ -35,7 +35,7 @@ export const RectangularRegionLayer = ({
   showLabel,
   children,
 }: Props) => {
-  type Paths = Parameters<typeof PathLayer$>[0]['paths']
+  type Paths = Parameters<typeof PathLayer>[0]['paths']
 
   const [rectDef, setRawRectDef] = useState(() => normalizeRectDef(rectDefProp))
 
@@ -106,7 +106,7 @@ export const RectangularRegionLayer = ({
 
   return (
     <Fragment>
-      <PathLayer$
+      <PathLayer
         paths={paths}
         blendMode="NORMAL"
         dimOnZoom={false}
@@ -118,7 +118,7 @@ export const RectangularRegionLayer = ({
         markerType='diamond'
       />
       {showLabel &&
-        <DomLayer$ position={menuXyz} offset={offset} >
+        <DomLayer position={menuXyz} offset={offset} >
           <RegularMenu
             renderMenuButton={() => (
               <div className={styles.lineInfo} >
@@ -129,7 +129,7 @@ export const RectangularRegionLayer = ({
           >
             {children}
           </RegularMenu>
-        </DomLayer$>
+        </DomLayer>
       }
       {onChange && (
         <MouseLayer$ rectDef={rectDef} onChange={setRectDef} onSubmit={onSubmit} />

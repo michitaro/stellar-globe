@@ -1,9 +1,9 @@
-import { Globe } from '@stellar-globe/stellar-globe'
+import { Globe as CoreGlobe } from '@stellar-globe/stellar-globe'
 import { ReactNode, forwardRef, useEffect, useImperativeHandle } from "react"
 import { GlobeContext, GlobeHooks, GlobeOptions, setDisplayName, useGenerateContext } from './GlobeContext'
 
 
-export type GlobeHandle = () => Globe
+export type GlobeHandle = () => CoreGlobe
 type GlobeProps = GlobeOptions & GlobeHooks & {
   children?: ReactNode
 }
@@ -14,14 +14,14 @@ type GlobeProps = GlobeOptions & GlobeHooks & {
  * 
  * @example
  * ```tsx
- * <Globe$>
- *   <PanLayer$ />
- *   <ZoomLayer$ />
- *   <GridLayer$ />
- * </Globe$>
+ * <Globe>
+ *   <PanLayer />
+ *   <ZoomLayer />
+ *   <GridLayer />
+ * </Globe>
  * ```
  */
-export const Globe$ = forwardRef<GlobeHandle, GlobeProps>(function Globe$(
+export const Globe = forwardRef<GlobeHandle, GlobeProps>(function Globe(
   {
     children,
     ...props
@@ -47,4 +47,7 @@ export const Globe$ = forwardRef<GlobeHandle, GlobeProps>(function Globe$(
   )
 })
 
-setDisplayName({ Globe$ })
+setDisplayName({ Globe })
+
+/** @deprecated Use Globe instead */
+export const Globe$ = Globe

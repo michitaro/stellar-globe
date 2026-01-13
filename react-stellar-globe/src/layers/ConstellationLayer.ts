@@ -1,18 +1,18 @@
-import { ConstellationLayer, Globe } from "@stellar-globe/stellar-globe"
+import { ConstellationLayer as CoreConstellationLayer, Globe } from "@stellar-globe/stellar-globe"
 import React, { memo, useCallback, useEffect } from "react"
 import { setDisplayName, useLayerBind } from "../GlobeContext"
 
 
-type ConstellationLayerProps = NonNullable<ConstructorParameters<typeof ConstellationLayer>[1]> & { visible?: boolean }
+type ConstellationLayerProps = NonNullable<ConstructorParameters<typeof CoreConstellationLayer>[1]> & { visible?: boolean }
 
-const ConstellationLayer$: React.FC<ConstellationLayerProps> = memo(props => {
-  const { visible = true, ...options } = { ...ConstellationLayer.defaultOptions(), ...props }
+const ConstellationLayer: React.FC<ConstellationLayerProps> = memo(props => {
+  const { visible = true, ...options } = { ...CoreConstellationLayer.defaultOptions(), ...props }
   const {
     lang, nameColor, nameFont, showLines, showNames,
   } = options
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const factory = useCallback((globe: Globe) => new ConstellationLayer(globe, options), [lang, nameColor, nameFont])
-  const { node, ifLayerReady } = useLayerBind<ConstellationLayer>(factory, visible)
+  const factory = useCallback((globe: Globe) => new CoreConstellationLayer(globe, options), [lang, nameColor, nameFont])
+  const { node, ifLayerReady } = useLayerBind<CoreConstellationLayer>(factory, visible)
 
   useEffect(() => {
     ifLayerReady(layer => {
@@ -25,6 +25,9 @@ const ConstellationLayer$: React.FC<ConstellationLayerProps> = memo(props => {
   return node
 })
 
-setDisplayName({ ConstellationLayer$ })
+setDisplayName({ ConstellationLayer })
 
-export { ConstellationLayer$ }
+export { ConstellationLayer }
+
+/** @deprecated Use ConstellationLayer instead */
+export const ConstellationLayer$ = ConstellationLayer

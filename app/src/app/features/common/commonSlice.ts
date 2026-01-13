@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { TractTileLayer$ } from "@stellar-globe/react-stellar-globe"
+import { TractTileLayer } from "@stellar-globe/react-stellar-globe"
 import { AngleUnit } from "../../../common/utils/formatAngle"
 import { readStorageState } from "../../store/stateSync/StorageSync"
 
 
-type MagFilter = NonNullable<Parameters<typeof TractTileLayer$>[0]['magFilter']>
+type MagFilter = NonNullable<Parameters<typeof TractTileLayer>[0]['magFilter']>
 
 
 type State = {

@@ -1,12 +1,12 @@
-import { Globe, TextLayer, overlayAlpha } from "@stellar-globe/stellar-globe"
+import { Globe, TextLayer as CoreTextLayer, overlayAlpha } from "@stellar-globe/stellar-globe"
 import { memo, useCallback, useEffect } from "react"
 import { setDisplayName, useLayerBind } from "../GlobeContext"
 
 
-type TextLayerProps = ConstructorParameters<typeof TextLayer>[1] & { visible?: boolean }
+type TextLayerProps = ConstructorParameters<typeof CoreTextLayer>[1] & { visible?: boolean }
 
 
-const TextLayer$: React.FC<TextLayerProps> = memo(props => {
+const TextLayer: React.FC<TextLayerProps> = memo(props => {
   const { visible = true, ...options } = props
   const {
     defaultColor,
@@ -15,8 +15,8 @@ const TextLayer$: React.FC<TextLayerProps> = memo(props => {
     alphaFunc = overlayAlpha,
   } = options
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const factory = useCallback((globe: Globe) => new TextLayer(globe, options), [])
-  const { node, ifLayerReady } = useLayerBind<TextLayer>(factory, visible)
+  const factory = useCallback((globe: Globe) => new CoreTextLayer(globe, options), [])
+  const { node, ifLayerReady } = useLayerBind<CoreTextLayer>(factory, visible)
 
   useEffect(() => {
     ifLayerReady(layer => {
@@ -38,10 +38,12 @@ const TextLayer$: React.FC<TextLayerProps> = memo(props => {
   return node
 })
 
-setDisplayName({ TextLayer$ })
+setDisplayName({ TextLayer })
 
-export { TextLayer$ }
+export { TextLayer }
 
+/** @deprecated Use TextLayer instead */
+export const TextLayer$ = TextLayer
 
 export function alwaysOne() {
   return 1.

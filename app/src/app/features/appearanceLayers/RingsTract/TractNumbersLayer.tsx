@@ -1,4 +1,4 @@
-import { DomLayer$, GlobeEventLayer$ } from "@stellar-globe/react-stellar-globe"
+import { DomLayer, GlobeEventLayer } from "@stellar-globe/react-stellar-globe"
 import { V3, angle } from "@stellar-globe/stellar-globe"
 import { Fragment, useCallback, useMemo, useState } from "react"
 import { useAppContext } from "../../../context"
@@ -44,12 +44,12 @@ export function TractNumbersLayer() {
 
   return (
     <Fragment>
-      <GlobeEventLayer$ onCameraMove={updateCameraParams} />
+      <GlobeEventLayer onCameraMove={updateCameraParams} />
       {camera.fovy <= 0.2 &&
         tracts.map(({ position, index }) => (
-          <DomLayer$ key={index} position={position}>
+          <DomLayer key={index} position={position}>
             <div className={styles.tractNumber}>{index}</div>
-          </DomLayer$>
+          </DomLayer>
         ))
       }
     </Fragment>

@@ -2,7 +2,7 @@ import { hips } from "@stellar-globe/stellar-globe"
 import { makePureLayerComponent, setDisplayName } from "../GlobeContext"
 
 
-const HipsSimpleLayer$ = makePureLayerComponent<{
+const HipsSimpleLayer = makePureLayerComponent<{
   visible?: boolean,
   baseUrl: string,
   animationLod?: number,
@@ -12,5 +12,8 @@ const HipsSimpleLayer$ = makePureLayerComponent<{
 )
 
 
-setDisplayName({ HipsSimpleLayer$ })
-export { HipsSimpleLayer$ }
+setDisplayName({ HipsSimpleLayer })
+export { HipsSimpleLayer }
+
+/** @deprecated Use HipsSimpleLayer instead */
+export const HipsSimpleLayer$ = HipsSimpleLayer

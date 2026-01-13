@@ -1,4 +1,4 @@
-import { MarkerLayer$ } from "@stellar-globe/react-stellar-globe"
+import { MarkerLayer } from "@stellar-globe/react-stellar-globe"
 import { V3, V4 } from "@stellar-globe/stellar-globe"
 import { memo, useMemo } from "react"
 
@@ -6,7 +6,7 @@ import { memo, useMemo } from "react"
 type PointMarkerProps = {
   position: V3
   color: V4
-  markerType: Parameters<typeof MarkerLayer$>[0]['defaultType']
+  markerType: Parameters<typeof MarkerLayer>[0]['defaultType']
   markerSize?: number
   markerWidth?: number
   visible?: boolean
@@ -21,7 +21,7 @@ export const PointMarker = memo(({
   markerWidth,
   visible,
 }: PointMarkerProps) => {
-  type Marker = Parameters<typeof MarkerLayer$>[0]['markers'][number]
+  type Marker = Parameters<typeof MarkerLayer>[0]['markers'][number]
 
   const markers = useMemo<Marker[]>(() => [{
     position,
@@ -30,7 +30,7 @@ export const PointMarker = memo(({
   const defaultColor = useMemo<V4>(() => [1, 1, 1, 1], [])
 
   return (
-    <MarkerLayer$
+    <MarkerLayer
       baseColor={color}
       markers={markers}
       markerSize={markerSize}

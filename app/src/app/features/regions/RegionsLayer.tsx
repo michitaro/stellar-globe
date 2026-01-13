@@ -1,4 +1,4 @@
-import { PathLayer$ } from "@stellar-globe/react-stellar-globe"
+import { PathLayer } from "@stellar-globe/react-stellar-globe"
 import { V4 } from "@stellar-globe/stellar-globe"
 import { FocusableItem, MenuItem } from "@szhsin/react-menu"
 import { Fragment, memo, useCallback, useMemo } from "react"
@@ -426,7 +426,7 @@ const PathRegionFromDefLayer = memo(({
 }: SpecificRegionType<'Path'>) => {
 
   return (
-    <PathLayer$
+    <PathLayer
       paths={paths}
       darkenNarrowLine={false}
       dimOnZoom={false}

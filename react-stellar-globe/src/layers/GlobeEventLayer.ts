@@ -1,10 +1,10 @@
-import { Globe, GlobeEventMap, Layer } from '@stellar-globe/stellar-globe'
+import { Globe, GlobeEventMap as CoreGlobeEventMap, Layer } from '@stellar-globe/stellar-globe'
 import { memo, useCallback, useEffect } from "react"
 import { setDisplayName, useLayerBind } from '../GlobeContext'
 import { useInstanceVariable } from '../hooks/useInstanceVariable'
 
 
-class GlobeEventLayer extends Layer { }
+class GlobeEventLayerImpl extends Layer { }
 
 
 const eventNameMap = {
@@ -20,17 +20,17 @@ const eventNameMap = {
 } as const
 
 
-type GlobeEventMap$ = {
-  [K in keyof typeof eventNameMap]: GlobeEventMap[(typeof eventNameMap)[K]]
+type GlobeEventMap = {
+  [K in keyof typeof eventNameMap]: CoreGlobeEventMap[(typeof eventNameMap)[K]]
 }
 
 
 type GlobeEventLayerProps = {
-  [K in keyof typeof eventNameMap]: (event: GlobeEventMap$[K]) => void
+  [K in keyof typeof eventNameMap]: (event: GlobeEventMap[K]) => void
 }
 
 
-const GlobeEventLayer$: React.FC<Partial<GlobeEventLayerProps>> = memo(props => {
+const GlobeEventLayer: React.FC<Partial<GlobeEventLayerProps>> = memo(props => {
   type PropName = keyof typeof eventNameMap
 
   const off = useInstanceVariable(() => new Map<PropName, () => void>())
@@ -38,7 +38,7 @@ const GlobeEventLayer$: React.FC<Partial<GlobeEventLayerProps>> = memo(props => 
   const rebind = (globe: Globe, pName: PropName) => {
     off.get(pName)?.()
     off.delete(pName)
-    type Callback = undefined | ((event: GlobeEventMap[(typeof eventNameMap)[typeof pName]]) => void)
+    type Callback = undefined | ((event: CoreGlobeEventMap[(typeof eventNameMap)[typeof pName]]) => void)
     const h = props[pName] as Callback
     if (h) {
       const _off = globe.on(eventNameMap[pName], h)
@@ -51,13 +51,13 @@ const GlobeEventLayer$: React.FC<Partial<GlobeEventLayerProps>> = memo(props => 
       for (const pName of Object.keys(eventNameMap) as PropName[]) {
         rebind(globe, pName)
       }
-      return new GlobeEventLayer(globe)
+      return new GlobeEventLayerImpl(globe)
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   )
 
-  const { node, ifLayerReady } = useLayerBind<GlobeEventLayer>(factory, true)
+  const { node, ifLayerReady } = useLayerBind<GlobeEventLayerImpl>(factory, true)
 
   for (const k of Object.keys(eventNameMap) as PropName[]) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -74,5 +74,8 @@ const GlobeEventLayer$: React.FC<Partial<GlobeEventLayerProps>> = memo(props => 
 })
 
 
-setDisplayName({ GlobeEventLayer$ })
-export { GlobeEventLayer$ }
+setDisplayName({ GlobeEventLayer })
+export { GlobeEventLayer }
+
+/** @deprecated Use GlobeEventLayer instead */
+export const GlobeEventLayer$ = GlobeEventLayer

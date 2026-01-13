@@ -1,4 +1,4 @@
-import { TractTileLayer$ } from "@stellar-globe/react-stellar-globe"
+import { TractTileLayer } from "@stellar-globe/react-stellar-globe"
 import { Fragment, Suspense, memo, useMemo } from "react"
 import { ErrorBoundary } from "react-error-boundary"
 import { useAppSelector } from "../../store/hooks"
@@ -32,12 +32,12 @@ export const TractTileLayers = memo(() => {
 })
 
 
-function TractTileLayerWithFilterNameDictionary(props: Parameters<typeof TractTileLayer$>[0]) {
+function TractTileLayerWithFilterNameDictionary(props: Parameters<typeof TractTileLayer>[0]) {
   const { baseUrl } = props
   const filterMap = useFilterMap(baseUrl)
   const filterNameDictionary = useMemo(
     () => Object.fromEntries(filterMap.map(({ intrinsicName, commonName }) => [commonName, intrinsicName])),
     [filterMap],
   )
-  return <TractTileLayer$ filterNameDictionary={filterNameDictionary} {...props} />
+  return <TractTileLayer filterNameDictionary={filterNameDictionary} {...props} />
 }

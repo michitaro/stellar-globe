@@ -1,19 +1,19 @@
-import { Globe, TractTileLayer } from "@stellar-globe/stellar-globe"
+import { Globe, TractTileLayer as CoreTractTileLayer } from "@stellar-globe/stellar-globe"
 import React, { memo, useCallback, useEffect } from "react"
 import { mountOndemand, setDisplayName, useLayerBind } from "../GlobeContext"
 
 
-type TractTileLayerProps = ConstructorParameters<typeof TractTileLayer>[1] & {
+type TractTileLayerProps = ConstructorParameters<typeof CoreTractTileLayer>[1] & {
   visible?: boolean
   filterNameDictionary?: filterNameDictionary
 }
 
 type ColorParams = NonNullable<TractTileLayerProps['colorParams']>
 
-const TractTileLayer$: React.FC<TractTileLayerProps> = mountOndemand(memo(props => {
+const TractTileLayer: React.FC<TractTileLayerProps> = mountOndemand(memo(props => {
   const {
     baseUrl,
-    colorParams = TractTileLayer.defaultParams({ type: 'sdssTrueColor' }),
+    colorParams = CoreTractTileLayer.defaultParams({ type: 'sdssTrueColor' }),
     outline = false,
     visible = true,
     magFilter = 'linear',
@@ -21,7 +21,7 @@ const TractTileLayer$: React.FC<TractTileLayerProps> = mountOndemand(memo(props 
   } = props
   const factory = useCallback(
     (globe: Globe) => {
-      return new TractTileLayer(globe, {
+      return new CoreTractTileLayer(globe, {
         ...props,
         colorParams: applyFilterNameTranslation(colorParams, filterNameDictionary)
       })
@@ -29,7 +29,7 @@ const TractTileLayer$: React.FC<TractTileLayerProps> = mountOndemand(memo(props 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [baseUrl],
   )
-  const { node, ifLayerReady } = useLayerBind<TractTileLayer>(factory, visible)
+  const { node, ifLayerReady } = useLayerBind<CoreTractTileLayer>(factory, visible)
 
   useEffect(() => {
     ifLayerReady(layer => {
@@ -52,8 +52,11 @@ const TractTileLayer$: React.FC<TractTileLayerProps> = mountOndemand(memo(props 
 
   return node
 }), 'visible')
-setDisplayName({ TractTileLayer$ })
-export { TractTileLayer$ }
+setDisplayName({ TractTileLayer })
+export { TractTileLayer }
+
+/** @deprecated Use TractTileLayer instead */
+export const TractTileLayer$ = TractTileLayer
 
 
 type filterNameDictionary = { [altName: string]: string }
