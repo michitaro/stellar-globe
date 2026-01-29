@@ -23,7 +23,23 @@ export function Example() {
       {Array.from({ length: count }).map((_, i) => (
         <MyDialog key={i} />
       ))}
+      <BuggyDialog />
     </DialogContext>
+  )
+}
+
+function BuggyDialog() {
+  return (
+    <DarkDialog
+      title="BuggyDialog"
+      minmaxSize={
+        { maxWidth: '300px' }
+      }
+    >
+      <div style={{ width: '2000px', height: '200px' }}>
+        content
+      </div>
+    </DarkDialog>
   )
 }
 
