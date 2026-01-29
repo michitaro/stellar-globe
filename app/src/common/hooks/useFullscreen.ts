@@ -20,7 +20,7 @@ export function useIsFullscreen() {
 }
 
 
-export function useFullscreen(ref: RefObject<HTMLDivElement>) {
+export function useFullscreen(ref: RefObject<HTMLDivElement | null>) {
   const { isFullscreen } = useIsFullscreen()
 
   const enterFullscreen = useCallback(() => {

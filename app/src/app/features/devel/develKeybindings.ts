@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { develSlice } from './develSlice'
 
 export function useDevelKeybindings() {
-  const profilerRef = useRef<ReturnType<typeof enableWebglProfiler>>()
+  const profilerRef = useRef<ReturnType<typeof enableWebglProfiler> | undefined>(undefined)
   const { globeHandle } = useAppContext()
   const dispatch = useAppDispatch()
   const profilingSupported = useAppSelector(state => state.devel.profilerSupported)

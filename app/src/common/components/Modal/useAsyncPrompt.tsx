@@ -69,7 +69,7 @@ function Prompt({
 }
 
 
-function useSetupModalFocusTrap(containerRef: RefObject<HTMLElement>, rootElementRef?: RefObject<HTMLElement>) {
+function useSetupModalFocusTrap(containerRef: RefObject<HTMLElement | null>, rootElementRef?: RefObject<HTMLElement | null>) {
   useEffect(() => {
     const container = containerRef.current
     if (!container) return

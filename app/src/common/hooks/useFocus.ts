@@ -1,7 +1,7 @@
 import { RefObject, useEffect, useState } from "react"
 
 
-export function useIsFocused(ref: RefObject<HTMLElement>, deps: unknown[] = []) {
+export function useIsFocused(ref: RefObject<HTMLElement | null>, deps: unknown[] = []) {
   const [isFocused, setIsFocused] = useState(false)
 
   useEffect(() => {

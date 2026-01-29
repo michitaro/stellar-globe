@@ -7,7 +7,7 @@ function useMakeContext({
   keybinds,
   catchEventsOutsideContainer,
 }: {
-  containerRef: RefObject<HTMLElement>
+  containerRef: RefObject<HTMLElement | null>
   keybinds: { [shortcut: string]: Keybind }
   catchEventsOutsideContainer: boolean,
 }) {
@@ -87,7 +87,7 @@ export function makeKeybindsEnvironment<T extends Record<string, Keybind>>(
 ) {
   type ProviderProps = {
     children?: ReactNode
-    containerRef: RefObject<HTMLElement>
+    containerRef: RefObject<HTMLElement | null>
     catchAllEvents?: boolean
   }
 

@@ -12,7 +12,7 @@ type ResizableProps = {
   setPosition: React.Dispatch<React.SetStateAction<Position | undefined>>
   size: PartialSize | undefined
   setSize: React.Dispatch<React.SetStateAction<PartialSize | undefined>>
-  container: RefObject<HTMLElement>
+  container: RefObject<HTMLElement | null>
   minSize?: Size
   enabled: { x: boolean, y: boolean }
   origin: Origin
@@ -66,7 +66,7 @@ function EnabledResizable({
   origin,
 }: ResizableProps) {
   // const positionAtDragStart = useRef<(Size & Position) | undefined>(undefined)
-  const dragState = useRef<DragState | undefined>()
+  const dragState = useRef<DragState | undefined>(undefined)
 
   const onDragStart = useCallback((e: DragMoveEvent) => {
     const { left, top, width, height } = container.current!.getBoundingClientRect()

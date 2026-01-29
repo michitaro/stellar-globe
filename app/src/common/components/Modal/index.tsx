@@ -4,8 +4,8 @@ import { useImmer } from "use-immer"
 import styles from './styles.module.scss'
 
 
-function useMakeContext(rootElementRef?: RefObject<HTMLElement>) {
-  const blockRef = useRef(null)
+function useMakeContext(rootElementRef?: RefObject<HTMLElement | null>) {
+  const blockRef = useRef<HTMLDivElement>(null)
   const [layers, updateLayers] = useImmer<ReactNode[]>([])
 
   const addLayer = useCallback((layer: ReactNode) => {
@@ -36,7 +36,7 @@ export function ModalProvider({
   rootElementRef,
 }: {
   children: ReactNode
-  rootElementRef?: RefObject<HTMLElement>
+  rootElementRef?: RefObject<HTMLElement | null>
 }) {
   const context = useMakeContext(rootElementRef)
   const nodeRef = context.blockRef

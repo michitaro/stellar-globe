@@ -1,11 +1,12 @@
 import { ControlledMenu, useClick, useHover, useMenuState } from '@szhsin/react-menu'
 import classNames from 'classnames'
-import { Fragment, MutableRefObject, ReactNode, useEffect, useMemo, useRef } from 'react'
+import { Fragment, ReactNode, useEffect, useMemo, useRef } from 'react'
 import { useMenuContainer } from './MenuContext'
 import styles from './styles.module.scss'
 
 
-const closers = new Map<MutableRefObject<null>, () => void>()
+type AnchorRef = ReturnType<typeof useRef<HTMLDivElement>>
+const closers = new Map<AnchorRef, () => void>()
 
 
 type Props = {
@@ -17,8 +18,9 @@ type Props = {
 
 
 export function HoverMenu({ className, children, renderMenuButton, renderMenuButtonContents, ...menuProps }: Props) {
-  const anchorRef = useRef(null)
+  const anchorRef = useRef<HTMLDivElement>(null)
   const [menuState, toggle] = useMenuState()
+  // @szhsin/react-menuがReact 19の型に未対応なためanyキャストが必要
   const clickProps = useClick(menuState.state, toggle)
   const { anchorProps, hoverProps } = useHover(menuState.state, toggle, { openDelay: 0, closeDelay: 1000 })
 
@@ -27,9 +29,9 @@ export function HoverMenu({ className, children, renderMenuButton, renderMenuBut
   }
 
   useEffect(() => {
-    closers.set(anchorRef, () => toggle(false))
+    closers.set(anchorRef as any, () => toggle(false))
     return () => {
-      closers.delete(anchorRef)
+      closers.delete(anchorRef as any)
     }
   }, [toggle])
 
@@ -66,7 +68,7 @@ export function HoverMenu({ className, children, renderMenuButton, renderMenuBut
         {...hoverProps}
         {...menuState}
         theming='dark'
-        anchorRef={anchorRef}
+        anchorRef={anchorRef as any}
         onClose={() => toggle(false)}
         submenuOpenDelay={0}
         submenuCloseDelay={0}

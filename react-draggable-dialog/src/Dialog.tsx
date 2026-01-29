@@ -81,7 +81,7 @@ function DialogDraggable(props: DialogProps & { autoResizeTrigger: unknown }) {
     useSensor(KeyboardSensor),
   )
   const [position, setPosition] = useState<Position | undefined>(undefined)
-  const positionAtDragStart = useRef<Position | undefined>()
+  const positionAtDragStart = useRef<Position | undefined>(undefined)
   const onDragStart = useCallback(({ active: { data } }: DragEndEvent) => {
     const sizeRef: React.RefObject<HTMLDivElement> = data.current?.sizeRef
     const { left, top } = sizeRef.current!.getBoundingClientRect()
@@ -286,7 +286,7 @@ function DnDContent({
 
 type PositionRegistryProps = {
   id: number
-  sizeRef: RefObject<HTMLDivElement>
+  sizeRef: RefObject<HTMLDivElement | null>
   visible: boolean
   position: Position | undefined
   setPosition: React.Dispatch<React.SetStateAction<Position | undefined>>
@@ -305,7 +305,7 @@ function usePositionRegistry({
 }: PositionRegistryProps) {
   const { dialogs, nextPosition, rearrangeTrigger } = useDialogContext()
 
-  const positionBeforeRearrange = useRef<Position>()
+  const positionBeforeRearrange = useRef<Position | undefined>(undefined)
 
   useLayoutEffect(
     () => {
@@ -343,7 +343,7 @@ function usePositionRegistry({
           const p1 = newTopLeft
           const dx = p0.left - p1.left
           const dy = p0.top - p1.top
-          sizeRef.current.animate?.([
+          sizeRef.current?.animate?.([
             { transform: `translate(${dx}px, ${dy}px)` },
             { transform: `translate(0, 0)`, },
           ], {
