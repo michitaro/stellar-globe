@@ -15,6 +15,14 @@ function localStorageState(state: AppState) {
     angleUnit: state.common.angleUnit,
     dialogPositionHint: state.common.dialogPositionHint,
     magFilter: state.common.magFilter,
+    cas: {
+      releaseName: state.cas.releaseName,
+      rerun: state.cas.rerun,
+      queueMode: state.cas.queueMode,
+      noMail: state.cas.noMail,
+      draftSql: state.cas.draftSql,
+      presets: state.cas.presets,
+    },
   }
 }
 
@@ -44,6 +52,7 @@ export function useLocalStorageSync({
         appOnChange(store, state => state.common.angleUnit, sync),
         appOnChange(store, state => state.common.dialogPositionHint, sync),
         appOnChange(store, state => state.common.magFilter, sync),
+        appOnChange(store, state => state.cas, sync),
       ]
       return () => {
         while (cleanup.length > 0) {

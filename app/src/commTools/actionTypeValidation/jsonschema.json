@@ -290,7 +290,7 @@
             "$ref": "#/definitions/DialogState_1"
         },
         "DialogState_1": {
-            "$ref": "#/definitions/__type_32"
+            "$ref": "#/definitions/__type_43"
         },
         "JOINT": {
             "enum": [
@@ -348,7 +348,7 @@
             "type": "string"
         },
         "Marker": {
-            "$ref": "#/definitions/__type_46"
+            "$ref": "#/definitions/__type_57"
         },
         "MarkerType": {
             "enum": [
@@ -371,7 +371,7 @@
             "type": "string"
         },
         "MaskConfig": {
-            "$ref": "#/definitions/__type_52"
+            "$ref": "#/definitions/__type_63"
         },
         "P": {
             "$ref": "#/definitions/__type_1"
@@ -380,79 +380,118 @@
             "$ref": "#/definitions/__type_2"
         },
         "P_10": {
-            "$ref": "#/definitions/__type_14"
+            "$ref": "#/definitions/__type_13"
         },
         "P_11": {
-            "$ref": "#/definitions/__type_15"
+            "$ref": "#/definitions/__type_14"
         },
         "P_12": {
-            "$ref": "#/definitions/__type_16"
+            "$ref": "#/definitions/__type_15"
         },
         "P_13": {
-            "$ref": "#/definitions/__type_17"
+            "$ref": "#/definitions/__type_16"
         },
         "P_14": {
-            "$ref": "#/definitions/__type_18"
+            "$ref": "#/definitions/__type_17"
         },
         "P_15": {
-            "$ref": "#/definitions/__type_19"
+            "$ref": "#/definitions/__type_18"
         },
         "P_16": {
-            "$ref": "#/definitions/__object"
+            "$ref": "#/definitions/__type_19"
         },
         "P_17": {
-            "$ref": "#/definitions/__object_1"
+            "$ref": "#/definitions/__type_20"
         },
         "P_18": {
-            "$ref": "#/definitions/__object_2"
+            "$ref": "#/definitions/__type_21"
         },
         "P_19": {
-            "$ref": "#/definitions/__object_3"
+            "$ref": "#/definitions/__type_22"
         },
         "P_2": {
             "description": "The type of the action's payload.",
             "type": "boolean"
         },
         "P_20": {
-            "$ref": "#/definitions/__object_4"
-        },
-        "P_21": {
-            "$ref": "#/definitions/__type_21"
-        },
-        "P_22": {
-            "$ref": "#/definitions/__type_22"
-        },
-        "P_23": {
             "$ref": "#/definitions/__type_23"
         },
-        "P_24": {
+        "P_21": {
             "$ref": "#/definitions/__type_24"
         },
-        "P_25": {
+        "P_22": {
             "$ref": "#/definitions/__type_25"
         },
-        "P_26": {
+        "P_23": {
             "$ref": "#/definitions/__type_26"
         },
-        "P_27": {
+        "P_24": {
+            "$ref": "#/definitions/__type_27"
+        },
+        "P_25": {
             "$ref": "#/definitions/__type_28"
         },
-        "P_28": {
+        "P_26": {
             "$ref": "#/definitions/__type_29"
         },
-        "P_29": {
+        "P_27": {
             "$ref": "#/definitions/__type_30"
+        },
+        "P_28": {
+            "$ref": "#/definitions/__object_1"
+        },
+        "P_29": {
+            "$ref": "#/definitions/__object_2"
         },
         "P_3": {
             "$ref": "#/definitions/__type_3"
         },
         "P_30": {
-            "$ref": "#/definitions/__object_5"
+            "$ref": "#/definitions/__object_3"
         },
         "P_31": {
-            "$ref": "#/definitions/__type_31"
+            "$ref": "#/definitions/__object_4"
         },
         "P_32": {
+            "$ref": "#/definitions/__object_5"
+        },
+        "P_33": {
+            "$ref": "#/definitions/__type_32"
+        },
+        "P_34": {
+            "$ref": "#/definitions/__type_33"
+        },
+        "P_35": {
+            "$ref": "#/definitions/__type_34"
+        },
+        "P_36": {
+            "$ref": "#/definitions/__type_35"
+        },
+        "P_37": {
+            "$ref": "#/definitions/__type_36"
+        },
+        "P_38": {
+            "$ref": "#/definitions/__type_37"
+        },
+        "P_39": {
+            "$ref": "#/definitions/__type_39"
+        },
+        "P_4": {
+            "$ref": "#/definitions/__type_4"
+        },
+        "P_40": {
+            "$ref": "#/definitions/__type_40"
+        },
+        "P_41": {
+            "$ref": "#/definitions/__type_41"
+        },
+        "P_42": {
+            "$ref": "#/definitions/__object_6"
+        },
+        "P_43": {
+            "$ref": "#/definitions/__type_42"
+        },
+        "P_44": {
             "additionalProperties": false,
             "description": "The type of the action's payload.",
             "properties": {
@@ -529,59 +568,20 @@
             ],
             "type": "object"
         },
-        "P_33": {
-            "$ref": "#/definitions/__type_33"
-        },
-        "P_34": {
-            "$ref": "#/definitions/__type_34"
-        },
-        "P_35": {
-            "$ref": "#/definitions/__type_35"
-        },
-        "P_36": {
-            "$ref": "#/definitions/__type_36"
-        },
-        "P_37": {
-            "$ref": "#/definitions/__type_37"
-        },
-        "P_38": {
-            "$ref": "#/definitions/__type_38"
-        },
-        "P_39": {
-            "$ref": "#/definitions/__type_39"
-        },
-        "P_4": {
-            "$ref": "#/definitions/__type_4"
-        },
-        "P_40": {
-            "$ref": "#/definitions/__type_40"
-        },
-        "P_41": {
-            "$ref": "#/definitions/__type_41"
-        },
-        "P_42": {
-            "$ref": "#/definitions/__type_42"
-        },
-        "P_43": {
-            "$ref": "#/definitions/__type_43"
-        },
-        "P_44": {
+        "P_45": {
             "$ref": "#/definitions/__type_44"
         },
-        "P_45": {
+        "P_46": {
             "$ref": "#/definitions/__type_45"
         },
-        "P_46": {
-            "$ref": "#/definitions/__type_47"
-        },
         "P_47": {
-            "$ref": "#/definitions/__type_48"
+            "$ref": "#/definitions/__type_46"
         },
         "P_48": {
-            "$ref": "#/definitions/__type_49"
+            "$ref": "#/definitions/__type_47"
         },
         "P_49": {
-            "$ref": "#/definitions/__type_50"
+            "$ref": "#/definitions/__type_48"
         },
         "P_5": {
             "description": "The type of the action's payload.",
@@ -596,16 +596,34 @@
             "type": "string"
         },
         "P_50": {
-            "$ref": "#/definitions/__type_51"
+            "$ref": "#/definitions/__type_49"
         },
         "P_51": {
-            "$ref": "#/definitions/__object_6"
+            "$ref": "#/definitions/__type_50"
         },
         "P_52": {
-            "$ref": "#/definitions/__type_53"
+            "$ref": "#/definitions/__type_51"
         },
         "P_53": {
+            "$ref": "#/definitions/__type_52"
+        },
+        "P_54": {
+            "$ref": "#/definitions/__type_53"
+        },
+        "P_55": {
             "$ref": "#/definitions/__type_54"
+        },
+        "P_56": {
+            "$ref": "#/definitions/__type_55"
+        },
+        "P_57": {
+            "$ref": "#/definitions/__type_56"
+        },
+        "P_58": {
+            "$ref": "#/definitions/__type_58"
+        },
+        "P_59": {
+            "$ref": "#/definitions/__type_59"
         },
         "P_6": {
             "description": "The type of the action's payload.",
@@ -616,14 +634,32 @@
             ],
             "type": "string"
         },
+        "P_60": {
+            "$ref": "#/definitions/__type_60"
+        },
+        "P_61": {
+            "$ref": "#/definitions/__type_61"
+        },
+        "P_62": {
+            "$ref": "#/definitions/__type_62"
+        },
+        "P_63": {
+            "$ref": "#/definitions/__object_7"
+        },
+        "P_64": {
+            "$ref": "#/definitions/__type_64"
+        },
+        "P_65": {
+            "$ref": "#/definitions/__type_65"
+        },
         "P_7": {
             "$ref": "#/definitions/__type_11"
         },
         "P_8": {
-            "$ref": "#/definitions/__type_12"
+            "$ref": "#/definitions/__object"
         },
         "P_9": {
-            "$ref": "#/definitions/__type_13"
+            "$ref": "#/definitions/__type_12"
         },
         "Partial": {
             "$ref": "#/definitions/__type_5"
@@ -644,10 +680,10 @@
             "$ref": "#/definitions/__type_10"
         },
         "Partial_6": {
-            "$ref": "#/definitions/__type_27"
+            "$ref": "#/definitions/__type_38"
         },
         "Partial_7": {
-            "$ref": "#/definitions/__type_55"
+            "$ref": "#/definitions/__type_66"
         },
         "PathRegion": {
             "additionalProperties": false,
@@ -817,7 +853,7 @@
             ]
         },
         "SkyCoordType": {
-            "$ref": "#/definitions/__type_20"
+            "$ref": "#/definitions/__type_31"
         },
         "T": {
             "const": "common/unitChanged",
@@ -830,52 +866,52 @@
             "type": "string"
         },
         "T_10": {
-            "const": "tractTileLayers/colorParamsUpdated",
+            "const": "cas/presetAdded",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_11": {
-            "const": "tractTileLayers/layerToggled",
+            "const": "cas/sqlDialogToggled",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_12": {
-            "const": "tractTileLayers/toneDialogToggled",
+            "const": "cas/jobsDialogToggled",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_13": {
-            "const": "tractTileLayers/layerAdded",
+            "const": "cas/sqlDialogOpened",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_14": {
-            "const": "tractTileLayers/layerRemoved",
+            "const": "cas/jobsDialogOpened",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_15": {
-            "const": "hipsLayers/baseUrlChanged",
+            "const": "cas/releaseChanged",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_16": {
-            "const": "hipsLayers/hipsDialogToggled",
+            "const": "cas/rerunChanged",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_17": {
-            "const": "regions/toolChanged",
+            "const": "cas/queryRegionChanged",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_18": {
-            "const": "regions/toolPinnedToggled",
+            "const": "cas/queueModeChanged",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_19": {
-            "const": "regions/autoColorToggled",
+            "const": "cas/noMailChanged",
             "description": "the type used for the action type.",
             "type": "string"
         },
@@ -885,52 +921,52 @@
             "type": "string"
         },
         "T_20": {
-            "const": "regions/newLinearRegionAdded",
+            "const": "cas/draftSqlChanged",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_21": {
-            "const": "regions/newCircularRegionAdded",
+            "const": "cas/presetDeleted",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_22": {
-            "const": "regions/newRectangularRegionAdded",
+            "const": "cas/presetRenamed",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_23": {
-            "const": "regions/newTextRegionAdded",
+            "const": "cas/jobsReloadRequested",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_24": {
-            "const": "regions/newPathRegionAdded",
+            "const": "tractTileLayers/colorParamsUpdated",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_25": {
-            "const": "regions/regionUpdated",
+            "const": "tractTileLayers/layerToggled",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_26": {
-            "const": "regions/regionsCleared",
+            "const": "tractTileLayers/toneDialogToggled",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_27": {
-            "const": "regions/regionDeleted",
+            "const": "tractTileLayers/layerAdded",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_28": {
-            "const": "regions/regionsDialogToggled",
+            "const": "tractTileLayers/layerRemoved",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_29": {
-            "const": "regions/regionsImported",
+            "const": "hipsLayers/baseUrlChanged",
             "description": "the type used for the action type.",
             "type": "string"
         },
@@ -940,52 +976,52 @@
             "type": "string"
         },
         "T_30": {
-            "const": "regions/regionsBatchUpdated",
+            "const": "hipsLayers/hipsDialogToggled",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_31": {
-            "const": "regions/regionsBatchDeleted",
+            "const": "regions/toolChanged",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_32": {
-            "const": "regions/regionsReordered",
+            "const": "regions/toolPinnedToggled",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_33": {
-            "const": "regions/regionsRenameGroup",
+            "const": "regions/autoColorToggled",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_34": {
-            "const": "catalogs/catalogAdded",
+            "const": "regions/newLinearRegionAdded",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_35": {
-            "const": "catalogs/catalogDeleted",
+            "const": "regions/newCircularRegionAdded",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_36": {
-            "const": "catalogs/catalogUpdated",
+            "const": "regions/newRectangularRegionAdded",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_37": {
-            "const": "catalogs/rowsFiltered",
+            "const": "regions/newTextRegionAdded",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_38": {
-            "const": "catalogs/selectionInverted",
+            "const": "regions/newPathRegionAdded",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_39": {
-            "const": "catalogs/allRowsSelected",
+            "const": "regions/regionUpdated",
             "description": "the type used for the action type.",
             "type": "string"
         },
@@ -995,52 +1031,52 @@
             "type": "string"
         },
         "T_40": {
-            "const": "catalogs/catalogMerged",
+            "const": "regions/regionsCleared",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_41": {
-            "const": "catalogs/catalogDuplicated",
+            "const": "regions/regionDeleted",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_42": {
-            "const": "catalogs/catalogSelected",
+            "const": "regions/regionsDialogToggled",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_43": {
-            "const": "catalogs/catalogsDialogToggled",
+            "const": "regions/regionsImported",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_44": {
-            "const": "catalogs/dialogToggled",
+            "const": "regions/regionsBatchUpdated",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_45": {
-            "const": "catalogs/dialogsClosed",
+            "const": "regions/regionsBatchDeleted",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_46": {
-            "const": "catalogs/focusedPositionChanged",
+            "const": "regions/regionsReordered",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_47": {
-            "const": "catalogs/recordSelected",
+            "const": "regions/regionsRenameGroup",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_48": {
-            "const": "catalogs/recordsBatchSelected",
+            "const": "catalogs/catalogAdded",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_49": {
-            "const": "catalogs/showAttributesToggled",
+            "const": "catalogs/catalogDeleted",
             "description": "the type used for the action type.",
             "type": "string"
         },
@@ -1050,52 +1086,52 @@
             "type": "string"
         },
         "T_50": {
-            "const": "catalogs/rowAdded",
+            "const": "catalogs/catalogUpdated",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_51": {
-            "const": "catalogs/rowDeleted",
+            "const": "catalogs/rowsFiltered",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_52": {
-            "const": "catalogs/fieldAdded",
+            "const": "catalogs/selectionInverted",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_53": {
-            "const": "catalogs/cellUpdated",
+            "const": "catalogs/allRowsSelected",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_54": {
-            "const": "catalogs/catalogReordered",
+            "const": "catalogs/catalogMerged",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_55": {
-            "const": "devel/profilerToggled",
+            "const": "catalogs/catalogDuplicated",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_56": {
-            "const": "fitsImage/dialogToggled",
+            "const": "catalogs/catalogSelected",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_57": {
-            "const": "fitsImage/imageAdded",
+            "const": "catalogs/catalogsDialogToggled",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_58": {
-            "const": "fitsImage/imageRemoved",
+            "const": "catalogs/dialogToggled",
             "description": "the type used for the action type.",
             "type": "string"
         },
         "T_59": {
-            "const": "fitsImage/imageMaskConfigUpdated",
+            "const": "catalogs/dialogsClosed",
             "description": "the type used for the action type.",
             "type": "string"
         },
@@ -1104,8 +1140,78 @@
             "description": "the type used for the action type.",
             "type": "string"
         },
+        "T_60": {
+            "const": "catalogs/focusedPositionChanged",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_61": {
+            "const": "catalogs/recordSelected",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_62": {
+            "const": "catalogs/recordsBatchSelected",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_63": {
+            "const": "catalogs/showAttributesToggled",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_64": {
+            "const": "catalogs/rowAdded",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_65": {
+            "const": "catalogs/rowDeleted",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_66": {
+            "const": "catalogs/fieldAdded",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_67": {
+            "const": "catalogs/cellUpdated",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_68": {
+            "const": "catalogs/catalogReordered",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_69": {
+            "const": "devel/profilerToggled",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
         "T_7": {
             "const": "camera/projectionUpdated",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_70": {
+            "const": "fitsImage/dialogToggled",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_71": {
+            "const": "fitsImage/imageAdded",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_72": {
+            "const": "fitsImage/imageRemoved",
+            "description": "the type used for the action type.",
+            "type": "string"
+        },
+        "T_73": {
+            "const": "fitsImage/imageMaskConfigUpdated",
             "description": "the type used for the action type.",
             "type": "string"
         },
@@ -1222,6 +1328,26 @@
         "__object": {
             "additionalProperties": false,
             "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "sql": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "id",
+                "name",
+                "sql"
+            ],
+            "type": "object"
+        },
+        "__object_1": {
+            "additionalProperties": false,
+            "properties": {
                 "color": {
                     "$ref": "#/definitions/V4"
                 },
@@ -1259,7 +1385,7 @@
             ],
             "type": "object"
         },
-        "__object_1": {
+        "__object_2": {
             "additionalProperties": false,
             "properties": {
                 "center": {
@@ -1299,7 +1425,7 @@
             ],
             "type": "object"
         },
-        "__object_2": {
+        "__object_3": {
             "additionalProperties": false,
             "properties": {
                 "color": {
@@ -1347,7 +1473,7 @@
             ],
             "type": "object"
         },
-        "__object_3": {
+        "__object_4": {
             "additionalProperties": false,
             "properties": {
                 "color": {
@@ -1383,7 +1509,7 @@
             ],
             "type": "object"
         },
-        "__object_4": {
+        "__object_5": {
             "additionalProperties": false,
             "properties": {
                 "color": {
@@ -1459,7 +1585,7 @@
             ],
             "type": "object"
         },
-        "__object_5": {
+        "__object_6": {
             "additionalProperties": false,
             "properties": {
                 "attributes": {
@@ -1523,7 +1649,7 @@
             ],
             "type": "object"
         },
-        "__object_6": {
+        "__object_7": {
             "additionalProperties": false,
             "properties": {
                 "hduIndex": {
@@ -1631,32 +1757,13 @@
         "__type_12": {
             "additionalProperties": false,
             "properties": {
-                "params": {
-                    "$ref": "#/definitions/ColorParams"
-                }
-            },
-            "required": [
-                "params"
-            ],
-            "type": "object"
-        },
-        "__type_13": {
-            "additionalProperties": false,
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "visible": {
+                "open": {
                     "type": "boolean"
                 }
             },
-            "required": [
-                "name",
-                "visible"
-            ],
             "type": "object"
         },
-        "__type_14": {
+        "__type_13": {
             "additionalProperties": false,
             "properties": {
                 "open": {
@@ -1665,38 +1772,43 @@
             },
             "type": "object"
         },
+        "__type_14": {
+            "additionalProperties": false,
+            "properties": {
+                "queryRegionId": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
         "__type_15": {
             "additionalProperties": false,
             "properties": {
-                "baseUrl": {
-                    "type": "string"
-                },
-                "name": {
+                "releaseName": {
                     "type": "string"
                 }
             },
             "required": [
-                "baseUrl",
-                "name"
+                "releaseName"
             ],
             "type": "object"
         },
         "__type_16": {
             "additionalProperties": false,
             "properties": {
-                "name": {
+                "rerun": {
                     "type": "string"
                 }
             },
             "required": [
-                "name"
+                "rerun"
             ],
             "type": "object"
         },
         "__type_17": {
             "additionalProperties": false,
             "properties": {
-                "baseUrl": {
+                "queryRegionId": {
                     "type": "string"
                 }
             },
@@ -1705,21 +1817,24 @@
         "__type_18": {
             "additionalProperties": false,
             "properties": {
-                "open": {
+                "queueMode": {
                     "type": "boolean"
                 }
             },
+            "required": [
+                "queueMode"
+            ],
             "type": "object"
         },
         "__type_19": {
             "additionalProperties": false,
             "properties": {
-                "tool": {
-                    "$ref": "#/definitions/ToolType"
+                "noMail": {
+                    "type": "boolean"
                 }
             },
             "required": [
-                "tool"
+                "noMail"
             ],
             "type": "object"
         },
@@ -1744,40 +1859,16 @@
         "__type_20": {
             "additionalProperties": false,
             "properties": {
-                "dec": {
-                    "type": "number"
-                },
-                "ra": {
-                    "type": "number"
+                "sql": {
+                    "type": "string"
                 }
             },
             "required": [
-                "dec",
-                "ra"
+                "sql"
             ],
             "type": "object"
         },
         "__type_21": {
-            "additionalProperties": false,
-            "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "regionDef": {
-                    "$ref": "#/definitions/Region"
-                }
-            },
-            "required": [
-                "id",
-                "regionDef"
-            ],
-            "type": "object"
-        },
-        "__type_22": {
-            "properties": {},
-            "type": "object"
-        },
-        "__type_23": {
             "additionalProperties": false,
             "properties": {
                 "id": {
@@ -1789,7 +1880,51 @@
             ],
             "type": "object"
         },
+        "__type_22": {
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "id",
+                "name"
+            ],
+            "type": "object"
+        },
+        "__type_23": {
+            "additionalProperties": false,
+            "properties": {
+                "params": {
+                    "$ref": "#/definitions/ColorParams"
+                }
+            },
+            "required": [
+                "params"
+            ],
+            "type": "object"
+        },
         "__type_24": {
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "visible": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "name",
+                "visible"
+            ],
+            "type": "object"
+        },
+        "__type_25": {
             "additionalProperties": false,
             "properties": {
                 "open": {
@@ -1798,77 +1933,50 @@
             },
             "type": "object"
         },
-        "__type_25": {
-            "additionalProperties": false,
-            "properties": {
-                "regions": {
-                    "items": {
-                        "$ref": "#/definitions/Region"
-                    },
-                    "type": "array"
-                }
-            },
-            "required": [
-                "regions"
-            ],
-            "type": "object"
-        },
         "__type_26": {
             "additionalProperties": false,
             "properties": {
-                "nameStartsWith": {
+                "baseUrl": {
                     "type": "string"
                 },
-                "regionDef": {
-                    "$ref": "#/definitions/Partial_6"
+                "name": {
+                    "type": "string"
                 }
             },
             "required": [
-                "nameStartsWith",
-                "regionDef"
+                "baseUrl",
+                "name"
             ],
             "type": "object"
         },
         "__type_27": {
             "additionalProperties": false,
             "properties": {
-                "color": {
-                    "$ref": "#/definitions/V4"
-                },
-                "showLabel": {
-                    "type": "boolean"
-                },
-                "visible": {
-                    "type": "boolean"
+                "name": {
+                    "type": "string"
                 }
             },
+            "required": [
+                "name"
+            ],
             "type": "object"
         },
         "__type_28": {
             "additionalProperties": false,
             "properties": {
-                "nameStartsWith": {
+                "baseUrl": {
                     "type": "string"
                 }
             },
-            "required": [
-                "nameStartsWith"
-            ],
             "type": "object"
         },
         "__type_29": {
             "additionalProperties": false,
             "properties": {
-                "ids": {
-                    "items": {
-                        "type": "string"
-                    },
-                    "type": "array"
+                "open": {
+                    "type": "boolean"
                 }
             },
-            "required": [
-                "ids"
-            ],
             "type": "object"
         },
         "__type_3": {
@@ -1886,6 +1994,164 @@
         "__type_30": {
             "additionalProperties": false,
             "properties": {
+                "tool": {
+                    "$ref": "#/definitions/ToolType"
+                }
+            },
+            "required": [
+                "tool"
+            ],
+            "type": "object"
+        },
+        "__type_31": {
+            "additionalProperties": false,
+            "properties": {
+                "dec": {
+                    "type": "number"
+                },
+                "ra": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "dec",
+                "ra"
+            ],
+            "type": "object"
+        },
+        "__type_32": {
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "regionDef": {
+                    "$ref": "#/definitions/Region"
+                }
+            },
+            "required": [
+                "id",
+                "regionDef"
+            ],
+            "type": "object"
+        },
+        "__type_33": {
+            "properties": {},
+            "type": "object"
+        },
+        "__type_34": {
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "id"
+            ],
+            "type": "object"
+        },
+        "__type_35": {
+            "additionalProperties": false,
+            "properties": {
+                "open": {
+                    "type": "boolean"
+                }
+            },
+            "type": "object"
+        },
+        "__type_36": {
+            "additionalProperties": false,
+            "properties": {
+                "regions": {
+                    "items": {
+                        "$ref": "#/definitions/Region"
+                    },
+                    "type": "array"
+                }
+            },
+            "required": [
+                "regions"
+            ],
+            "type": "object"
+        },
+        "__type_37": {
+            "additionalProperties": false,
+            "properties": {
+                "nameStartsWith": {
+                    "type": "string"
+                },
+                "regionDef": {
+                    "$ref": "#/definitions/Partial_6"
+                }
+            },
+            "required": [
+                "nameStartsWith",
+                "regionDef"
+            ],
+            "type": "object"
+        },
+        "__type_38": {
+            "additionalProperties": false,
+            "properties": {
+                "color": {
+                    "$ref": "#/definitions/V4"
+                },
+                "showLabel": {
+                    "type": "boolean"
+                },
+                "visible": {
+                    "type": "boolean"
+                }
+            },
+            "type": "object"
+        },
+        "__type_39": {
+            "additionalProperties": false,
+            "properties": {
+                "nameStartsWith": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "nameStartsWith"
+            ],
+            "type": "object"
+        },
+        "__type_4": {
+            "additionalProperties": false,
+            "properties": {
+                "props": {
+                    "$ref": "#/definitions/Props"
+                },
+                "which": {
+                    "$ref": "#/definitions/Which"
+                }
+            },
+            "required": [
+                "props",
+                "which"
+            ],
+            "type": "object"
+        },
+        "__type_40": {
+            "additionalProperties": false,
+            "properties": {
+                "ids": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                }
+            },
+            "required": [
+                "ids"
+            ],
+            "type": "object"
+        },
+        "__type_41": {
+            "additionalProperties": false,
+            "properties": {
                 "nameStartsWith": {
                     "type": "string"
                 },
@@ -1899,7 +2165,7 @@
             ],
             "type": "object"
         },
-        "__type_31": {
+        "__type_42": {
             "additionalProperties": false,
             "properties": {
                 "id": {
@@ -1911,7 +2177,7 @@
             ],
             "type": "object"
         },
-        "__type_32": {
+        "__type_43": {
             "additionalProperties": false,
             "properties": {
                 "checked": {
@@ -1933,7 +2199,7 @@
             ],
             "type": "object"
         },
-        "__type_33": {
+        "__type_44": {
             "additionalProperties": false,
             "properties": {
                 "id": {
@@ -1949,7 +2215,7 @@
             ],
             "type": "object"
         },
-        "__type_34": {
+        "__type_45": {
             "additionalProperties": false,
             "properties": {
                 "id": {
@@ -1961,7 +2227,7 @@
             ],
             "type": "object"
         },
-        "__type_35": {
+        "__type_46": {
             "additionalProperties": false,
             "properties": {
                 "id": {
@@ -1977,7 +2243,7 @@
             ],
             "type": "object"
         },
-        "__type_36": {
+        "__type_47": {
             "additionalProperties": false,
             "properties": {
                 "deleteSrc": {
@@ -2001,7 +2267,7 @@
             ],
             "type": "object"
         },
-        "__type_37": {
+        "__type_48": {
             "additionalProperties": false,
             "properties": {
                 "id": {
@@ -2013,7 +2279,7 @@
             ],
             "type": "object"
         },
-        "__type_38": {
+        "__type_49": {
             "additionalProperties": false,
             "properties": {
                 "id": {
@@ -2025,7 +2291,16 @@
             ],
             "type": "object"
         },
-        "__type_39": {
+        "__type_5": {
+            "additionalProperties": false,
+            "properties": {
+                "visible": {
+                    "type": "boolean"
+                }
+            },
+            "type": "object"
+        },
+        "__type_50": {
             "additionalProperties": false,
             "properties": {
                 "open": {
@@ -2034,23 +2309,7 @@
             },
             "type": "object"
         },
-        "__type_4": {
-            "additionalProperties": false,
-            "properties": {
-                "props": {
-                    "$ref": "#/definitions/Props"
-                },
-                "which": {
-                    "$ref": "#/definitions/Which"
-                }
-            },
-            "required": [
-                "props",
-                "which"
-            ],
-            "type": "object"
-        },
-        "__type_40": {
+        "__type_51": {
             "additionalProperties": false,
             "properties": {
                 "id": {
@@ -2065,7 +2324,7 @@
             ],
             "type": "object"
         },
-        "__type_41": {
+        "__type_52": {
             "additionalProperties": false,
             "properties": {
                 "position": {
@@ -2074,7 +2333,7 @@
             },
             "type": "object"
         },
-        "__type_42": {
+        "__type_53": {
             "additionalProperties": false,
             "properties": {
                 "id": {
@@ -2093,7 +2352,7 @@
             ],
             "type": "object"
         },
-        "__type_43": {
+        "__type_54": {
             "additionalProperties": false,
             "properties": {
                 "id": {
@@ -2112,7 +2371,7 @@
             ],
             "type": "object"
         },
-        "__type_44": {
+        "__type_55": {
             "additionalProperties": false,
             "properties": {
                 "show": {
@@ -2124,7 +2383,7 @@
             ],
             "type": "object"
         },
-        "__type_45": {
+        "__type_56": {
             "additionalProperties": false,
             "properties": {
                 "attributes": {
@@ -2151,7 +2410,7 @@
             ],
             "type": "object"
         },
-        "__type_46": {
+        "__type_57": {
             "additionalProperties": false,
             "properties": {
                 "color": {
@@ -2169,7 +2428,7 @@
             ],
             "type": "object"
         },
-        "__type_47": {
+        "__type_58": {
             "additionalProperties": false,
             "properties": {
                 "id": {
@@ -2185,7 +2444,7 @@
             ],
             "type": "object"
         },
-        "__type_48": {
+        "__type_59": {
             "additionalProperties": false,
             "properties": {
                 "field": {
@@ -2205,7 +2464,26 @@
             ],
             "type": "object"
         },
-        "__type_49": {
+        "__type_6": {
+            "additionalProperties": false,
+            "properties": {
+                "fadeInDuration": {
+                    "type": "number"
+                },
+                "imageSize": {
+                    "enum": [
+                        1024,
+                        512
+                    ],
+                    "type": "number"
+                },
+                "visible": {
+                    "type": "boolean"
+                }
+            },
+            "type": "object"
+        },
+        "__type_60": {
             "additionalProperties": false,
             "properties": {
                 "field": {
@@ -2229,16 +2507,7 @@
             ],
             "type": "object"
         },
-        "__type_5": {
-            "additionalProperties": false,
-            "properties": {
-                "visible": {
-                    "type": "boolean"
-                }
-            },
-            "type": "object"
-        },
-        "__type_50": {
+        "__type_61": {
             "additionalProperties": false,
             "properties": {
                 "ids": {
@@ -2253,7 +2522,7 @@
             ],
             "type": "object"
         },
-        "__type_51": {
+        "__type_62": {
             "additionalProperties": false,
             "properties": {
                 "active": {
@@ -2265,7 +2534,7 @@
             ],
             "type": "object"
         },
-        "__type_52": {
+        "__type_63": {
             "additionalProperties": false,
             "properties": {
                 "color": {
@@ -2281,7 +2550,7 @@
             ],
             "type": "object"
         },
-        "__type_53": {
+        "__type_64": {
             "additionalProperties": false,
             "properties": {
                 "id": {
@@ -2293,7 +2562,7 @@
             ],
             "type": "object"
         },
-        "__type_54": {
+        "__type_65": {
             "additionalProperties": false,
             "properties": {
                 "id": {
@@ -2309,7 +2578,7 @@
             ],
             "type": "object"
         },
-        "__type_55": {
+        "__type_66": {
             "additionalProperties": false,
             "properties": {
                 "color": {
@@ -2317,25 +2586,6 @@
                 },
                 "maskBit": {
                     "type": "number"
-                }
-            },
-            "type": "object"
-        },
-        "__type_6": {
-            "additionalProperties": false,
-            "properties": {
-                "fadeInDuration": {
-                    "type": "number"
-                },
-                "imageSize": {
-                    "enum": [
-                        1024,
-                        512
-                    ],
-                    "type": "number"
-                },
-                "visible": {
-                    "type": "boolean"
                 }
             },
             "type": "object"
@@ -2467,14 +2717,230 @@
                     ],
                     "type": "object"
                 },
+                "cas/draftSqlChanged": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_17"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_20"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "cas/jobsDialogOpened": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "type": {
+                            "$ref": "#/definitions/T_14"
+                        }
+                    },
+                    "required": [
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "cas/jobsDialogToggled": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_10"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_12"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "cas/jobsReloadRequested": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "type": {
+                            "$ref": "#/definitions/T_23"
+                        }
+                    },
+                    "required": [
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "cas/noMailChanged": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_16"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_19"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "cas/presetAdded": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_8"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_10"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "cas/presetDeleted": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_18"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_21"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "cas/presetRenamed": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_19"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_22"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "cas/queryRegionChanged": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_14"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_17"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "cas/queueModeChanged": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_15"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_18"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "cas/releaseChanged": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_12"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_15"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "cas/rerunChanged": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_13"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_16"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "cas/sqlDialogOpened": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_11"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_13"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "cas/sqlDialogToggled": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_9"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_11"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
                 "catalogs/allRowsSelected": {
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
-                            "$ref": "#/definitions/P_35"
+                            "$ref": "#/definitions/P_47"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_39"
+                            "$ref": "#/definitions/T_53"
                         }
                     },
                     "required": [
@@ -2487,10 +2953,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
-                            "$ref": "#/definitions/P_30"
+                            "$ref": "#/definitions/P_42"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_34"
+                            "$ref": "#/definitions/T_48"
                         }
                     },
                     "required": [
@@ -2503,10 +2969,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
-                            "$ref": "#/definitions/P_31"
+                            "$ref": "#/definitions/P_43"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_35"
+                            "$ref": "#/definitions/T_49"
                         }
                     },
                     "required": [
@@ -2519,10 +2985,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
-                            "$ref": "#/definitions/P_37"
+                            "$ref": "#/definitions/P_49"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_41"
+                            "$ref": "#/definitions/T_55"
                         }
                     },
                     "required": [
@@ -2535,10 +3001,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
-                            "$ref": "#/definitions/P_36"
+                            "$ref": "#/definitions/P_48"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_40"
+                            "$ref": "#/definitions/T_54"
                         }
                     },
                     "required": [
@@ -2551,10 +3017,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
-                            "$ref": "#/definitions/P_49"
+                            "$ref": "#/definitions/P_61"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_54"
+                            "$ref": "#/definitions/T_68"
                         }
                     },
                     "required": [
@@ -2567,10 +3033,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
-                            "$ref": "#/definitions/P_38"
+                            "$ref": "#/definitions/P_50"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_42"
+                            "$ref": "#/definitions/T_56"
                         }
                     },
                     "required": [
@@ -2583,10 +3049,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
-                            "$ref": "#/definitions/P_32"
+                            "$ref": "#/definitions/P_44"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_36"
+                            "$ref": "#/definitions/T_50"
                         }
                     },
                     "required": [
@@ -2599,10 +3065,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
-                            "$ref": "#/definitions/P_39"
+                            "$ref": "#/definitions/P_51"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_43"
+                            "$ref": "#/definitions/T_57"
                         }
                     },
                     "required": [
@@ -2615,10 +3081,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
-                            "$ref": "#/definitions/P_48"
+                            "$ref": "#/definitions/P_60"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_53"
+                            "$ref": "#/definitions/T_67"
                         }
                     },
                     "required": [
@@ -2631,10 +3097,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
-                            "$ref": "#/definitions/P_40"
+                            "$ref": "#/definitions/P_52"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_44"
+                            "$ref": "#/definitions/T_58"
                         }
                     },
                     "required": [
@@ -2647,10 +3113,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
-                            "$ref": "#/definitions/P_22"
+                            "$ref": "#/definitions/P_34"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_45"
+                            "$ref": "#/definitions/T_59"
                         }
                     },
                     "required": [
@@ -2663,10 +3129,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
-                            "$ref": "#/definitions/P_47"
+                            "$ref": "#/definitions/P_59"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_52"
+                            "$ref": "#/definitions/T_66"
                         }
                     },
                     "required": [
@@ -2679,10 +3145,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
-                            "$ref": "#/definitions/P_41"
+                            "$ref": "#/definitions/P_53"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_46"
+                            "$ref": "#/definitions/T_60"
                         }
                     },
                     "required": [
@@ -2695,10 +3161,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
-                            "$ref": "#/definitions/P_42"
+                            "$ref": "#/definitions/P_54"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_47"
+                            "$ref": "#/definitions/T_61"
                         }
                     },
                     "required": [
@@ -2711,10 +3177,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
-                            "$ref": "#/definitions/P_43"
+                            "$ref": "#/definitions/P_55"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_48"
+                            "$ref": "#/definitions/T_62"
                         }
                     },
                     "required": [
@@ -2727,10 +3193,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
-                            "$ref": "#/definitions/P_45"
+                            "$ref": "#/definitions/P_57"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_50"
+                            "$ref": "#/definitions/T_64"
                         }
                     },
                     "required": [
@@ -2743,10 +3209,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
-                            "$ref": "#/definitions/P_46"
+                            "$ref": "#/definitions/P_58"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_51"
+                            "$ref": "#/definitions/T_65"
                         }
                     },
                     "required": [
@@ -2759,10 +3225,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
-                            "$ref": "#/definitions/P_33"
+                            "$ref": "#/definitions/P_45"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_37"
+                            "$ref": "#/definitions/T_51"
                         }
                     },
                     "required": [
@@ -2775,10 +3241,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
-                            "$ref": "#/definitions/P_34"
+                            "$ref": "#/definitions/P_46"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_38"
+                            "$ref": "#/definitions/T_52"
                         }
                     },
                     "required": [
@@ -2791,10 +3257,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
-                            "$ref": "#/definitions/P_44"
+                            "$ref": "#/definitions/P_56"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_49"
+                            "$ref": "#/definitions/T_63"
                         }
                     },
                     "required": [
@@ -2883,10 +3349,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
-                            "$ref": "#/definitions/P_50"
+                            "$ref": "#/definitions/P_62"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_55"
+                            "$ref": "#/definitions/T_69"
                         }
                     },
                     "required": [
@@ -2899,7 +3365,7 @@
                     "additionalProperties": false,
                     "properties": {
                         "type": {
-                            "$ref": "#/definitions/T_56"
+                            "$ref": "#/definitions/T_70"
                         }
                     },
                     "required": [
@@ -2911,10 +3377,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
-                            "$ref": "#/definitions/P_51"
+                            "$ref": "#/definitions/P_63"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_57"
+                            "$ref": "#/definitions/T_71"
                         }
                     },
                     "required": [
@@ -2927,10 +3393,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
-                            "$ref": "#/definitions/P_53"
+                            "$ref": "#/definitions/P_65"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_59"
+                            "$ref": "#/definitions/T_73"
                         }
                     },
                     "required": [
@@ -2943,10 +3409,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
-                            "$ref": "#/definitions/P_52"
+                            "$ref": "#/definitions/P_64"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_58"
+                            "$ref": "#/definitions/T_72"
                         }
                     },
                     "required": [
@@ -2956,226 +3422,6 @@
                     "type": "object"
                 },
                 "hipsLayers/baseUrlChanged": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "payload": {
-                            "$ref": "#/definitions/P_13"
-                        },
-                        "type": {
-                            "$ref": "#/definitions/T_15"
-                        }
-                    },
-                    "required": [
-                        "payload",
-                        "type"
-                    ],
-                    "type": "object"
-                },
-                "hipsLayers/hipsDialogToggled": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "payload": {
-                            "$ref": "#/definitions/P_14"
-                        },
-                        "type": {
-                            "$ref": "#/definitions/T_16"
-                        }
-                    },
-                    "required": [
-                        "payload",
-                        "type"
-                    ],
-                    "type": "object"
-                },
-                "regions/autoColorToggled": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "type": {
-                            "$ref": "#/definitions/T_19"
-                        }
-                    },
-                    "required": [
-                        "type"
-                    ],
-                    "type": "object"
-                },
-                "regions/newCircularRegionAdded": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "payload": {
-                            "$ref": "#/definitions/P_17"
-                        },
-                        "type": {
-                            "$ref": "#/definitions/T_21"
-                        }
-                    },
-                    "required": [
-                        "payload",
-                        "type"
-                    ],
-                    "type": "object"
-                },
-                "regions/newLinearRegionAdded": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "payload": {
-                            "$ref": "#/definitions/P_16"
-                        },
-                        "type": {
-                            "$ref": "#/definitions/T_20"
-                        }
-                    },
-                    "required": [
-                        "payload",
-                        "type"
-                    ],
-                    "type": "object"
-                },
-                "regions/newPathRegionAdded": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "payload": {
-                            "$ref": "#/definitions/P_20"
-                        },
-                        "type": {
-                            "$ref": "#/definitions/T_24"
-                        }
-                    },
-                    "required": [
-                        "payload",
-                        "type"
-                    ],
-                    "type": "object"
-                },
-                "regions/newRectangularRegionAdded": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "payload": {
-                            "$ref": "#/definitions/P_18"
-                        },
-                        "type": {
-                            "$ref": "#/definitions/T_22"
-                        }
-                    },
-                    "required": [
-                        "payload",
-                        "type"
-                    ],
-                    "type": "object"
-                },
-                "regions/newTextRegionAdded": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "payload": {
-                            "$ref": "#/definitions/P_19"
-                        },
-                        "type": {
-                            "$ref": "#/definitions/T_23"
-                        }
-                    },
-                    "required": [
-                        "payload",
-                        "type"
-                    ],
-                    "type": "object"
-                },
-                "regions/regionDeleted": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "payload": {
-                            "$ref": "#/definitions/P_23"
-                        },
-                        "type": {
-                            "$ref": "#/definitions/T_27"
-                        }
-                    },
-                    "required": [
-                        "payload",
-                        "type"
-                    ],
-                    "type": "object"
-                },
-                "regions/regionUpdated": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "payload": {
-                            "$ref": "#/definitions/P_21"
-                        },
-                        "type": {
-                            "$ref": "#/definitions/T_25"
-                        }
-                    },
-                    "required": [
-                        "payload",
-                        "type"
-                    ],
-                    "type": "object"
-                },
-                "regions/regionsBatchDeleted": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "payload": {
-                            "$ref": "#/definitions/P_27"
-                        },
-                        "type": {
-                            "$ref": "#/definitions/T_31"
-                        }
-                    },
-                    "required": [
-                        "payload",
-                        "type"
-                    ],
-                    "type": "object"
-                },
-                "regions/regionsBatchUpdated": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "payload": {
-                            "$ref": "#/definitions/P_26"
-                        },
-                        "type": {
-                            "$ref": "#/definitions/T_30"
-                        }
-                    },
-                    "required": [
-                        "payload",
-                        "type"
-                    ],
-                    "type": "object"
-                },
-                "regions/regionsCleared": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "payload": {
-                            "$ref": "#/definitions/P_22"
-                        },
-                        "type": {
-                            "$ref": "#/definitions/T_26"
-                        }
-                    },
-                    "required": [
-                        "payload",
-                        "type"
-                    ],
-                    "type": "object"
-                },
-                "regions/regionsDialogToggled": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "payload": {
-                            "$ref": "#/definitions/P_24"
-                        },
-                        "type": {
-                            "$ref": "#/definitions/T_28"
-                        }
-                    },
-                    "required": [
-                        "payload",
-                        "type"
-                    ],
-                    "type": "object"
-                },
-                "regions/regionsImported": {
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
@@ -3191,14 +3437,234 @@
                     ],
                     "type": "object"
                 },
-                "regions/regionsRenameGroup": {
+                "hipsLayers/hipsDialogToggled": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_26"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_30"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "regions/autoColorToggled": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "type": {
+                            "$ref": "#/definitions/T_33"
+                        }
+                    },
+                    "required": [
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "regions/newCircularRegionAdded": {
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
                             "$ref": "#/definitions/P_29"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_33"
+                            "$ref": "#/definitions/T_35"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "regions/newLinearRegionAdded": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_28"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_34"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "regions/newPathRegionAdded": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_32"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_38"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "regions/newRectangularRegionAdded": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_30"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_36"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "regions/newTextRegionAdded": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_31"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_37"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "regions/regionDeleted": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_35"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_41"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "regions/regionUpdated": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_33"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_39"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "regions/regionsBatchDeleted": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_39"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_45"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "regions/regionsBatchUpdated": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_38"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_44"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "regions/regionsCleared": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_34"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_40"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "regions/regionsDialogToggled": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_36"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_42"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "regions/regionsImported": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_37"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_43"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "regions/regionsRenameGroup": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "$ref": "#/definitions/P_41"
+                        },
+                        "type": {
+                            "$ref": "#/definitions/T_47"
                         }
                     },
                     "required": [
@@ -3211,10 +3677,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
-                            "$ref": "#/definitions/P_28"
+                            "$ref": "#/definitions/P_40"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_32"
+                            "$ref": "#/definitions/T_46"
                         }
                     },
                     "required": [
@@ -3227,10 +3693,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
-                            "$ref": "#/definitions/P_15"
+                            "$ref": "#/definitions/P_27"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_17"
+                            "$ref": "#/definitions/T_31"
                         }
                     },
                     "required": [
@@ -3243,7 +3709,7 @@
                     "additionalProperties": false,
                     "properties": {
                         "type": {
-                            "$ref": "#/definitions/T_18"
+                            "$ref": "#/definitions/T_32"
                         }
                     },
                     "required": [
@@ -3255,10 +3721,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
-                            "$ref": "#/definitions/P_8"
+                            "$ref": "#/definitions/P_20"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_10"
+                            "$ref": "#/definitions/T_24"
                         }
                     },
                     "required": [
@@ -3271,10 +3737,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
-                            "$ref": "#/definitions/P_11"
+                            "$ref": "#/definitions/P_23"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_13"
+                            "$ref": "#/definitions/T_27"
                         }
                     },
                     "required": [
@@ -3287,10 +3753,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
-                            "$ref": "#/definitions/P_12"
+                            "$ref": "#/definitions/P_24"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_14"
+                            "$ref": "#/definitions/T_28"
                         }
                     },
                     "required": [
@@ -3303,10 +3769,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
-                            "$ref": "#/definitions/P_9"
+                            "$ref": "#/definitions/P_21"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_11"
+                            "$ref": "#/definitions/T_25"
                         }
                     },
                     "required": [
@@ -3319,10 +3785,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "payload": {
-                            "$ref": "#/definitions/P_10"
+                            "$ref": "#/definitions/P_22"
                         },
                         "type": {
-                            "$ref": "#/definitions/T_12"
+                            "$ref": "#/definitions/T_26"
                         }
                     },
                     "required": [
@@ -3338,6 +3804,20 @@
                 "camera/paramsChanged",
                 "camera/projectionUpdated",
                 "camera/retinaToggled",
+                "cas/draftSqlChanged",
+                "cas/jobsDialogOpened",
+                "cas/jobsDialogToggled",
+                "cas/jobsReloadRequested",
+                "cas/noMailChanged",
+                "cas/presetAdded",
+                "cas/presetDeleted",
+                "cas/presetRenamed",
+                "cas/queryRegionChanged",
+                "cas/queueModeChanged",
+                "cas/releaseChanged",
+                "cas/rerunChanged",
+                "cas/sqlDialogOpened",
+                "cas/sqlDialogToggled",
                 "catalogs/allRowsSelected",
                 "catalogs/catalogAdded",
                 "catalogs/catalogDeleted",

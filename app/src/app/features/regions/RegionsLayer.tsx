@@ -6,6 +6,7 @@ import { ColorPickerRgba } from "../../../common/components/ColorPicker"
 import { Icon } from "../../../common/components/Icon"
 import { setDisplayName } from "../../../common/utils/setDisplayName"
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
+import { casSlice } from "../cas/casSlice"
 import { CircleDef, CircularRegionLayer } from "./CircularRegionLayer"
 import { LineDef, LinearRegionLayer } from "./LinearRegionLayer"
 import { RectDef, RectangularRegionLayer } from "./RectangularRegionLayer"
@@ -234,6 +235,7 @@ const RectangularRegionFromDefLayer = memo(({
   name,
 }: SpecificRegionType<'Rectangular'>) => {
   const dispatch = useAppDispatch()
+  const casEnabled = useAppSelector(state => state.cas.enabled)
 
   const original = useMemo(() => ({
     id,
@@ -298,6 +300,12 @@ const RectangularRegionFromDefLayer = memo(({
       onChange={onRectDefChange}
       showLabel={showLabel}
     >
+      {casEnabled && (
+        <MenuItem onClick={() => dispatch(casSlice.actions.sqlDialogOpened({ queryRegionId: id }))}>
+          <Icon type='table' marginRight />
+          Query CAS
+        </MenuItem>
+      )}
       <MenuItem onClick={duplicate}><Icon type='content_copy' marginRight />Duplicate</MenuItem>
       <MenuItem
         onClick={() => {

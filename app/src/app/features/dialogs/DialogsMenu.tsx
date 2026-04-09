@@ -5,6 +5,7 @@ import { MenuBarItem } from "../../../common/components/Menu/MenuBarItem"
 import { setDisplayName } from "../../../common/utils/setDisplayName"
 import { MenuItemWithKeybind } from "../../keybindings/MenuItemWithKeybind"
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
+import { casSlice } from "../cas/casSlice"
 import { commonSlice } from "../common/commonSlice"
 import { useAppContext } from "../../context"
 import { catalogsSlice } from "../catalog/catalogSlice"
@@ -16,6 +17,9 @@ export const DialogsMenu = memo(() => {
   const hips = useAppSelector(state => state.hipsLayers.hipsDialogVisible)
   const catalogsDialog = useAppSelector(state => state.catalogs.catalogsDialogVisible)
   const localFitsImageDialog = useAppSelector(state => state.fitsImage.dialogVisible)
+  const casEnabled = useAppSelector(state => state.cas.enabled)
+  const casSqlDialog = useAppSelector(state => state.cas.sqlDialogVisible)
+  const casJobsDialog = useAppSelector(state => state.cas.jobsDialogVisible)
   const currentPositionHint = useAppSelector(state => state.common.dialogPositionHint)
   const dispatch = useAppDispatch()
   const { dialogContext } = useAppContext()
@@ -43,6 +47,12 @@ export const DialogsMenu = memo(() => {
       <MenuItemWithKeybind type='checkbox' checked={hips} keybind="toggleHipsDialog"><Icon type='layers' marginRight />HiPS</MenuItemWithKeybind>
       <MenuItemWithKeybind type='checkbox' checked={catalogsDialog} keybind="toggleCatalogsDialog"><Icon type='table' marginRight />Catalogs</MenuItemWithKeybind>
       <MenuItem type='checkbox' checked={localFitsImageDialog} onClick={() => dispatch(fitsImageSlice.actions.dialogToggled())}><Icon type='photo_library' marginRight />FITS Images</MenuItem>
+      {casEnabled && (
+        <MenuItemWithKeybind type='checkbox' checked={casSqlDialog} keybind="toggleCasSqlDialog"><Icon type='table' marginRight />CAS SQL</MenuItemWithKeybind>
+      )}
+      {casEnabled && (
+        <MenuItemWithKeybind type='checkbox' checked={casJobsDialog} keybind="toggleCasJobsDialog"><Icon type='table' marginRight />CAS Jobs</MenuItemWithKeybind>
+      )}
       <MenuDivider />
       <SubMenu label="Catalogs">
         {
@@ -55,8 +65,8 @@ export const DialogsMenu = memo(() => {
         }
       </SubMenu>
       <MenuDivider />
-      <MenuItemWithKeybind keybind="rearrangeDialogs" ><Icon marginRight type='grid_view' />Rearrange</MenuItemWithKeybind>
-      <MenuItemWithKeybind keybind="closeAllDialogs" ><Icon marginRight type='close' />Close All</MenuItemWithKeybind>
+        <MenuItemWithKeybind keybind="rearrangeDialogs" ><Icon marginRight type='grid_view' />Rearrange</MenuItemWithKeybind>
+        <MenuItemWithKeybind keybind="closeAllDialogs" ><Icon marginRight type='close' />Close All</MenuItemWithKeybind>
       <MenuDivider />
       <SubMenu label="Default Position">
         {positionMenu('Top Left', { top: 8, left: 8 })}

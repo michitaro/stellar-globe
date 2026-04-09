@@ -68,6 +68,25 @@ Redux Toolkitを使用して状態管理を行っています。
 * カタログデータのオーバーレイ
 * 外部連携API (CommTools)
 
+## CAS SQL 機能
+
+CAS が有効なデプロイでは、`app` から `/datasearch/skymaps_api/` 経由で CAS に SQL を発行できます。
+
+* SQL エディタは Monaco Editor ベースの dialog として提供されます
+* `CAS SQL` / `CAS Jobs` dialog と、矩形 region からの `Query CAS` 導線が追加されます
+* SQL エディタでは release / rerun 選択、sample query、preset 保存、`Queue` / `No Mail`、`$rerun` と `$coord_in_selection_box` 展開を利用できます
+* preview 結果は catalog として読み込みでき、job list から完了ジョブの CSV / CSV.gz 取り込み、cancel、delete ができます
+
+### 有効化方法
+
+CAS 機能はエンドユーザー向けの runtime toggle を持たず、ビルド / デプロイ時の `VITE_enableCas` で切り替えます。
+
+* `app/vite/env/.env`: `VITE_enableCas=false`
+* `app/vite/env/.env.internal`: `VITE_enableCas=true`
+* `app/vite/env/.env.u2k`: `VITE_enableCas=false`
+
+別の配備先で有効化する場合は、対応する env ファイルに `VITE_enableCas=true` を設定してください。
+
 ## Python連携のための型チェック機構
 
 `app` とPython側の通信では、実行時に型の整合性をチェックする仕組みが実装されています。

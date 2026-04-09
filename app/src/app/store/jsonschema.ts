@@ -2,6 +2,7 @@ import { Slice } from "@reduxjs/toolkit"
 import { BaseAction } from "../context"
 import { appearanceLayersSlice } from "../features/appearanceLayers/appearanceLayersSlice"
 import { cameraSlice } from "../features/camera/cameraSlice"
+import { casSlice } from "../features/cas/casSlice"
 import { catalogsSlice } from "../features/catalog/catalogSlice"
 import { commonSlice } from "../features/common/commonSlice"
 import { develSlice } from "../features/devel/develSlice"
@@ -38,6 +39,7 @@ export type ActionValidatorJsonSchema = {
     ActionsWithValidatorOfSlice<typeof commonSlice> &
     ActionsWithValidatorOfSlice<typeof appearanceLayersSlice> &
     ActionsWithValidatorOfSlice<typeof cameraSlice> &
+    ActionsWithValidatorOfSlice<typeof casSlice> &
     ActionsWithValidatorOfSlice<typeof tractTileLayersSlice> &
     ActionsWithValidatorOfSlice<typeof hipsLayersSlice> &
     ActionsWithValidatorOfSlice<typeof regionsSlice> &
@@ -62,6 +64,7 @@ export type PublicJsonSchema = {
     ActionsOfSlice<typeof commonSlice> &
     ActionsOfSlice<typeof appearanceLayersSlice> &
     ActionsOfSlice<typeof cameraSlice> &
+    ActionsOfSlice<typeof casSlice> &
     ActionsOfSlice<typeof tractTileLayersSlice> &
     ActionsOfSlice<typeof hipsLayersSlice> &
     ActionsOfSlice<typeof regionsSlice> &

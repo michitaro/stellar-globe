@@ -227,6 +227,78 @@
                     ],
                     "type": "object"
                 },
+                "cas": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "draftSql": {
+                            "type": "string"
+                        },
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "jobsDialogVisible": {
+                            "type": "boolean"
+                        },
+                        "jobsReloadToken": {
+                            "type": "number"
+                        },
+                        "noMail": {
+                            "type": "boolean"
+                        },
+                        "presets": {
+                            "items": {
+                                "additionalProperties": false,
+                                "properties": {
+                                    "id": {
+                                        "type": "string"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "sql": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "id",
+                                    "name",
+                                    "sql"
+                                ],
+                                "type": "object"
+                            },
+                            "type": "array"
+                        },
+                        "queryRegionId": {
+                            "type": "string"
+                        },
+                        "queueMode": {
+                            "type": "boolean"
+                        },
+                        "releaseName": {
+                            "type": "string"
+                        },
+                        "rerun": {
+                            "type": "string"
+                        },
+                        "sqlDialogVisible": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "draftSql",
+                        "enabled",
+                        "jobsDialogVisible",
+                        "jobsReloadToken",
+                        "noMail",
+                        "presets",
+                        "queryRegionId",
+                        "queueMode",
+                        "releaseName",
+                        "rerun",
+                        "sqlDialogVisible"
+                    ],
+                    "type": "object"
+                },
                 "catalogs": {
                     "additionalProperties": false,
                     "properties": {
@@ -730,6 +802,7 @@
             "required": [
                 "appearanceLayers",
                 "camera",
+                "cas",
                 "catalogs",
                 "common",
                 "computed",
@@ -2133,6 +2206,370 @@
                         }
                     },
                     "required": [
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "cas/draftSqlChanged": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "additionalProperties": false,
+                            "description": "The type of the action's payload.",
+                            "properties": {
+                                "sql": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "sql"
+                            ],
+                            "type": "object"
+                        },
+                        "type": {
+                            "const": "cas/draftSqlChanged",
+                            "description": "the type used for the action type.",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "cas/jobsDialogOpened": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "type": {
+                            "const": "cas/jobsDialogOpened",
+                            "description": "the type used for the action type.",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "cas/jobsDialogToggled": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "additionalProperties": false,
+                            "description": "The type of the action's payload.",
+                            "properties": {
+                                "open": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "type": {
+                            "const": "cas/jobsDialogToggled",
+                            "description": "the type used for the action type.",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "cas/jobsReloadRequested": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "type": {
+                            "const": "cas/jobsReloadRequested",
+                            "description": "the type used for the action type.",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "cas/noMailChanged": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "additionalProperties": false,
+                            "description": "The type of the action's payload.",
+                            "properties": {
+                                "noMail": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "noMail"
+                            ],
+                            "type": "object"
+                        },
+                        "type": {
+                            "const": "cas/noMailChanged",
+                            "description": "the type used for the action type.",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "cas/presetAdded": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "additionalProperties": false,
+                            "description": "The type of the action's payload.",
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "sql": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "id",
+                                "name",
+                                "sql"
+                            ],
+                            "type": "object"
+                        },
+                        "type": {
+                            "const": "cas/presetAdded",
+                            "description": "the type used for the action type.",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "cas/presetDeleted": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "additionalProperties": false,
+                            "description": "The type of the action's payload.",
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "id"
+                            ],
+                            "type": "object"
+                        },
+                        "type": {
+                            "const": "cas/presetDeleted",
+                            "description": "the type used for the action type.",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "cas/presetRenamed": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "additionalProperties": false,
+                            "description": "The type of the action's payload.",
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "id",
+                                "name"
+                            ],
+                            "type": "object"
+                        },
+                        "type": {
+                            "const": "cas/presetRenamed",
+                            "description": "the type used for the action type.",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "cas/queryRegionChanged": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "additionalProperties": false,
+                            "description": "The type of the action's payload.",
+                            "properties": {
+                                "queryRegionId": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "type": {
+                            "const": "cas/queryRegionChanged",
+                            "description": "the type used for the action type.",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "cas/queueModeChanged": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "additionalProperties": false,
+                            "description": "The type of the action's payload.",
+                            "properties": {
+                                "queueMode": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "queueMode"
+                            ],
+                            "type": "object"
+                        },
+                        "type": {
+                            "const": "cas/queueModeChanged",
+                            "description": "the type used for the action type.",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "cas/releaseChanged": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "additionalProperties": false,
+                            "description": "The type of the action's payload.",
+                            "properties": {
+                                "releaseName": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "releaseName"
+                            ],
+                            "type": "object"
+                        },
+                        "type": {
+                            "const": "cas/releaseChanged",
+                            "description": "the type used for the action type.",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "cas/rerunChanged": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "additionalProperties": false,
+                            "description": "The type of the action's payload.",
+                            "properties": {
+                                "rerun": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "rerun"
+                            ],
+                            "type": "object"
+                        },
+                        "type": {
+                            "const": "cas/rerunChanged",
+                            "description": "the type used for the action type.",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "cas/sqlDialogOpened": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "additionalProperties": false,
+                            "description": "The type of the action's payload.",
+                            "properties": {
+                                "queryRegionId": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "type": {
+                            "const": "cas/sqlDialogOpened",
+                            "description": "the type used for the action type.",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "payload",
+                        "type"
+                    ],
+                    "type": "object"
+                },
+                "cas/sqlDialogToggled": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "payload": {
+                            "additionalProperties": false,
+                            "description": "The type of the action's payload.",
+                            "properties": {
+                                "open": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "type": {
+                            "const": "cas/sqlDialogToggled",
+                            "description": "the type used for the action type.",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "payload",
                         "type"
                     ],
                     "type": "object"
@@ -4453,6 +4890,20 @@
                 "camera/paramsChanged",
                 "camera/projectionUpdated",
                 "camera/retinaToggled",
+                "cas/draftSqlChanged",
+                "cas/jobsDialogOpened",
+                "cas/jobsDialogToggled",
+                "cas/jobsReloadRequested",
+                "cas/noMailChanged",
+                "cas/presetAdded",
+                "cas/presetDeleted",
+                "cas/presetRenamed",
+                "cas/queryRegionChanged",
+                "cas/queueModeChanged",
+                "cas/releaseChanged",
+                "cas/rerunChanged",
+                "cas/sqlDialogOpened",
+                "cas/sqlDialogToggled",
                 "catalogs/allRowsSelected",
                 "catalogs/catalogAdded",
                 "catalogs/catalogDeleted",
