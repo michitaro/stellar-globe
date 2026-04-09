@@ -21,7 +21,6 @@ function localStorageState(state: AppState) {
       queueMode: state.cas.queueMode,
       noMail: state.cas.noMail,
       draftSql: state.cas.draftSql,
-      presets: state.cas.presets,
     },
   }
 }

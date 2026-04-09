@@ -70,22 +70,22 @@ Redux Toolkitを使用して状態管理を行っています。
 
 ## CAS SQL 機能
 
-CAS が有効なデプロイでは、`app` から `/datasearch/skymaps_api/` 経由で CAS に SQL を発行できます。
+CAS が有効な target では、`app` から `/datasearch/skymaps_api/` 経由で CAS に SQL を発行できます。
 
 * SQL エディタは Monaco Editor ベースの dialog として提供されます
 * `CAS SQL` / `CAS Jobs` dialog と、矩形 region からの `Query CAS` 導線が追加されます
-* SQL エディタでは release / rerun 選択、sample query、preset 保存、`Queue` / `No Mail`、`$rerun` と `$coord_in_selection_box` 展開を利用できます
+* SQL エディタでは release / rerun 選択、release ごとの sample query、`Queue` / `No Mail`、`$rerun` と `$coord_in_selection_box` 展開を利用できます
 * preview 結果は catalog として読み込みでき、job list から完了ジョブの CSV / CSV.gz 取り込み、cancel、delete ができます
 
 ### 有効化方法
 
-CAS 機能はエンドユーザー向けの runtime toggle を持たず、ビルド / デプロイ時の `VITE_enableCas` で切り替えます。
+`.env` ファイルでは `VITE_target` だけを設定し、target ごとの CAS 有効化・release・sample query は `src/app/env/` 以下で定義します。
 
-* `app/vite/env/.env`: `VITE_enableCas=false`
-* `app/vite/env/.env.internal`: `VITE_enableCas=true`
-* `app/vite/env/.env.u2k`: `VITE_enableCas=false`
+* `app/vite/env/.env`: `VITE_target=public`
+* `app/vite/env/.env.internal`: `VITE_target=internal`
+* `app/vite/env/.env.u2k`: `VITE_target=u2k`
 
-別の配備先で有効化する場合は、対応する env ファイルに `VITE_enableCas=true` を設定してください。
+別の配備先を追加する場合は、対応する `VITE_target` と `src/app/env/` の target 定義を追加してください。
 
 ## Python連携のための型チェック機構
 

@@ -1,14 +1,7 @@
-import { PayloadAction, createSlice, nanoid } from "@reduxjs/toolkit"
+import { PayloadAction, createSlice } from "@reduxjs/toolkit"
+import { defaultCasSql, env, findCasRelease } from "../../env"
 import { readStorageState } from "../../store/stateSync/StorageSync"
 import { regionsSlice } from "../regions/regionsSlice"
-import { casConfig, findCasRelease } from "./casConfig"
-import { defaultCasSql } from "./sampleQueries"
-
-export type CasPreset = {
-  id: string
-  name: string
-  sql: string
-}
 
 type State = {
   enabled: boolean
@@ -20,18 +13,17 @@ type State = {
   queueMode: boolean
   noMail: boolean
   draftSql: string
-  presets: CasPreset[]
   jobsReloadToken: number
 }
 
 function initialState(): State {
-  const config = casConfig()
+  const config = env().cas
   const stored = readStorageState().cas
-  const release = findCasRelease(config, stored?.releaseName)
+  const release = config.enabled ? findCasRelease(stored?.releaseName) : undefined
   const rerun = release?.reruns.includes(stored?.rerun ?? '') ? stored?.rerun : release?.reruns[0]
 
   return {
-    enabled: config.enabled,
+    enabled: config.enabled && config.releases.length > 0,
     sqlDialogVisible: false,
     jobsDialogVisible: false,
     releaseName: release?.name,
@@ -39,8 +31,7 @@ function initialState(): State {
     queryRegionId: undefined,
     queueMode: stored?.queueMode ?? false,
     noMail: stored?.noMail ?? true,
-    draftSql: stored?.draftSql ?? defaultCasSql(config.sampleQuerySet),
-    presets: stored?.presets ?? [],
+    draftSql: stored?.draftSql ?? defaultCasSql(release),
     jobsReloadToken: 0,
   }
 }
@@ -71,7 +62,7 @@ export const casSlice = createSlice({
       }
     },
     releaseChanged(state, { payload: { releaseName } }: PayloadAction<{ releaseName: string }>) {
-      const release = findCasRelease(casConfig(), releaseName)
+      const release = findCasRelease(releaseName)
       state.releaseName = release?.name
       if (!release?.reruns.includes(state.rerun ?? '')) {
         state.rerun = release?.reruns[0]
@@ -91,28 +82,6 @@ export const casSlice = createSlice({
     },
     draftSqlChanged(state, { payload: { sql } }: PayloadAction<{ sql: string }>) {
       state.draftSql = sql
-    },
-    presetAdded: {
-      prepare(payload: { name: string, sql: string }) {
-        return {
-          payload: {
-            id: nanoid(),
-            ...payload,
-          },
-        }
-      },
-      reducer(state, { payload }: PayloadAction<CasPreset>) {
-        state.presets.push(payload)
-      },
-    },
-    presetDeleted(state, { payload: { id } }: PayloadAction<{ id: string }>) {
-      state.presets = state.presets.filter(preset => preset.id !== id)
-    },
-    presetRenamed(state, { payload: { id, name } }: PayloadAction<{ id: string, name: string }>) {
-      const preset = state.presets.find(item => item.id === id)
-      if (preset) {
-        preset.name = name
-      }
     },
     jobsReloadRequested(state) {
       state.jobsReloadToken += 1

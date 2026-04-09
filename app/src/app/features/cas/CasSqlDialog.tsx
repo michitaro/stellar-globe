@@ -5,14 +5,13 @@ import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import './monaco'
 import { useBlockUI } from '../../../common/components/Modal'
 import { AppDialog } from '../../AppDialog'
+import { env, findCasRelease } from '../../env'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { catalogsSlice } from '../catalog/catalogSlice'
 import { RectangularRegion, Region } from '../regions/regionsSlice'
-import { casConfig, findCasRelease } from './casConfig'
 import { enqueueJob, previewJob } from './api'
 import { casPreviewToCatalog } from './preview'
 import { casSlice } from './casSlice'
-import { getCasSampleQueries } from './sampleQueries'
 import { expandCasSql } from './sql'
 import styles from './dialog.module.scss'
 
@@ -21,9 +20,9 @@ export const CasSqlDialog = memo(() => {
   const blockUI = useBlockUI()
   const cas = useAppSelector(state => state.cas)
   const regions = useAppSelector(state => state.regions.regions.filter(isRectangularRegion))
-  const config = casConfig()
-  const release = findCasRelease(config, cas.releaseName)
-  const sampleQueries = useMemo(() => getCasSampleQueries(config.sampleQuerySet), [config.sampleQuerySet])
+  const config = env().cas
+  const release = findCasRelease(cas.releaseName)
+  const sampleQueries = useMemo(() => release?.sampleQueries ?? [], [release])
   const visible = cas.enabled && cas.sqlDialogVisible
   const selectedRegion = regions.find(region => region.id === cas.queryRegionId)
   const [errorText, setErrorText] = useState<string>()
@@ -127,35 +126,6 @@ export const CasSqlDialog = memo(() => {
     }
   }, [visible])
 
-  const savePreset = useCallback(() => {
-    const name = prompt('Preset name?')
-    if (name) {
-      dispatch(casSlice.actions.presetAdded({ name, sql: cas.draftSql }))
-    }
-  }, [cas.draftSql, dispatch])
-
-  const loadPreset = useCallback((presetId: string) => {
-    const preset = cas.presets.find(item => item.id === presetId)
-    if (preset) {
-      dispatch(casSlice.actions.draftSqlChanged({ sql: preset.sql }))
-    }
-  }, [cas.presets, dispatch])
-
-  const renamePreset = useCallback((presetId: string) => {
-    const preset = cas.presets.find(item => item.id === presetId)
-    if (!preset) {
-      return
-    }
-    const name = prompt('Preset name?', preset.name)
-    if (name) {
-      dispatch(casSlice.actions.presetRenamed({ id: preset.id, name }))
-    }
-  }, [cas.presets, dispatch])
-
-  const deletePreset = useCallback((presetId: string) => {
-    dispatch(casSlice.actions.presetDeleted({ id: presetId }))
-  }, [dispatch])
-
   const openSchemaBrowser = useCallback(() => {
     window.open(config.schemaBrowserUrl, '_blank', 'noopener')
   }, [config.schemaBrowserUrl])
@@ -177,39 +147,8 @@ export const CasSqlDialog = memo(() => {
           <MenuItem disabled>No sample queries</MenuItem>
         )}
       </SubMenu>
-      <SubMenu label='Presets'>
-        <MenuItem onClick={savePreset}>Save Current SQL...</MenuItem>
-        <MenuDivider />
-        <SubMenu label='Load'>
-          {cas.presets.length > 0 ? cas.presets.map(preset => (
-            <MenuItem key={preset.id} onClick={() => loadPreset(preset.id)}>
-              {preset.name}
-            </MenuItem>
-          )) : (
-            <MenuItem disabled>No presets</MenuItem>
-          )}
-        </SubMenu>
-        <SubMenu label='Rename'>
-          {cas.presets.length > 0 ? cas.presets.map(preset => (
-            <MenuItem key={preset.id} onClick={() => renamePreset(preset.id)}>
-              {preset.name}
-            </MenuItem>
-          )) : (
-            <MenuItem disabled>No presets</MenuItem>
-          )}
-        </SubMenu>
-        <SubMenu label='Delete'>
-          {cas.presets.length > 0 ? cas.presets.map(preset => (
-            <MenuItem key={preset.id} onClick={() => deletePreset(preset.id)}>
-              {preset.name}
-            </MenuItem>
-          )) : (
-            <MenuItem disabled>No presets</MenuItem>
-          )}
-        </SubMenu>
-      </SubMenu>
     </>
-  ), [cas.presets, deletePreset, dispatch, loadPreset, openSchemaBrowser, renamePreset, sampleQueries, savePreset])
+  ), [dispatch, openSchemaBrowser, sampleQueries])
 
   if (!cas.enabled) {
     return null

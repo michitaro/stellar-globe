@@ -13,7 +13,6 @@ function makeState(overrides: Partial<CasState> = {}): CasState {
     queueMode: false,
     noMail: true,
     draftSql: 'SELECT 1',
-    presets: [],
     jobsReloadToken: 0,
     ...overrides,
   }

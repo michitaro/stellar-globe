@@ -70,22 +70,22 @@ Main slices include:
 
 ## CAS SQL Feature
 
-On deployments where CAS is enabled, `app` can send SQL queries to CAS through `/datasearch/skymaps_api/`.
+On targets where CAS is enabled, `app` can send SQL queries to CAS through `/datasearch/skymaps_api/`.
 
 * The SQL editor is provided as a Monaco Editor based dialog
 * `CAS SQL` / `CAS Jobs` dialogs and a `Query CAS` entry from rectangular regions are available
-* The SQL editor supports release / rerun selection, sample queries, preset storage, `Queue` / `No Mail`, and expansion of `$rerun` and `$coord_in_selection_box`
+* The SQL editor supports release / rerun selection, release-specific sample queries, `Queue` / `No Mail`, and expansion of `$rerun` and `$coord_in_selection_box`
 * Preview results can be loaded as catalogs, and the jobs dialog can import completed CSV / CSV.gz results, cancel running jobs, and delete finished jobs
 
 ### Enabling the Feature
 
-CAS does not provide an end-user runtime toggle. It is controlled by the build / deploy-time `VITE_enableCas` flag.
+The `.env` files only select `VITE_target`. CAS enablement, releases, and sample queries are defined under `src/app/env/` for each target.
 
-* `app/vite/env/.env`: `VITE_enableCas=false`
-* `app/vite/env/.env.internal`: `VITE_enableCas=true`
-* `app/vite/env/.env.u2k`: `VITE_enableCas=false`
+* `app/vite/env/.env`: `VITE_target=public`
+* `app/vite/env/.env.internal`: `VITE_target=internal`
+* `app/vite/env/.env.u2k`: `VITE_target=u2k`
 
-To enable CAS for another deployment target, set `VITE_enableCas=true` in the corresponding env file.
+To add another deployment target, add the corresponding `VITE_target` value and a target definition under `src/app/env/`.
 
 ## Type Checking Mechanism for Python Integration
 

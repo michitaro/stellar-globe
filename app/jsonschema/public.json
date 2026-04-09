@@ -245,29 +245,6 @@
                         "noMail": {
                             "type": "boolean"
                         },
-                        "presets": {
-                            "items": {
-                                "additionalProperties": false,
-                                "properties": {
-                                    "id": {
-                                        "type": "string"
-                                    },
-                                    "name": {
-                                        "type": "string"
-                                    },
-                                    "sql": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "id",
-                                    "name",
-                                    "sql"
-                                ],
-                                "type": "object"
-                            },
-                            "type": "array"
-                        },
                         "queryRegionId": {
                             "type": "string"
                         },
@@ -290,7 +267,6 @@
                         "jobsDialogVisible",
                         "jobsReloadToken",
                         "noMail",
-                        "presets",
                         "queryRegionId",
                         "queueMode",
                         "releaseName",
@@ -2309,102 +2285,6 @@
                         },
                         "type": {
                             "const": "cas/noMailChanged",
-                            "description": "the type used for the action type.",
-                            "type": "string"
-                        }
-                    },
-                    "required": [
-                        "payload",
-                        "type"
-                    ],
-                    "type": "object"
-                },
-                "cas/presetAdded": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "payload": {
-                            "additionalProperties": false,
-                            "description": "The type of the action's payload.",
-                            "properties": {
-                                "id": {
-                                    "type": "string"
-                                },
-                                "name": {
-                                    "type": "string"
-                                },
-                                "sql": {
-                                    "type": "string"
-                                }
-                            },
-                            "required": [
-                                "id",
-                                "name",
-                                "sql"
-                            ],
-                            "type": "object"
-                        },
-                        "type": {
-                            "const": "cas/presetAdded",
-                            "description": "the type used for the action type.",
-                            "type": "string"
-                        }
-                    },
-                    "required": [
-                        "payload",
-                        "type"
-                    ],
-                    "type": "object"
-                },
-                "cas/presetDeleted": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "payload": {
-                            "additionalProperties": false,
-                            "description": "The type of the action's payload.",
-                            "properties": {
-                                "id": {
-                                    "type": "string"
-                                }
-                            },
-                            "required": [
-                                "id"
-                            ],
-                            "type": "object"
-                        },
-                        "type": {
-                            "const": "cas/presetDeleted",
-                            "description": "the type used for the action type.",
-                            "type": "string"
-                        }
-                    },
-                    "required": [
-                        "payload",
-                        "type"
-                    ],
-                    "type": "object"
-                },
-                "cas/presetRenamed": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "payload": {
-                            "additionalProperties": false,
-                            "description": "The type of the action's payload.",
-                            "properties": {
-                                "id": {
-                                    "type": "string"
-                                },
-                                "name": {
-                                    "type": "string"
-                                }
-                            },
-                            "required": [
-                                "id",
-                                "name"
-                            ],
-                            "type": "object"
-                        },
-                        "type": {
-                            "const": "cas/presetRenamed",
                             "description": "the type used for the action type.",
                             "type": "string"
                         }
@@ -4895,9 +4775,6 @@
                 "cas/jobsDialogToggled",
                 "cas/jobsReloadRequested",
                 "cas/noMailChanged",
-                "cas/presetAdded",
-                "cas/presetDeleted",
-                "cas/presetRenamed",
                 "cas/queryRegionChanged",
                 "cas/queueModeChanged",
                 "cas/releaseChanged",
