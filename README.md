@@ -88,6 +88,19 @@ The build requires the following environment:
 * **Python**: Version 3.12 or later (required for building `python-integration`)
 * **npm/yarn**: Node.js package manager
 
+### Dependency freshness policy
+
+This repository blocks external dependencies that were published less than **30 days** ago.
+Local `file:` and `link:` dependencies are excluded from the policy.
+
+Check the current repository state with:
+
+```bash
+python3 ./tools/check_dependency_freshness.py
+```
+
+The same check also runs from `build.bash` and GitHub Actions.
+
 ### Build Script Details
 
 `build.bash` executes builds in the following order:
@@ -141,6 +154,8 @@ cd ../react-stellar-globe && npm install
 cd ../react-draggable-dialog && npm install
 cd ../app && npm install
 ```
+
+If you only want to run the freshness policy, execute `python3 ./tools/check_dependency_freshness.py` from the repository root.
 
 ## Main Repository and Mirrors
 

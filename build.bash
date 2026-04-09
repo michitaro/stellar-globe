@@ -1,5 +1,6 @@
 set -uex
 cd $(dirname $0)
+python3 ./tools/check_dependency_freshness.py
 make -C stellar-globe
 make -C react-stellar-globe
 make -C react-draggable-dialog

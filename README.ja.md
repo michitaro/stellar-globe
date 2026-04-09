@@ -88,6 +88,19 @@ bash ./build.bash
 * **Python**: バージョン 3.12 以降（`python-integration` のビルドに必要）
 * **npm/yarn**: Node.js パッケージマネージャー
 
+### 依存パッケージの鮮度ポリシー
+
+このリポジトリでは、公開から **30日未満** の外部依存パッケージを使用しない方針を導入しています。
+ローカルの `file:` / `link:` 依存は対象外です。
+
+確認コマンド:
+
+```bash
+python3 ./tools/check_dependency_freshness.py
+```
+
+`build.bash` と GitHub Actions からも同じチェックが実行されます。
+
 ### ビルドスクリプトの内容
 
 `build.bash` は以下の順序でビルドを実行します：
@@ -142,6 +155,8 @@ cd ../react-draggable-dialog && npm install
 cd ../app && npm install
 ```
 
+鮮度チェックだけを個別に確認したい場合は、リポジトリルートで `python3 ./tools/check_dependency_freshness.py` を実行してください。
+
 ## 本家リポジトリとミラー
 
 本家リポジトリは以下にあります:
@@ -153,4 +168,3 @@ cd ../app && npm install
 
 Issue（問題報告・要望）は日本語または英語で受け付けています。
 本家リポジトリまたはミラーのいずれかにIssueを作成してください。
-
