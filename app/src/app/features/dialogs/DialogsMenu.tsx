@@ -19,7 +19,6 @@ export const DialogsMenu = memo(() => {
   const localFitsImageDialog = useAppSelector(state => state.fitsImage.dialogVisible)
   const casEnabled = useAppSelector(state => state.cas.enabled)
   const casSqlDialog = useAppSelector(state => state.cas.sqlDialogVisible)
-  const casJobsDialog = useAppSelector(state => state.cas.jobsDialogVisible)
   const currentPositionHint = useAppSelector(state => state.common.dialogPositionHint)
   const dispatch = useAppDispatch()
   const { dialogContext } = useAppContext()
@@ -49,9 +48,6 @@ export const DialogsMenu = memo(() => {
       <MenuItem type='checkbox' checked={localFitsImageDialog} onClick={() => dispatch(fitsImageSlice.actions.dialogToggled())}><Icon type='photo_library' marginRight />FITS Images</MenuItem>
       {casEnabled && (
         <MenuItemWithKeybind type='checkbox' checked={casSqlDialog} keybind="toggleCasSqlDialog"><Icon type='table' marginRight />CAS SQL</MenuItemWithKeybind>
-      )}
-      {casEnabled && (
-        <MenuItemWithKeybind type='checkbox' checked={casJobsDialog} keybind="toggleCasJobsDialog"><Icon type='table' marginRight />CAS Jobs</MenuItemWithKeybind>
       )}
       <MenuDivider />
       <SubMenu label="Catalogs">

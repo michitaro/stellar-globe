@@ -22,6 +22,8 @@ export type CasJobIndexResponse = {
   num_pages: number
 }
 
+const jobsPerPage = 10
+
 export type CasJob = {
   id: number
   name: string
@@ -89,7 +91,7 @@ export async function listJobs(page = 1) {
   return withCasCredentials(() =>
     requestJson<CasJobIndexResponse>('/catalog_jobs', {
       query: {
-        per: 50,
+        per: jobsPerPage,
         page,
       },
     })

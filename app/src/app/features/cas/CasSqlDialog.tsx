@@ -1,3 +1,4 @@
+import { MenuDivider, MenuItem, SubMenu } from '@szhsin/react-menu'
 import Editor, { OnMount } from '@monaco-editor/react'
 import { editor as MonacoEditor } from 'monaco-editor'
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -25,7 +26,6 @@ export const CasSqlDialog = memo(() => {
   const sampleQueries = useMemo(() => getCasSampleQueries(config.sampleQuerySet), [config.sampleQuerySet])
   const visible = cas.enabled && cas.sqlDialogVisible
   const selectedRegion = regions.find(region => region.id === cas.queryRegionId)
-  const [selectedPresetId, setSelectedPresetId] = useState<string>('')
   const [errorText, setErrorText] = useState<string>()
   const editorRef = useRef<MonacoEditor.IStandaloneCodeEditor | null>(null)
   const monacoRef = useRef<typeof import('monaco-editor') | null>(null)
@@ -134,15 +134,15 @@ export const CasSqlDialog = memo(() => {
     }
   }, [cas.draftSql, dispatch])
 
-  const loadPreset = useCallback(() => {
-    const preset = cas.presets.find(item => item.id === selectedPresetId)
+  const loadPreset = useCallback((presetId: string) => {
+    const preset = cas.presets.find(item => item.id === presetId)
     if (preset) {
       dispatch(casSlice.actions.draftSqlChanged({ sql: preset.sql }))
     }
-  }, [cas.presets, dispatch, selectedPresetId])
+  }, [cas.presets, dispatch])
 
-  const renamePreset = useCallback(() => {
-    const preset = cas.presets.find(item => item.id === selectedPresetId)
+  const renamePreset = useCallback((presetId: string) => {
+    const preset = cas.presets.find(item => item.id === presetId)
     if (!preset) {
       return
     }
@@ -150,14 +150,66 @@ export const CasSqlDialog = memo(() => {
     if (name) {
       dispatch(casSlice.actions.presetRenamed({ id: preset.id, name }))
     }
-  }, [cas.presets, dispatch, selectedPresetId])
+  }, [cas.presets, dispatch])
 
-  const deletePreset = useCallback(() => {
-    if (selectedPresetId) {
-      dispatch(casSlice.actions.presetDeleted({ id: selectedPresetId }))
-      setSelectedPresetId('')
-    }
-  }, [dispatch, selectedPresetId])
+  const deletePreset = useCallback((presetId: string) => {
+    dispatch(casSlice.actions.presetDeleted({ id: presetId }))
+  }, [dispatch])
+
+  const openSchemaBrowser = useCallback(() => {
+    window.open(config.schemaBrowserUrl, '_blank', 'noopener')
+  }, [config.schemaBrowserUrl])
+
+  const menu = useMemo(() => (
+    <>
+      <MenuItem onClick={() => dispatch(casSlice.actions.jobsDialogOpened())}>Jobs</MenuItem>
+      <MenuItem onClick={openSchemaBrowser}>Schema Browser</MenuItem>
+      <MenuDivider />
+      <SubMenu label='Sample Queries'>
+        {sampleQueries.length > 0 ? sampleQueries.map(query => (
+          <MenuItem
+            key={query.id}
+            onClick={() => dispatch(casSlice.actions.draftSqlChanged({ sql: query.sql }))}
+          >
+            {query.name}
+          </MenuItem>
+        )) : (
+          <MenuItem disabled>No sample queries</MenuItem>
+        )}
+      </SubMenu>
+      <SubMenu label='Presets'>
+        <MenuItem onClick={savePreset}>Save Current SQL...</MenuItem>
+        <MenuDivider />
+        <SubMenu label='Load'>
+          {cas.presets.length > 0 ? cas.presets.map(preset => (
+            <MenuItem key={preset.id} onClick={() => loadPreset(preset.id)}>
+              {preset.name}
+            </MenuItem>
+          )) : (
+            <MenuItem disabled>No presets</MenuItem>
+          )}
+        </SubMenu>
+        <SubMenu label='Rename'>
+          {cas.presets.length > 0 ? cas.presets.map(preset => (
+            <MenuItem key={preset.id} onClick={() => renamePreset(preset.id)}>
+              {preset.name}
+            </MenuItem>
+          )) : (
+            <MenuItem disabled>No presets</MenuItem>
+          )}
+        </SubMenu>
+        <SubMenu label='Delete'>
+          {cas.presets.length > 0 ? cas.presets.map(preset => (
+            <MenuItem key={preset.id} onClick={() => deletePreset(preset.id)}>
+              {preset.name}
+            </MenuItem>
+          )) : (
+            <MenuItem disabled>No presets</MenuItem>
+          )}
+        </SubMenu>
+      </SubMenu>
+    </>
+  ), [cas.presets, deletePreset, dispatch, loadPreset, openSchemaBrowser, renamePreset, sampleQueries, savePreset])
 
   if (!cas.enabled) {
     return null
@@ -168,6 +220,14 @@ export const CasSqlDialog = memo(() => {
       title='CAS SQL'
       visible={visible}
       resizable
+      sizeHint={{ width: 'min(90vw, 1100px)', height: 'min(75vh, 720px)' }}
+      minmaxSize={{
+        minWidth: 'min(640px, 90vw)',
+        minHeight: 'min(420px, 75vh)',
+        maxWidth: '90vw',
+        maxHeight: '75vh',
+      }}
+      menu={menu}
       onCloseButtonClick={() => dispatch(casSlice.actions.sqlDialogToggled({ open: false }))}
     >
       <div className={styles.dialogBody}>
@@ -208,34 +268,10 @@ export const CasSqlDialog = memo(() => {
               ))}
             </select>
           </label>
-          <span className={styles.grow} />
-          {sampleQueries.map(query => (
-            <button key={query.id} onClick={() => dispatch(casSlice.actions.draftSqlChanged({ sql: query.sql }))}>
-              {query.name}
-            </button>
-          ))}
-          <button onClick={() => dispatch(casSlice.actions.jobsDialogOpened())}>Jobs</button>
-          <button onClick={() => window.open(config.schemaBrowserUrl, '_blank', 'noopener')}>Schema</button>
-        </div>
-
-        <div className={styles.toolbar}>
-          <label className={styles.toolbarLabel}>
-            <span>Preset</span>
-            <select value={selectedPresetId} onChange={event => setSelectedPresetId(event.currentTarget.value)}>
-              <option value=''>None</option>
-              {cas.presets.map(preset => (
-                <option key={preset.id} value={preset.id}>{preset.name}</option>
-              ))}
-            </select>
-          </label>
-          <button onClick={loadPreset} disabled={!selectedPresetId}>Load</button>
-          <button onClick={savePreset}>Save</button>
-          <button onClick={renamePreset} disabled={!selectedPresetId}>Rename</button>
-          <button onClick={deletePreset} disabled={!selectedPresetId}>Delete</button>
         </div>
 
         <div className={styles.hint}>
-          矩形 region を作成して「Query CAS」から開くと、`$coord_in_selection_box` に選択範囲を展開できます。
+          Create a rectangular region and open CAS from “Query CAS” to expand `$coord_in_selection_box` to that selection.
         </div>
 
         <div className={styles.editor}>
