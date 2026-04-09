@@ -8,7 +8,6 @@ type State = {
   sqlDialogVisible: boolean
   jobsDialogVisible: boolean
   releaseName: string | undefined
-  rerun: string | undefined
   queryRegionId: string | undefined
   queueMode: boolean
   noMail: boolean
@@ -20,18 +19,16 @@ function initialState(): State {
   const config = env().cas
   const stored = readStorageState().cas
   const release = config.enabled ? findCasRelease(stored?.releaseName) : undefined
-  const rerun = release?.reruns.includes(stored?.rerun ?? '') ? stored?.rerun : release?.reruns[0]
 
   return {
     enabled: config.enabled && config.releases.length > 0,
     sqlDialogVisible: false,
     jobsDialogVisible: false,
     releaseName: release?.name,
-    rerun,
     queryRegionId: undefined,
     queueMode: stored?.queueMode ?? false,
     noMail: stored?.noMail ?? true,
-    draftSql: stored?.draftSql ?? defaultCasSql(release),
+    draftSql: stored?.draftSql ?? defaultCasSql(),
     jobsReloadToken: 0,
   }
 }
@@ -64,12 +61,6 @@ export const casSlice = createSlice({
     releaseChanged(state, { payload: { releaseName } }: PayloadAction<{ releaseName: string }>) {
       const release = findCasRelease(releaseName)
       state.releaseName = release?.name
-      if (!release?.reruns.includes(state.rerun ?? '')) {
-        state.rerun = release?.reruns[0]
-      }
-    },
-    rerunChanged(state, { payload: { rerun } }: PayloadAction<{ rerun: string }>) {
-      state.rerun = rerun
     },
     queryRegionChanged(state, { payload: { queryRegionId } }: PayloadAction<{ queryRegionId?: string }>) {
       state.queryRegionId = queryRegionId

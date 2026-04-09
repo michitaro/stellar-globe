@@ -25,8 +25,8 @@ export function findCasRelease(releaseName?: string): CasRelease | undefined {
   return env().cas.releases.find(release => release.name === releaseName) ?? env().cas.releases[0]
 }
 
-export function defaultCasSql(release?: CasRelease) {
-  return release?.sampleQueries[0]?.sql ?? ''
+export function defaultCasSql() {
+  return env().cas.sampleQueries[0]?.sql ?? ''
 }
 
 export type { AppEnv, AppTarget, CasRelease, CasSampleQuery } from './types'

@@ -22,7 +22,7 @@ export const CasSqlDialog = memo(() => {
   const regions = useAppSelector(state => state.regions.regions.filter(isRectangularRegion))
   const config = env().cas
   const release = findCasRelease(cas.releaseName)
-  const sampleQueries = useMemo(() => release?.sampleQueries ?? [], [release])
+  const sampleQueries = config.sampleQueries
   const visible = cas.enabled && cas.sqlDialogVisible
   const selectedRegion = regions.find(region => region.id === cas.queryRegionId)
   const [errorText, setErrorText] = useState<string>()
@@ -53,14 +53,13 @@ export const CasSqlDialog = memo(() => {
   }, [])
 
   const submit = useCallback(async () => {
-    if (!release || !cas.rerun) {
+    if (!release) {
       alert('CAS release is not configured.')
       return
     }
 
     const expandedSql = expandCasSql({
       sql: cas.draftSql,
-      rerun: cas.rerun,
       region: selectedRegion,
     })
 
@@ -71,7 +70,7 @@ export const CasSqlDialog = memo(() => {
       await blockUI(async () => {
         if (cas.queueMode) {
           await enqueueJob({
-            releaseVersion: release.casRelease,
+            releaseVersion: release.name,
             sql: expandedSql,
             noMail: cas.noMail,
           })
@@ -81,7 +80,7 @@ export const CasSqlDialog = memo(() => {
         }
 
         const result = await previewJob({
-          releaseVersion: release.casRelease,
+          releaseVersion: release.name,
           sql: expandedSql,
         })
 
@@ -92,7 +91,7 @@ export const CasSqlDialog = memo(() => {
 
         const preview = casPreviewToCatalog(result.preview)
         dispatch(catalogsSlice.actions.catalogAdded({
-          name: `CAS ${cas.rerun}`,
+          name: `CAS ${release.name}`,
           fields: preview.fields,
           attributes: preview.attributes,
           markers: preview.markers,
@@ -107,7 +106,7 @@ export const CasSqlDialog = memo(() => {
     catch (error) {
       alert(error instanceof Error ? error.message : String(error))
     }
-  }, [blockUI, cas.draftSql, cas.noMail, cas.queueMode, cas.rerun, clearMarkers, dispatch, release, selectedRegion, showSqlError])
+  }, [blockUI, cas.draftSql, cas.noMail, cas.queueMode, clearMarkers, dispatch, release, selectedRegion, showSqlError])
 
   submitRef.current = submit
 
@@ -184,17 +183,6 @@ export const CasSqlDialog = memo(() => {
               </select>
             </label>
           )}
-          <label className={styles.toolbarLabel}>
-            <span>Rerun</span>
-            <select
-              value={cas.rerun ?? ''}
-              onChange={event => dispatch(casSlice.actions.rerunChanged({ rerun: event.currentTarget.value }))}
-            >
-              {release?.reruns.map(item => (
-                <option key={item} value={item}>{item}</option>
-              ))}
-            </select>
-          </label>
           <label className={styles.toolbarLabel}>
             <span>Region</span>
             <select

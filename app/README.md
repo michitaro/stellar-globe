@@ -74,12 +74,12 @@ On targets where CAS is enabled, `app` can send SQL queries to CAS through `/dat
 
 * The SQL editor is provided as a Monaco Editor based dialog
 * `CAS SQL` / `CAS Jobs` dialogs and a `Query CAS` entry from rectangular regions are available
-* The SQL editor supports release / rerun selection, release-specific sample queries, `Queue` / `No Mail`, and expansion of `$rerun` and `$coord_in_selection_box`
+* The SQL editor supports release selection, target-specific sample queries, `Queue` / `No Mail`, and expansion of `$coord_in_selection_box`
 * Preview results can be loaded as catalogs, and the jobs dialog can import completed CSV / CSV.gz results, cancel running jobs, and delete finished jobs
 
 ### Enabling the Feature
 
-The `.env` files only select `VITE_target`. CAS enablement, releases, and sample queries are defined under `src/app/env/` for each target.
+The `.env` files only select `VITE_target`. CAS enablement, release lists, and sample queries are defined under `src/app/env/` for each target.
 
 * `app/vite/env/.env`: `VITE_target=public`
 * `app/vite/env/.env.internal`: `VITE_target=internal`

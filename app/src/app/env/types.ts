@@ -16,9 +16,6 @@ export type CasSampleQuery = {
 
 export type CasRelease = {
   name: string
-  casRelease: string
-  reruns: string[]
-  sampleQueries: CasSampleQuery[]
 }
 
 export type AppEnv = {
@@ -27,6 +24,7 @@ export type AppEnv = {
   cas: {
     enabled: boolean
     releases: CasRelease[]
+    sampleQueries: CasSampleQuery[]
     schemaBrowserUrl: string
   }
 }

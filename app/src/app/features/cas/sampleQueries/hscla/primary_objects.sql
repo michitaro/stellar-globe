@@ -7,7 +7,7 @@ SELECT
     ,y_cmodel_mag
     ,y_cmodel_magerr
 FROM
-    $rerun.forced
+    hscla2020_wide.forced
 WHERE
     $coord_in_selection_box
     AND isprimary

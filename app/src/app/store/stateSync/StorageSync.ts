@@ -17,12 +17,31 @@ function localStorageState(state: AppState) {
     magFilter: state.common.magFilter,
     cas: {
       releaseName: state.cas.releaseName,
-      rerun: state.cas.rerun,
       queueMode: state.cas.queueMode,
       noMail: state.cas.noMail,
       draftSql: state.cas.draftSql,
     },
   }
+}
+
+export function normalizeStorageState(unvalidated: unknown) {
+  if (!unvalidated || typeof unvalidated !== 'object') {
+    return unvalidated
+  }
+
+  const state = unvalidated as Record<string, unknown>
+  const cas = state.cas
+  if (!cas || typeof cas !== 'object') {
+    return unvalidated
+  }
+
+  const casState = cas as Record<string, unknown>
+  if (!('rerun' in casState) && !('presets' in casState)) {
+    return unvalidated
+  }
+
+  const { rerun: _rerun, presets: _presets, ...normalizedCas } = casState
+  return { ...state, cas: normalizedCas }
 }
 
 
@@ -77,7 +96,7 @@ export const readStorageState = (() => {
       return {}
     }
     try {
-      const unvalidated = JSON.parse(raw)
+      const unvalidated = normalizeStorageState(JSON.parse(raw))
       if (isValidStorageState(unvalidated)) {
         return unvalidated
       }

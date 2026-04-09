@@ -74,12 +74,12 @@ CAS が有効な target では、`app` から `/datasearch/skymaps_api/` 経由�
 
 * SQL エディタは Monaco Editor ベースの dialog として提供されます
 * `CAS SQL` / `CAS Jobs` dialog と、矩形 region からの `Query CAS` 導線が追加されます
-* SQL エディタでは release / rerun 選択、release ごとの sample query、`Queue` / `No Mail`、`$rerun` と `$coord_in_selection_box` 展開を利用できます
+* SQL エディタでは release 選択、target ごとの sample query、`Queue` / `No Mail`、`$coord_in_selection_box` 展開を利用できます
 * preview 結果は catalog として読み込みでき、job list から完了ジョブの CSV / CSV.gz 取り込み、cancel、delete ができます
 
 ### 有効化方法
 
-`.env` ファイルでは `VITE_target` だけを設定し、target ごとの CAS 有効化・release・sample query は `src/app/env/` 以下で定義します。
+`.env` ファイルでは `VITE_target` だけを設定し、target ごとの CAS 有効化・release 一覧・sample query は `src/app/env/` 以下で定義します。
 
 * `app/vite/env/.env`: `VITE_target=public`
 * `app/vite/env/.env.internal`: `VITE_target=internal`

@@ -1,4 +1,4 @@
-import { internalSampleQueries, pdr3SampleQueries } from './casSampleQueries'
+import { internalCasSampleQueries } from './casSampleQueries'
 import type { AppEnv } from './types'
 
 export const internalEnv: AppEnv = {
@@ -14,18 +14,9 @@ export const internalEnv: AppEnv = {
     enabled: true,
     schemaBrowserUrl: 'https://hscdata.mtk.nao.ac.jp/schema_browser3/',
     releases: [
-      {
-        name: 'dr4',
-        casRelease: 'dr4',
-        reruns: ['s23b_wide', 's23b_deep', 's23b_deep2'],
-        sampleQueries: internalSampleQueries,
-      },
-      {
-        name: 'pdr3',
-        casRelease: 'pdr3',
-        reruns: ['pdr3_wide', 'pdr3_dud'],
-        sampleQueries: pdr3SampleQueries,
-      },
+      { name: 's23b_wide' },
+      { name: 's23b_dud' },
     ],
+    sampleQueries: internalCasSampleQueries,
   },
 }

@@ -2,18 +2,15 @@ import { RectangularRegion } from "../regions/regionsSlice"
 
 type Options = {
   sql: string
-  rerun: string
   region?: RectangularRegion
 }
 
 export function expandCasSql({
   sql,
-  rerun,
   region,
 }: Options) {
   return sql
     .replace(/\$coord_in_selection_box\b/g, region ? boxSearch(region) : `'t'`)
-    .replace(/\$rerun\b/g, rerun)
 }
 
 function boxSearch(region: RectangularRegion) {

@@ -2,7 +2,7 @@ import { test } from 'vitest'
 import { expandCasSql } from './sql'
 import { RectangularRegion } from '../regions/regionsSlice'
 
-test('expands rerun and selection box placeholders', () => {
+test('expands the selection box placeholder', () => {
   const region: RectangularRegion = {
     id: 'region-1',
     type: 'Rectangular',
@@ -17,8 +17,7 @@ test('expands rerun and selection box placeholders', () => {
   }
 
   const sql = expandCasSql({
-    sql: 'SELECT * FROM $rerun.forced WHERE $coord_in_selection_box',
-    rerun: 'pdr3_wide',
+    sql: 'SELECT * FROM pdr3_wide.forced WHERE $coord_in_selection_box',
     region,
   })
 
@@ -28,8 +27,7 @@ test('expands rerun and selection box placeholders', () => {
 
 test('expands selection placeholder to true when no region is selected', () => {
   const sql = expandCasSql({
-    sql: 'SELECT * FROM $rerun.forced WHERE $coord_in_selection_box',
-    rerun: 'pdr3_wide',
+    sql: 'SELECT * FROM pdr3_wide.forced WHERE $coord_in_selection_box',
   })
 
   expect(sql).toBe(`SELECT * FROM pdr3_wide.forced WHERE 't'`)

@@ -254,9 +254,6 @@
                         "releaseName": {
                             "type": "string"
                         },
-                        "rerun": {
-                            "type": "string"
-                        },
                         "sqlDialogVisible": {
                             "type": "boolean"
                         }
@@ -270,7 +267,6 @@
                         "queryRegionId",
                         "queueMode",
                         "releaseName",
-                        "rerun",
                         "sqlDialogVisible"
                     ],
                     "type": "object"
@@ -2366,34 +2362,6 @@
                         },
                         "type": {
                             "const": "cas/releaseChanged",
-                            "description": "the type used for the action type.",
-                            "type": "string"
-                        }
-                    },
-                    "required": [
-                        "payload",
-                        "type"
-                    ],
-                    "type": "object"
-                },
-                "cas/rerunChanged": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "payload": {
-                            "additionalProperties": false,
-                            "description": "The type of the action's payload.",
-                            "properties": {
-                                "rerun": {
-                                    "type": "string"
-                                }
-                            },
-                            "required": [
-                                "rerun"
-                            ],
-                            "type": "object"
-                        },
-                        "type": {
-                            "const": "cas/rerunChanged",
                             "description": "the type used for the action type.",
                             "type": "string"
                         }
@@ -4778,7 +4746,6 @@
                 "cas/queryRegionChanged",
                 "cas/queueModeChanged",
                 "cas/releaseChanged",
-                "cas/rerunChanged",
                 "cas/sqlDialogOpened",
                 "cas/sqlDialogToggled",
                 "catalogs/allRowsSelected",

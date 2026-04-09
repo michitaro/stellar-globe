@@ -1,5 +1,31 @@
-import { test } from 'vitest'
+import { test, vi } from 'vitest'
 import { regionsSlice } from '../regions/regionsSlice'
+
+vi.mock('../../env', () => ({
+  defaultCasSql: () => 'SELECT 1',
+  env: () => ({
+    target: 'public',
+    data: {
+      u2k: false,
+      la2016: false,
+      la2020: false,
+      pdr3: true,
+      idr: false,
+    },
+    cas: {
+      enabled: true,
+      releases: [{ name: 'pdr3' }, { name: 'pdr2' }],
+      sampleQueries: [],
+      schemaBrowserUrl: 'https://example.invalid/schema_browser3/',
+    },
+  }),
+  findCasRelease: (releaseName?: string) => [{ name: 'pdr3' }, { name: 'pdr2' }].find(release => release.name === releaseName) ?? { name: 'pdr3' },
+}))
+
+vi.mock('../../store/stateSync/StorageSync', () => ({
+  readStorageState: () => ({}),
+}))
+
 import { CasState, casSlice } from './casSlice'
 
 function makeState(overrides: Partial<CasState> = {}): CasState {
@@ -8,7 +34,6 @@ function makeState(overrides: Partial<CasState> = {}): CasState {
     sqlDialogVisible: false,
     jobsDialogVisible: false,
     releaseName: 'pdr3',
-    rerun: 'pdr3_wide',
     queryRegionId: undefined,
     queueMode: false,
     noMail: true,
@@ -18,16 +43,13 @@ function makeState(overrides: Partial<CasState> = {}): CasState {
   }
 }
 
-test('resets rerun when the selected release does not contain the current rerun', () => {
-  const state = makeState({ rerun: 'invalid-rerun' })
-
+test('falls back to the first configured release when an unknown release is selected', () => {
   const nextState = casSlice.reducer(
-    state,
-    casSlice.actions.releaseChanged({ releaseName: 'pdr3' }),
+    makeState(),
+    casSlice.actions.releaseChanged({ releaseName: 'unknown-release' }),
   )
 
   expect(nextState.releaseName).toBe('pdr3')
-  expect(nextState.rerun).toBe('pdr3_wide')
 })
 
 test('clears query region when the selected rectangle is deleted', () => {

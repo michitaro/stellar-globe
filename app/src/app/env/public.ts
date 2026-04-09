@@ -1,4 +1,4 @@
-import { pdr3SampleQueries } from './casSampleQueries'
+import { publicCasSampleQueries } from './casSampleQueries'
 import type { AppEnv } from './types'
 
 export const publicEnv: AppEnv = {
@@ -14,12 +14,13 @@ export const publicEnv: AppEnv = {
     enabled: true,
     schemaBrowserUrl: 'https://hscdata.mtk.nao.ac.jp/schema_browser3/',
     releases: [
-      {
-        name: 'pdr3',
-        casRelease: 'pdr3',
-        reruns: ['pdr3_wide', 'pdr3_dud'],
-        sampleQueries: pdr3SampleQueries,
-      },
+      { name: 'pdr3' },
+      { name: 'pdr3-citus-columnar' },
+      { name: 'pdr2' },
+      { name: 'pdr2-citus-columnar' },
+      { name: 'chorus_pdr1' },
+      { name: 'pdr1' },
     ],
+    sampleQueries: publicCasSampleQueries,
   },
 }

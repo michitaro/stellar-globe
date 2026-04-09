@@ -1,4 +1,3 @@
-import { u2kSampleQueries } from './casSampleQueries'
 import type { AppEnv } from './types'
 
 export const u2kEnv: AppEnv = {
@@ -11,15 +10,9 @@ export const u2kEnv: AppEnv = {
     idr: false,
   },
   cas: {
-    enabled: true,
+    enabled: false,
     schemaBrowserUrl: 'https://hscdata.mtk.nao.ac.jp/schema_browser3/',
-    releases: [
-      {
-        name: 'u2k',
-        casRelease: 'u2k',
-        reruns: ['s18a_dud_u2k'],
-        sampleQueries: u2kSampleQueries,
-      },
-    ],
+    releases: [],
+    sampleQueries: [],
   },
 }

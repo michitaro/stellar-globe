@@ -7,13 +7,13 @@ SELECT
     ,f1.y_cmodel_mag
     ,f1.y_cmodel_magsigma
 FROM
-    $rerun.forced  AS f1
+    pdr3_wide.forced  AS f1
   LEFT JOIN
-    $rerun.forced2 AS f2 USING (object_id)
+    pdr3_wide.forced2 AS f2 USING (object_id)
   LEFT JOIN
-    $rerun.meas   AS m1 USING (object_id)
+    pdr3_wide.meas   AS m1 USING (object_id)
   LEFT JOIN
-    $rerun.meas2  AS m2 USING (object_id)
+    pdr3_wide.meas2  AS m2 USING (object_id)
 WHERE
     $coord_in_selection_box
     AND NOT f1.g_pixelflags_edge
