@@ -1,9 +1,9 @@
 import { DndContext, useDraggable } from '@dnd-kit/core'
 import { DragMoveEvent } from "@dnd-kit/core/dist/types"
 import { restrictToWindowEdges } from '@dnd-kit/modifiers'
-import { CSSProperties, ReactNode, RefObject, useCallback, useLayoutEffect, useMemo, useRef } from 'react'
+import { ReactNode, RefObject, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { DialogRect, readDialogRect, resizeHandleStyle, sameDialogRect } from './resizeHandleGeometry'
 import { Origin, PartialSize, Position, Rect, Size } from './types'
-import { convertOrigin } from './utils'
 
 
 type ResizableProps = {
@@ -58,6 +58,7 @@ type DragState = {
 function EnabledResizable({
   children,
   container,
+  position,
   setPosition,
   size,
   setSize,
@@ -65,8 +66,8 @@ function EnabledResizable({
   enabled,
   origin,
 }: ResizableProps) {
-  // const positionAtDragStart = useRef<(Size & Position) | undefined>(undefined)
   const dragState = useRef<DragState | undefined>(undefined)
+  const [containerRect, setContainerRect] = useState<DialogRect | undefined>(undefined)
 
   const onDragStart = useCallback((e: DragMoveEvent) => {
     const { left, top, width, height } = container.current!.getBoundingClientRect()
@@ -127,6 +128,35 @@ function EnabledResizable({
     }
   }, [container, origin, setPosition, size])
 
+  const updateContainerRect = useCallback(() => {
+    setContainerRect(current => {
+      const next = readDialogRect(container.current)
+      return sameDialogRect(current, next) ? current : next
+    })
+  }, [container])
+
+  useLayoutEffect(() => {
+    const element = container.current
+    if (!element) {
+      setContainerRect(undefined)
+      return
+    }
+
+    updateContainerRect()
+
+    const resizeObserver = new ResizeObserver(updateContainerRect)
+    resizeObserver.observe(element)
+    window.addEventListener('resize', updateContainerRect)
+    return () => {
+      resizeObserver.disconnect()
+      window.removeEventListener('resize', updateContainerRect)
+    }
+  }, [container, updateContainerRect])
+
+  useLayoutEffect(() => {
+    updateContainerRect()
+  }, [position, size, updateContainerRect])
+
   return (
     <DndContext
       onDragStart={onDragStart}
@@ -135,14 +165,14 @@ function EnabledResizable({
       modifiers={[restrictToWindowEdges]}
     >
       {children}
-      {enabled.y && <ResizeHandle n />}
-      {enabled.y && enabled.x && <ResizeHandle n e />}
-      {enabled.x && <ResizeHandle e />}
-      {enabled.x && enabled.y && <ResizeHandle e s />}
-      {enabled.y && <ResizeHandle s />}
-      {enabled.y && enabled.x && <ResizeHandle s w />}
-      {enabled.x && <ResizeHandle w />}
-      {enabled.x && enabled.y && <ResizeHandle w n />}
+      {containerRect && enabled.y && <ResizeHandle dialogRect={containerRect} n />}
+      {containerRect && enabled.y && enabled.x && <ResizeHandle dialogRect={containerRect} n e />}
+      {containerRect && enabled.x && <ResizeHandle dialogRect={containerRect} e />}
+      {containerRect && enabled.x && enabled.y && <ResizeHandle dialogRect={containerRect} e s />}
+      {containerRect && enabled.y && <ResizeHandle dialogRect={containerRect} s />}
+      {containerRect && enabled.y && enabled.x && <ResizeHandle dialogRect={containerRect} s w />}
+      {containerRect && enabled.x && <ResizeHandle dialogRect={containerRect} w />}
+      {containerRect && enabled.x && enabled.y && <ResizeHandle dialogRect={containerRect} w n />}
     </DndContext>
   )
 }
@@ -151,22 +181,14 @@ function EnabledResizable({
 type Direction = 'n' | 'e' | 'w' | 's'
 
 
-function ResizeHandle({ n, w, e, s, size = 8 }: Partial<Record<Direction, boolean>> & { size?: number }) {
-  const boxPosition = useMemo<CSSProperties>(() => ({
-    // backgroundColor: 'rgba(0, 0, 255, 0.25)',
-    position: 'absolute',
-    left: w ? `${-size}px` : e ? undefined : `${size}px`,
-    right: e ? `${-size}px` : w ? undefined : `${size}px`,
-    width: (e || w) ? `${2 * size}px` : undefined,
-    top: n ? `${-size}px` : s ? undefined : `${size}px`,
-    bottom: s ? `${-size}px` : n ? undefined : `${size}px`,
-    height: (n || s) ? `${2 * size}px` : undefined,
-    cursor: (n && e || s && w) ? 'nesw-resize' :
-      (n && w || s && e) ? 'nwse-resize' :
-        (n || s) ? 'ns-resize' :
-          (e || w) ? 'ew-resize' : undefined,
-  }), [e, n, s, size, w])
-
+function ResizeHandle({
+  dialogRect,
+  n,
+  w,
+  e,
+  s,
+  size = 8,
+}: Partial<Record<Direction, boolean>> & { dialogRect: DialogRect, size?: number }) {
   const id = n ? (e ? 'ne' : w ? 'nw' : 'n') :
     s ? (e ? 'se' : w ? 'sw' : 's') :
       e ? 'e' : 'w'
@@ -175,9 +197,11 @@ function ResizeHandle({ n, w, e, s, size = 8 }: Partial<Record<Direction, boolea
     id,
   })
 
-  const style = {
-    ...boxPosition,
-  }
+  const style = useMemo(() => resizeHandleStyle({
+    direction: id,
+    dialogRect,
+    gripSize: size,
+  }), [dialogRect, id, size])
 
   return (
     <div ref={setNodeRef} style={style} {...listeners} {...attributes} />
