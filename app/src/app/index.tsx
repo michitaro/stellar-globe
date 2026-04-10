@@ -75,9 +75,9 @@ export const App = forwardRef<AppHandle, AppProps>(({
           tabIndex={catchAllKeyboardEvents ? undefined : -1}
         >
           <MenuProvider portal={menuLayerElement}>
-            <Dialogs portal={dialogLayerElement} />
             <StateHistoryProvider stateHistory={stateHistory}>
               <ModalProvider rootElementRef={rootElementRef}>
+                <Dialogs portal={dialogLayerElement} />
                 <KeybindsProvider containerRef={rootElementRef} catchAllEvents={catchAllKeyboardEvents}>
                   <AppDragAndDrop>
                     <MainViewer />

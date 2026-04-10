@@ -68,6 +68,25 @@ Main slices include:
 * Catalog data overlay
 * External integration API (CommTools)
 
+## CAS SQL Feature
+
+On targets where CAS is enabled, `app` can send SQL queries to CAS through `/datasearch/skymaps_api/`.
+
+* The SQL editor is provided as a Monaco Editor based dialog
+* `CAS SQL` / `CAS Jobs` dialogs and a `Query CAS` entry from rectangular regions are available
+* The SQL editor supports release selection, target-specific sample queries, `Queue` / `No Mail`, and expansion of `$coord_in_selection_box`
+* Preview results can be loaded as catalogs, and the jobs dialog can import completed CSV / CSV.gz results, cancel running jobs, and delete finished jobs
+
+### Enabling the Feature
+
+The `.env` files only select `VITE_target`. CAS enablement, release lists, and sample queries are defined under `src/app/env/` for each target.
+
+* `app/vite/env/.env`: `VITE_target=public`
+* `app/vite/env/.env.internal`: `VITE_target=internal`
+* `app/vite/env/.env.u2k`: `VITE_target=u2k`
+
+To add another deployment target, add the corresponding `VITE_target` value and a target definition under `src/app/env/`.
+
 ## Type Checking Mechanism for Python Integration
 
 A mechanism to check type consistency at runtime is implemented for communication between `app` and Python.

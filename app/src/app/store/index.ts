@@ -2,6 +2,7 @@ import { Action, ThunkAction, configureStore, createSlice } from "@reduxjs/toolk
 import { makeGlobalStack } from "../../common/utils/globalstack"
 import { appearanceLayersSlice } from "../features/appearanceLayers/appearanceLayersSlice"
 import { cameraSlice } from "../features/camera/cameraSlice"
+import { casSlice } from "../features/cas/casSlice"
 import { catalogsSlice } from "../features/catalog/catalogSlice"
 import { commonSlice } from "../features/common/commonSlice"
 import { develSlice } from "../features/devel/develSlice"
@@ -36,6 +37,7 @@ export function makeStore({
         [commonSlice.name]: commonSlice.reducer,
         [appearanceLayersSlice.name]: appearanceLayersSlice.reducer,
         [cameraSlice.name]: cameraSlice.reducer,
+        [casSlice.name]: casSlice.reducer,
         [indicatorSlice.name]: indicatorSlice.reducer,
         [tractTileLayersSlice.name]: tractTileLayersSlice.reducer,
         [hipsLayersSlice.name]: hipsLayersSlice.reducer,

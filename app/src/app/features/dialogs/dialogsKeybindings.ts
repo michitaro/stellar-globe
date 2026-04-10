@@ -1,7 +1,9 @@
 import { useMemo } from "react"
 import { Keybind } from "../../../common/components/keybindings"
 import { useAppDispatch } from "../../store/hooks"
+import { useAppSelector } from "../../store/hooks"
 import { catalogsSlice } from "../catalog/catalogSlice"
+import { casSlice } from "../cas/casSlice"
 import { hipsLayersSlice } from "../hipsLayers/hipsLayersSlice"
 import { regionsSlice } from "../regions/regionsSlice"
 import { tractTileLayersSlice } from "../tractTileLayers/tractTileLayersSlice"
@@ -11,6 +13,7 @@ import { useAppContext } from "../../context"
 export function useDialogsKeybindings() {
   const dispatch = useAppDispatch()
   const { dialogContext } = useAppContext()
+  const casEnabled = useAppSelector(state => state.cas.enabled)
 
   return useMemo(() => {
     const toggleToneDialog: Keybind = {
@@ -37,6 +40,22 @@ export function useDialogsKeybindings() {
       },
       shortcut: 'C',
     }
+    const toggleCasSqlDialog: Keybind = {
+      action: () => {
+        if (casEnabled) {
+          dispatch(casSlice.actions.sqlDialogToggled({}))
+        }
+      },
+      shortcut: 'Shift+Q',
+    }
+    const toggleCasJobsDialog: Keybind = {
+      action: () => {
+        if (casEnabled) {
+          dispatch(casSlice.actions.jobsDialogToggled({}))
+        }
+      },
+      shortcut: 'Shift+J',
+    }
     const rearrangeDialogs: Keybind = {
       action: () => {
         dialogContext.current!.rearrange()
@@ -50,6 +69,8 @@ export function useDialogsKeybindings() {
         dispatch(hipsLayersSlice.actions.hipsDialogToggled({ open: false }))
         dispatch(catalogsSlice.actions.catalogsDialogToggled({ open: false }))
         dispatch(catalogsSlice.actions.dialogsClosed({}))
+        dispatch(casSlice.actions.sqlDialogToggled({ open: false }))
+        dispatch(casSlice.actions.jobsDialogToggled({ open: false }))
       },
       shortcut: 'X',
     }
@@ -59,8 +80,10 @@ export function useDialogsKeybindings() {
       toggleRegionsDialog,
       toggleHipsDialog,
       toggleCatalogsDialog,
+      toggleCasSqlDialog,
+      toggleCasJobsDialog,
       rearrangeDialogs,
       closeAllDialogs,
     }
-  }, [dialogContext, dispatch])
+  }, [casEnabled, dialogContext, dispatch])
 }

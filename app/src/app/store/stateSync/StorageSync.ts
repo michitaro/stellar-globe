@@ -15,7 +15,33 @@ function localStorageState(state: AppState) {
     angleUnit: state.common.angleUnit,
     dialogPositionHint: state.common.dialogPositionHint,
     magFilter: state.common.magFilter,
+    cas: {
+      releaseName: state.cas.releaseName,
+      queueMode: state.cas.queueMode,
+      noMail: state.cas.noMail,
+      draftSql: state.cas.draftSql,
+    },
   }
+}
+
+export function normalizeStorageState(unvalidated: unknown) {
+  if (!unvalidated || typeof unvalidated !== 'object') {
+    return unvalidated
+  }
+
+  const state = unvalidated as Record<string, unknown>
+  const cas = state.cas
+  if (!cas || typeof cas !== 'object') {
+    return unvalidated
+  }
+
+  const casState = cas as Record<string, unknown>
+  if (!('rerun' in casState) && !('presets' in casState)) {
+    return unvalidated
+  }
+
+  const { rerun: _rerun, presets: _presets, ...normalizedCas } = casState
+  return { ...state, cas: normalizedCas }
 }
 
 
@@ -44,6 +70,7 @@ export function useLocalStorageSync({
         appOnChange(store, state => state.common.angleUnit, sync),
         appOnChange(store, state => state.common.dialogPositionHint, sync),
         appOnChange(store, state => state.common.magFilter, sync),
+        appOnChange(store, state => state.cas, sync),
       ]
       return () => {
         while (cleanup.length > 0) {
@@ -69,7 +96,7 @@ export const readStorageState = (() => {
       return {}
     }
     try {
-      const unvalidated = JSON.parse(raw)
+      const unvalidated = normalizeStorageState(JSON.parse(raw))
       if (isValidStorageState(unvalidated)) {
         return unvalidated
       }
