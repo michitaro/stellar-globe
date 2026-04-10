@@ -1,4 +1,5 @@
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { Icon } from '../../../common/components/Icon'
 import { AppDialog } from '../../AppDialog'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { parseCatalogCsvText } from '../catalog/catalogSlice'
@@ -110,9 +111,9 @@ export const CasJobsDialog = memo(() => {
     <AppDialog
       title='CAS Jobs'
       visible={visible}
-      sizeHint={{ width: 'min(90vw, 1100px)', height: 'min(75vh, 560px)' }}
+      sizeHint={{ width: 'min(760px, 90vw)', height: 'min(75vh, 560px)' }}
       minmaxSize={{
-        minWidth: 'min(760px, 90vw)',
+        minWidth: 'min(560px, 90vw)',
         minHeight: 'min(420px, 75vh)',
         maxWidth: '90vw',
         maxHeight: '75vh',
@@ -130,7 +131,6 @@ export const CasJobsDialog = memo(() => {
                 <th className={styles.statusCell}>Status</th>
                 <th className={styles.filesizeCell}>Filesize</th>
                 <th className={styles.sqlCell}>SQL</th>
-                <th className={styles.buttonCell}>Load</th>
                 <th className={styles.actionCell}>Action</th>
               </tr>
             </thead>
@@ -142,15 +142,41 @@ export const CasJobsDialog = memo(() => {
                   <td className={styles.statusCell}>{job.status}</td>
                   <td className={styles.filesizeCell}>{prettyBytes(job.filesize)}</td>
                   <td className={styles.sqlCell} title={job.sql}>{job.sql}</td>
-                  <td className={styles.buttonCell}>
-                    <button disabled={busy || !job.canLoad} onClick={() => void loadJob(job)}>Load</button>
-                  </td>
                   <td className={styles.actionCell}>
-                    {job.status === 'running' ? (
-                      <button disabled={busy} onClick={() => void cancel(job)}>Cancel</button>
-                    ) : (
-                      <button disabled={busy} onClick={() => void remove(job)}>Delete</button>
-                    )}
+                    <div className={styles.actionButtons}>
+                      {job.canLoad && (
+                        <button
+                          className={styles.iconButton}
+                          disabled={busy}
+                          title='Load result'
+                          aria-label='Load result'
+                          onClick={() => void loadJob(job)}
+                        >
+                          <Icon type='download' />
+                        </button>
+                      )}
+                      {job.status === 'running' ? (
+                        <button
+                          className={styles.iconButton}
+                          disabled={busy}
+                          title='Cancel job'
+                          aria-label='Cancel job'
+                          onClick={() => void cancel(job)}
+                        >
+                          <Icon type='cancel' />
+                        </button>
+                      ) : (
+                        <button
+                          className={styles.iconButton}
+                          disabled={busy}
+                          title='Delete job'
+                          aria-label='Delete job'
+                          onClick={() => void remove(job)}
+                        >
+                          <Icon type='delete' />
+                        </button>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}

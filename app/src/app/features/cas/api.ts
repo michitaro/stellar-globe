@@ -22,7 +22,7 @@ export type CasJobIndexResponse = {
   num_pages: number
 }
 
-const jobsPerPage = 10
+const jobsPerPage = 50
 
 export type CasJob = {
   id: number

@@ -1,9 +1,7 @@
 import { MenuDivider, MenuItem, SubMenu } from '@szhsin/react-menu'
-import Editor, { OnMount } from '@monaco-editor/react'
-import { editor as MonacoEditor } from 'monaco-editor'
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import './monaco'
-import { useBlockUI } from '../../../common/components/Modal'
+import type { OnMount } from '@monaco-editor/react'
+import type { editor as MonacoEditor } from 'monaco-editor'
+import { Suspense, lazy, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AppDialog } from '../../AppDialog'
 import { env, findCasRelease } from '../../env'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
@@ -15,9 +13,10 @@ import { casSlice } from './casSlice'
 import { expandCasSql } from './sql'
 import styles from './dialog.module.scss'
 
+const LazyCasSqlEditor = lazy(() => import('./CasSqlEditor'))
+
 export const CasSqlDialog = memo(() => {
   const dispatch = useAppDispatch()
-  const blockUI = useBlockUI()
   const cas = useAppSelector(state => state.cas)
   const regions = useAppSelector(state => state.regions.regions.filter(isRectangularRegion))
   const config = env().cas
@@ -25,10 +24,24 @@ export const CasSqlDialog = memo(() => {
   const sampleQueries = config.sampleQueries
   const visible = cas.enabled && cas.sqlDialogVisible
   const selectedRegion = regions.find(region => region.id === cas.queryRegionId)
+  const latestRegionId = regions.length > 0 ? regions[regions.length - 1].id : undefined
   const [errorText, setErrorText] = useState<string>()
+  const [busyText, setBusyText] = useState<string>()
+  const [editorRequested, setEditorRequested] = useState(false)
   const editorRef = useRef<MonacoEditor.IStandaloneCodeEditor | null>(null)
   const monacoRef = useRef<typeof import('monaco-editor') | null>(null)
   const submitRef = useRef<() => Promise<void>>(async () => { })
+  const previousVisible = useRef(false)
+
+  const runBusy = useCallback(async <T,>(text: string, action: () => Promise<T>) => {
+    setBusyText(text)
+    try {
+      return await action()
+    }
+    finally {
+      setBusyText(undefined)
+    }
+  }, [])
 
   const clearMarkers = useCallback(() => {
     const editor = editorRef.current
@@ -67,7 +80,7 @@ export const CasSqlDialog = memo(() => {
     setErrorText(undefined)
 
     try {
-      await blockUI(async () => {
+      await runBusy(cas.queueMode ? 'Queueing job...' : 'Loading preview...', async () => {
         if (cas.queueMode) {
           await enqueueJob({
             releaseVersion: release.name,
@@ -106,7 +119,7 @@ export const CasSqlDialog = memo(() => {
     catch (error) {
       alert(error instanceof Error ? error.message : String(error))
     }
-  }, [blockUI, cas.draftSql, cas.noMail, cas.queueMode, clearMarkers, dispatch, release, selectedRegion, showSqlError])
+  }, [cas.draftSql, cas.noMail, cas.queueMode, clearMarkers, dispatch, release, runBusy, selectedRegion, showSqlError])
 
   submitRef.current = submit
 
@@ -116,7 +129,10 @@ export const CasSqlDialog = memo(() => {
     editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
       void submitRef.current()
     })
-  }, [])
+    if (visible) {
+      editor.focus()
+    }
+  }, [visible])
 
   useEffect(() => {
     if (visible) {
@@ -125,16 +141,35 @@ export const CasSqlDialog = memo(() => {
     }
   }, [visible])
 
+  useEffect(() => {
+    if (visible) {
+      setEditorRequested(true)
+    }
+  }, [visible])
+
+  useEffect(() => {
+    const justOpened = visible && !previousVisible.current
+    previousVisible.current = visible
+    if (!justOpened || !latestRegionId) {
+      return
+    }
+    if (!cas.queryRegionId || !selectedRegion) {
+      dispatch(casSlice.actions.queryRegionChanged({ queryRegionId: latestRegionId }))
+    }
+  }, [cas.queryRegionId, dispatch, latestRegionId, selectedRegion, visible])
+
   const openSchemaBrowser = useCallback(() => {
     window.open(config.schemaBrowserUrl, '_blank', 'noopener')
   }, [config.schemaBrowserUrl])
 
+  const busy = busyText !== undefined
+  const renderEditor = editorRequested || visible
   const menu = useMemo(() => (
     <>
-      <MenuItem onClick={() => dispatch(casSlice.actions.jobsDialogOpened())}>Jobs</MenuItem>
-      <MenuItem onClick={openSchemaBrowser}>Schema Browser</MenuItem>
+      <MenuItem disabled={busy} onClick={() => dispatch(casSlice.actions.jobsDialogOpened())}>Jobs</MenuItem>
+      <MenuItem disabled={busy} onClick={openSchemaBrowser}>Schema Browser</MenuItem>
       <MenuDivider />
-      <SubMenu label='Sample Queries'>
+      <SubMenu label='Sample Queries' disabled={busy}>
         {sampleQueries.length > 0 ? sampleQueries.map(query => (
           <MenuItem
             key={query.id}
@@ -147,7 +182,7 @@ export const CasSqlDialog = memo(() => {
         )}
       </SubMenu>
     </>
-  ), [dispatch, openSchemaBrowser, sampleQueries])
+  ), [busy, dispatch, openSchemaBrowser, sampleQueries])
 
   if (!cas.enabled) {
     return null
@@ -158,7 +193,7 @@ export const CasSqlDialog = memo(() => {
       title='CAS SQL'
       visible={visible}
       resizable
-      sizeHint={{ width: 'min(90vw, 1100px)', height: 'min(75vh, 720px)' }}
+      sizeHint={{ width: 'min(640px, 90vw)', height: 'min(420px, 75vh)' }}
       minmaxSize={{
         minWidth: 'min(640px, 90vw)',
         minHeight: 'min(420px, 75vh)',
@@ -168,12 +203,13 @@ export const CasSqlDialog = memo(() => {
       menu={menu}
       onCloseButtonClick={() => dispatch(casSlice.actions.sqlDialogToggled({ open: false }))}
     >
-      <div className={styles.dialogBody}>
+      <div className={styles.dialogBody} aria-busy={busy}>
         <div className={styles.toolbar}>
           {config.releases.length > 1 && (
             <label className={styles.toolbarLabel}>
               <span>Release</span>
               <select
+                disabled={busy}
                 value={release?.name ?? ''}
                 onChange={event => dispatch(casSlice.actions.releaseChanged({ releaseName: event.currentTarget.value }))}
               >
@@ -186,6 +222,7 @@ export const CasSqlDialog = memo(() => {
           <label className={styles.toolbarLabel}>
             <span>Region</span>
             <select
+              disabled={busy}
               value={cas.queryRegionId ?? ''}
               onChange={event => dispatch(casSlice.actions.queryRegionChanged({ queryRegionId: event.currentTarget.value || undefined }))}
             >
@@ -202,20 +239,21 @@ export const CasSqlDialog = memo(() => {
         </div>
 
         <div className={styles.editor}>
-          <Editor
-            theme='vs-dark'
-            language='sql'
-            value={cas.draftSql}
-            onChange={value => dispatch(casSlice.actions.draftSqlChanged({ sql: value ?? '' }))}
-            onMount={onEditorMount}
-            options={{
-              automaticLayout: true,
-              minimap: { enabled: false },
-              fontSize: 13,
-              tabSize: 4,
-              wordWrap: 'on',
-            }}
-          />
+          <Suspense fallback={
+            <div className={styles.editorLoading}>
+              <div className={styles.spinner} />
+              <div>Loading editor...</div>
+            </div>
+          }>
+            {renderEditor && (
+              <LazyCasSqlEditor
+                sql={cas.draftSql}
+                busy={busy}
+                onChange={sql => dispatch(casSlice.actions.draftSqlChanged({ sql }))}
+                onMount={onEditorMount}
+              />
+            )}
+          </Suspense>
         </div>
 
         {errorText && (
@@ -227,7 +265,7 @@ export const CasSqlDialog = memo(() => {
             <input
               type='checkbox'
               checked={cas.noMail}
-              disabled={!cas.queueMode}
+              disabled={busy || !cas.queueMode}
               onChange={event => dispatch(casSlice.actions.noMailChanged({ noMail: event.currentTarget.checked }))}
             />
             <span>No Mail</span>
@@ -236,13 +274,23 @@ export const CasSqlDialog = memo(() => {
             <input
               type='checkbox'
               checked={cas.queueMode}
+              disabled={busy}
               onChange={event => dispatch(casSlice.actions.queueModeChanged({ queueMode: event.currentTarget.checked }))}
             />
             <span>Queue</span>
           </label>
           <span className={styles.grow} />
-          <button onClick={() => void submit()}>Submit (Ctrl+Enter)</button>
+          <button disabled={busy} onClick={() => void submit()}>Submit (Ctrl+Enter)</button>
         </div>
+
+        {busyText && (
+          <div className={styles.busyOverlay}>
+            <div className={styles.busyPanel}>
+              <div className={styles.spinner} />
+              <div>{busyText}</div>
+            </div>
+          </div>
+        )}
       </div>
     </AppDialog>
   )
