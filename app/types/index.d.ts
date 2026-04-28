@@ -13,6 +13,7 @@ type AppProps = {
     storageKey?: string
     onStoreChange?: (e: StoreChangeEvent) => void
     initialState?: unknown
+    testingKey?: string
 }
 
 declare const App: FC<AppProps & { ref?: unknown }>

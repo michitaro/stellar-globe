@@ -3,4 +3,7 @@
 /.cache
 /.jupyterlite.doit.db
 /pypi/*.whl
-
+/node_modules
+/playwright-report
+/test-results
+/files/e2e-smoke.ipynb

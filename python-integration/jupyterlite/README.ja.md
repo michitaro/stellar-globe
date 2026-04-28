@@ -10,6 +10,7 @@ JupyterLiteは、JupyterLabをWebAssembly (WASM)を使用してブラウザ内�
 - hscMap Pythonクライアントライブラリ
 - stellar-globe JupyterLab拡張
 - チュートリアルノートブック
+- E2E用smoke notebook
 
 ビルドされたサイトは完全に静的なファイルで構成され、サーバーサイドのPythonやJupyterサーバーを必要とせずに、
 任意のWebサーバーやGitHub Pagesなどでホストできます。
@@ -18,11 +19,17 @@ JupyterLiteは、JupyterLabをWebAssembly (WASM)を使用してブラウザ内�
 
 ```
 jupyterlite/
-├── files/          # ビルド時にJupyterLiteに含めるファイル
-│   └── tutorial.ipynb  # hscMapのチュートリアルノートブック
+├── content/        # JupyterLiteに含める追加notebook
+│   └── e2e-smoke.ipynb  # Playwright用smoke notebook
+├── files/          # ビルド時にJupyterLiteに含めるファイル（生成物）
+│   ├── tutorial.ipynb
+│   └── e2e-smoke.ipynb
 ├── pypi/           # JupyterLite環境でインストール可能なPythonパッケージ
 │   └── hscmap-0.0.0-py3-none-any.whl
 ├── _output/        # ビルド結果（静的サイト）
+├── tests/          # Playwrightテスト
+├── scripts/        # Docker実行ラッパー
+├── package.json    # Playwright設定
 ├── pyproject.toml  # Python環境設定
 ├── Makefile        # ビルドコマンド
 └── README.ja.md    # このファイル
@@ -32,6 +39,8 @@ jupyterlite/
 
 - Python 3.8以降
 - uvコマンド（Python環境管理）
+- Node.js 18以降（E2Eテスト実行時）
+- Docker（`npm run test:e2e:docker` を使う場合）
 
 uvのインストール:
 ```bash
@@ -90,7 +99,7 @@ make rebuild
 1. `rebuild-dependencies`: 依存パッケージのビルド
 2. `build`: JupyterLiteサイトのビルド
    - `pypi/`ディレクトリにhscMapのwheelをコピー
-   - `files/`ディレクトリにチュートリアルノートブックをコピー
+   - `files/`ディレクトリにチュートリアルnotebookとE2E用notebookをコピー
    - JupyterLab拡張をインストール
    - `jupyter lite build`を実行してサイトを生成
 
@@ -118,6 +127,60 @@ make serve
 2. ブラウザでアクセス
 3. ファイルブラウザから`tutorial.ipynb`を開く
 4. セルを実行してhscMapの動作を確認
+
+### 生成済みサイトだけを配信
+
+E2Eでは `rebuild` せず `_output/` をそのまま配信するため、以下のターゲットも使えます。
+
+```bash
+make serve-built
+```
+
+`serve-built` は `Cross-Origin-Opener-Policy` / `Cross-Origin-Embedder-Policy` / `Cross-Origin-Resource-Policy` を付けて配信し、JupyterLite のファイル同期を安定させます。
+
+## Playwright E2Eテスト
+
+### セットアップ
+
+```bash
+npm install
+npm run setup:e2e
+```
+
+### ローカル実行
+
+```bash
+npm run test:e2e:noninteractive
+```
+
+このコマンドは以下を実行します。
+
+1. `make rebuild` で JupyterLite と依存パッケージを再ビルド
+2. `make serve-built` で `127.0.0.1:8000` に静的サイトを配信
+3. Playwright + Chromium で `e2e-smoke.ipynb` を開いて実行
+
+smoke test では以下を確認します。
+
+- notebook を開ける
+- `hscmap` を JupyterLite 上で import できる
+- viewer を開ける
+- camera state を更新できる
+- viewer の `canvas` が描画される
+
+### Docker実行
+
+```bash
+npm run test:e2e:docker
+```
+
+このスクリプトは Playwright 公式Dockerイメージを使用し、Linux では `--network host --ipc=host --init` 前提で実行します。
+JupyterLite の file sync は `SharedArrayBuffer` または Service Worker に依存するため、`serve-built` では COI ヘッダ付きの静的サーバを使います。加えて Service Worker 制約に合わせ、Docker 内からも `127.0.0.1` を維持する構成にしています。
+
+### 制約
+
+- Docker実行ラッパーは Linux 前提です
+- WebGL は GPU ではなく Chromium の software rendering (`SwiftShader`) 前提です
+- 画素単位の比較ではなく、起動・状態同期・snapshot の smoke test を行います
 
 ## デプロイ
 

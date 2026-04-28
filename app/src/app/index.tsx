@@ -24,6 +24,13 @@ import styles from './style.module.scss'
 import { Indicator } from './features/indicator/Indicator'
 
 
+declare global {
+  interface Window {
+    __stellarGlobeAppTestHandles__?: Record<string, AppHandle>
+  }
+}
+
+
 export type AppProps = {
   hashSync?: boolean
   storageSync?: boolean
@@ -34,6 +41,7 @@ export type AppProps = {
   activeOnInit?: boolean
   onStoreChange?: (e: StoreChangeEvent) => void
   initialState?: AppState
+  testingKey?: string
 }
 
 export type AppHandle = {
@@ -55,8 +63,11 @@ export const App = forwardRef<AppHandle, AppProps>(({
   storageKey = '@stellar-globe/app/store-settings',
   onStoreChange,
   initialState,
+  testingKey,
 }, ref) => {
   const context = useMakeContext({ active: activeOnInit, storageKey, onStoreChange, initialState, hashSync })
+  const localHandleRef = useRef<AppHandle>(null!)
+  useSetupAppHandle(localHandleRef, context)
   useSetupAppHandle(ref, context)
   const { rootElementRef, store, stateHistory } = context
   const { isFullscreen } = useIsFullscreen()
@@ -65,12 +76,26 @@ export const App = forwardRef<AppHandle, AppProps>(({
 
   useHashSync({ store, enabled: hashSync })
   useLocalStorageSync({ store, enabled: storageSync, storageKey: store.getState().initializerParams.storageKey })
+  useEffect(() => {
+    if (!testingKey) {
+      return
+    }
+    window.__stellarGlobeAppTestHandles__ ??= {}
+    window.__stellarGlobeAppTestHandles__[testingKey] = localHandleRef.current
+    return () => {
+      if (window.__stellarGlobeAppTestHandles__?.[testingKey] === localHandleRef.current) {
+        delete window.__stellarGlobeAppTestHandles__[testingKey]
+      }
+    }
+  }, [testingKey])
 
   return (
     <AppContextProvider context={context} >
       <Provider store={store}>
         <div
           className={classNames(styles.main, styles.theme)}
+          data-testid='stellar-globe-app'
+          data-stellar-globe-testing-key={testingKey}
           ref={rootElementRef}
           tabIndex={catchAllKeyboardEvents ? undefined : -1}
         >

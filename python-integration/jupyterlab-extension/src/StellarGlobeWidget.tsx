@@ -1,13 +1,13 @@
 import { LabShell } from '@jupyterlab/application'
 import { showErrorMessage } from '@jupyterlab/apputils'
 import { ContentsManager } from '@jupyterlab/services'
-import { ReactWidget } from '@jupyterlab/ui-components'
 import { Message } from '@lumino/messaging'
 import { Widget } from '@lumino/widgets'
 import StellarGlobeApp, { AppHandle, AppState } from '@stellar-globe/app'
 import { FromApp, StateManager, ToApp, validateAction, validateToAppMessage } from '@stellar-globe/app/commTools'
 import { SkyCoord, easing } from '@stellar-globe/stellar-globe'
 import React, { useLayoutEffect, useRef } from 'react'
+import { createRoot, Root } from 'react-dom/client'
 import { cropCanvasToAspectRatio } from './cropCanvasToAspectRatio'
 import { EventEmitter } from './eventemitter'
 import { lockFrame } from './lockWindow'
@@ -90,10 +90,12 @@ export function makeStellarGlobeWidget(
         widgetEnvs.delete(id)
       })
 
-      typedRespondToQuery('Ready', queryId, {
-        revision: stateManager.revision,
-        state: appRef.current.getState(),
-      }, storageOptions)
+      if (queryId) {
+        typedRespondToQuery('Ready', queryId, {
+          revision: stateManager.revision,
+          state: appRef.current.getState(),
+        }, storageOptions)
+      }
     }, [])
 
     type OnStoreChange = NonNullable<Parameters<typeof StellarGlobeApp>[0]['onStoreChange']>
@@ -104,30 +106,43 @@ export function makeStellarGlobeWidget(
     }
 
     return (
-      <StellarGlobeApp
-        ref={appRef}
-        catchAllKeyboardEvents={false}
-        hashSync={false}
-        storageSync={false}
-        floatingLayerZIndex={99}
-        activeOnInit={false}
-        storageKey='@stellar-globe/jupyterlab/store-settings'
-        onStoreChange={onStoreChange}
-        initialState={initialState as AppState}
-      />
+        <StellarGlobeApp
+          ref={appRef}
+          catchAllKeyboardEvents={false}
+          hashSync={false}
+          storageSync={false}
+          floatingLayerZIndex={99}
+          activeOnInit={false}
+          storageKey='@stellar-globe/jupyterlab/store-settings'
+          testingKey={id}
+          onStoreChange={onStoreChange}
+          initialState={initialState as AppState}
+        />
     )
   }
 
-  const widget = new class extends ReactWidget {
+  let root: Root | undefined
+  const widget = new class extends Widget {
+    constructor() {
+      super()
+      this.addClass('jp-ThemedContainer')
+    }
+
+    protected onAfterAttach(msg: Message): void {
+      super.onAfterAttach(msg)
+      root ??= createRoot(this.node)
+      root.render(<Component />)
+    }
+
+    protected onBeforeDetach(msg: Message): void {
+      root?.unmount()
+      root = undefined
+      super.onBeforeDetach(msg)
+    }
+
     protected onCloseRequest(msg: Message): void {
       cleanup.emit()
       return super.onCloseRequest(msg)
-    }
-
-    render() {
-      return (
-        <Component />
-      )
     }
   }
 
