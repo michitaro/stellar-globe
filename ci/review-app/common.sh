@@ -90,6 +90,10 @@ review_app_namespace() {
   printf '%s\n' "$truncated"
 }
 
+review_app_route_name() {
+  printf '%s\n' "$(review_app_namespace)"
+}
+
 review_app_gateway_namespace() {
   printf '%s\n' "${REVIEW_APP_GATEWAY_NAMESPACE:-gateway-test}"
 }

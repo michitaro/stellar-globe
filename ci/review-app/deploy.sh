@@ -6,6 +6,7 @@ script_dir=$(CDPATH= cd -- "$(dirname "$0")" && pwd)
 . "$script_dir/common.sh"
 
 namespace=$(review_app_namespace)
+route_name=$(review_app_route_name)
 project_name=$(review_app_project_name)
 project_path_slug=$(review_app_project_path_slug)
 branch_slug=$(review_app_branch_slug)
@@ -20,9 +21,10 @@ image=$(review_app_image)
 env_file=$(review_app_gitlab_env_file)
 
 route_condition_status() {
-  route_name=$1
-  condition_type=$2
-  kubectl -n "$namespace" get httproute "$route_name" -o jsonpath="{.status.parents[0].conditions[?(@.type==\"${condition_type}\")].status}"
+  route_namespace=$1
+  route_name=$2
+  condition_type=$3
+  kubectl -n "$route_namespace" get httproute "$route_name" -o jsonpath="{.status.parents[0].conditions[?(@.type==\"${condition_type}\")].status}"
 }
 
 cat <<EOF | kubectl apply -f -
@@ -103,11 +105,29 @@ spec:
     port: 80
     targetPort: http
 ---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  name: ${route_name}
+  namespace: ${namespace}
+  labels:
+    app.kubernetes.io/name: review-app
+    app.kubernetes.io/instance: ${branch_slug}
+spec:
+  from:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    namespace: ${gateway_namespace}
+  to:
+  - group: ""
+    kind: Service
+    name: review-app
+---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: review-app
-  namespace: ${namespace}
+  name: ${route_name}
+  namespace: ${gateway_namespace}
   labels:
     app.kubernetes.io/name: review-app
     app.kubernetes.io/instance: ${branch_slug}
@@ -123,24 +143,27 @@ spec:
         value: ${base_path}
     backendRefs:
     - name: review-app
+      namespace: ${namespace}
       port: 80
 EOF
 
+kubectl -n "$namespace" delete httproute review-app --ignore-not-found=true
 kubectl -n "$namespace" rollout status deployment/review-app --timeout=180s
 
 for _ in $(seq 1 30); do
-  accepted=$(route_condition_status review-app Accepted || true)
-  resolved_refs=$(route_condition_status review-app ResolvedRefs || true)
+  accepted=$(route_condition_status "$gateway_namespace" "$route_name" Accepted || true)
+  resolved_refs=$(route_condition_status "$gateway_namespace" "$route_name" ResolvedRefs || true)
   if [ "$accepted" = "True" ] && [ "$resolved_refs" = "True" ]; then
     break
   fi
   sleep 2
 done
 
-accepted=$(route_condition_status review-app Accepted || true)
-resolved_refs=$(route_condition_status review-app ResolvedRefs || true)
+accepted=$(route_condition_status "$gateway_namespace" "$route_name" Accepted || true)
+resolved_refs=$(route_condition_status "$gateway_namespace" "$route_name" ResolvedRefs || true)
 if [ "$accepted" != "True" ] || [ "$resolved_refs" != "True" ]; then
-  kubectl -n "$namespace" get httproute review-app -o yaml >&2
+  kubectl -n "$gateway_namespace" get httproute "$route_name" -o yaml >&2
+  kubectl -n "$namespace" get referencegrant "$route_name" -o yaml >&2
   echo "review app HTTPRoute did not become ready" >&2
   exit 1
 fi
