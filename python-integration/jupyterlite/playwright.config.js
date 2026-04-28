@@ -1,11 +1,20 @@
 import { defineConfig } from '@playwright/test'
 
 const port = process.env.PORT ?? '8000'
+const captureSuccessScreenshots = process.env.JUPYTERLITE_E2E_SUCCESS_SCREENSHOTS === '1'
+const reporter = process.env.JUPYTERLITE_E2E_HTML_REPORT === '1'
+  ? [
+    ['list'],
+    ['html', { open: 'never', outputFolder: 'playwright-report' }],
+  ]
+  : [['list']]
 
 export default defineConfig({
   testDir: './tests',
   fullyParallel: false,
   retries: process.env.CI ? 1 : 0,
+  outputDir: './test-results',
+  reporter,
   timeout: 3 * 60 * 1000,
   expect: {
     timeout: 2 * 60 * 1000,
@@ -13,7 +22,7 @@ export default defineConfig({
   use: {
     baseURL: `http://127.0.0.1:${port}`,
     trace: 'on-first-retry',
-    screenshot: 'only-on-failure',
+    screenshot: captureSuccessScreenshots ? 'on' : 'only-on-failure',
     video: 'retain-on-failure',
   },
   projects: [

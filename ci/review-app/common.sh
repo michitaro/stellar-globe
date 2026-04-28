@@ -31,6 +31,10 @@ review_app_jupyterlite_path() {
   printf '%sjupyterlite/\n' "$(review_app_base_path)"
 }
 
+review_app_jupyterlite_e2e_report_path() {
+  printf '%sjupyterlite-e2e/\n' "$(review_app_base_path)"
+}
+
 review_app_docs_path() {
   printf '%sdocs/\n' "$(review_app_base_path)"
 }

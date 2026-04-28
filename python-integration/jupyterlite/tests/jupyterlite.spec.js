@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test'
 
 const hooksName = '__stellarGlobeJupyterlabTestHooks__'
 
-test('JupyterLite smoke notebook can open Stellar Globe and query state', async ({ page }) => {
+test('JupyterLite smoke notebook can open Stellar Globe and query state', async ({ page }, testInfo) => {
   const consoleErrors = []
   const pageErrors = []
   const unexpectedRequestFailures = []
@@ -45,6 +45,10 @@ test('JupyterLite smoke notebook can open Stellar Globe and query state', async 
   await expect(output).toContainText('center_ok=True')
   await expect(output).toContainText('fov_ok=True')
   await expect(output).toContainText('snapshot_is_png=True')
+  await testInfo.attach('notebook-result', {
+    body: await page.screenshot({ fullPage: true }),
+    contentType: 'image/png',
+  })
 
   const outputText = await output.textContent() ?? ''
   const snapshotSizeMatch = outputText.match(/snapshot_size=(\d+)/)
@@ -54,8 +58,13 @@ test('JupyterLite smoke notebook can open Stellar Globe and query state', async 
   await page.waitForFunction(({ name, title }) => {
     return globalThis[name].viewerTitles().includes(title)
   }, { name: hooksName, title: 'e2e smoke' })
-  await expect(page.locator('[data-testid="stellar-globe-app"] canvas').first()).toBeVisible()
-  const dataUrl = await page.locator('[data-testid="stellar-globe-app"] canvas').first().evaluate(canvas => canvas.toDataURL())
+  const canvas = page.locator('[data-testid="stellar-globe-app"] canvas').first()
+  await expect(canvas).toBeVisible()
+  await testInfo.attach('viewer-render', {
+    body: await canvas.screenshot(),
+    contentType: 'image/png',
+  })
+  const dataUrl = await canvas.evaluate(canvas => canvas.toDataURL())
   expect(dataUrl.startsWith('data:image/png')).toBeTruthy()
 
   expect(consoleErrors).toEqual([])

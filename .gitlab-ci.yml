@@ -56,8 +56,11 @@ build_review_app:
   script:
     - sh ci/review-app/build.sh
   artifacts:
+    when: always
     paths:
       - dist/
+      - python-integration/jupyterlite/playwright-report/
+      - python-integration/jupyterlite/test-results/
     expire_in: 1 week
 
 package_review_app:
