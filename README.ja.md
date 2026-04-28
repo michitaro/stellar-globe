@@ -157,6 +157,16 @@ cd ../app && npm install
 
 鮮度チェックだけを個別に確認したい場合は、リポジトリルートで `python3 ./tools/check_dependency_freshness.py` を実行してください。
 
+### GitLab review app CI
+
+GitLab CI では branch push ごとに review app 用 pipeline を動かし、review app のルートには成果物へのリンクをまとめたトップページを配置します。現在は `app` の standalone build を `standalone/`、`python-integration/jupyterlite` の静的出力を `jupyterlite/` 配下へ配備します。将来的に docs などの成果物を同じトップページから追加できる構成です。
+
+- CI 定義: `.gitlab-ci.yml`
+- review app 用スクリプト: `ci/review-app/`
+- microk8s / Gateway API 用の共通 helper: `.github/skills/gitlab-microk8s-review-app-ci/bin/`
+
+最低限、cluster に接続できる `REVIEW_APP_KUBECONFIG_B64` を GitLab CI variable に設定してください。必要に応じて `REVIEW_APP_GATEWAY_*`、`REVIEW_APP_REGISTRY_*`、`REVIEW_APP_BASE_URL` を上書きできます。既定では review app は `/review-apps/<project-name>/<branch-slug>/` にトップページを置き、各成果物は `standalone/` と `jupyterlite/` に配備されます。
+
 ## 本家リポジトリとミラー
 
 本家リポジトリは以下にあります:

@@ -157,6 +157,16 @@ cd ../app && npm install
 
 If you only want to run the freshness policy, execute `python3 ./tools/check_dependency_freshness.py` from the repository root.
 
+### GitLab review app CI
+
+GitLab CI now builds a review app on branch pushes with a landing page at the review app root. The landing page links to the currently published products: the standalone `app` build under `standalone/` and the static `python-integration/jupyterlite` output under `jupyterlite/`. This layout also leaves room to add future products such as documentation.
+
+- CI definition: `.gitlab-ci.yml`
+- Review app scripts: `ci/review-app/`
+- Shared microk8s / Gateway API helpers: `.github/skills/gitlab-microk8s-review-app-ci/bin/`
+
+At minimum, configure `REVIEW_APP_KUBECONFIG_B64` as a GitLab CI variable so jobs can reach the target cluster. You can also override `REVIEW_APP_GATEWAY_*`, `REVIEW_APP_REGISTRY_*`, and `REVIEW_APP_BASE_URL` as needed. By default, review apps are published under `/review-apps/<project-name>/<branch-slug>/` with a landing page at the root, and products are available under `standalone/` and `jupyterlite/`.
+
 ## Main Repository and Mirrors
 
 The main repository is located at:
