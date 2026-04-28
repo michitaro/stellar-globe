@@ -162,9 +162,9 @@ npm run test:e2e:noninteractive
 smoke test では以下を確認します。
 
 - notebook を開ける
-- `hscmap` を JupyterLite 上で import できる
-- viewer を開ける
-- camera state を更新できる
+- `Window()` で viewer を開ける
+- `jump_to()` 後に camera state が更新される
+- `snapshot_bytes()` が PNG を返す
 - viewer の `canvas` が描画される
 
 ### Docker実行

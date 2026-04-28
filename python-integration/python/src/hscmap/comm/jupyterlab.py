@@ -9,6 +9,8 @@ from hscmap.models.Open import Model as Open
 from .base import CommBase, remove_none
 
 comm_target = 'stellarglobe/new'
+query_response_indexeddb_name = 'stellar-globe-query-responses'
+query_response_indexeddb_store = 'responses'
 
 
 @dataclass
@@ -18,7 +20,8 @@ class JupyterLabCommOptions:
 
 class JupyterLabComm(CommBase):  # pragma: no cover
     def __init__(self, open_msg: Open, options: JupyterLabCommOptions) -> None:
-        open_msg['extraOptions'] = extra_options()  # type: ignore
+        self._extra_options = extra_options()
+        open_msg['extraOptions'] = self._extra_options  # type: ignore
         self._comm = create_comm(comm_target, remove_none(open_msg))
 
     def send(self, msg):
@@ -43,11 +46,13 @@ class JupyterLabComm(CommBase):  # pragma: no cover
         timeout = 10
         poll_interval = 0.1
 
+        if sys.platform == 'emscripten' and self._extra_options['storage']['type'] == 'indexeddb':
+            return wait_for_query_response_text_on_indexeddb(query_id, timeout, poll_interval)
+
         deadline = time.time() + timeout
         response_file = f'~query-{query_id}'
         while time.time() <= deadline:
-            parent = Path(response_file).absolute().parent
-            while True:
+            for parent in candidate_dirs(response_file):
                 list(parent.glob('*'))  # This is a bit tricky, but in the JupyterLite environment, if you don't do this, newly created files won't be visible.
                 p = parent / response_file
                 try:
@@ -57,15 +62,10 @@ class JupyterLabComm(CommBase):  # pragma: no cover
                             raise ValueError("Invalid response file format")
                         response = f.read()
                         if len(response) == int(size_str):
+                            p.unlink(missing_ok=True)
                             return response
                 except:
                     pass
-                finally:
-                    p.unlink(missing_ok=True)
-                    pass
-                if parent == parent.parent:
-                    break
-                parent = parent.parent
             time.sleep(poll_interval)
         raise TimeoutError()
 
@@ -79,7 +79,6 @@ class FileStorageOptions(TypedDict):
 
 class IndexedDBStorageOptions(TypedDict):
     type: Literal['indexeddb']
-    dbname: str
 
 
 class ExtraOptions(TypedDict):
@@ -88,13 +87,91 @@ class ExtraOptions(TypedDict):
 
 def extra_options() -> ExtraOptions:
     if sys.platform == 'emscripten':
-        # import js  # type: ignore
-
-        # if 'serviceWorker' not in dir(js.navigator):
-        #     raise ValueError('Service Worker is not supported on this browser')
         return {'storage': {'type': 'indexeddb'}}
     else:
         return {'storage': {'type': 'file'}}
+
+
+def candidate_dirs(response_file: str):
+    checked = set()
+    seeds = [
+        Path(response_file).absolute().parent,
+        Path('/drive'),
+        Path('/home/pyodide'),
+        Path('/'),
+    ]
+    for seed in seeds:
+        parent = seed
+        while True:
+            resolved = str(parent)
+            if resolved not in checked:
+                checked.add(resolved)
+                yield parent
+            if parent == parent.parent:
+                break
+            parent = parent.parent
+
+
+def wait_for_query_response_text_on_indexeddb(query_id: str, timeout: float, poll_interval: float) -> str:
+    deadline = time.time() + timeout
+    while time.time() <= deadline:
+        response = load_query_response_from_indexeddb(query_id)
+        if response is not None:
+            return response
+        time.sleep(poll_interval)
+    raise TimeoutError()
+
+
+def load_query_response_from_indexeddb(query_id: str) -> Optional[str]:
+    from pyodide.ffi import create_once_callable, run_sync  # type: ignore
+    import js  # type: ignore
+
+    async def load() -> Optional[str]:
+        open_request = js.indexedDB.open(query_response_indexeddb_name, 1)
+        open_request.onupgradeneeded = create_once_callable(
+            lambda _event: (
+                open_request.result.createObjectStore(query_response_indexeddb_store)
+                if not open_request.result.objectStoreNames.contains(query_response_indexeddb_store)
+                else None
+            )
+        )
+        db = await request_as_promise(open_request)
+        tx = db.transaction(query_response_indexeddb_store, 'readonly')
+        store = tx.objectStore(query_response_indexeddb_store)
+        response = await request_as_promise(store.get(query_id))
+        await transaction_as_promise(tx)
+        if response is not None:
+            delete_tx = db.transaction(query_response_indexeddb_store, 'readwrite')
+            delete_store = delete_tx.objectStore(query_response_indexeddb_store)
+            await request_as_promise(delete_store.delete(query_id))
+            await transaction_as_promise(delete_tx)
+        db.close()
+        return cast(Optional[str], response)
+
+    return cast(Optional[str], run_sync(load()))
+
+
+def request_as_promise(request):
+    from pyodide.ffi import create_once_callable  # type: ignore
+    import js  # type: ignore
+
+    def executor(resolve, reject):
+        request.onsuccess = create_once_callable(lambda _event: resolve(request.result))
+        request.onerror = create_once_callable(lambda _event: reject(request.error))
+
+    return js.Promise.new(create_once_callable(executor))
+
+
+def transaction_as_promise(transaction):
+    from pyodide.ffi import create_once_callable  # type: ignore
+    import js  # type: ignore
+
+    def executor(resolve, reject):
+        transaction.oncomplete = create_once_callable(lambda _event: resolve(None))
+        transaction.onerror = create_once_callable(lambda _event: reject(transaction.error))
+        transaction.onabort = create_once_callable(lambda _event: reject(transaction.error))
+
+    return js.Promise.new(create_once_callable(executor))
 
 
 def create_comm(target: str, initial_msg):  # pragma: no cover

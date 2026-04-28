@@ -14,6 +14,9 @@ test('JupyterLite smoke notebook can open Stellar Globe and query state', async 
     if (message.text().startsWith('Failed to load resource:')) {
       return
     }
+    if (message.text().includes('TypeError: Failed to fetch')) {
+      return
+    }
     consoleErrors.push(message.text())
   })
   page.on('pageerror', error => {
@@ -38,17 +41,15 @@ test('JupyterLite smoke notebook can open Stellar Globe and query state', async 
   }, hooksName)
 
   const output = page.locator('.jp-OutputArea-output pre').last()
-  await expect(output).toContainText('hscmap import ok')
+  await expect(output).toContainText('window_title=e2e smoke')
+  await expect(output).toContainText('center_ok=True')
+  await expect(output).toContainText('fov_ok=True')
+  await expect(output).toContainText('snapshot_is_png=True')
 
-  const viewerId = await page.evaluate(async name => {
-    return await globalThis[name].openViewer('e2e smoke')
-  }, hooksName)
-  const result = await page.evaluate(async ({ name, id }) => {
-    return await globalThis[name].jumpViewer(id, 150, 2, 1)
-  }, { name: hooksName, id: viewerId })
-  expect(result.center[0]).toBeCloseTo(150, 1)
-  expect(result.center[1]).toBeCloseTo(2, 1)
-  expect(result.fov).toBeCloseTo(1, 1)
+  const outputText = await output.textContent() ?? ''
+  const snapshotSizeMatch = outputText.match(/snapshot_size=(\d+)/)
+  expect(snapshotSizeMatch).not.toBeNull()
+  expect(Number(snapshotSizeMatch[1])).toBeGreaterThan(1024)
 
   await page.waitForFunction(({ name, title }) => {
     return globalThis[name].viewerTitles().includes(title)
@@ -67,5 +68,7 @@ function isAllowedRequestFailure(url) {
     'http://hscmap.mtk.nao.ac.jp/stellar-globe/static/pretty_picture/',
     'http://hscmap.mtk.nao.ac.jp/stellar-globe/static/eso_milky_way_layer/',
     'http://hscmap.mtk.nao.ac.jp/stellar-globe/static/hipparcos-catalog/index.json',
+    'http://hscmap.mtk.nao.ac.jp/hscMap4/data/pdr3_wide/filter.json',
+    'http://hscmap.mtk.nao.ac.jp/hscMap4/data/pdr3_dud/filter.json',
   ].some(prefix => url.startsWith(prefix))
 }

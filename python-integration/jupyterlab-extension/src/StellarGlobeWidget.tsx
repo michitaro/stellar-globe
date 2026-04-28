@@ -232,13 +232,13 @@ async function typedRespondToQuery<T extends keyof FromApp>(type: T, queryId: st
 
 async function respondToQuery(queryId: string, content: string, options: StorageOptions) {
   const fileContent = `${content.length}\n${content}`
-  const filename = `~query-${queryId}`
   switch (options.type) {
     case 'indexeddb': {
-      await saveFileOnJupyterLiteIndexedDB(filename, fileContent, options)
+      await saveQueryResponseOnJupyterLiteIndexedDB(queryId, content)
       break
     }
     case 'file': {
+      const filename = `~query-${queryId}`
       const manager = new ContentsManager()
       await manager.save(filename, {
         type: 'file',
@@ -253,51 +253,41 @@ async function respondToQuery(queryId: string, content: string, options: Storage
 }
 
 
-function saveFileOnJupyterLiteIndexedDB(filename: string, content: string, options: IndexedDBStorageOptions) {
+const queryResponseDbName = 'stellar-globe-query-responses'
+const queryResponseStoreName = 'responses'
+
+
+function saveQueryResponseOnJupyterLiteIndexedDB(queryId: string, content: string) {
   return new Promise<void>((resolve, reject) => {
-    const dbname = `JupyterLite Storage - ${rootPath()}`
-    const request = indexedDB.open(dbname)
+    const request = indexedDB.open(queryResponseDbName, 1)
+    request.onupgradeneeded = () => {
+      const db = request.result
+      if (!db.objectStoreNames.contains(queryResponseStoreName)) {
+        db.createObjectStore(queryResponseStoreName)
+      }
+    }
     request.onsuccess = () => {
       const db = request.result
-      const tx = db.transaction('files', 'readwrite')
-      const store = tx.objectStore('files')
-      const record = {
-        "size": 0,
-        "name": filename,
-        "path": filename,
-        "last_modified": new Date().toISOString(), // "2024-03-12T19:37:22.480Z"
-        "created": new Date().toISOString(),
-        "format": "text",
-        "mimetype": "text/plain",
-        "content": content,
-        "writable": true,
-        "type": "file",
-      }
-      const putRequest = store.put(record, filename)
-      putRequest.onsuccess = () => {
+      const tx = db.transaction(queryResponseStoreName, 'readwrite')
+      const store = tx.objectStore(queryResponseStoreName)
+      tx.oncomplete = () => {
+        db.close()
         resolve()
       }
-      putRequest.onerror = () => {
-        reject(putRequest.error)
+      tx.onerror = () => {
+        db.close()
+        reject(tx.error)
       }
+      tx.onabort = () => {
+        db.close()
+        reject(tx.error)
+      }
+      store.put(content, queryId)
     }
     request.onerror = () => {
       reject(request.error)
     }
   })
-}
-
-function rootPath() {
-  // http://127.0.0.1:8000/lab/index.html → /
-  // http://127.0.0.1:8000/lab/ → /
-  // http://127.0.0.1:8000/some-path/lab/index.html → /some-path
-  // http://127.0.0.1:8000/some-path/lab/ → /some-path
-  const path = window.location.pathname
-  const match = path.match(/^(.*\/)lab\/(?:index\.html)?$/)
-  if (match) {
-    return match[1]
-  }
-  return '/'
 }
 
 

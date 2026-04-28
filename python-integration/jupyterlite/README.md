@@ -162,9 +162,9 @@ This command will:
 The smoke test checks:
 
 - a notebook can be opened
-- `hscmap` can be imported in JupyterLite
-- the viewer can be opened
-- camera state can be updated
+- `Window()` can open the viewer
+- camera state changes after `jump_to()`
+- `snapshot_bytes()` returns PNG bytes
 - the viewer `canvas` is rendered
 
 ### Run in Docker
