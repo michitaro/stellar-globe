@@ -55,7 +55,7 @@ def main():
                 {'Model.type': f"type: Literal[{repr(action_name)}]"},
             )
 
-    subprocess.check_call(['rsync', '-av', '--exclude=.gitignore', '--delete', f'{tmp_dir}/', dest_dir])
+    sync_generated_models(tmp_dir, dest_dir)
     run_bash('''find ./src/hscmap/models  -type d | grep -v __pycache__ | while read d; do touch $d/__init__.py; done''')
     shutil.rmtree(tmp_dir, ignore_errors=True)
 
@@ -119,6 +119,29 @@ def datamodel_codegen(schema):
 
 def load_json_file(path: Path):
     return json.loads(path.read_text())
+
+
+def sync_generated_models(src_dir: Path, dest_dir: Path):
+    dest_dir.mkdir(parents=True, exist_ok=True)
+
+    for existing in dest_dir.iterdir():
+        if existing.name == '.gitignore':
+            continue
+        if existing.is_dir():
+            shutil.rmtree(existing)
+        else:
+            existing.unlink()
+
+    for generated in src_dir.rglob('*'):
+        relative = generated.relative_to(src_dir)
+        if generated.name == '.gitignore':
+            continue
+        destination = dest_dir / relative
+        if generated.is_dir():
+            destination.mkdir(parents=True, exist_ok=True)
+        else:
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(generated, destination)
 
 
 def run_bash(cmd: str):
