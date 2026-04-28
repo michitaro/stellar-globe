@@ -102,6 +102,29 @@ ${address_block}
         from: All
 EOF
 
+kubectl patch gateway -n "$gateway_namespace" "$gateway_name" --type=merge -p "$(cat <<EOF
+{
+  "spec": {
+    "listeners": [
+      {
+        "name": "${listener_name}",
+        "protocol": "HTTP",
+        "port": 80,
+        "allowedRoutes": {
+          "namespaces": {
+            "from": "All"
+          }
+        }
+      }
+    ]
+  }
+}
+EOF
+)"
+
+kubectl wait --for=condition=Accepted "gateway/${gateway_name}" -n "$gateway_namespace" --timeout=180s
+kubectl wait --for=condition=Programmed "gateway/${gateway_name}" -n "$gateway_namespace" --timeout=180s
+
 service_ref=""
 for _ in $(seq 1 30); do
   service_ref=$(

@@ -19,6 +19,12 @@ environment_url=$(review_app_environment_url)
 image=$(review_app_image)
 env_file=$(review_app_gitlab_env_file)
 
+route_condition_status() {
+  route_name=$1
+  condition_type=$2
+  kubectl -n "$namespace" get httproute "$route_name" -o jsonpath="{.status.parents[0].conditions[?(@.type==\"${condition_type}\")].status}"
+}
+
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: Namespace
@@ -121,6 +127,23 @@ spec:
 EOF
 
 kubectl -n "$namespace" rollout status deployment/review-app --timeout=180s
+
+for _ in $(seq 1 30); do
+  accepted=$(route_condition_status review-app Accepted || true)
+  resolved_refs=$(route_condition_status review-app ResolvedRefs || true)
+  if [ "$accepted" = "True" ] && [ "$resolved_refs" = "True" ]; then
+    break
+  fi
+  sleep 2
+done
+
+accepted=$(route_condition_status review-app Accepted || true)
+resolved_refs=$(route_condition_status review-app ResolvedRefs || true)
+if [ "$accepted" != "True" ] || [ "$resolved_refs" != "True" ]; then
+  kubectl -n "$namespace" get httproute review-app -o yaml >&2
+  echo "review app HTTPRoute did not become ready" >&2
+  exit 1
+fi
 
 cat > "$env_file" <<EOF
 REVIEW_APP_GATEWAY_ADDRESS=${gateway_address}
