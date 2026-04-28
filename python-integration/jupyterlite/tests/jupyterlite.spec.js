@@ -15,23 +15,13 @@ test('JupyterLite smoke notebook can open Stellar Globe and query state', async 
     if (message.text().startsWith('Failed to load resource:')) {
       return
     }
-    if (message.text().includes('TypeError: Failed to fetch')) {
-      return
-    }
     consoleErrors.push(message.text())
   })
   page.on('pageerror', error => {
-    const text = String(error)
-    if (text === 'TypeError: Failed to fetch') {
-      return
-    }
-    pageErrors.push(text)
+    pageErrors.push(String(error))
   })
   page.on('requestfailed', request => {
-    const url = request.url()
-    if (!isAllowedRequestFailure(url)) {
-      unexpectedRequestFailures.push(`${request.failure()?.errorText ?? 'unknown'} ${url}`)
-    }
+    unexpectedRequestFailures.push(`${request.failure()?.errorText ?? 'unknown'} ${request.url()}`)
   })
 
   await page.goto('/lab/index.html')
@@ -73,13 +63,3 @@ test('JupyterLite smoke notebook can open Stellar Globe and query state', async 
   expect(pageErrors).toEqual([])
   expect(unexpectedRequestFailures).toEqual([])
 })
-
-function isAllowedRequestFailure(url) {
-  return [
-    'http://hscmap.mtk.nao.ac.jp/stellar-globe/static/pretty_picture/',
-    'http://hscmap.mtk.nao.ac.jp/stellar-globe/static/eso_milky_way_layer/',
-    'http://hscmap.mtk.nao.ac.jp/stellar-globe/static/hipparcos-catalog/index.json',
-    'http://hscmap.mtk.nao.ac.jp/hscMap4/data/pdr3_wide/filter.json',
-    'http://hscmap.mtk.nao.ac.jp/hscMap4/data/pdr3_dud/filter.json',
-  ].some(prefix => url.startsWith(prefix))
-}

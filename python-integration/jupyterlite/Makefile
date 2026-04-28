@@ -1,4 +1,4 @@
-.PHONY: rebuild rebuild-python rebuild-jupyterlab-extension rebuild-dependencies serve serve-built rebuild-app setup
+.PHONY: rebuild rebuild-python rebuild-jupyterlab-extension rebuild-dependencies serve serve-built rebuild-app rebuild-ui-libraries setup
 
 PORT ?= 8000
 
@@ -26,14 +26,19 @@ build:
 
 rebuild-dependencies: rebuild-python rebuild-jupyterlab-extension
 
-rebuild-app:
+rebuild-ui-libraries:
+	$(MAKE) -C ../../stellar-globe build
+	$(MAKE) -C ../../react-draggable-dialog build
+	$(MAKE) -C ../../react-stellar-globe build
+
+rebuild-app: rebuild-ui-libraries
 	$(MAKE) -C ../../app lib
 
 rebuild-python: rebuild-app
 	$(MAKE) -C ../python build
 
 rebuild-jupyterlab-extension: rebuild-app
-	$(MAKE) -C ../jupyterlab-extension build
+	$(MAKE) -C ../jupyterlab-extension clean build
 
 deploy: rebuild
 	rsync -av --delete _output/ hscmap.mtk.nao.ac.jp:htdocs/hscMap5/jupyter/

@@ -72,12 +72,19 @@ class FileStorageOptions(TypedDict):
     type: Literal['file']
 
 
+RuntimeType = Literal['python', 'pyodide']
+
+
 class ExtraOptions(TypedDict):
     storage: FileStorageOptions
+    runtime: RuntimeType
 
 
 def extra_options() -> ExtraOptions:
-    return {'storage': {'type': 'file'}}
+    return {
+        'storage': {'type': 'file'},
+        'runtime': 'pyodide' if sys.platform == 'emscripten' else 'python',
+    }
 
 
 def candidate_dirs(response_file: str):

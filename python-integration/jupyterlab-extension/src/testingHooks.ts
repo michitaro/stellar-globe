@@ -2,8 +2,9 @@ import { SkyCoord, angle } from '@stellar-globe/stellar-globe'
 import { JupyterFrontEnd } from '@jupyterlab/application'
 import { INotebookTracker, NotebookActions, NotebookPanel } from '@jupyterlab/notebook'
 import { CommType } from './types'
-import { AppHandle, AppState, makeStore } from '@stellar-globe/app'
+import { AppHandle } from '@stellar-globe/app'
 import { makeStellarGlobeWidget } from './StellarGlobeWidget'
+import { makeJupyterLiteInitialState } from './jupyterLiteInitialState'
 
 export type StellarGlobeJupyterlabTestHooks = {
   openNotebook: (path: string) => Promise<void>
@@ -49,7 +50,7 @@ export function installTestingHooks(app: JupyterFrontEnd, notebooks: INotebookTr
         id,
         title,
         queryId: '',
-        initialState: makeTestInitialState(`@stellar-globe/jupyterlab/test/${id}`),
+        initialState: makeJupyterLiteInitialState(`@stellar-globe/jupyterlab/test/${id}`),
         extraOptions: { storage: { type: 'file' } },
       })
       app.shell.activateById(widget.id)
@@ -158,16 +159,4 @@ function nonNullAppHandle(id: string): AppHandle {
 
 function isClose(actual: number, expected: number) {
   return Math.abs(actual - expected) < 0.1
-}
-
-function makeTestInitialState(storageKey: string): AppState {
-  const state = JSON.parse(JSON.stringify(makeStore({ storageKey }).getState())) as AppState & { computed?: unknown }
-  delete state.computed
-  state.appearanceLayers.esoMilkyWay.visible = false
-  state.appearanceLayers.nearbyGalaxiesAndNebulas.visible = false
-  state.appearanceLayers.hipparcosCatalog.visible = false
-  state.hipsLayers.baseUrl = undefined
-  state.tractTileLayers.layers = []
-  state.tractTileLayers.toneDialogVisible = false
-  return state
 }

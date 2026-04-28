@@ -1,12 +1,14 @@
 import { HipparcosCatalogLayer as CoreHipparcosCatalogLayer } from "@stellar-globe/stellar-globe"
-import { makePureLayerComponent, setDisplayName } from "../GlobeContext"
+import { makePureLayerComponent, mountOndemand, setDisplayName } from "../GlobeContext"
 
-const HipparcosCatalogLayer = makePureLayerComponent<{
+const InnerHipparcosCatalogLayer = makePureLayerComponent<{
   visible?: boolean
 }>(
   globe => new CoreHipparcosCatalogLayer(globe),
   'visible',
 )
+
+const HipparcosCatalogLayer = mountOndemand(InnerHipparcosCatalogLayer, 'visible')
 
 setDisplayName({ HipparcosCatalogLayer })
 export { HipparcosCatalogLayer }

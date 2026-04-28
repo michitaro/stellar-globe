@@ -10,6 +10,7 @@ import React, { useLayoutEffect, useRef } from 'react'
 import { createRoot, Root } from 'react-dom/client'
 import { cropCanvasToAspectRatio } from './cropCanvasToAspectRatio'
 import { EventEmitter } from './eventemitter'
+import { makeJupyterLiteInitialState } from './jupyterLiteInitialState'
 import { lockFrame } from './lockWindow'
 import { CommType, StellarGlobeSessionEnv } from "./types"
 
@@ -28,6 +29,13 @@ type StorageOptions = FileStorageOptions
 
 type FileStorageOptions = {
   type: 'file'
+}
+
+type RuntimeType = 'pyodide' | 'python'
+
+type ExtraOptions = {
+  runtime?: RuntimeType
+  storage?: StorageOptions
 }
 
 
@@ -66,7 +74,13 @@ export function makeStellarGlobeWidget(
 
   const Component = () => {
     const appRef = useRef<AppHandle>(null!)
-    const storageOptions: StorageOptions = (extraOptions as any)?.storage || { type: 'file' }
+    const storageKey = '@stellar-globe/jupyterlab/store-settings'
+    const normalizedExtraOptions = (extraOptions as ExtraOptions | undefined) ?? {}
+    const storageOptions: StorageOptions = normalizedExtraOptions.storage ?? { type: 'file' }
+    const effectiveInitialState = initialState as AppState | undefined
+      ?? (normalizedExtraOptions.runtime === 'pyodide'
+        ? makeJupyterLiteInitialState(storageKey)
+        : undefined)
 
 
     useLayoutEffect(() => {
@@ -111,10 +125,10 @@ export function makeStellarGlobeWidget(
           storageSync={false}
           floatingLayerZIndex={99}
           activeOnInit={false}
-          storageKey='@stellar-globe/jupyterlab/store-settings'
+          storageKey={storageKey}
           testingKey={id}
           onStoreChange={onStoreChange}
-          initialState={initialState as AppState}
+          initialState={effectiveInitialState}
         />
     )
   }
