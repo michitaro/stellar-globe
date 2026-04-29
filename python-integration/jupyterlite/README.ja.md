@@ -11,6 +11,7 @@ JupyterLiteは、JupyterLabをWebAssembly (WASM)を使用してブラウザ内�
 - stellar-globe JupyterLab拡張
 - チュートリアルノートブック
 - E2E用smoke notebook
+- query-response切り分け用diagnostic notebook
 
 ビルドされたサイトは完全に静的なファイルで構成され、サーバーサイドのPythonやJupyterサーバーを必要とせずに、
 任意のWebサーバーやGitHub Pagesなどでホストできます。
@@ -20,10 +21,12 @@ JupyterLiteは、JupyterLabをWebAssembly (WASM)を使用してブラウザ内�
 ```
 jupyterlite/
 ├── content/        # JupyterLiteに含める追加notebook
-│   └── e2e-smoke.ipynb  # Playwright用smoke notebook
+│   ├── e2e-smoke.ipynb  # Playwright用smoke notebook
+│   └── query-response-diagnostic.ipynb  # IndexedDB / Window() 切り分け用 notebook
 ├── files/          # ビルド時にJupyterLiteに含めるファイル（生成物）
 │   ├── tutorial.ipynb
-│   └── e2e-smoke.ipynb
+│   ├── e2e-smoke.ipynb
+│   └── query-response-diagnostic.ipynb
 ├── pypi/           # JupyterLite環境でインストール可能なPythonパッケージ
 │   └── hscmap-0.0.0-py3-none-any.whl
 ├── _output/        # ビルド結果（静的サイト）
@@ -228,6 +231,7 @@ make rebuild-python
 1. ブラウザのコンソールでエラーメッセージを確認
 2. JupyterLab拡張が正しくロードされているか確認
 3. 必要に応じて完全リビルド: `make rebuild`
+4. `query-response-diagnostic.ipynb` を実行し、`secure context` 判定、IndexedDB roundtrip、`load_query_response_from_indexeddb(...)`、`Window()` のどこで失敗するかを確認
 
 ## JupyterLiteについて
 

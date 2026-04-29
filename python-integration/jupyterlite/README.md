@@ -11,6 +11,7 @@ This directory builds a JupyterLite environment including:
 - stellar-globe JupyterLab extension
 - Tutorial notebook
 - Smoke notebook for E2E
+- Query-response diagnostic notebook for manual investigation
 
 The built site consists of entirely static files and can be hosted on any web server or GitHub Pages
 without requiring server-side Python or Jupyter server.
@@ -20,10 +21,12 @@ without requiring server-side Python or Jupyter server.
 ```
 jupyterlite/
 ├── content/        # Additional notebooks bundled into JupyterLite
-│   └── e2e-smoke.ipynb  # Smoke notebook for Playwright
+│   ├── e2e-smoke.ipynb  # Smoke notebook for Playwright
+│   └── query-response-diagnostic.ipynb  # Notebook for IndexedDB / Window() diagnosis
 ├── files/          # Files included in JupyterLite during build (generated)
 │   ├── tutorial.ipynb
-│   └── e2e-smoke.ipynb
+│   ├── e2e-smoke.ipynb
+│   └── query-response-diagnostic.ipynb
 ├── pypi/           # Python packages installable in JupyterLite
 │   └── hscmap-0.0.0-py3-none-any.whl
 ├── _output/        # Build output (static site)
@@ -228,6 +231,7 @@ make rebuild-python
 1. Check error messages in browser console
 2. Verify JupyterLab extension loaded correctly
 3. Do full rebuild if needed: `make rebuild`
+4. Run `query-response-diagnostic.ipynb` to see whether the failure starts at secure-context detection, the IndexedDB roundtrip, `load_query_response_from_indexeddb(...)`, or `Window()`
 
 ## About JupyterLite
 
