@@ -1,6 +1,8 @@
 import { defineConfig } from '@playwright/test'
 
 const port = process.env.PORT ?? '8000'
+const rawBaseURL = process.env.JUPYTERLITE_E2E_BASE_URL ?? `http://127.0.0.1:${port}/`
+const baseURL = rawBaseURL.endsWith('/') ? rawBaseURL : `${rawBaseURL}/`
 const captureSuccessScreenshots = process.env.JUPYTERLITE_E2E_SUCCESS_SCREENSHOTS === '1'
 const reporter = process.env.JUPYTERLITE_E2E_HTML_REPORT === '1'
   ? [
@@ -20,7 +22,7 @@ export default defineConfig({
     timeout: 2 * 60 * 1000,
   },
   use: {
-    baseURL: `http://127.0.0.1:${port}`,
+    baseURL,
     trace: 'on-first-retry',
     screenshot: captureSuccessScreenshots ? 'on' : 'only-on-failure',
     video: 'retain-on-failure',
