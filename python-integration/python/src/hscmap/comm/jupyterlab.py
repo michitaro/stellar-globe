@@ -9,6 +9,8 @@ from hscmap.models.Open import Model as Open
 from .base import CommBase, remove_none
 
 comm_target = 'stellarglobe/new'
+query_response_indexeddb_name = 'stellar-globe-query-responses'
+query_response_indexeddb_store = 'responses'
 
 
 @dataclass
@@ -19,6 +21,7 @@ class JupyterLabCommOptions:
 class JupyterLabComm(CommBase):  # pragma: no cover
     def __init__(self, open_msg: Open, options: JupyterLabCommOptions) -> None:
         self._extra_options = extra_options()
+        self._query_responses: dict[str, str] = {}
         open_msg['extraOptions'] = self._extra_options  # type: ignore
         self._comm = create_comm(comm_target, remove_none(open_msg))
 
@@ -28,6 +31,12 @@ class JupyterLabComm(CommBase):  # pragma: no cover
     def on_msg(self, callback):
         def unwarp_callback(raw_msg):
             msg = raw_msg['content']['data']
+            if msg.get('type') == '__query_response__':
+                query_id = msg.get('queryId')
+                content = msg.get('content')
+                if isinstance(query_id, str) and isinstance(content, str):
+                    self._query_responses[query_id] = content
+                    return
             callback(msg)
 
         self._comm.on_msg(unwarp_callback)
@@ -46,7 +55,18 @@ class JupyterLabComm(CommBase):  # pragma: no cover
 
         deadline = time.time() + timeout
         response_file = f'~query-{query_id}'
+        use_indexeddb = sys.platform == 'emscripten' and not is_secure_context()
         while time.time() <= deadline:
+            cached = self._query_responses.pop(query_id, None)
+            if cached is not None:
+                return cached
+            if use_indexeddb:
+                try:
+                    indexeddb_response = load_query_response_from_indexeddb(query_id)
+                except Exception:
+                    indexeddb_response = None
+                if indexeddb_response is not None:
+                    return indexeddb_response
             for parent in candidate_dirs(response_file):
                 list(parent.glob('*'))  # This is a bit tricky, but in the JupyterLite environment, if you don't do this, newly created files won't be visible.
                 p = parent / response_file
@@ -105,6 +125,66 @@ def candidate_dirs(response_file: str):
             if parent == parent.parent:
                 break
             parent = parent.parent
+
+
+def is_secure_context() -> bool:
+    try:
+        import js  # type: ignore
+    except ImportError:
+        return False
+    return bool(getattr(js, 'isSecureContext', False))
+
+
+def load_query_response_from_indexeddb(query_id: str) -> Optional[str]:
+    from pyodide.ffi import create_once_callable, run_sync  # type: ignore
+    import js  # type: ignore
+
+    async def load() -> Optional[str]:
+        open_request = js.indexedDB.open(query_response_indexeddb_name, 1)
+        open_request.onupgradeneeded = create_once_callable(
+            lambda _event: (
+                open_request.result.createObjectStore(query_response_indexeddb_store)
+                if not open_request.result.objectStoreNames.contains(query_response_indexeddb_store)
+                else None
+            )
+        )
+        db = await request_as_promise(open_request)
+        tx = db.transaction(query_response_indexeddb_store, 'readonly')
+        store = tx.objectStore(query_response_indexeddb_store)
+        response = await request_as_promise(store.get(query_id))
+        await transaction_as_promise(tx)
+        if response is not None:
+            delete_tx = db.transaction(query_response_indexeddb_store, 'readwrite')
+            delete_store = delete_tx.objectStore(query_response_indexeddb_store)
+            await request_as_promise(delete_store.delete(query_id))
+            await transaction_as_promise(delete_tx)
+        db.close()
+        return cast(Optional[str], response)
+
+    return cast(Optional[str], run_sync(load()))
+
+
+def request_as_promise(request):
+    from pyodide.ffi import create_once_callable  # type: ignore
+    import js  # type: ignore
+
+    def executor(resolve, reject):
+        request.onsuccess = create_once_callable(lambda _event: resolve(request.result))
+        request.onerror = create_once_callable(lambda _event: reject(request.error))
+
+    return js.Promise.new(create_once_callable(executor))
+
+
+def transaction_as_promise(transaction):
+    from pyodide.ffi import create_once_callable  # type: ignore
+    import js  # type: ignore
+
+    def executor(resolve, reject):
+        transaction.oncomplete = create_once_callable(lambda _event: resolve(None))
+        transaction.onerror = create_once_callable(lambda _event: reject(transaction.error))
+        transaction.onabort = create_once_callable(lambda _event: reject(transaction.error))
+
+    return js.Promise.new(create_once_callable(executor))
 
 def create_comm(target: str, initial_msg):  # pragma: no cover
     f: Optional[Callable] = None

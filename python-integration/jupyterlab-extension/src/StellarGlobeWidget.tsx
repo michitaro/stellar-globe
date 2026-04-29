@@ -20,6 +20,7 @@ type StellarGlobeWidgetEnv = {
   widget: Widget
   onWidgetClose: (cb: () => void) => void
   stateManager: () => StateManager<unknown>
+  runtime: RuntimeType
   storageOptions: StorageOptions
   contentsManager: Contents.IManager
 }
@@ -92,10 +93,11 @@ export function makeStellarGlobeWidget(
         widget,
         onWidgetClose: cb => { cleanup.on(cb) },
         stateManager: () => stateManager,
+        runtime: normalizedExtraOptions.runtime ?? 'python',
         storageOptions,
         contentsManager: appContentsManager,
       }
-      comm.onMsg = onMsgFromPython(env)
+      comm.onMsg = onMsgFromPython(env, comm)
 
       widgetEnvs.set(id, env)
       cleanup.on(() => {
@@ -106,7 +108,7 @@ export function makeStellarGlobeWidget(
         typedRespondToQuery('Ready', queryId, {
           revision: stateManager.revision,
           state: appRef.current.getState(),
-        }, storageOptions, appContentsManager)
+        }, comm, normalizedExtraOptions.runtime ?? 'python', storageOptions, appContentsManager)
       }
     }, [])
 
@@ -184,9 +186,10 @@ function onMsgFromPython({
   appHandle,
   widget,
   stateManager,
+  runtime,
   storageOptions,
   contentsManager,
-}: StellarGlobeWidgetEnv): CommType['onMsg'] {
+}: StellarGlobeWidgetEnv, comm: CommType): CommType['onMsg'] {
   let lastErrorAt: number | undefined = undefined
   return wrapTypeCheck({
     Open() { },
@@ -222,13 +225,13 @@ function onMsgFromPython({
     },
     QueryState: async ({ queryId, baseRevision }) => {
       const batchPatch = stateManager().patchFrom(baseRevision)
-      await typedRespondToQuery('QueryStateResponse', queryId, batchPatch, storageOptions, contentsManager)
+      await typedRespondToQuery('QueryStateResponse', queryId, batchPatch, comm, runtime, storageOptions, contentsManager)
     },
     QuerySnapshot: async ({ queryId, aspectRatio }) => {
       const globe = appHandle.globe()
       const originalCanvas = globe.gl.canvas as HTMLCanvasElement
       const url = (aspectRatio ? cropCanvasToAspectRatio(originalCanvas, aspectRatio) : originalCanvas).toDataURL()
-      await respondToQuery(queryId, url, storageOptions, contentsManager)
+      await respondToQuery(queryId, url, comm, runtime, storageOptions, contentsManager)
     },
     JumpTo({ ra, dec, fov, duration, easingFunction }) {
       const globe = appHandle.globe()
@@ -239,25 +242,75 @@ function onMsgFromPython({
 }
 
 
-async function typedRespondToQuery<T extends keyof FromApp>(type: T, queryId: string, data: Omit<FromApp[T], 'type'>, options: StorageOptions, contentsManager: Contents.IManager) {
-  return await respondToQuery(queryId, JSON.stringify(replaceUndefinedWithNull({ ...data, type })), options, contentsManager)
+async function typedRespondToQuery<T extends keyof FromApp>(type: T, queryId: string, data: Omit<FromApp[T], 'type'>, comm: CommType, runtime: RuntimeType, options: StorageOptions, contentsManager: Contents.IManager) {
+  return await respondToQuery(queryId, JSON.stringify(replaceUndefinedWithNull({ ...data, type })), comm, runtime, options, contentsManager)
 }
 
-async function respondToQuery(queryId: string, content: string, options: StorageOptions, contentsManager: Contents.IManager) {
+async function respondToQuery(queryId: string, content: string, comm: CommType, runtime: RuntimeType, options: StorageOptions, contentsManager: Contents.IManager) {
+  comm.send({
+    type: '__query_response__',
+    queryId,
+    content,
+  })
   const fileContent = `${content.length}\n${content}`
   switch (options.type) {
     case 'file': {
       const filename = `~query-${queryId}`
-      await contentsManager.save(filename, {
-        type: 'file',
-        format: 'text',
-        content: fileContent,
-      })
-      break
+      const useIndexedDb = runtime === 'pyodide' && !globalThis.isSecureContext
+      const writes = await Promise.allSettled([
+        ...(useIndexedDb ? [saveQueryResponseOnJupyterLiteIndexedDB(queryId, content)] : []),
+        ...(!useIndexedDb ? [contentsManager.save(filename, {
+          type: 'file',
+          format: 'text',
+          content: fileContent,
+        })] : []),
+      ])
+      if (writes.some(result => result.status === 'fulfilled')) {
+        return
+      }
+      throw new Error(`Failed to persist query response for ${queryId}`)
     }
     default:
       throw new Error(`Unknown storage type: ${options}`)
   }
+}
+
+
+const queryResponseDbName = 'stellar-globe-query-responses'
+const queryResponseStoreName = 'responses'
+
+
+function saveQueryResponseOnJupyterLiteIndexedDB(queryId: string, content: string) {
+  return new Promise<void>((resolve, reject) => {
+    const request = indexedDB.open(queryResponseDbName, 1)
+    request.onupgradeneeded = () => {
+      const db = request.result
+      if (!db.objectStoreNames.contains(queryResponseStoreName)) {
+        db.createObjectStore(queryResponseStoreName)
+      }
+    }
+    request.onsuccess = () => {
+      const db = request.result
+      const tx = db.transaction(queryResponseStoreName, 'readwrite')
+      const store = tx.objectStore(queryResponseStoreName)
+      tx.oncomplete = () => {
+        db.close()
+        resolve()
+      }
+      tx.onerror = () => {
+        db.close()
+        reject(tx.error)
+      }
+      tx.onabort = () => {
+        db.close()
+        reject(tx.error)
+      }
+      store.put(content, queryId)
+    }
+    request.onerror = () => {
+      reject(request.error)
+    }
+  })
 }
 
 
