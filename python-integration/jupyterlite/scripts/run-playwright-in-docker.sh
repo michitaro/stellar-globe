@@ -38,7 +38,7 @@ for _ in $(seq 1 60); do
       -v "${project_dir}:/work" \
       -w /work \
       "${playwright_image}" \
-      /bin/bash -lc "npm ci && npx playwright test"
+      /bin/bash -lc "set -euo pipefail; npm ci; test_status=0; npx playwright test || test_status=\$?; node ./scripts/annotate-playwright-report.mjs; exit \$test_status"
     exit 0
   fi
   sleep 1

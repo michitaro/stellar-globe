@@ -22,8 +22,10 @@ server_pid=$!
 
 for _ in $(seq 1 60); do
   if curl --silent --fail "http://127.0.0.1:${port}/lab/index.html" >/dev/null; then
-    PLAYWRIGHT_SKIP_WEBSERVER=1 PORT="${port}" npx playwright test
-    exit 0
+    test_status=0
+    PLAYWRIGHT_SKIP_WEBSERVER=1 PORT="${port}" npx playwright test || test_status=$?
+    node ./scripts/annotate-playwright-report.mjs
+    exit "${test_status}"
   fi
   sleep 1
 done
