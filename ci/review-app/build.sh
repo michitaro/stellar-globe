@@ -14,6 +14,7 @@ app_dist_dir="app/dist/standalone"
 jupyterlite_dist_dir="python-integration/jupyterlite/_output"
 jupyterlite_e2e_project_dir="python-integration/jupyterlite"
 jupyterlite_e2e_report_dir="$jupyterlite_e2e_project_dir/playwright-report"
+jupyterlite_e2e_port="${JUPYTERLITE_E2E_PORT:-38000}"
 landing_page="$script_dir/landing-page.html"
 
 JUPYTERLITE_BASE_URL="$(review_app_jupyterlite_path)" bash ./build.bash
@@ -23,7 +24,11 @@ rm -rf "$jupyterlite_e2e_project_dir/test-results" "$jupyterlite_e2e_report_dir"
   cd "$jupyterlite_e2e_project_dir"
   npm ci
   npm run setup:e2e
-  JUPYTERLITE_E2E_HTML_REPORT=1 JUPYTERLITE_E2E_SUCCESS_SCREENSHOTS=1 npm run test:e2e
+  PORT="$jupyterlite_e2e_port" \
+    JUPYTERLITE_E2E_BASE_URL="http://127.0.0.1:${jupyterlite_e2e_port}$(review_app_jupyterlite_path)" \
+    JUPYTERLITE_E2E_HTML_REPORT=1 \
+    JUPYTERLITE_E2E_SUCCESS_SCREENSHOTS=1 \
+    npm run test:e2e
 )
 
 if [ ! -f "$landing_page" ]; then

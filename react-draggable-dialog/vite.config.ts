@@ -19,7 +19,7 @@ export default defineConfig({
       fileName: (format) => `react-draggable-dialog.${format}.js`,
     },
     rollupOptions: {
-      external: ['react', 'react-dom'],
+      external: ['react', 'react-dom', 'react/jsx-runtime', 'react/jsx-dev-runtime'],
     },
   },
 })
