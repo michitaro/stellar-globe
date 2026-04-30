@@ -51,4 +51,5 @@ mkdir -p "$output_dir" "$standalone_output_dir" "$jupyterlite_output_dir" "$jupy
 cp "$landing_page" "${output_dir}index.html"
 cp -R "$app_dist_dir"/. "$standalone_output_dir"/
 cp -R "$jupyterlite_dist_dir"/. "$jupyterlite_output_dir"/
+python3 "$script_dir/filter-jupyterlite-review-app.py" "$jupyterlite_output_dir"
 cp -R "$jupyterlite_e2e_report_dir"/. "$jupyterlite_e2e_report_output_dir"/
