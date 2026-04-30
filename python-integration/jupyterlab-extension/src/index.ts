@@ -6,6 +6,7 @@ import { INotebookTracker } from '@jupyterlab/notebook'
 import { ToApp, validateToAppMessage } from '@stellar-globe/app/commTools'
 import { makeStellarGlobeWidget } from './StellarGlobeWidget'
 import { EventEmitter } from './eventemitter'
+import { installTestingHooks } from './testingHooks'
 import { KernelType, StellarGlobeSessionEnv } from './types'
 
 
@@ -16,6 +17,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
   requires: [INotebookTracker],
   activate: (app: JupyterFrontEnd, nbTracker: INotebookTracker) => {
     loadExternalCSS('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200')
+    installTestingHooks(app, nbTracker)
     connectToKernelChangedSignalForCommCreation(app, nbTracker)
   },
 }
@@ -57,16 +59,13 @@ function connectToKernelChangedSignalForCommCreation(
         cleanups.get(oldValue)?.()
       }
       if (newValue) {
-        const kernel = nbPanel.sessionContext.session!.kernel!
-        const cleanup = setupCommTarget({ app, kernel }, onSessionClosed)
+        const cleanup = setupCommTarget({ app, kernel: newValue }, onSessionClosed)
         cleanups.set(newValue, cleanup)
       }
     }
 
-    nbPanel.sessionContext.kernelChanged.connect(() => {
-      const kernel = nbPanel.sessionContext.session!.kernel!
-      const cleanup = setupCommTarget({ app, kernel }, onSessionClosed)
-      cleanups.set(kernel, cleanup)
+    nbPanel.sessionContext.kernelChanged.connect((_sender, args) => {
+      handleKernelChanged(args)
     })
 
     if (nbPanel.sessionContext.session?.kernel) {

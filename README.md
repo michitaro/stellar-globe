@@ -159,13 +159,13 @@ If you only want to run the freshness policy, execute `python3 ./tools/check_dep
 
 ### GitLab review app CI
 
-GitLab CI now builds a review app on branch pushes with a landing page at the review app root. The landing page links to the currently published products: the standalone `app` build under `standalone/` and the static `python-integration/jupyterlite` output under `jupyterlite/`. This layout also leaves room to add future products such as documentation.
+GitLab CI now builds a review app on branch pushes with a landing page at the review app root. The landing page links to the currently published products: the standalone `app` build under `standalone/`, the static `python-integration/jupyterlite` output under `jupyterlite/`, and the Playwright HTML report for JupyterLite E2E under `jupyterlite-e2e/`.
 
 - CI definition: `.gitlab-ci.yml`
 - Review app scripts: `ci/review-app/`
 - Shared microk8s / Gateway API helpers: `.github/skills/gitlab-microk8s-review-app-ci/bin/`
 
-At minimum, configure `REVIEW_APP_KUBECONFIG_B64` as a GitLab CI variable so jobs can reach the target cluster. You can also override `REVIEW_APP_GATEWAY_*`, `REVIEW_APP_REGISTRY_*`, and `REVIEW_APP_BASE_URL` as needed. By default, review apps are published under `/review-apps/<project-name>/<branch-slug>/` with a landing page at the root, and products are available under `standalone/` and `jupyterlite/`.
+At minimum, configure `REVIEW_APP_KUBECONFIG_B64` as a GitLab CI variable so jobs can reach the target cluster. You can also override `REVIEW_APP_GATEWAY_*`, `REVIEW_APP_REGISTRY_*`, and `REVIEW_APP_BASE_URL` as needed. By default, review apps are published under `/review-apps/<project-name>/<branch-slug>/` with a landing page at the root, and products are available under `standalone/`, `jupyterlite/`, and `jupyterlite-e2e/`. The build job also keeps `python-integration/jupyterlite/test-results/` and `playwright-report/` as CI artifacts so screenshots, videos, and traces remain downloadable even when the review app is not inspected directly.
 
 ## Main Repository and Mirrors
 

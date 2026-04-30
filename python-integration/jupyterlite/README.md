@@ -10,6 +10,8 @@ This directory builds a JupyterLite environment including:
 - hscMap Python client library
 - stellar-globe JupyterLab extension
 - Tutorial notebook
+- Smoke notebook for E2E
+- Query-response diagnostic notebook for manual investigation
 
 The built site consists of entirely static files and can be hosted on any web server or GitHub Pages
 without requiring server-side Python or Jupyter server.
@@ -18,11 +20,19 @@ without requiring server-side Python or Jupyter server.
 
 ```
 jupyterlite/
-├── files/          # Files to include in JupyterLite during build
-│   └── tutorial.ipynb  # hscMap tutorial notebook
+├── content/        # Additional notebooks bundled into JupyterLite
+│   ├── e2e-smoke.ipynb  # Smoke notebook for Playwright
+│   └── query-response-diagnostic.ipynb  # Notebook for IndexedDB / Window() diagnosis
+├── files/          # Files included in JupyterLite during build (generated)
+│   ├── tutorial.ipynb
+│   ├── e2e-smoke.ipynb
+│   └── query-response-diagnostic.ipynb
 ├── pypi/           # Python packages installable in JupyterLite
 │   └── hscmap-0.0.0-py3-none-any.whl
 ├── _output/        # Build output (static site)
+├── tests/          # Playwright tests
+├── scripts/        # Docker wrapper scripts
+├── package.json    # Playwright package definition
 ├── pyproject.toml  # Python environment configuration
 ├── Makefile        # Build commands
 └── README.md       # This file
@@ -32,6 +42,8 @@ jupyterlite/
 
 - Python 3.8 or later
 - uv command (Python environment manager)
+- Node.js 18 or later (for E2E)
+- Docker (when using `npm run test:e2e:docker`)
 
 Installing uv:
 ```bash
@@ -90,7 +102,7 @@ This command:
 1. `rebuild-dependencies`: Build dependency packages
 2. `build`: Build JupyterLite site
    - Copy hscMap wheel to `pypi/` directory
-   - Copy tutorial notebook to `files/` directory
+   - Copy tutorial and E2E notebooks to `files/` directory
    - Install JupyterLab extension
    - Run `jupyter lite build` to generate site
 
@@ -118,6 +130,60 @@ Access `http://localhost:8000` in your browser to open JupyterLite.
 2. Access in browser
 3. Open `tutorial.ipynb` from file browser
 4. Run cells to verify hscMap functionality
+
+### Serve prebuilt output only
+
+For E2E, you can serve `_output/` without triggering a rebuild:
+
+```bash
+make serve-built
+```
+
+`serve-built` adds the cross-origin isolation headers needed for reliable JupyterLite file synchronization.
+
+## Playwright E2E Tests
+
+### Setup
+
+```bash
+npm install
+npm run setup:e2e
+```
+
+### Run locally
+
+```bash
+npm run test:e2e:noninteractive
+```
+
+This command will:
+
+1. Run `make rebuild` to rebuild JupyterLite and its dependencies
+2. Serve the static site on `127.0.0.1:8000` via `make serve-built`
+3. Open and run `e2e-smoke.ipynb` with Playwright + Chromium
+
+The smoke test checks:
+
+- a notebook can be opened
+- `Window()` can open the viewer
+- camera state changes after `jump_to()`
+- `snapshot_bytes()` returns PNG bytes
+- the viewer `canvas` is rendered
+
+### Run in Docker
+
+```bash
+npm run test:e2e:docker
+```
+
+This uses the official Playwright Docker image. On Linux it runs with `--network host --ipc=host --init`.
+JupyterLite file synchronization depends on either `SharedArrayBuffer` or the Service Worker, so `serve-built` uses a static server with cross-origin isolation headers. The Docker runner also keeps access on `127.0.0.1` instead of routing through a container alias so the Service Worker path remains valid.
+
+### Limitations
+
+- The Docker wrapper currently assumes Linux
+- WebGL runs through Chromium software rendering (`SwiftShader`)
+- The initial test is a smoke test for startup, state sync, and snapshot generation rather than pixel-perfect comparison
 
 ## Deployment
 
@@ -165,6 +231,8 @@ make rebuild-python
 1. Check error messages in browser console
 2. Verify JupyterLab extension loaded correctly
 3. Do full rebuild if needed: `make rebuild`
+4. Run `query-response-diagnostic.ipynb` to see whether the failure starts at secure-context detection, the IndexedDB roundtrip, `load_query_response_from_indexeddb(...)`, or `Window()`
+5. On non-secure origins such as `http://<ip-address>/...`, runtimes without WebAssembly stack switching (such as Safari-family browsers) cannot complete `Window()`, `sync()`, or `snapshot_bytes()` in JupyterLite. Use `https://...`, `http://localhost/...`, or a browser/runtime that supports stack switching for now.
 
 ## About JupyterLite
 
@@ -188,4 +256,3 @@ See [JupyterLite official documentation](https://jupyterlite.readthedocs.io/) fo
 - [Pyodide](https://pyodide.org/)
 - [hscMap Python Client](../python/)
 - [hscMap JupyterLab Extension](../jupyterlab-extension/)
-

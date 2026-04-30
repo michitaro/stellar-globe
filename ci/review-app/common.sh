@@ -31,6 +31,10 @@ review_app_jupyterlite_path() {
   printf '%sjupyterlite/\n' "$(review_app_base_path)"
 }
 
+review_app_jupyterlite_e2e_report_path() {
+  printf '%sjupyterlite-e2e/\n' "$(review_app_base_path)"
+}
+
 review_app_docs_path() {
   printf '%sdocs/\n' "$(review_app_base_path)"
 }
@@ -84,6 +88,10 @@ review_app_namespace() {
   truncated=$(printf '%s-%s' "$prefix" "$checksum" | cut -c1-63 | sed 's/-$//')
 
   printf '%s\n' "$truncated"
+}
+
+review_app_route_name() {
+  printf '%s\n' "$(review_app_namespace)"
 }
 
 review_app_gateway_namespace() {

@@ -47,11 +47,15 @@ function layerDef(name: string, baseUrl: string) {
 
 function initialState(): State {
   const layers: State['layers'] = [
-    layerDef('s23b Wide', "../data/s23b_wide"),
-    layerDef('s23b Deep', "../data/s23b_deep"),
     layerDef('PDR3 Wide', "//hscmap.mtk.nao.ac.jp/hscMap4/data/pdr3_wide"),
     layerDef('PDR3 DUD', "//hscmap.mtk.nao.ac.jp/hscMap4/data/pdr3_dud"),
   ]
+  if (env().target !== 'public') {
+    layers.unshift(
+      layerDef('s23b Wide', "../data/s23b_wide"),
+      layerDef('s23b Deep', "../data/s23b_deep"),
+    )
+  }
   if (env().data.u2k) {
     layers.push(layerDef('U2K V2', "./data/u2k_v2"))
   }

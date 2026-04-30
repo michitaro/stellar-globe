@@ -59,7 +59,9 @@
         "@jupyterlab/notebook": "^4.1.4",
         "@stellar-globe/app": "link:../../app",
         "@stellar-globe/react-stellar-globe": "link:../../react-stellar-globe",
-        "@stellar-globe/stellar-globe": "link:../../stellar-globe"
+        "@stellar-globe/stellar-globe": "link:../../stellar-globe",
+        "react": "19.1.1",
+        "react-dom": "19.1.1"
     },
     "devDependencies": {
         "@jupyterlab/builder": "^4.0.0",
@@ -67,8 +69,9 @@
         "@testing-library/react": "^14.1.2",
         "@types/jest": "^29.5.11",
         "@types/json-schema": "^7.0.11",
-        "@types/react": "^18.0.26",
+        "@types/react": "19.1.2",
         "@types/react-addons-linked-state-mixin": "^0.14.22",
+        "@types/react-dom": "19.1.2",
         "@typescript-eslint/eslint-plugin": "^6.1.0",
         "@typescript-eslint/parser": "^6.1.0",
         "css-loader": "^6.7.1",
@@ -102,7 +105,14 @@
     },
     "jupyterlab": {
         "extension": true,
-        "outputDir": "stellar_globe_jupyterlab_extension/labextension"
+        "outputDir": "stellar_globe_jupyterlab_extension/labextension",
+        "webpackConfig": "./webpack.config.cjs",
+        "sharedPackages": {
+            "react": false,
+            "react-dom": false,
+            "react-dom/client": false,
+            "react/jsx-runtime": false
+        }
     },
     "eslintIgnore": [
         "node_modules",

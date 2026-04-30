@@ -99,7 +99,7 @@ ${address_block}
     port: 80
     allowedRoutes:
       namespaces:
-        from: All
+        from: Same
 EOF
 
 service_ref=""

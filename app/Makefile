@@ -21,10 +21,13 @@ deploy: standalone
 	rsync -av --delete ./dist/standalone/ hscmap.mtk.nao.ac.jp:htdocs/hscMap5/app/
 
 # This is for Python module
-public-jsonschema:
+public-jsonschema: node_modules
 	npm run make-public-json-schema
 
 node_modules: package.json package-lock.json
+	rm -rf ./node_modules/@stellar-globe/stellar-globe
+	rm -rf ./node_modules/@stellar-globe/react-stellar-globe
+	rm -rf ./node_modules/@stellar-globe/react-draggable-dialog
 	npm install
 
 s23b_validation: standalone

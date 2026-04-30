@@ -13,16 +13,25 @@ export const deferredFilterMap = (() => {
     {
       promise: Promise<unknown>
       result?: FilterMap,
-      error?: string
+      error?: unknown
     }
   >
 
   return (baseUrl: string) => {
     if (!cache.has(baseUrl)) {
       const promise = (async () => {
-        return ((await (await fetch(`${baseUrl}/filter.json`)).json().catch(() => [])) as any[])
-          .map(normalizeFilterDef)
-          .filter(f => !f.commonName.startsWith('.'))
+        try {
+          const response = await fetch(`${baseUrl}/filter.json`)
+          if (!response.ok) {
+            return []
+          }
+          return ((await response.json().catch(() => [])) as any[])
+            .map(normalizeFilterDef)
+            .filter(f => !f.commonName.startsWith('.'))
+        } catch (error) {
+          console.warn(`Failed to load tract filters: ${baseUrl}`, error)
+          return []
+        }
       })()
       cache.set(baseUrl, { promise })
       promise.then(result => {

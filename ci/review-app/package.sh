@@ -9,6 +9,7 @@ site_entry="dist$(review_app_base_path)index.html"
 standalone_entry="dist$(review_app_standalone_path)index.html"
 jupyterlite_entry="dist$(review_app_jupyterlite_path)index.html"
 jupyterlite_lab_entry="dist$(review_app_jupyterlite_path)lab/index.html"
+jupyterlite_e2e_report_entry="dist$(review_app_jupyterlite_e2e_report_path)index.html"
 
 if [ ! -f "$site_entry" ]; then
   echo "review app landing page not found: $site_entry" >&2
@@ -22,6 +23,11 @@ fi
 
 if [ ! -f "$jupyterlite_entry" ] && [ ! -f "$jupyterlite_lab_entry" ]; then
   echo "JupyterLite entrypoint not found under dist$(review_app_jupyterlite_path)" >&2
+  exit 1
+fi
+
+if [ ! -f "$jupyterlite_e2e_report_entry" ]; then
+  echo "JupyterLite E2E report not found: $jupyterlite_e2e_report_entry" >&2
   exit 1
 fi
 

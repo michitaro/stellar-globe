@@ -1,13 +1,13 @@
-import { BeautifulObjectLayer as CoreBeautifulObjectLayer, EsoMilkyWayLayer } from "@stellar-globe/stellar-globe"
-import { makePureLayerComponent, setDisplayName } from "../GlobeContext"
+import { BeautifulObjectLayer as CoreBeautifulObjectLayer } from "@stellar-globe/stellar-globe"
+import { makePureLayerComponent, mountOndemand, setDisplayName } from "../GlobeContext"
 import { memo } from "react"
 
-const One = makePureLayerComponent<
+const One = mountOndemand(makePureLayerComponent<
   {
     which: ConstructorParameters<typeof CoreBeautifulObjectLayer>[1]
     visible?: boolean
   }
->((globe, { which }) => new CoreBeautifulObjectLayer(globe, which), 'visible')
+>((globe, { which }) => new CoreBeautifulObjectLayer(globe, which), 'visible'), 'visible')
 
 type Props = {
   visible?: boolean
