@@ -23,7 +23,14 @@ export default defineConfig(commonConfig('lib', {
       },
     },
     rollupOptions: {
-      external: ['react', 'react-dom', '@stellar-globe/stellar-globe', '@stellar-globe/react-stellar-globe'],
+      external: [
+        'react',
+        'react-dom',
+        'react/jsx-runtime',
+        'react/jsx-dev-runtime',
+        '@stellar-globe/stellar-globe',
+        '@stellar-globe/react-stellar-globe',
+      ],
     },
   },
 }))
