@@ -232,6 +232,7 @@ make rebuild-python
 2. Verify JupyterLab extension loaded correctly
 3. Do full rebuild if needed: `make rebuild`
 4. Run `query-response-diagnostic.ipynb` to see whether the failure starts at secure-context detection, the IndexedDB roundtrip, `load_query_response_from_indexeddb(...)`, or `Window()`
+5. On non-secure origins such as `http://<ip-address>/...`, runtimes without WebAssembly stack switching (such as Safari-family browsers) cannot complete `Window()`, `sync()`, or `snapshot_bytes()` in JupyterLite. Use `https://...`, `http://localhost/...`, or a browser/runtime that supports stack switching for now.
 
 ## About JupyterLite
 

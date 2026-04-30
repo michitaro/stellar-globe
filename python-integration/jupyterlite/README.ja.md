@@ -232,6 +232,7 @@ make rebuild-python
 2. JupyterLab拡張が正しくロードされているか確認
 3. 必要に応じて完全リビルド: `make rebuild`
 4. `query-response-diagnostic.ipynb` を実行し、`secure context` 判定、IndexedDB roundtrip、`load_query_response_from_indexeddb(...)`、`Window()` のどこで失敗するかを確認
+5. `http://<IPアドレス>/...` のような non-secure origin では、Safari 系のように WebAssembly stack switching を持たないランタイムで `Window()` / `sync()` / `snapshot_bytes()` が動かない。現状は `https://...` か `http://localhost/...`、または stack switching 対応ブラウザで確認する
 
 ## JupyterLiteについて
 

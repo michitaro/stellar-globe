@@ -258,12 +258,8 @@ async function respondToQuery(queryId: string, content: string, comm: CommType, 
       const filename = `~query-${queryId}`
       const useIndexedDb = runtime === 'pyodide' && !globalThis.isSecureContext
       const writes = await Promise.allSettled([
+        saveQueryResponseAsFile(filename, fileContent, contentsManager),
         ...(useIndexedDb ? [saveQueryResponseOnJupyterLiteIndexedDB(queryId, content)] : []),
-        ...(!useIndexedDb ? [contentsManager.save(filename, {
-          type: 'file',
-          format: 'text',
-          content: fileContent,
-        })] : []),
       ])
       if (writes.some(result => result.status === 'fulfilled')) {
         return
@@ -278,6 +274,15 @@ async function respondToQuery(queryId: string, content: string, comm: CommType, 
 
 const queryResponseDbName = 'stellar-globe-query-responses'
 const queryResponseStoreName = 'responses'
+
+
+function saveQueryResponseAsFile(filename: string, content: string, contentsManager: Contents.IManager) {
+  return contentsManager.save(filename, {
+    type: 'file',
+    format: 'text',
+    content,
+  })
+}
 
 
 function saveQueryResponseOnJupyterLiteIndexedDB(queryId: string, content: string) {

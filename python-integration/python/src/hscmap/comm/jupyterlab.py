@@ -11,6 +11,7 @@ from .base import CommBase, remove_none
 comm_target = 'stellarglobe/new'
 query_response_indexeddb_name = 'stellar-globe-query-responses'
 query_response_indexeddb_store = 'responses'
+_run_sync_supported: Optional[bool] = None
 
 
 @dataclass
@@ -55,7 +56,8 @@ class JupyterLabComm(CommBase):  # pragma: no cover
 
         deadline = time.time() + timeout
         response_file = f'~query-{query_id}'
-        use_indexeddb = sys.platform == 'emscripten' and not is_secure_context()
+        insecure_pyodide = sys.platform == 'emscripten' and not is_secure_context()
+        use_indexeddb = insecure_pyodide and supports_blocking_js_promise_wait()
         while time.time() <= deadline:
             cached = self._query_responses.pop(query_id, None)
             if cached is not None:
@@ -82,6 +84,8 @@ class JupyterLabComm(CommBase):  # pragma: no cover
                 except:
                     pass
             time.sleep(poll_interval)
+        if insecure_pyodide and not use_indexeddb:
+            raise unsupported_nonsecure_query_response_runtime()
         raise TimeoutError()
 
 
@@ -135,9 +139,20 @@ def is_secure_context() -> bool:
     return bool(getattr(js, 'isSecureContext', False))
 
 
+def unsupported_nonsecure_query_response_runtime() -> RuntimeError:
+    return RuntimeError(
+        'This JupyterLite runtime cannot block on browser promises on a non-secure origin. '
+        'Window(), sync(), and snapshot_bytes() need HTTPS/localhost or a browser runtime '
+        'with WebAssembly stack switching support.'
+    )
+
+
 def load_query_response_from_indexeddb(query_id: str) -> Optional[str]:
     from pyodide.ffi import create_once_callable, run_sync  # type: ignore
     import js  # type: ignore
+
+    if not supports_blocking_js_promise_wait():
+        raise unsupported_nonsecure_query_response_runtime()
 
     async def load() -> Optional[str]:
         open_request = js.indexedDB.open(query_response_indexeddb_name, 1)
@@ -162,6 +177,34 @@ def load_query_response_from_indexeddb(query_id: str) -> Optional[str]:
         return cast(Optional[str], response)
 
     return cast(Optional[str], run_sync(load()))
+
+
+def supports_blocking_js_promise_wait() -> bool:
+    global _run_sync_supported
+
+    if _run_sync_supported is not None:
+        return _run_sync_supported
+
+    from pyodide.ffi import run_sync  # type: ignore
+
+    async def probe() -> None:
+        return None
+
+    probe_coro = probe()
+    try:
+        run_sync(probe_coro)
+    except RuntimeError as exc:
+        probe_coro.close()
+        if 'WebAssembly stack switching not supported' in str(exc):
+            _run_sync_supported = False
+            return False
+        raise
+    except Exception:
+        probe_coro.close()
+        raise
+
+    _run_sync_supported = True
+    return True
 
 
 def request_as_promise(request):
