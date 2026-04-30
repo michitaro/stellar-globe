@@ -7,6 +7,7 @@ test('JupyterLite smoke notebook can open Stellar Globe and query state', async 
   const consoleErrors = []
   const pageErrors = []
   const unexpectedRequestFailures = []
+  const successfulResponses = []
 
   page.on('console', message => {
     if (message.type() !== 'error') {
@@ -23,6 +24,11 @@ test('JupyterLite smoke notebook can open Stellar Globe and query state', async 
   page.on('requestfailed', request => {
     unexpectedRequestFailures.push(`${request.failure()?.errorText ?? 'unknown'} ${request.url()}`)
   })
+  page.on('response', response => {
+    if (response.ok()) {
+      successfulResponses.push(response.url())
+    }
+  })
 
   await page.goto('lab/index.html')
   await page.waitForFunction(name => Boolean(globalThis[name]), hooksName)
@@ -37,6 +43,13 @@ test('JupyterLite smoke notebook can open Stellar Globe and query state', async 
   await expect(windowOutput).toContainText('window_opened=True')
   await expect(windowOutput).toContainText('window_title=e2e smoke')
   await expect(windowOutput).not.toContainText('TimeoutError')
+
+  const defaultsCell = page.locator('.jp-CodeCell').filter({ hasText: "tile_layer_names = sorted(w.dataset.tile_layers.keys())" })
+  await expect(defaultsCell).toHaveCount(1)
+  const defaultsOutput = defaultsCell.locator('.jp-OutputArea-output pre').last()
+  await expect(defaultsOutput).toContainText('pdr3_wide_present=True')
+  await expect(defaultsOutput).toContainText('pdr3_dud_present=True')
+  await expect(defaultsOutput).toContainText('hipparcos_visible=True')
 
   const resultCell = page.locator('.jp-CodeCell').filter({ hasText: 'snapshot = w.snapshot_bytes()' })
   await expect(resultCell).toHaveCount(1)
@@ -76,6 +89,8 @@ test('JupyterLite smoke notebook can open Stellar Globe and query state', async 
   })
   const dataUrl = await canvas.evaluate(canvas => canvas.toDataURL())
   expect(dataUrl.startsWith('data:image/png')).toBeTruthy()
+  expect(successfulResponses.some(url => url.includes('/pdr3_wide/meta.json'))).toBeTruthy()
+  expect(successfulResponses.some(url => url.includes('/hipparcos-catalog/index.json'))).toBeTruthy()
 
   expect(consoleErrors).toEqual([])
   expect(pageErrors).toEqual([])
