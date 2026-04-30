@@ -32,6 +32,9 @@ test('JupyterLite smoke notebook can open Stellar Globe and query state', async 
 
   await page.goto('lab/index.html')
   await page.waitForFunction(name => Boolean(globalThis[name]), hooksName)
+  const rootEntriesBefore = await page.evaluate(async name => {
+    return await globalThis[name].rootEntryNames()
+  }, hooksName)
 
   await page.evaluate(async name => {
     await globalThis[name].runNotebook('e2e-smoke.ipynb')
@@ -91,6 +94,13 @@ test('JupyterLite smoke notebook can open Stellar Globe and query state', async 
   expect(dataUrl.startsWith('data:image/png')).toBeTruthy()
   expect(successfulResponses.some(url => url.includes('/pdr3_wide/meta.json'))).toBeTruthy()
   expect(successfulResponses.some(url => url.includes('/hipparcos-catalog/index.json'))).toBeTruthy()
+  const rootEntriesAfter = await page.evaluate(async name => {
+    return await globalThis[name].rootEntryNames()
+  }, hooksName)
+  const newUntitledEntries = rootEntriesAfter
+    .filter(name => !rootEntriesBefore.includes(name))
+    .filter(name => /^untitled\d*\.$/i.test(name))
+  expect(newUntitledEntries).toEqual([])
 
   expect(consoleErrors).toEqual([])
   expect(pageErrors).toEqual([])

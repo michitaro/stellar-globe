@@ -55,7 +55,7 @@ class JupyterLabComm(CommBase):  # pragma: no cover
         poll_interval = 0.1
 
         deadline = time.time() + timeout
-        response_file = f'~query-{query_id}'
+        response_file = query_response_filename(query_id)
         insecure_pyodide = sys.platform == 'emscripten' and not is_secure_context()
         use_indexeddb = insecure_pyodide and supports_blocking_js_promise_wait()
         while time.time() <= deadline:
@@ -71,6 +71,7 @@ class JupyterLabComm(CommBase):  # pragma: no cover
                     return indexeddb_response
             for parent in candidate_dirs(response_file):
                 list(parent.glob('*'))  # This is a bit tricky, but in the JupyterLite environment, if you don't do this, newly created files won't be visible.
+                list(parent.glob('.*'))
                 p = parent / response_file
                 try:
                     with open(p) as f:
@@ -137,6 +138,10 @@ def is_secure_context() -> bool:
     except ImportError:
         return False
     return bool(getattr(js, 'isSecureContext', False))
+
+
+def query_response_filename(query_id: str) -> str:
+    return f'.query-{query_id}' if sys.platform == 'emscripten' else f'~query-{query_id}'
 
 
 def unsupported_nonsecure_query_response_runtime() -> RuntimeError:

@@ -255,10 +255,10 @@ async function respondToQuery(queryId: string, content: string, comm: CommType, 
   const fileContent = `${content.length}\n${content}`
   switch (options.type) {
     case 'file': {
-      const filename = `~query-${queryId}`
+      const filename = queryResponseFilename(queryId, runtime)
       const useIndexedDb = runtime === 'pyodide' && !globalThis.isSecureContext
       const writes = await Promise.allSettled([
-        saveQueryResponseAsFile(filename, fileContent, contentsManager),
+        saveQueryResponseAsFile(filename, fileContent, contentsManager, { cleanup: runtime === 'pyodide' }),
         ...(useIndexedDb ? [saveQueryResponseOnJupyterLiteIndexedDB(queryId, content)] : []),
       ])
       if (writes.some(result => result.status === 'fulfilled')) {
@@ -274,14 +274,32 @@ async function respondToQuery(queryId: string, content: string, comm: CommType, 
 
 const queryResponseDbName = 'stellar-globe-query-responses'
 const queryResponseStoreName = 'responses'
+const queryResponseCleanupDelayMs = 15000
 
 
-function saveQueryResponseAsFile(filename: string, content: string, contentsManager: Contents.IManager) {
+function queryResponseFilename(queryId: string, runtime: RuntimeType) {
+  return runtime === 'pyodide' ? `.query-${queryId}` : `~query-${queryId}`
+}
+
+
+function saveQueryResponseAsFile(filename: string, content: string, contentsManager: Contents.IManager, options?: { cleanup?: boolean }) {
   return contentsManager.save(filename, {
     type: 'file',
     format: 'text',
     content,
+  }).then(result => {
+    if (options?.cleanup) {
+      scheduleQueryResponseFileCleanup(filename, contentsManager)
+    }
+    return result
   })
+}
+
+
+function scheduleQueryResponseFileCleanup(filename: string, contentsManager: Contents.IManager) {
+  globalThis.setTimeout(() => {
+    void contentsManager.delete(filename).catch(() => undefined)
+  }, queryResponseCleanupDelayMs)
 }
 
 

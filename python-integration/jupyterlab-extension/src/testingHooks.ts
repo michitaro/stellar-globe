@@ -1,6 +1,7 @@
 import { SkyCoord, angle } from '@stellar-globe/stellar-globe'
 import { JupyterFrontEnd } from '@jupyterlab/application'
 import { INotebookTracker, NotebookActions, NotebookPanel } from '@jupyterlab/notebook'
+import { Contents } from '@jupyterlab/services'
 import { CommType } from './types'
 import { AppHandle } from '@stellar-globe/app'
 import { makeStellarGlobeWidget } from './StellarGlobeWidget'
@@ -14,6 +15,7 @@ export type StellarGlobeJupyterlabTestHooks = {
   jumpViewer: (id: string, raDeg: number, decDeg: number, fovDeg: number) => Promise<{ center: [number, number], fov: number }>
   viewerState: (id: string) => { center: [number, number], fov: number }
   viewerTitles: () => string[]
+  rootEntryNames: () => Promise<string[]>
 }
 
 declare global {
@@ -73,6 +75,13 @@ export function installTestingHooks(app: JupyterFrontEnd, notebooks: INotebookTr
     },
     viewerState: id => readViewerState(id),
     viewerTitles: () => Array.from(app.shell.widgets('main')).map(widget => widget.title.label),
+    rootEntryNames: async () => {
+      const root = await app.serviceManager.contents.get('', { content: true })
+      if (root.type !== 'directory' || !Array.isArray(root.content)) {
+        throw new Error('Contents root is not a directory.')
+      }
+      return root.content.map((entry: Contents.IModel) => entry.name)
+    },
   }
 }
 
