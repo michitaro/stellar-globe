@@ -35,6 +35,7 @@ export class FitsTextureProvider extends tile.AsyncTextureProvider {
     const meta: Meta = await (await fetch(`${this.url}/meta.json`)).json()
     this.meta = meta
     this.tract = tile.Tract.fromFitsHeader(meta.wcs, meta.tractOptions)
+    this.tractsUpdated()
     this.nFilters = meta.filters.length
     assert(this.nFilters <= 4, `nFilters <= 4: (${this.nFilters})`)
     this.onload && this.onload()

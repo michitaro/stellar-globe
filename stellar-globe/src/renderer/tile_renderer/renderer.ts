@@ -1,11 +1,11 @@
-import { mat3, vec3 } from 'gl-matrix'
+import { mat3 } from 'gl-matrix'
 import { Cache } from '~/lib/cache'
 import { AttribList, Program, utils as glUtils } from '~/lib/gl-wrapper'
 import { TextureProvider, TileTexture } from './texture_provider'
 import { TileId, Tract } from './tract'
+import { TractSpatialIndex } from './tract_spatial_index'
 
 import { Globe } from '~/globe'
-import { square } from '~/utils/math'
 import { View } from '~/view'
 import shaderFrag from './frag.glsl?raw'
 import shaderVert from './vert.glsl?raw'
@@ -22,6 +22,8 @@ export class Renderer<TP extends TextureProvider = TextureProvider> {
   integerLevel = false
   alreadyReleased = false
   color: V4 = [1, 1, 1, 1]
+  private tractIndex?: TractSpatialIndex
+  private tractIndexRevision = -1
 
   constructor(
     readonly globe: Globe,
@@ -63,15 +65,22 @@ export class Renderer<TP extends TextureProvider = TextureProvider> {
     })
   }
 
-  // OPTIMIZE
   private visibleTracts(view: View, cb: (tract: Tract) => void) {
-    const fovCenter = view.mvp.direction
-    const arc = view.mvp.arc
-    this.textureProvider.walkTracts((tract) => {
-      if (vec3.sqrDist(fovCenter, tract.refPoint) <= square(arc + tract.fov)) {
-        cb(tract)
-      }
+    this.getTractIndex().visible(view.mvp.direction, view.mvp.arc, cb)
+  }
+
+  private getTractIndex() {
+    if (this.tractIndex && this.tractIndexRevision === this.textureProvider.tractRevision) {
+      return this.tractIndex
+    }
+
+    const tracts: Tract[] = []
+    this.textureProvider.walkTracts(tract => {
+      tracts.push(tract)
     })
+    this.tractIndex = new TractSpatialIndex(tracts)
+    this.tractIndexRevision = this.textureProvider.tractRevision
+    return this.tractIndex
   }
 
   /** @internal */

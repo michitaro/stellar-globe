@@ -30,6 +30,15 @@ export abstract class TextureProvider {
   abstract requestTile(id: TileId, options: { immediate: boolean, fadeIn: boolean }): void
   abstract flushQueue(center: V3): void
 
+  private _tractRevision = 0
+  public get tractRevision() {
+    return this._tractRevision
+  }
+
+  protected tractsUpdated() {
+    this._tractRevision++
+  }
+
   private _revision = 0
   public get revision() {
     return this._revision

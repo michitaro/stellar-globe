@@ -286,6 +286,7 @@ export class SspTileTextureProvider extends AsyncTextureProvider {
       this.tractName.set(tract, name)
       this.tracts.push(tract)
     }
+    this.tractsUpdated()
     this.updateImageCacheSize()
     this.globe.requestRefresh()
   }
