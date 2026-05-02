@@ -93,15 +93,8 @@ The build requires the following environment:
 
 This repository blocks external dependencies that were published less than **30 days** ago.
 Each npm project sets `min-release-age=30` in `.npmrc` so `npm install` avoids too-new versions during dependency resolution.
-Local `file:` and `link:` dependencies are excluded from the policy.
-
-Check the current repository state with:
-
-```bash
-python3 ./tools/check_dependency_freshness.py
-```
-
-The same check also runs from `build.bash` and GitHub Actions.
+Python projects use `exclude-newer = "30 days"` in their `uv` configuration so the same restriction applies during `uv lock` and `uv sync`.
+Local `file:` / `link:` dependencies and path/editable dependencies are excluded from the policy.
 
 ### Build Script Details
 
@@ -157,7 +150,7 @@ cd ../react-draggable-dialog && npm install
 cd ../app && npm install
 ```
 
-If you only want to run the freshness policy, execute `python3 ./tools/check_dependency_freshness.py` from the repository root.
+The freshness policy is applied automatically during dependency resolution with `npm install`, `uv lock`, and `uv sync`.
 
 ### GitLab review app CI
 

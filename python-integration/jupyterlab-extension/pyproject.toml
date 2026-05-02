@@ -83,6 +83,7 @@ before-build-python = ["jlpm clean:all"]
 ignore = ["W002"]
 
 [tool.uv]
+exclude-newer = "30 days"
 dev-dependencies = [
     "jupyterlab>=4.0.0,<5",
     "build",

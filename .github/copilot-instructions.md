@@ -4,12 +4,11 @@ Copilotが作業時に遵守すべきルール。このファイルは常にコ�
 
 ## 作業時留意点
 
-- こまめにgit commitする（`copilot`の中身も含む）
+- こまめにgit commitする
 - チェックリスト形式の依頼は、その項目の完了時にチェックを入れる
-- コードスニペット実行時はファイルに保存して実行（`./copilot`内に保存）
+- コードスニペット実行時は session workspace の `files/` など、リポジトリ外の一時領域に保存して実行
 - コマンド内で`>`は避ける（自動許可されないため）
-- 指示者への確認は `./copilot/ask_for_instructions` を使用
-  - 作業が進められない場合や各項目完了時のレビュー依頼に活用
+- 指示者への確認が必要な場合は、GitLab 上で確認を依頼する
 - fish shellを使用。bash特有の構文(`read/do/while`など)は不可。
   - コマンド置換 `(command)` は使用禁止（auto approvalが効かないため）
   - 代わりに変数への代入を使用: `set var (command); echo $var`
