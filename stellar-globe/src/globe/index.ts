@@ -113,6 +113,29 @@ export class Globe {
     return this._visualEffect
   }
 
+  /**
+   * 現在の描画結果をビジュアルエフェクト用スナップショットとして保存する。
+   * `TransitionEffect` のような snapshot ベースのエフェクトで使用する。
+   */
+  captureVisualEffectSnapshot() {
+    if (!this.visualEffectRenderer) {
+      return false
+    }
+    this.visualEffectRenderer.captureSnapshot()
+    return true
+  }
+
+  /**
+   * ビジュアルエフェクト用スナップショットを破棄する。
+   */
+  clearVisualEffectSnapshot() {
+    if (!this.visualEffectRenderer) {
+      return false
+    }
+    this.visualEffectRenderer.clearSnapshot()
+    return true
+  }
+
   private _alreadyReleased = false
 
   get alreadyReleased() {

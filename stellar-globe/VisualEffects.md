@@ -8,9 +8,9 @@ You can apply post-processing effects to rendering by using classes that extend 
 
 | Class Name | Description |
 |------------|-------------|
-| `GlowEffect` | Glow effect that makes bright areas shine |
+| `GlowEffect` | Highlights bright stars, white markers, and other high-luminance areas with a soft glow |
 | `GaussianBlurEffect` | Gaussian blur effect |
-| `BloomEffect` | Bloom effect combining original image with blur |
+| `BloomEffect` | Adds a broader glow around high-luminance areas for a stronger emission look |
 | `FrostedGlassEffect` | Frosted glass blur effect |
 | `PassThroughEffect` | No effect pass-through (for debugging) |
 
@@ -80,9 +80,11 @@ afterimage.blend = 0.7;       // Afterimage blend ratio
 afterimage.blurAmount = 0.0;  // Blur amount applied to afterimage
 ```
 
+`GlowEffect` and `BloomEffect` are post-process effects for emphasizing bright pixels. They are not edge detectors and are not meant to wash out the entire frame. In astronomical scenes they work best on stars, white markers, and other high-luminance features. If `threshold` is too low, the whole image can start to look broken because the background is being lifted as well.
+
 ### Animation-Enabled Effects
 
-Some effects (`RippleEffect`, `FrostedGlassEffect`) support animation.
+Some effects (`RippleEffect`, `FrostedGlassEffect`) implement `update()`, and `WarpEffect` also needs continuous redraws while `startWarp()` / `endWarp()` is running.
 
 ```typescript
 const ripple = new RippleEffect();
@@ -99,17 +101,63 @@ function animate() {
 animate();
 ```
 
-### Transition Effect
-
-You can achieve transitions between two images.
+For `WarpEffect`, keep calling `globe.requestRefresh()` while the warp strength animation is in progress.
 
 ```typescript
+const warp = new WarpEffect();
+globe.setVisualEffect(warp);
+
+let active = true;
+function redrawLoop() {
+  if (!active) return;
+  globe.requestRefresh();
+  requestAnimationFrame(redrawLoop);
+}
+
+redrawLoop();
+await warp.startWarp(1500);
+await warp.endWarp(800);
+active = false;
+```
+
+### Transition Effect
+
+You can create a transition between two frames in four steps.
+
+1. Enable `TransitionEffect` with `globe.setVisualEffect()`
+2. Save the current frame with `globe.captureVisualEffectSnapshot()`
+3. Change the camera or layers to the destination state
+4. Animate `progress` from `0` to `1` while calling `globe.requestRefresh()`
+
+```typescript
+import { Globe, TransitionEffect, SkyCoord, deg2rad } from '@stellar-globe/stellar-globe';
+
 const transition = new TransitionEffect();
 transition.type = 'swirl';  // 'dissolve' | 'wipe' | 'swirl' | 'zoom' | 'slide'
-transition.progress = 0.5;  // 0: snapshot, 1: current frame
+transition.progress = 0.0;  // 0: snapshot, 1: current frame
 transition.swirlStrength = 3.0;  // Swirl intensity (for swirl type)
 
 globe.setVisualEffect(transition);
+globe.captureVisualEffectSnapshot();
+
+globe.camera.jumpTo(
+  { fovy: deg2rad(20) },
+  { coord: SkyCoord.fromDeg(10.6847083, 41.26875), duration: 0 },
+);
+
+const duration = 1500;
+const startTime = performance.now();
+function animateTransition() {
+  const elapsed = performance.now() - startTime;
+  transition.progress = Math.min(elapsed / duration, 1);
+  globe.requestRefresh();
+  if (transition.progress < 1) {
+    requestAnimationFrame(animateTransition);
+  } else {
+    globe.clearVisualEffectSnapshot();
+  }
+}
+animateTransition();
 ```
 
 ### Warp Effect Animation
@@ -248,5 +296,5 @@ class MyTransitionEffect extends VisualEffectParams {
 | `7` | Bloom |
 | `8` | Afterimage |
 | `9` | Transition |
-| `W` | Start/end warp effect |
-| `T` | Transition demo |
+| `W` | Start/end warp effect (with continuous redraw during animation) |
+| `T` | Capture the current frame and transition to the next viewpoint |

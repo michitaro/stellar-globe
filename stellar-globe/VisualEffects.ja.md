@@ -8,9 +8,9 @@
 
 | クラス名 | 説明 |
 |---------|------|
-| `GlowEffect` | 明るい部分を光らせるグロー効果 |
+| `GlowEffect` | 明るい星や白いマーカーなど、高輝度部分の周囲をにじませて強調する |
 | `GaussianBlurEffect` | ガウシアンぼかし効果 |
-| `BloomEffect` | 元画像とブラーを合成するブルーム効果 |
+| `BloomEffect` | Glow より広めに高輝度部分をにじませ、発光感を足す |
 | `FrostedGlassEffect` | すりガラス越しに見るようなぼかし効果 |
 | `PassThroughEffect` | 何も変更しないパススルー（デバッグ用） |
 
@@ -80,9 +80,11 @@ afterimage.blend = 0.7;       // 残像のブレンド比率
 afterimage.blurAmount = 0.0;  // 残像に適用するブラー量
 ```
 
+`GlowEffect` と `BloomEffect` は「高輝度部分だけを強調する」後処理です。輪郭抽出や全画面の白飛びを狙うものではありません。天体画像では星像、白いマーカー、明るい銀河中心などを目立たせたい場面で使います。`threshold` を下げすぎると背景まで持ち上がって壊れたように見えやすいので注意してください。
+
 ### アニメーション対応エフェクト
 
-一部のエフェクト（`RippleEffect`, `FrostedGlassEffect`）はアニメーションに対応しています。
+一部のエフェクト（`RippleEffect`, `FrostedGlassEffect`）は `update()` を実装しており、`WarpEffect` は `startWarp()` / `endWarp()` の実行中に継続的な再描画が必要です。
 
 ```typescript
 const ripple = new RippleEffect();
@@ -99,17 +101,63 @@ function animate() {
 animate();
 ```
 
-### トランジション効果
-
-2つの画像間のトランジションを実現できます。
+`WarpEffect` を使う場合は、強度アニメーション中も `globe.requestRefresh()` を継続して呼んでください。
 
 ```typescript
+const warp = new WarpEffect();
+globe.setVisualEffect(warp);
+
+let active = true;
+function redrawLoop() {
+  if (!active) return;
+  globe.requestRefresh();
+  requestAnimationFrame(redrawLoop);
+}
+
+redrawLoop();
+await warp.startWarp(1500);
+await warp.endWarp(800);
+active = false;
+```
+
+### トランジション効果
+
+2つの画像間のトランジションを実現できます。使い方は次の4段階です。
+
+1. `TransitionEffect` を `globe.setVisualEffect()` で有効化する
+2. 現在の画面を `globe.captureVisualEffectSnapshot()` で保存する
+3. カメラやレイヤーを変更して「遷移後」の状態を作る
+4. `progress` を `0` から `1` に進めながら `globe.requestRefresh()` する
+
+```typescript
+import { Globe, TransitionEffect, SkyCoord, deg2rad } from '@stellar-globe/stellar-globe';
+
 const transition = new TransitionEffect();
 transition.type = 'swirl';  // 'dissolve' | 'wipe' | 'swirl' | 'zoom' | 'slide'
-transition.progress = 0.5;  // 0: スナップショット, 1: 現在のフレーム
+transition.progress = 0.0;  // 0: スナップショット, 1: 現在のフレーム
 transition.swirlStrength = 3.0;  // 渦巻きの強度（swirlタイプ用）
 
 globe.setVisualEffect(transition);
+globe.captureVisualEffectSnapshot();
+
+globe.camera.jumpTo(
+  { fovy: deg2rad(20) },
+  { coord: SkyCoord.fromDeg(10.6847083, 41.26875), duration: 0 },
+);
+
+const duration = 1500;
+const startTime = performance.now();
+function animateTransition() {
+  const elapsed = performance.now() - startTime;
+  transition.progress = Math.min(elapsed / duration, 1);
+  globe.requestRefresh();
+  if (transition.progress < 1) {
+    requestAnimationFrame(animateTransition);
+  } else {
+    globe.clearVisualEffectSnapshot();
+  }
+}
+animateTransition();
 ```
 
 ### ワープ効果のアニメーション
@@ -248,5 +296,5 @@ class MyTransitionEffect extends VisualEffectParams {
 | `7` | ブルーム |
 | `8` | 残像 |
 | `9` | トランジション |
-| `W` | ワープ効果の開始/終了 |
-| `T` | トランジションデモ |
+| `W` | ワープ効果の開始/終了（アニメーション中は連続再描画） |
+| `T` | 現在の画面を保存し、次の視点へトランジション |
