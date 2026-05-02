@@ -26,6 +26,8 @@ coverage
 # Production
 build
 /dist
+/.generated-app-config
+/src/app/env/generated.json
 
 # Miscellaneous
 *.local

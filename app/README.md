@@ -79,13 +79,12 @@ On targets where CAS is enabled, `app` can send SQL queries to CAS through `/dat
 
 ### Enabling the Feature
 
-The `.env` files only select `VITE_target`. CAS enablement, release lists, and sample queries are defined under `src/app/env/` for each target.
+Build-time configuration is written in `TypeScript` in `app/config/app.config.ts` and materialized into `src/app/env/generated.json` before each build. By default, it uses `app/config/examples/public.ts`.
 
-* `app/vite/env/.env`: `VITE_target=public`
-* `app/vite/env/.env.internal`: `VITE_target=internal`
-* `app/vite/env/.env.u2k`: `VITE_target=u2k`
+* Use the default config: `npm run build-standalone`
+* Use a different config file: `APP_CONFIG=./config/examples/internal.ts npm run build-standalone`
 
-To add another deployment target, add the corresponding `VITE_target` value and a target definition under `src/app/env/`.
+Structured values such as `sampleQueries` can reference SQL files with the `sqlFile()` helper. To add another deployment target, add a new config file under `app/config/`.
 
 ## Type Checking Mechanism for Python Integration
 

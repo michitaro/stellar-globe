@@ -18,6 +18,10 @@ vi.mock('../../env', () => ({
       sampleQueries: [],
       schemaBrowserUrl: 'https://example.invalid/schema_browser3/',
     },
+    tractTileLayers: {
+      includeInternalLayers: false,
+      defaultVisibleDatasets: ['PDR3 Wide', 'PDR3 DUD'],
+    },
   }),
   findCasRelease: (releaseName?: string) => [{ name: 'pdr3' }, { name: 'pdr2' }].find(release => release.name === releaseName) ?? { name: 'pdr3' },
 }))

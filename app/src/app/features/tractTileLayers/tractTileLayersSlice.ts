@@ -25,14 +25,7 @@ export const defaultFilters = ['i', 'r', 'g']
 
 
 function layerVisible(layerName: string) {
-  switch (env().target) {
-    case 'u2k':
-      return (readHashState().datasets ?? ['U2K V2']).includes(layerName)
-    case 'internal':
-      return (readHashState().datasets ?? ['s23b Wide', 's23b Deep']).includes(layerName)
-    default:
-      return (readHashState().datasets ?? ['PDR3 Wide', 'PDR3 DUD']).includes(layerName)
-  }
+  return (readHashState().datasets ?? env().tractTileLayers.defaultVisibleDatasets).includes(layerName)
 }
 
 
@@ -50,7 +43,7 @@ function initialState(): State {
     layerDef('PDR3 Wide', "//hscmap.mtk.nao.ac.jp/hscMap4/data/pdr3_wide"),
     layerDef('PDR3 DUD', "//hscmap.mtk.nao.ac.jp/hscMap4/data/pdr3_dud"),
   ]
-  if (env().target !== 'public') {
+  if (env().tractTileLayers.includeInternalLayers) {
     layers.unshift(
       layerDef('s23b Wide', "../data/s23b_wide"),
       layerDef('s23b Deep', "../data/s23b_deep"),

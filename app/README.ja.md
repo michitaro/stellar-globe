@@ -79,13 +79,12 @@ CAS が有効な target では、`app` から `/datasearch/skymaps_api/` 経由�
 
 ### 有効化方法
 
-`.env` ファイルでは `VITE_target` だけを設定し、target ごとの CAS 有効化・release 一覧・sample query は `src/app/env/` 以下で定義します。
+build 時の設定は `app/config/app.config.ts` を `TypeScript` で記述し、build 前に `src/app/env/generated.json` へ自動生成します。既定では `app/config/examples/public.ts` を使います。
 
-* `app/vite/env/.env`: `VITE_target=public`
-* `app/vite/env/.env.internal`: `VITE_target=internal`
-* `app/vite/env/.env.u2k`: `VITE_target=u2k`
+* 既定の設定を使う: `npm run build-standalone`
+* 別の設定ファイルを使う: `APP_CONFIG=./config/examples/internal.ts npm run build-standalone`
 
-別の配備先を追加する場合は、対応する `VITE_target` と `src/app/env/` の target 定義を追加してください。
+`sampleQueries` のような構造化データは `sqlFile()` helper で SQL ファイル参照として書けます。別の配備先を追加する場合は `app/config/` 以下に新しい設定ファイルを追加してください。
 
 ## Python連携のための型チェック機構
 
