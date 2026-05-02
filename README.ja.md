@@ -53,7 +53,7 @@ Webブラウザ上で動作し、大規模な天体画像データを高速か�
   * 以下のサブコンポーネントを含みます。
     * `python`: Pythonクライアントライブラリ。
     * `jupyterlab-extension`: JupyterLab用の拡張機能。
-    * `hscmap-server`: 独自のHTTPサーバー。
+    * `hscmap-server`: コマンドラインから指定portでStellar Globeを配信し、PythonクライアントとWebSocketで接続するHTTPサーバー。
 
 ## 依存関係図
 
@@ -71,6 +71,7 @@ graph TD
 Pythonから `app` のアプリケーションを操作することができます。
 これにより、データ解析環境であるJupyterLabなどと連携し、解析結果をビューワー上に可視化したり、ビューワーの状態をPythonから制御したりすることが可能です。
 `app` はJupyterLabのタブ内で動作させるか、または独自のHTTPサーバーを用いて動作させることができます。
+`python-integration/hscmap-server` は後者のためのパッケージで、`hscmap-server --port 8000` のように起動すると指定portでビューワーを配信します。
 
 ## ビルド手順
 
@@ -86,11 +87,12 @@ bash ./build.bash
 
 * **Node.js**: バージョン 18 以降を推奨
 * **Python**: バージョン 3.12 以降（`python-integration` のビルドに必要）
-* **npm/yarn**: Node.js パッケージマネージャー
+* **npm**: バージョン 11 以降を推奨（`min-release-age` による依存解決時の鮮度制御に使用）
 
 ### 依存パッケージの鮮度ポリシー
 
 このリポジトリでは、公開から **30日未満** の外部依存パッケージを使用しない方針を導入しています。
+各npm projectの `.npmrc` で `min-release-age=30` を設定し、`npm install` の依存解決時点で新しすぎるversionを選ばないようにしています。
 ローカルの `file:` / `link:` 依存は対象外です。
 
 確認コマンド:

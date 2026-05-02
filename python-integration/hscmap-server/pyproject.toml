@@ -19,21 +19,32 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
 ]
-dependencies = []
+dependencies = [
+    "starlette>=0.44.0,<0.50.0",
+    "uvicorn[standard]>=0.30.0,<0.46.0",
+]
+
+[project.scripts]
+hscmap-server = "hscmapserver:main"
 
 [project.optional-dependencies]
 dev = [
     "pytest",
     "pytest-cov",
     "pytest-watch",
+    "httpx<0.28",
 ]
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
-[tool.uv]
-dev-dependencies = [
+[tool.setuptools.package-data]
+hscmapserver = ["static/dist/*", "static/dist/**/*"]
+
+[dependency-groups]
+dev = [
     "pytest",
     "pytest-cov",
     "pytest-watch",
+    "httpx<0.28",
 ]
