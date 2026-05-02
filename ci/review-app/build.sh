@@ -4,10 +4,14 @@ set -eu
 
 script_dir=$(CDPATH= cd -- "$(dirname "$0")" && pwd)
 . "$script_dir/common.sh"
+repo_root=$(CDPATH= cd -- "$script_dir/../.." && pwd)
 
 base_path=$(review_app_base_path)
 output_dir="dist$base_path"
 standalone_output_dir="dist$(review_app_standalone_path)"
+stellar_globe_demo_output_dir="dist$(review_app_stellar_globe_demo_path)"
+react_stellar_globe_demo_output_dir="dist$(review_app_react_stellar_globe_demo_path)"
+react_draggable_dialog_demo_output_dir="dist$(review_app_react_draggable_dialog_demo_path)"
 jupyterlite_output_dir="dist$(review_app_jupyterlite_path)"
 jupyterlite_e2e_report_output_dir="dist$(review_app_jupyterlite_e2e_report_path)"
 app_dist_dir="app/dist/standalone"
@@ -16,6 +20,17 @@ jupyterlite_e2e_project_dir="python-integration/jupyterlite"
 jupyterlite_e2e_report_dir="$jupyterlite_e2e_project_dir/playwright-report"
 jupyterlite_e2e_port="${JUPYTERLITE_E2E_PORT:-38000}"
 landing_page="$script_dir/landing-page.html"
+
+build_demo() {
+  package_dir=$1
+  npm_script=$2
+  output_dir=$3
+
+  (
+    cd "$package_dir"
+    npm run "$npm_script" -- --emptyOutDir --outDir "$repo_root/$output_dir"
+  )
+}
 
 JUPYTERLITE_BASE_URL="$(review_app_jupyterlite_path)" bash ./build.bash
 
@@ -52,9 +67,19 @@ if [ ! -f "$jupyterlite_e2e_report_dir/index.html" ]; then
 fi
 
 rm -rf dist
-mkdir -p "$output_dir" "$standalone_output_dir" "$jupyterlite_output_dir" "$jupyterlite_e2e_report_output_dir"
+mkdir -p \
+  "$output_dir" \
+  "$standalone_output_dir" \
+  "$stellar_globe_demo_output_dir" \
+  "$react_stellar_globe_demo_output_dir" \
+  "$react_draggable_dialog_demo_output_dir" \
+  "$jupyterlite_output_dir" \
+  "$jupyterlite_e2e_report_output_dir"
 cp "$landing_page" "${output_dir}index.html"
 cp -R "$app_dist_dir"/. "$standalone_output_dir"/
+build_demo stellar-globe build:demo "$stellar_globe_demo_output_dir"
+build_demo react-stellar-globe build:examples "$react_stellar_globe_demo_output_dir"
+build_demo react-draggable-dialog build:example "$react_draggable_dialog_demo_output_dir"
 cp -R "$jupyterlite_dist_dir"/. "$jupyterlite_output_dir"/
 python3 "$script_dir/filter-jupyterlite-review-app.py" "$jupyterlite_output_dir"
 cp -R "$jupyterlite_e2e_report_dir"/. "$jupyterlite_e2e_report_output_dir"/

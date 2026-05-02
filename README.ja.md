@@ -154,13 +154,13 @@ cd ../app && npm install
 
 ### GitLab review app CI
 
-GitLab CI では branch push ごとに review app 用 pipeline を動かし、review app のルートには成果物へのリンクをまとめたトップページを配置します。現在は `app` の standalone build を `standalone/`、`python-integration/jupyterlite` の静的出力を `jupyterlite/`、JupyterLite E2E の Playwright HTML report を `jupyterlite-e2e/` 配下へ配備します。
+GitLab CI では branch push ごとに review app 用 pipeline を動かし、review app のルートには成果物へのリンクをまとめたトップページを配置します。現在は `app` の standalone build を `standalone/`、`stellar-globe/demo` の静的 build を `stellar-globe/`、`react-stellar-globe/examples` の静的 build を `react-stellar-globe/`、`react-draggable-dialog/example` の静的 build を `react-draggable-dialog/`、`python-integration/jupyterlite` の静的出力を `jupyterlite/`、JupyterLite E2E の Playwright HTML report を `jupyterlite-e2e/` 配下へ配備します。
 
 - CI 定義: `.gitlab-ci.yml`
 - review app 用スクリプト: `ci/review-app/`
 - microk8s / Gateway API 用の共通 helper: `.github/skills/gitlab-microk8s-review-app-ci/bin/`
 
-最低限、cluster に接続できる `REVIEW_APP_KUBECONFIG_B64` を GitLab CI variable に設定してください。必要に応じて `REVIEW_APP_GATEWAY_*`、`REVIEW_APP_REGISTRY_*`、`REVIEW_APP_BASE_URL` を上書きできます。既定では review app は `/review-apps/<project-name>/<branch-slug>/` にトップページを置き、各成果物は `standalone/`、`jupyterlite/`、`jupyterlite-e2e/` に配備されます。さらに build job では `python-integration/jupyterlite/test-results/` と `playwright-report/` も CI artifact として保持するため、screenshot / video / trace を review app を開かずに取得することもできます。
+最低限、cluster に接続できる `REVIEW_APP_KUBECONFIG_B64` を GitLab CI variable に設定してください。必要に応じて `REVIEW_APP_GATEWAY_*`、`REVIEW_APP_REGISTRY_*`、`REVIEW_APP_BASE_URL` を上書きできます。既定では review app は `/review-apps/<project-name>/<branch-slug>/` にトップページを置き、各成果物は `standalone/`、`stellar-globe/`、`react-stellar-globe/`、`react-draggable-dialog/`、`jupyterlite/`、`jupyterlite-e2e/` に配備されます。さらに build job では `python-integration/jupyterlite/test-results/` と `playwright-report/` も CI artifact として保持するため、screenshot / video / trace を review app を開かずに取得することもできます。
 
 ## 本家リポジトリとミラー
 

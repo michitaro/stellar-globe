@@ -27,6 +27,18 @@ review_app_standalone_path() {
   printf '%sstandalone/\n' "$(review_app_base_path)"
 }
 
+review_app_stellar_globe_demo_path() {
+  printf '%sstellar-globe/\n' "$(review_app_base_path)"
+}
+
+review_app_react_stellar_globe_demo_path() {
+  printf '%sreact-stellar-globe/\n' "$(review_app_base_path)"
+}
+
+review_app_react_draggable_dialog_demo_path() {
+  printf '%sreact-draggable-dialog/\n' "$(review_app_base_path)"
+}
+
 review_app_jupyterlite_path() {
   printf '%sjupyterlite/\n' "$(review_app_base_path)"
 }
