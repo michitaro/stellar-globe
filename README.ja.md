@@ -93,15 +93,8 @@ bash ./build.bash
 
 このリポジトリでは、公開から **30日未満** の外部依存パッケージを使用しない方針を導入しています。
 各npm projectの `.npmrc` で `min-release-age=30` を設定し、`npm install` の依存解決時点で新しすぎるversionを選ばないようにしています。
-ローカルの `file:` / `link:` 依存は対象外です。
-
-確認コマンド:
-
-```bash
-python3 ./tools/check_dependency_freshness.py
-```
-
-`build.bash` と GitHub Actions からも同じチェックが実行されます。
+Python project では各 `pyproject.toml` の `uv` 設定で `exclude-newer = "30 days"` を指定し、`uv lock` / `uv sync` の依存解決時に同じ制約を適用しています。
+ローカルの `file:` / `link:` 依存や path/editable 依存は対象外です。
 
 ### ビルドスクリプトの内容
 
@@ -157,7 +150,7 @@ cd ../react-draggable-dialog && npm install
 cd ../app && npm install
 ```
 
-鮮度チェックだけを個別に確認したい場合は、リポジトリルートで `python3 ./tools/check_dependency_freshness.py` を実行してください。
+鮮度ポリシーは `npm install`、`uv lock`、`uv sync` の依存解決時に自動で適用されます。
 
 ### GitLab review app CI
 

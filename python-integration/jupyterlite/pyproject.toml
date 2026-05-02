@@ -19,6 +19,7 @@ classifiers = [
 dependencies = []
 
 [tool.uv]
+exclude-newer = "30 days"
 dev-dependencies = [
     "jupyterlab",
     "jupyterlite-core",

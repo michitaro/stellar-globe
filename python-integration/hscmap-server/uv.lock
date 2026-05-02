@@ -8,6 +8,10 @@ resolution-markers = [
     "python_full_version < '3.8.1'",
 ]
 
+[options]
+exclude-newer = "2026-04-02T17:27:40.944965877Z"
+exclude-newer-span = "P30D"
+
 [[package]]
 name = "anyio"
 version = "4.5.2"
