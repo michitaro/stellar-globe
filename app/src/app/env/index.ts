@@ -1,24 +1,10 @@
-import { internalEnv } from './internal'
-import { legacyArchiveEnv } from './legacyArchive'
-import { publicEnv } from './public'
+import generatedEnv from './generated.json'
 import type { AppEnv, AppTarget, CasRelease } from './types'
-import { u2kEnv } from './u2k'
 
-const envSet: Record<AppTarget, AppEnv> = {
-  public: publicEnv,
-  u2k: u2kEnv,
-  'legacy-archive': legacyArchiveEnv,
-  internal: internalEnv,
-}
+const appEnv: AppEnv = generatedEnv
 
 export function env(): AppEnv {
-  const target = String(import.meta.env.VITE_target) as AppTarget
-
-  if (!(target in envSet)) {
-    throw new Error(`Invalid env.target: ${target}`)
-  }
-
-  return envSet[target]
+  return appEnv
 }
 
 export function findCasRelease(releaseName?: string): CasRelease | undefined {

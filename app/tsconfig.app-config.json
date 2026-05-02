@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "allowSyntheticDefaultImports": true,
+    "outDir": "./.generated-app-config",
+    "rootDir": ".",
+    "noEmitOnError": true
+  },
+  "include": [
+    "config/**/*.ts"
+  ]
+}
