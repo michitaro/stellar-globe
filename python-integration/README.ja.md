@@ -60,9 +60,9 @@ JupyterLabは拡張機能によって機能を追加できるプラグインア�
 
 ### `hscmap-server`
 
-JupyterLabを使用せずに、単独のWebサーバーとしてhscMapを配信・制御するためのサーバーアプリケーションです。
+JupyterLabを使用せずに、単独のWebサーバーとしてhscMapを配信・制御するためのサーバーアプリケーションです。`hscmap-server --port 8000` のようにコマンドラインから起動し、指定したportでStellar Globeのフロントエンドを配信します。
 
-Jupyter環境を使わずにhscMapを利用したい場合や、独自のWebアプリケーションに組み込む場合に使用します。
+PythonクライアントとはWebSocketで接続し、Python側の操作コマンドとブラウザ側の状態更新を中継します。Jupyter環境を使わずにhscMapを利用したい場合や、独自のWebアプリケーションに組み込む場合に使用します。
 
 ## 使用方法
 

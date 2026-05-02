@@ -53,7 +53,7 @@ The roles and dependencies of each component are as follows:
   * Includes the following sub-components:
     * `python`: Python client library.
     * `jupyterlab-extension`: JupyterLab extension.
-    * `hscmap-server`: Custom HTTP server.
+    * `hscmap-server`: HTTP server that serves Stellar Globe on a command-line selected port and connects to the Python client over WebSocket.
 
 ## Dependency Graph
 
@@ -71,6 +71,7 @@ graph TD
 The `app` application can be controlled from Python.
 This enables integration with data analysis environments like JupyterLab, allowing visualization of analysis results in the viewer and control of viewer state from Python.
 The `app` can run within a JupyterLab tab or using a custom HTTP server.
+`python-integration/hscmap-server` provides the latter: start it with a command such as `hscmap-server --port 8000` to serve the viewer on the selected port.
 
 ## Build Instructions
 
@@ -86,11 +87,12 @@ The build requires the following environment:
 
 * **Node.js**: Version 18 or later recommended
 * **Python**: Version 3.12 or later (required for building `python-integration`)
-* **npm/yarn**: Node.js package manager
+* **npm**: Version 11 or later recommended (used for dependency-resolution freshness control via `min-release-age`)
 
 ### Dependency freshness policy
 
 This repository blocks external dependencies that were published less than **30 days** ago.
+Each npm project sets `min-release-age=30` in `.npmrc` so `npm install` avoids too-new versions during dependency resolution.
 Local `file:` and `link:` dependencies are excluded from the policy.
 
 Check the current repository state with:

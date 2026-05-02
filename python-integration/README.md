@@ -60,9 +60,9 @@ Extensions mainly consist of the following elements:
 
 ### `hscmap-server`
 
-A server application for distributing and controlling hscMap as a standalone web server without using JupyterLab.
+A server application for distributing and controlling hscMap as a standalone web server without using JupyterLab. Start it from the command line, for example with `hscmap-server --port 8000`, to serve the Stellar Globe frontend on the requested port.
 
-Used when you want to use hscMap without a Jupyter environment or embed it in your own web application.
+It connects to the Python client over WebSocket and relays Python commands and browser state updates. Use it when you want to use hscMap without a Jupyter environment or embed it in your own web application.
 
 ## Usage
 

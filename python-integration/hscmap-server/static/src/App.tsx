@@ -11,14 +11,18 @@ function useMakeContext(appRef: React.MutableRefObject<AppHandle>) {
   const ctx = useRef<{
     stateManager: StateManager<unknown>,
     ws: WebSocket,
-  }>(null!)
+  } | null>(null)
 
   useEffect(() => {
     const initialState = appRef.current.getState()
     const originalHash = location.hash
     const commId = location.hash.slice(1)
+    if (!commId) {
+      return undefined
+    }
     location.hash = ''
-    const ws = new WebSocket(`ws://localhost:8000/comms/${commId}`)
+    const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:'
+    const ws = new WebSocket(`${wsProtocol}//${location.host}/comms/${commId}`)
     const stateManager = new StateManager(initialState)
     ctx.current = { stateManager, ws }
     const handleOpenMessage = (e: MessageEvent) => {
@@ -59,6 +63,9 @@ function useMakeContext(appRef: React.MutableRefObject<AppHandle>) {
   }, [appRef])
 
   const onStoreChange: OnStoreChange = e => {
+    if (ctx.current === null || ctx.current.ws.readyState !== WebSocket.OPEN) {
+      return
+    }
     const { stateManager, ws } = ctx.current
     const patch = stateManager.pushState(e.state)
     const msg: FromApp['StoreChanged'] = {

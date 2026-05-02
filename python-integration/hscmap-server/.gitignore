@@ -2,3 +2,4 @@
 *.egg-info
 *.pyc
 __pycache__
+/src/hscmapserver/static/dist/
