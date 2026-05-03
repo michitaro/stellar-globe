@@ -75,6 +75,7 @@ export type DialogProps = {
   rememberPosition?: boolean
   sizeHint?: CSSSize
   minmaxSize?: CSSSizeLimit
+  fitViewportHeight?: boolean
 }
 
 
@@ -171,6 +172,7 @@ function DnDContent({
   rememberPosition = false,
   resizable: resizableProp = false,
   minmaxSize,
+  fitViewportHeight = true,
   autoResizeTrigger,
 }: DialogProps & {
   autoResizeTrigger: unknown,
@@ -258,10 +260,10 @@ function DnDContent({
     return {
       ...sizeHint,
       ...overwrite,
-      maxHeight: maxHeight - 16,
+      ...(fitViewportHeight ? { maxHeight: maxHeight - 16 } : {}),
       ...minmaxSize,
     }
-  }, [maxHeight, minmaxSize, size, sizeHint])
+  }, [fitViewportHeight, maxHeight, minmaxSize, size, sizeHint])
 
   const onExited = useCallback(() => {
     if (!rememberPosition) {
