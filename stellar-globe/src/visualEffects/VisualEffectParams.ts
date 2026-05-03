@@ -1,6 +1,10 @@
 import { Program } from '../lib/gl-wrapper'
 
 
+export type RenderTargetInfo = {
+  texelSize: [number, number]
+}
+
 /**
  * ビジュアルエフェクトのパラメータを定義する抽象クラス
  * 各エフェクトはこのクラスを継承して実装する
@@ -12,6 +16,8 @@ export abstract class VisualEffectParams {
   abstract fragShader(): string
   /** シェーダーのuniform変数を設定 */
   abstract setUniforms(program: Program): void
+  /** レンダリング先テクスチャの情報を更新 */
+  setRenderTargetInfo?(_info: RenderTargetInfo): void
   /** エフェクトの更新処理（アニメーション用） */
   update?(deltaTime: number): void
 }

@@ -1,5 +1,5 @@
 import { Program } from '../lib/gl-wrapper'
-import { VisualEffectParams } from './VisualEffectParams'
+import { RenderTargetInfo, VisualEffectParams } from './VisualEffectParams'
 
 
 /**
@@ -15,61 +15,63 @@ export class GlowEffect extends VisualEffectParams {
   radius = 3.0
   /** アスペクト比（縦横比補正用） */
   aspectRatio = 1.0
+  /** オフスクリーンテクスチャ上の 1 ピクセル幅 */
+  texelSize: [number, number] = [1 / 1024, 1 / 1024]
 
   fragShader() {
     return `
       precision mediump float;
       uniform sampler2D     u_raw;
       uniform mat2          u_tex_matrix;
+      uniform vec2          u_texel_size;
       uniform float         u_intensity;
       uniform float         u_threshold;
       uniform float         u_radius;
-      uniform float         u_aspect_ratio;
       varying vec2          v_coord;
+
+      float gaussian(float x, float sigma) {
+          return exp(-(x * x) / (2.0 * sigma * sigma));
+      }
+
+      float luminance(vec3 color) {
+          return dot(color, vec3(0.299, 0.587, 0.114));
+      }
+
+      vec3 extractBright(vec3 color) {
+          float brightness = luminance(color);
+          float knee = max(0.03, (1.0 - u_threshold) * 0.2);
+          float strength = smoothstep(max(u_threshold - knee, 0.0), min(u_threshold + knee, 1.0), brightness);
+          return color * strength;
+      }
 
       void main(void) {
           vec2 texCoord = u_tex_matrix * v_coord;
           vec4 color = texture2D(u_raw, texCoord);
-          
-          // ピクセルサイズ（正規化座標系で、アスペクト比を考慮）
-          float basePixelSize = 0.002;
-          vec2 pixelSize = vec2(basePixelSize, basePixelSize * u_aspect_ratio);
-          
-          // ガウシアンブラー風のサンプリングでグローを計算
-          vec4 glow = vec4(0.0);
+
+          vec2 texMax = u_tex_matrix * vec2(1.0, 1.0);
+          vec2 pixelSize = u_texel_size;
+
+          // 明るい部分を抽出した画像をガウシアンブラーして加算する
+          vec3 glow = vec3(0.0);
           float totalWeight = 0.0;
-          
+
           for (float x = -4.0; x <= 4.0; x += 1.0) {
               for (float y = -4.0; y <= 4.0; y += 1.0) {
-                  vec2 offset = vec2(x, y) * pixelSize * u_radius;
-                  vec2 sampleCoord = v_coord + offset;
-                  
-                  // 境界外のサンプリングをクランプ
-                  sampleCoord = clamp(sampleCoord, vec2(0.001), vec2(0.999));
-                  
-                  vec2 sampleTexCoord = u_tex_matrix * sampleCoord;
-                  vec4 sampleColor = texture2D(u_raw, sampleTexCoord);
-                  
-                  // 明るさを計算
-                  float brightness = dot(sampleColor.rgb, vec3(0.299, 0.587, 0.114));
-                  
-                  // 閾値以上の部分のみグローに寄与
-                  if (brightness > u_threshold) {
-                      float weight = exp(-(x*x + y*y) / 8.0);
-                      glow += sampleColor * weight * (brightness - u_threshold);
-                      totalWeight += weight;
-                  }
+                  vec2 offset = vec2(x, y) * pixelSize * max(u_radius, 0.001);
+                  vec2 sampleTexCoord = clamp(texCoord + offset, vec2(0.0), texMax);
+                  vec3 sampleColor = texture2D(u_raw, sampleTexCoord).rgb;
+                  float weight = gaussian(length(vec2(x, y)), 2.0);
+
+                  glow += extractBright(sampleColor) * weight;
+                  totalWeight += weight;
               }
           }
-          
+
           if (totalWeight > 0.0) {
               glow /= totalWeight;
           }
-          
-          // 元の色にグローを加算
-          color.rgb += glow.rgb * u_intensity;
-          
-          gl_FragColor = color;
+
+          gl_FragColor = vec4(color.rgb + glow * u_intensity, color.a);
       }
     `
   }
@@ -79,7 +81,13 @@ export class GlowEffect extends VisualEffectParams {
       u_intensity: this.intensity,
       u_threshold: this.threshold,
       u_radius: this.radius,
-      u_aspect_ratio: this.aspectRatio,
     })
+    program.uniform2fv({
+      u_texel_size: this.texelSize,
+    })
+  }
+
+  setRenderTargetInfo(info: RenderTargetInfo) {
+    this.texelSize = info.texelSize
   }
 }
