@@ -173,9 +173,9 @@ function hasAspectRatio(effect: VisualEffectParams): effect is VisualEffectParam
  */
 function initVisualEffectsDemo(globe: Globe) {
   const glow = new GlowEffect()
-  glow.intensity = 0.4
-  glow.threshold = 0.72
-  glow.radius = 1.6
+  glow.intensity = 1.0
+  glow.threshold = 0.62
+  glow.radius = 2.8
 
   const frostedGlass = new FrostedGlassEffect()
   const ripple = new RippleEffect()
@@ -190,9 +190,9 @@ function initVisualEffectsDemo(globe: Globe) {
   blur.radius = 3.0
 
   const bloom = new BloomEffect()
-  bloom.blurRadius = 3.0
-  bloom.blurBlend = 0.55
-  bloom.threshold = 0.68
+  bloom.blurRadius = 4.5
+  bloom.blurBlend = 0.9
+  bloom.threshold = 0.58
 
   const afterimage = new AfterimageEffect()
 

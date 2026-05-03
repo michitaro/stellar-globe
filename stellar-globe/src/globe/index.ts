@@ -121,6 +121,12 @@ export class Globe {
     if (!this.visualEffectRenderer) {
       return false
     }
+    if (this.rafId !== undefined) {
+      cancelAnimationFrame(this.rafId)
+      this.rafId = undefined
+    }
+    // preserveDrawingBuffer に依存せず、直前の描画結果を確実に取得する。
+    this.draw()
     this.visualEffectRenderer.captureSnapshot()
     return true
   }

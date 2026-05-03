@@ -82,6 +82,13 @@ export class CaptureTarget {
     const matrix = mat2.create()
     return mat2.scale(matrix, matrix, [canvasWidth / targetWidth, canvasHeight / targetHeight])
   }
+
+  texelSize(): [number, number] {
+    return [
+      1 / this.targetWidth,
+      1 / this.targetHeight,
+    ]
+  }
 }
 
 

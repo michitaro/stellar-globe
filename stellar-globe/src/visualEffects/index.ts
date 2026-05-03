@@ -232,6 +232,9 @@ export class VisualEffectRenderer {
   private draw() {
     const { gl, program, captureTarget } = this
     program.use()
+    this.params.setRenderTargetInfo?.({
+      texelSize: captureTarget.texelSize(),
+    })
     program.uniformMatrix2fv({
       u_tex_matrix: captureTarget.texMatrix(),
     })

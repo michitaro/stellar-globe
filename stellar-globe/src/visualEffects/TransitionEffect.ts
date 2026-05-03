@@ -58,6 +58,10 @@ export class TransitionEffect extends VisualEffectParams {
       
       #define M_PI 3.14159265359
 
+      bool isInsideUnit(vec2 coord) {
+          return coord.x >= 0.0 && coord.x <= 1.0 && coord.y >= 0.0 && coord.y <= 1.0;
+      }
+
       void main(void) {
           vec2 texCoord = u_tex_matrix * v_coord;
           vec4 currentColor = texture2D(u_raw, texCoord);
@@ -141,26 +145,26 @@ export class TransitionEffect extends VisualEffectParams {
               
               // スナップショット: 進行方向にスライドアウト
               vec2 snapshotCoord = v_coord + dir * t;
-              vec4 slidSnapshot = vec4(0.0);
-              if (snapshotCoord.x >= 0.0 && snapshotCoord.x <= 1.0 &&
-                  snapshotCoord.y >= 0.0 && snapshotCoord.y <= 1.0) {
+              bool hasSlidSnapshot = isInsideUnit(snapshotCoord);
+              vec4 slidSnapshot = snapshotColor;
+              if (hasSlidSnapshot) {
                   slidSnapshot = texture2D(u_snapshot, u_tex_matrix * snapshotCoord);
               }
               
               // 現在: 反対側からスライドイン
               vec2 currentCoord = v_coord - dir * (1.0 - t);
-              vec4 slidCurrent = vec4(0.0);
-              if (currentCoord.x >= 0.0 && currentCoord.x <= 1.0 &&
-                  currentCoord.y >= 0.0 && currentCoord.y <= 1.0) {
+              bool hasSlidCurrent = isInsideUnit(currentCoord);
+              vec4 slidCurrent = currentColor;
+              if (hasSlidCurrent) {
                   slidCurrent = texture2D(u_raw, u_tex_matrix * currentCoord);
               }
               
               // 境界を決定
               float boundary = dot(v_coord - vec2(0.5), dir) + 0.5;
               if (boundary < t) {
-                  gl_FragColor = slidCurrent;
+                  gl_FragColor = hasSlidCurrent ? slidCurrent : snapshotColor;
               } else {
-                  gl_FragColor = slidSnapshot;
+                  gl_FragColor = hasSlidSnapshot ? slidSnapshot : currentColor;
               }
               return;
           }
