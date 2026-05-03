@@ -1,8 +1,7 @@
-import { DndContext, KeyboardSensor, useDraggable, useSensor, useSensors } from '@dnd-kit/core'
+import { DndContext, KeyboardSensor, Modifier, useDraggable, useSensor, useSensors } from '@dnd-kit/core'
 import { CSS } from '@dnd-kit/utilities'
 
 import { DragEndEvent } from "@dnd-kit/core/dist/types"
-import { restrictToWindowEdges } from '@dnd-kit/modifiers'
 import classNames from 'classnames'
 import { CSSProperties, ReactNode, RefObject, forwardRef, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
@@ -14,6 +13,54 @@ import { useSeqId } from './hooks'
 import styles from './styles.module.scss'
 import { CSSPosition, CSSSize, CSSSizeLimit, Origin, PartialSize, Position } from './types'
 import { pickXY, position2origin, position2topleft } from './utils'
+
+
+// カスタムモディファイア：ダイアログの一部が常に画面内に表示されるようにしつつ、
+// 大きなダイアログでもドラッグできるようにする
+const restrictToWindowEdgesWithMinVisible: Modifier = ({
+  transform,
+  draggingNodeRect,
+  windowRect,
+}) => {
+  if (!draggingNodeRect || !windowRect) {
+    return transform
+  }
+
+  const minVisibleSize = 50 // 少なくともこのピクセル分は画面内に表示する
+
+  // ドラッグ後の位置を計算
+  const newLeft = draggingNodeRect.left + transform.x
+  const newTop = draggingNodeRect.top + transform.y
+  const newRight = newLeft + draggingNodeRect.width
+  const newBottom = newTop + draggingNodeRect.height
+
+  let x = transform.x
+  let y = transform.y
+
+  // 左端の制限: ダイアログの右端が少なくともminVisibleSize分は画面内に
+  if (newRight < minVisibleSize) {
+    x = transform.x + (minVisibleSize - newRight)
+  }
+  // 右端の制限: ダイアログの左端が画面右端からminVisibleSize分は内側に
+  if (newLeft > windowRect.width - minVisibleSize) {
+    x = transform.x - (newLeft - (windowRect.width - minVisibleSize))
+  }
+
+  // 上端の制限: ダイアログの下端が少なくともminVisibleSize分は画面内に
+  if (newBottom < minVisibleSize) {
+    y = transform.y + (minVisibleSize - newBottom)
+  }
+  // 下端の制限: ダイアログの上端が画面下端からminVisibleSize分は内側に
+  if (newTop > windowRect.height - minVisibleSize) {
+    y = transform.y - (newTop - (windowRect.height - minVisibleSize))
+  }
+
+  return {
+    ...transform,
+    x,
+    y,
+  }
+}
 
 
 export type DialogProps = {
@@ -28,6 +75,7 @@ export type DialogProps = {
   rememberPosition?: boolean
   sizeHint?: CSSSize
   minmaxSize?: CSSSizeLimit
+  fitViewportHeight?: boolean
 }
 
 
@@ -102,7 +150,7 @@ function DialogDraggable(props: DialogProps & { autoResizeTrigger: unknown }) {
       sensors={sensors}
       onDragStart={(onDragStart)}
       onDragEnd={onDragEnd}
-      modifiers={[restrictToWindowEdges]}
+      modifiers={[restrictToWindowEdgesWithMinVisible]}
     >
       <DnDContent {...{ ...props, }} position={position} setPosition={setPosition} />
     </DndContext>
@@ -124,6 +172,7 @@ function DnDContent({
   rememberPosition = false,
   resizable: resizableProp = false,
   minmaxSize,
+  fitViewportHeight = true,
   autoResizeTrigger,
 }: DialogProps & {
   autoResizeTrigger: unknown,
@@ -211,10 +260,10 @@ function DnDContent({
     return {
       ...sizeHint,
       ...overwrite,
-      maxHeight: maxHeight - 16,
+      ...(fitViewportHeight ? { maxHeight: maxHeight - 16 } : {}),
       ...minmaxSize,
     }
-  }, [maxHeight, minmaxSize, size, sizeHint])
+  }, [fitViewportHeight, maxHeight, minmaxSize, size, sizeHint])
 
   const onExited = useCallback(() => {
     if (!rememberPosition) {

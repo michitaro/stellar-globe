@@ -40,4 +40,21 @@ describe('Dialog', () => {
     )
     expect(screen.queryByText('Test Title')).not.toBeInTheDocument()
   })
+
+  it('should allow opting out of viewport height fitting', () => {
+    render(
+      <DialogContext>
+        <Dialog
+          title="Tall Dialog"
+          classNames={{}}
+          visible={true}
+          fitViewportHeight={false}
+        >
+          <div>Test Content</div>
+        </Dialog>
+      </DialogContext>
+    )
+
+    expect(screen.getByText('Tall Dialog').closest('div[style]')).not.toHaveStyle({ maxHeight: '752px' })
+  })
 })
