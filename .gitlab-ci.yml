@@ -36,7 +36,7 @@ variables:
 
 .with_kubectl:
   before_script:
-    - apk add --no-cache kubectl
+    - apk add --no-cache curl kubectl
     - |
       if [ -n "${REVIEW_APP_KUBECONFIG_B64:-}" ]; then
         mkdir -p "$CI_PROJECT_DIR/.kube"
