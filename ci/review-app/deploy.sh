@@ -168,6 +168,13 @@ if [ "$accepted" != "True" ] || [ "$resolved_refs" != "True" ]; then
   exit 1
 fi
 
+curl --fail --silent --show-error \
+  --retry 10 \
+  --retry-all-errors \
+  --retry-delay 2 \
+  --max-time 20 \
+  "$environment_url" >/dev/null
+
 cat > "$env_file" <<EOF
 REVIEW_APP_GATEWAY_ADDRESS=${gateway_address}
 REVIEW_APP_BASE_URL=${base_url}
