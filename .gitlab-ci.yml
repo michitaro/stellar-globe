@@ -17,20 +17,30 @@ variables:
   REVIEW_APP_REGISTRY_NAMESPACE: "container-registry"
   REVIEW_APP_REGISTRY_SERVICE_NAME: "registry"
 
-.review_app_branch_rules:
+.review_app_rules:
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+    - if: '$CI_COMMIT_BRANCH && $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH'
+    - when: never
+
+.review_app_feature_rules:
   rules:
     - if: '$CI_COMMIT_BRANCH && $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH'
     - when: never
 
-.review_app_stop_rules:
+.review_app_default_branch_rules:
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+    - when: never
+
+.review_app_feature_stop_rules:
   rules:
     - if: '$CI_COMMIT_BRANCH && $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH'
       when: manual
     - when: never
 
-.review_app_bootstrap_rules:
+.review_app_default_stop_rules:
   rules:
-    - if: '$CI_COMMIT_BRANCH && $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH'
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       when: manual
     - when: never
@@ -49,7 +59,7 @@ build_review_app:
   stage: build
   image: node:22-bookworm
   extends:
-    - .review_app_branch_rules
+    - .review_app_rules
   before_script:
     - apt-get update
     - apt-get install -y --no-install-recommends python3 python3-pip python3-venv
@@ -70,7 +80,7 @@ package_review_app:
     name: gcr.io/kaniko-project/executor:v1.23.2-debug
     entrypoint: [""]
   extends:
-    - .review_app_branch_rules
+    - .review_app_rules
   needs:
     - job: build_review_app
       artifacts: true
@@ -95,7 +105,7 @@ bootstrap_review_app_gateway:
   stage: bootstrap
   image: alpine:3.20
   extends:
-    - .review_app_bootstrap_rules
+    - .review_app_rules
     - .with_kubectl
   resource_group: review-app-bootstrap
   script:
@@ -111,7 +121,7 @@ deploy_review_app:
   stage: deploy
   image: alpine:3.20
   extends:
-    - .review_app_branch_rules
+    - .review_app_feature_rules
     - .with_kubectl
   needs:
     - job: bootstrap_review_app_gateway
@@ -130,12 +140,51 @@ deploy_review_app:
     name: "review/$CI_COMMIT_REF_SLUG"
     url: "$REVIEW_APP_ENVIRONMENT_URL"
     on_stop: stop_review_app
+    auto_stop_in: 1 week
+
+deploy_main_review_app:
+  stage: deploy
+  image: alpine:3.20
+  extends:
+    - .review_app_default_branch_rules
+    - .with_kubectl
+  needs:
+    - job: bootstrap_review_app_gateway
+      artifacts: true
+    - job: package_review_app
+  resource_group: "review-app/$CI_COMMIT_REF_SLUG"
+  script:
+    - sh ci/review-app/deploy.sh
+  artifacts:
+    reports:
+      dotenv: review-app.env
+    paths:
+      - review-app.env
+    expire_in: 1 week
+  environment:
+    name: "review/$CI_COMMIT_REF_SLUG"
+    url: "$REVIEW_APP_ENVIRONMENT_URL"
+    on_stop: stop_main_review_app
 
 stop_review_app:
   stage: deploy
   image: alpine:3.20
   extends:
-    - .review_app_stop_rules
+    - .review_app_feature_stop_rules
+    - .with_kubectl
+  allow_failure: true
+  resource_group: "review-app/$CI_COMMIT_REF_SLUG"
+  script:
+    - sh ci/review-app/stop.sh
+  environment:
+    name: "review/$CI_COMMIT_REF_SLUG"
+    action: stop
+
+stop_main_review_app:
+  stage: deploy
+  image: alpine:3.20
+  extends:
+    - .review_app_default_stop_rules
     - .with_kubectl
   allow_failure: true
   resource_group: "review-app/$CI_COMMIT_REF_SLUG"
