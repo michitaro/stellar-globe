@@ -28,6 +28,12 @@ pip install stellar_globe_jupyterlab_extension
 * `eventemitter.ts`: Event handling
 * `lockWindow.tsx`: Window lock functionality
 
+### JupyterLab bridge (`packages/jupyterlab-bridge/`)
+
+* Internal package that absorbs notebook / kernel / comm compatibility differences
+* Prevents duplicate handling of the same Comm open
+* Centralizes session-closed notifications
+
 ### Python Side (`stellar_globe_jupyterlab_extension/`)
 
 * `__init__.py`: Python extension initialization
@@ -63,8 +69,8 @@ App in iframe (@stellar-globe/app)
    This creates a Jupyter Comm named `stellar-globe`.
 
 2. **Comm Detection (Extension side)**
-   - `activateCommPlugin()` in `src/index.ts` monitors all Comms
-   - Calls `makeStellarGlobeWidget()` when it detects a Comm named `stellar-globe`
+   - `src/index.ts` monitors notebook / kernel / comm lifecycle through `packages/jupyterlab-bridge/`
+   - Calls `makeStellarGlobeWidget()` when it detects a Comm open for the `stellarglobe/new` target
 
 3. **Widget Generation**
    - Generate new React widget in `StellarGlobeWidget.tsx`
@@ -215,6 +221,8 @@ jupyter labextension develop . --overwrite
 jlpm build
 ```
 
+`jlpm build` / `jlpm watch` also builds the internal `packages/jupyterlab-bridge/` package.
+
 ### Starting Development Server
 
 To automatically rebuild on source code changes:
@@ -278,6 +286,27 @@ Test files are located in the `src/__tests__/` directory:
 
 Test coverage is generated in the `coverage/` directory.
 Open `coverage/lcov-report/index.html` in a browser to view coverage visually.
+
+### JupyterLab smoke test
+
+You can verify with a real JupyterLab instance that `Window()` opens exactly one viewer and that query / snapshot calls succeed.
+
+```bash
+# Smoke test with the default combination
+python3 scripts/jupyterlab_smoke.py
+
+# Smoke test with explicit package versions
+python3 scripts/jupyterlab_smoke.py \
+  --python-jupyterlab-spec '~=4.3.0' \
+  --js-jupyterlab-spec '~4.3.0' \
+  --js-services-spec '~7.3.0' \
+  --builder-jupyterlab-spec '^4.0.0'
+
+# Matrix for JupyterLab 4.0 through 4.6
+python3 scripts/jupyterlab_smoke_matrix.py
+```
+
+`@jupyterlab/services` uses `4.x` for JupyterLab 4.0-4.2 and `7.3-7.6` for JupyterLab 4.3-4.6. `@jupyterlab/builder` defaults to `^4.0.0`.
 
 ### Python Testing
 

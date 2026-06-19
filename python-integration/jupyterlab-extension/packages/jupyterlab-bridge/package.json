@@ -1,0 +1,30 @@
+{
+    "name": "@stellar-globe/jupyterlab-bridge",
+    "version": "0.0.0",
+    "description": "JupyterLab notebook/kernel/comm bridge helpers",
+    "license": "BSD-3-Clause",
+    "author": "Koike Michitaro",
+    "files": [
+        "lib/**/*.{d.ts,js,js.map}",
+        "src/**/*.ts"
+    ],
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
+    "scripts": {
+        "build": "tsc --sourceMap",
+        "clean": "rimraf lib tsconfig.tsbuildinfo",
+        "watch": "tsc -w --sourceMap"
+    },
+    "dependencies": {
+        "@jupyterlab/application": "^4.0.0",
+        "@jupyterlab/apputils": "^4.0.0",
+        "@jupyterlab/notebook": "^4.0.0"
+    },
+    "devDependencies": {
+        "rimraf": "^5.0.1",
+        "typescript": "~5.0.2"
+    },
+    "publishConfig": {
+        "access": "public"
+    }
+}

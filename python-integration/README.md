@@ -57,6 +57,7 @@ Extensions mainly consist of the following elements:
 4. **State synchronization**
    - Monitor changes to App's Redux store
    - Calculate differences in JSON Patch format and efficiently synchronize with Python side
+   - `jupyterlab-extension/packages/jupyterlab-bridge/` absorbs JupyterLab version differences and Comm lifecycle handling
 
 ### `hscmap-server`
 

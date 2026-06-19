@@ -1,6 +1,5 @@
-import { LabShell } from '@jupyterlab/application'
+import { JupyterFrontEnd, LabShell } from '@jupyterlab/application'
 import { showErrorMessage } from '@jupyterlab/apputils'
-import { Contents } from '@jupyterlab/services'
 import { Message } from '@lumino/messaging'
 import { Widget } from '@lumino/widgets'
 import StellarGlobeApp, { AppHandle, AppState } from '@stellar-globe/app'
@@ -22,7 +21,7 @@ type StellarGlobeWidgetEnv = {
   stateManager: () => StateManager<unknown>
   runtime: RuntimeType
   storageOptions: StorageOptions
-  contentsManager: Contents.IManager
+  contentsManager: JupyterFrontEnd['serviceManager']['contents']
 }
 
 
@@ -242,11 +241,11 @@ function onMsgFromPython({
 }
 
 
-async function typedRespondToQuery<T extends keyof FromApp>(type: T, queryId: string, data: Omit<FromApp[T], 'type'>, comm: CommType, runtime: RuntimeType, options: StorageOptions, contentsManager: Contents.IManager) {
+async function typedRespondToQuery<T extends keyof FromApp>(type: T, queryId: string, data: Omit<FromApp[T], 'type'>, comm: CommType, runtime: RuntimeType, options: StorageOptions, contentsManager: JupyterFrontEnd['serviceManager']['contents']) {
   return await respondToQuery(queryId, JSON.stringify(replaceUndefinedWithNull({ ...data, type })), comm, runtime, options, contentsManager)
 }
 
-async function respondToQuery(queryId: string, content: string, comm: CommType, runtime: RuntimeType, options: StorageOptions, contentsManager: Contents.IManager) {
+async function respondToQuery(queryId: string, content: string, comm: CommType, runtime: RuntimeType, options: StorageOptions, contentsManager: JupyterFrontEnd['serviceManager']['contents']) {
   comm.send({
     type: '__query_response__',
     queryId,
@@ -256,6 +255,12 @@ async function respondToQuery(queryId: string, content: string, comm: CommType, 
   switch (options.type) {
     case 'file': {
       const filename = queryResponseFilename(queryId, runtime)
+      if (runtime === 'python') {
+        void saveQueryResponseAsFile(filename, fileContent, contentsManager).catch(error => {
+          console.warn(`Failed to persist query response for ${queryId}`, error)
+        })
+        return
+      }
       const useIndexedDb = runtime === 'pyodide' && !globalThis.isSecureContext
       const writes = await Promise.allSettled([
         saveQueryResponseAsFile(filename, fileContent, contentsManager, { cleanup: runtime === 'pyodide' }),
@@ -282,7 +287,7 @@ function queryResponseFilename(queryId: string, runtime: RuntimeType) {
 }
 
 
-function saveQueryResponseAsFile(filename: string, content: string, contentsManager: Contents.IManager, options?: { cleanup?: boolean }) {
+function saveQueryResponseAsFile(filename: string, content: string, contentsManager: JupyterFrontEnd['serviceManager']['contents'], options?: { cleanup?: boolean }) {
   return contentsManager.save(filename, {
     type: 'file',
     format: 'text',
@@ -296,7 +301,7 @@ function saveQueryResponseAsFile(filename: string, content: string, contentsMana
 }
 
 
-function scheduleQueryResponseFileCleanup(filename: string, contentsManager: Contents.IManager) {
+function scheduleQueryResponseFileCleanup(filename: string, contentsManager: JupyterFrontEnd['serviceManager']['contents']) {
   globalThis.setTimeout(() => {
     void contentsManager.delete(filename).catch(() => undefined)
   }, queryResponseCleanupDelayMs)
@@ -347,8 +352,16 @@ function wrapTypeCheck(cbmap: { [K in keyof ToApp]: (msg: ToApp[K]) => void }): 
   ]))
 
   return (e) => {
-    const msg = e.content.data
-    const type = msg.type as string
+    const msg = readMessageData(e)
+    if (!msg) {
+      console.warn('Ignoring comm message without data', e)
+      return
+    }
+    const type = msg.type
+    if (typeof type !== 'string') {
+      console.warn('Ignoring comm message without type', msg)
+      return
+    }
     // @ts-ignore
     const cb = cbmap[type]
     if (cb) {
@@ -376,6 +389,15 @@ function wrapTypeCheck(cbmap: { [K in keyof ToApp]: (msg: ToApp[K]) => void }): 
       alert(`Unknown message type: ${type}`)
     }
   }
+}
+
+
+function readMessageData(rawMsg: { content?: { data?: unknown } }) {
+  const msg = rawMsg.content?.data
+  if (!msg || typeof msg !== 'object') {
+    return undefined
+  }
+  return msg as { type?: unknown }
 }
 
 

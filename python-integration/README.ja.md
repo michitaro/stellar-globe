@@ -57,6 +57,7 @@ JupyterLabは拡張機能によって機能を追加できるプラグインア�
 4. **状態の同期**
    - App の Redux store の変更を監視
    - JSON Patch形式で差分を計算し、効率的にPython側に同期
+   - `jupyterlab-extension/packages/jupyterlab-bridge/` が JupyterLab version 差分と Comm lifecycle を吸収
 
 ### `hscmap-server`
 
