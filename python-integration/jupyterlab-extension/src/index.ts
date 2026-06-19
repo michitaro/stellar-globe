@@ -2,23 +2,47 @@ import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application'
+import { showErrorMessage } from '@jupyterlab/apputils'
 import { INotebookTracker } from '@jupyterlab/notebook'
+import { connectNotebookCommTarget } from '@stellar-globe/jupyterlab-bridge'
 import { ToApp, validateToAppMessage } from '@stellar-globe/app/commTools'
 import { makeStellarGlobeWidget } from './StellarGlobeWidget'
-import { EventEmitter } from './eventemitter'
 import { installTestingHooks } from './testingHooks'
-import { KernelType, StellarGlobeSessionEnv } from './types'
+
+
+const requiredServices = [INotebookTracker] as unknown as JupyterFrontEndPlugin<void>['requires']
 
 
 const plugin: JupyterFrontEndPlugin<void> = {
   id: '@stellar-globe/jupyterlab-extension:plugin',
   description: 'A JupyterLab extension for StellarGlobe.',
   autoStart: true,
-  requires: [INotebookTracker],
+  requires: requiredServices,
   activate: (app: JupyterFrontEnd, nbTracker: INotebookTracker) => {
     loadExternalCSS('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200')
     installTestingHooks(app, nbTracker)
-    connectToKernelChangedSignalForCommCreation(app, nbTracker)
+    connectNotebookCommTarget({
+      app,
+      notebooks: nbTracker,
+      target: 'stellarglobe/new',
+      onConnected: ({ app, kernel, onSessionClosed }, comm, rawMsg) => {
+        const msg = readMessageData(rawMsg)
+        if (!msg) {
+          console.warn('Ignoring comm open without message data', rawMsg)
+          return
+        }
+        if (isValidToAppMessage('Open', msg)) {
+          const widget = makeStellarGlobeWidget({ app, kernel }, comm, msg)
+          onSessionClosed.on(() => {
+            widget.close()
+          })
+          return
+        }
+        const errors = validateToAppMessage('Open', msg).errors
+        console.error('StellarGlobe Comm Type Error', errors)
+        void showErrorMessage('StellarGlobe Comm Type Error', JSON.stringify(errors, null, 2))
+      },
+    })
   },
 }
 
@@ -37,89 +61,16 @@ function loadExternalCSS(url: string) {
 
 
 export default plugin
-
-
-// registerCommTargetのあたらいは↓を参考に。
-// https://github.com/jupyter-widgets/ipywidgets/blob/52663ac472c38ba12575dfb4979fa2d250e79bc3/python/jupyterlab_widgets/src/plugin.ts#L174
-function connectToKernelChangedSignalForCommCreation(
-  app: JupyterFrontEnd,
-  notebooks: INotebookTracker,
-) {
-  notebooks.widgetAdded.connect((_, nbPanel) => {
-    const onSessionClosed = EventEmitter({ once: true })
-    const cleanups = new WeakMap<KernelType, () => void>()
-
-    type KernelChangedArgs = Parameters<Parameters<(typeof nbPanel)["sessionContext"]["kernelChanged"]["connect"]>[0]>[1]
-
-    const handleKernelChanged = ({
-      oldValue,
-      newValue,
-    }: KernelChangedArgs): void => {
-      if (oldValue) {
-        cleanups.get(oldValue)?.()
-      }
-      if (newValue) {
-        const cleanup = setupCommTarget({ app, kernel: newValue }, onSessionClosed)
-        cleanups.set(newValue, cleanup)
-      }
-    }
-
-    nbPanel.sessionContext.kernelChanged.connect((_sender, args) => {
-      handleKernelChanged(args)
-    })
-
-    if (nbPanel.sessionContext.session?.kernel) {
-      handleKernelChanged({
-        name: 'kernel',
-        oldValue: null,
-        newValue: nbPanel.sessionContext.session?.kernel,
-      })
-    }
-
-    nbPanel.sessionContext.statusChanged.connect((_slot, status) => {
-      switch (status) {
-        case 'autorestarting':
-        case 'dead':
-        case 'restarting':
-        case 'terminating':
-          onSessionClosed.emit()
-          break
-      }
-    })
-  })
-}
-
-
-function setupCommTarget(env: StellarGlobeSessionEnv, onSessionClosed: EventEmitter) {
-  const target = 'stellarglobe/new'
-  return registerCommTarget(env.kernel, target, function onConnected(comm, rawMsg) {
-    const msg = rawMsg.content.data
-    if (isValidToAppMessage('Open', msg)) {
-      const widget = makeStellarGlobeWidget(env, comm, msg)
-      onSessionClosed.on(() => {
-        widget.close()
-      })
-    }
-    else {
-      alert(`Type error:\n${JSON.stringify(validateToAppMessage('Open', msg).errors, null, 2)}`)
-    }
-  })
-}
-
-
 function isValidToAppMessage<T extends keyof ToApp>(type: T, msg: any): msg is ToApp[T] {
   const { errors } = validateToAppMessage(type, msg)
   return errors.length === 0
 }
 
 
-function registerCommTarget(
-  kernel: KernelType,
-  target: string,
-  onConnected: Parameters<KernelType["registerCommTarget"]>[1],
-) {
-  kernel.registerCommTarget(target, onConnected)
-  return () => {
-    kernel.removeCommTarget(target, onConnected)
+function readMessageData(rawMsg: { content?: { data?: unknown } }) {
+  const msg = rawMsg.content?.data
+  if (!msg || typeof msg !== 'object') {
+    return undefined
   }
+  return msg as Record<string, unknown>
 }

@@ -28,6 +28,12 @@ pip install stellar_globe_jupyterlab_extension
 * `eventemitter.ts`: イベントハンドリング
 * `lockWindow.tsx`: ウィンドウのロック機能
 
+### JupyterLab bridge (`packages/jupyterlab-bridge/`)
+
+* notebook / kernel / comm の接続差異を吸収する内部package
+* 同一Comm openの多重処理を防止
+* session終了通知を一元化
+
 ### Python側 (`stellar_globe_jupyterlab_extension/`)
 
 * `__init__.py`: Python拡張の初期化
@@ -63,8 +69,8 @@ iframe内のApp (@stellar-globe/app)
    これにより、`stellar-globe` という名前のJupyter Commが作成されます。
 
 2. **Comm の検出（拡張機能側）**
-   - `src/index.ts` の `activateCommPlugin()` が全てのCommを監視
-   - `stellar-globe` という名前のCommを検出すると `makeStellarGlobeWidget()` を呼び出し
+   - `src/index.ts` が `packages/jupyterlab-bridge/` 経由で notebook / kernel / comm を監視
+   - `stellarglobe/new` target の Comm open を検出すると `makeStellarGlobeWidget()` を呼び出し
 
 3. **ウィジェットの生成**
    - `StellarGlobeWidget.tsx` で新しいReactウィジェットを生成
@@ -215,6 +221,8 @@ jupyter labextension develop . --overwrite
 jlpm build
 ```
 
+`jlpm build` / `jlpm watch` は内部の `packages/jupyterlab-bridge/` も一緒にビルドします。
+
 ### 開発サーバーの起動
 
 ソースコードの変更を自動的にリビルドするには：
@@ -278,6 +286,27 @@ jlpm test:coverage
 
 テストカバレッジは `coverage/` ディレクトリに生成されます。
 `coverage/lcov-report/index.html` をブラウザで開くと視覚的にカバレッジを確認できます。
+
+### JupyterLab smoke test
+
+`Window()` で viewer が1つだけ開き、query / snapshot まで通るかを実JupyterLabで確認できます。
+
+```bash
+# 既定の組み合わせで smoke test
+python3 scripts/jupyterlab_smoke.py
+
+# 主要package versionを指定して smoke test
+python3 scripts/jupyterlab_smoke.py \
+  --python-jupyterlab-spec '~=4.3.0' \
+  --js-jupyterlab-spec '~4.3.0' \
+  --js-services-spec '~7.3.0' \
+  --builder-jupyterlab-spec '^4.0.0'
+
+# JupyterLab 4.0〜4.6 の matrix
+python3 scripts/jupyterlab_smoke_matrix.py
+```
+
+`@jupyterlab/services` は 4.0〜4.2 では `4.x`、4.3〜4.6 では `7.3〜7.6` を使います。`@jupyterlab/builder` は `^4.0.0` を既定にしています。
 
 ### Pythonのテスト
 
